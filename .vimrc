@@ -79,6 +79,9 @@ map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 " Switch CWD to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
+" To open a new empty buffer
+nmap <leader>T :enew<cr>
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -185,6 +188,12 @@ Plug 'svermeulen/vim-easyclip'
 Plug 'airblade/vim-gitgutter'
 " A code-completion engine for Vim
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+" Auto-close scopes
+Plug 'Raimondi/delimitMate'
+" Nice browser for CTags
+Plug 'majutsushi/tagbar'
+" Man browser for Vim
+Plug 'bruno-/vim-man'
 
 " Initialize plugin system
 call plug#end()
@@ -292,6 +301,17 @@ autocmd FileType conf,bitbake setlocal commentstring=#\ %s
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:rainbow_active = 1
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Tagbar
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <silent> <leader>tt :TagbarToggle<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => DelimMate
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Match block delimiters for Ruby and C-like languages
+let b:delimitMate_expand_cr = 1
+execute "inoremap {<CR> {<CR>}<ESC>O"
 
 " --------------------------------------------------------------------------------------------------
 " File Type
