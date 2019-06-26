@@ -169,11 +169,15 @@ function mkcd {
 function hdi() {
     command howdoi $* -c -n 5;
 };
+# Command: Push dotfiles to github
+function dotfiles-push() {
+  command yadm commit -a -m "Latest file updates"
+  command yadm push
+}
 # execute vte.sh directly (IMPORTANT FOR TILIX)
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
     source /etc/profile.d/vte.sh
 fi
-
 
 # ###################################################################
 # Auto-suggest Configuration
