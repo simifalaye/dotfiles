@@ -16,7 +16,6 @@ export ZSH="/home/simifa/.oh-my-zsh"
 # ZSH_THEME="robbyrussell"
 ZSH_THEME="powerlevel9k/powerlevel9k"
 
-POWERLEVEL9K_MODE='awesome-fontconfig'
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir dir_writable vcs)
@@ -130,29 +129,46 @@ fi
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
+
+# ###################################################################
+# Aliases
+#
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
-#
-# Example aliases
+# ###################################################################
 alias zshconfig="vim ~/.zshrc"
 alias ohmyzsh="vim ~/.oh-my-zsh"
+
 alias /="cd /"
 alias home="cd ~"
 alias dev="cd ~/dev"
-alias grep="grep  --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}"
 
+alias grep="grep  --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}"
+alias lsl="ls -l"
+alias lsal="ls -al"
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+alias .......='cd ../../../../../..'
+alias ........='cd ../../../../../../..'
+alias .........='cd ../../../../../../../..'
+
+# ###################################################################
+# Helpful functions
+# ###################################################################
 # Command: mkcd - makes a directory and cd's into it
 function mkcd {
     command mkdir $1 && cd $1
 }
-
 # Command: hdi - runs howdoi with common settings
 function hdi() {
     command howdoi $* -c -n 5;
 };
-
 # execute vte.sh directly (IMPORTANT FOR TILIX)
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
     source /etc/profile.d/vte.sh

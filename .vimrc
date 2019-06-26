@@ -29,6 +29,7 @@ autocmd BufWritePre * :%s/\s\+$//e "remove trailing white space on save
 highlight SpecialKey ctermfg=1
 set list
 set listchars=tab:T>
+set encoding=utf8
 "  ---------------------------------------------------------------------------
 
 " With a map leader it's possible to do extra key combinations
@@ -52,6 +53,10 @@ au BufRead,BufNewFile *.py setlocal textwidth=80
 
 " Turn on the Wild menu
 set wildmenu
+
+" Use ; for commands., do not have to hold shift to do commands
+nnoremap ; :
+nnoremap , :
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM navigation (tabs, windows, buffers)
@@ -160,6 +165,13 @@ endfunction
 " --------------------------------------------------------------------------------------------------
 " Plugins
 " --------------------------------------------------------------------------------------------------
+
+"load plug vim if we do not have it yet
+if empty(glob('~/.vim/autoload/plug.vim'))
+   !mkdir -p ~/.vim/autoload/
+    !curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+
 " Specify a directory for plugins
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
@@ -194,6 +206,8 @@ Plug 'Raimondi/delimitMate'
 Plug 'majutsushi/tagbar'
 " Man browser for Vim
 Plug 'bruno-/vim-man'
+" Puts filetype glyphs in explorer plugins such as NERDTree
+Plug 'ryanoasis/vim-devicons'
 
 " Initialize plugin system
 call plug#end()
@@ -245,7 +259,7 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 nnoremap <silent><Leader>v :NERDTreeFind<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Solarized Colorscheme
+" => Theming: solarized, airline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:solarized_termcolors=16
 let g:colarized_termtrans = 1
@@ -254,6 +268,8 @@ let g:solarized_visibility = "high"
 let g:solarized_contrast = "high"
 colorscheme solarized
 set background=dark
+
+let g:airline_powerline_fonts = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Git gutter (Git diff)
