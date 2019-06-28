@@ -1,4 +1,4 @@
-" ----------------------------------------------------------------------------
+"  ---------------------------------------------------------------------------
 "  " Vecima standard vim setup
 "  "
 "  "
@@ -32,9 +32,11 @@ set listchars=tab:T>
 set encoding=utf8
 "  ---------------------------------------------------------------------------
 
-" With a map leader it's possible to do extra key combinations
-" like <leader>w saves the current file
+" Use leader to specify extra keybinding
 let mapleader = " "
+" Set directories
+let vimplugdir='~/.vim/plugged'
+let vimautoloaddir='~/.vim/autoload'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -51,12 +53,16 @@ au! BufNewFile,BufRead *.rockspec setf lua
 " Set text line width for python files
 au BufRead,BufNewFile *.py setlocal textwidth=80
 
-" Turn on the Wild menu
+" Better autocompletion for filenames, buffers, colors, etc.
 set wildmenu
+set wildmode=longest:full,full
 
 " Use ; for commands., do not have to hold shift to do commands
 nnoremap ; :
 nnoremap , :
+
+" Hide last search highlights
+nmap <silent> <leader>/ :nohlsearch<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM navigation (tabs, windows, buffers)
@@ -79,13 +85,14 @@ noremap <C-k> <C-w>k
 
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
-map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
+map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>
 
 " Switch CWD to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
-" To open a new empty buffer
-nmap <leader>T :enew<cr>
+" Easy moves through wrapped lines
+nnoremap j gj
+nnoremap k gk
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
@@ -167,9 +174,13 @@ endfunction
 " --------------------------------------------------------------------------------------------------
 
 "load plug vim if we do not have it yet
-if empty(glob('~/.vim/autoload/plug.vim'))
-   !mkdir -p ~/.vim/autoload/
-    !curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+if empty(glob(vimautoloaddir . '/plug.vim'))
+  " TODO: else?
+  if executable('curl')
+    execute 'silent !curl -fLo ' . vimautoloaddir . '/plug.vim --create-dirs ' .
+          \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  endif
 endif
 
 " Specify a directory for plugins
@@ -302,7 +313,11 @@ nmap ga <Plug>(EasyAlign)
 " => Ack.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Use Ag for searches
-let g:ackprg = 'ag --nogroup --nocolor --column'
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep --smart-case'
+endif
+" Map leader + a to ack
+nnoremap <Leader>a :Ack!<Space>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vim.commentary

@@ -140,6 +140,8 @@ fi
 # ###################################################################
 alias zshconfig="vim ~/.zshrc"
 alias ohmyzsh="vim ~/.oh-my-zsh"
+alias vimconfig="vim ~/.vimrc"
+alias tmuxconfig="vim ~/.tmux.conf"
 
 alias /="cd /"
 alias home="cd ~"
@@ -170,7 +172,7 @@ function hdi() {
     command howdoi $* -c -n 5;
 };
 # Command: Push dotfiles to github
-function dotfiles-push() {
+function dotfiles() {
   command yadm commit -a -m "Latest file updates"
   command yadm push
 }
