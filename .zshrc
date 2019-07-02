@@ -129,10 +129,3 @@ function dotfiles() {
   command yadm commit -a -m "Latest file updates"
   command yadm push
 }
-
-# ###################################################################
-# execute vte.sh directly (IMPORTANT FOR TILIX)
-# ###################################################################
-if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
-    source /etc/profile.d/vte.sh
-fi
