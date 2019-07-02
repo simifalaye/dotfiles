@@ -1,32 +1,26 @@
-export TERM="xterm-256color"
+# Zsh always executes zshenv. Then, depending on the case:
+# - run as a login shell, it executes zprofile;
+# - run as an interactive, it executes zshrc;
+# - run as a login shell, it executes zlogin.
+#
+# At the end of a login session, it executes zlogout, but in reverse order, the
+# user-specific file first, then the system-wide one, constituting a chiasmus
+# with the zlogin files.
 
-# set shell
-export SHELL=/usr/bin/zsh
+# Source global definitions
+test -r ~/.shell-env && . ~/.shell-env
+test -r ~/.shell-aliases && . ~/.shell-aliases
+test -r ~/.shell-common && . ~/.shell-common
 
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-
-# Path to your oh-my-zsh installation.
-export ZSH="/home/simifa/.oh-my-zsh"
-
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-# ZSH_THEME="robbyrussell"
-ZSH_THEME="powerlevel9k/powerlevel9k"
-
+# Theme customization with powerlevel9k
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir dir_writable vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(disk_usage time status)
 POWERLEVEL9K_TIME_FORMAT="%D{\uf073 %d-%h}"
-# POWERLEVEL9K_TIME_FORMAT="%D{\uf017 %H:%M \uf073 %d-%h}"
 POWERLEVEL9K_PROMPT_ON_NEWLINE=true
 POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=''
 POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX=' $ '
-# POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX="\n"
-# POWERLEVEL9K_MULTILINE_SECOND_PROMPT_PREFIX="%K{black}%F{white} `date +%T` \uf017 %f%k%F{white}%f $ "
 POWERLEVEL9K_VCS_GIT_ICON='\uf09b'
 POWERLEVEL9K_OS_ICON_BACKGROUND="white"
 POWERLEVEL9K_OS_ICON_FOREGROUND="blue"
@@ -43,125 +37,85 @@ POWERLEVEL9K_VCS_MODIFIED_FOREGROUND="yellow"
 POWERLEVEL9K_DIR_DEFAULT_BACKGROUND="transparent"
 POWERLEVEL9K_DIR_DEFAULT_FOREGROUND="blue"
 
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
-# If set to an empty array, this variable will have no effect.
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+setopt appendhistory
+setopt autocd
+setopt correct_all
+setopt extendedglob
+setopt hist_expire_dups_first
+setopt hist_find_no_dups
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt interactive_comments
+setopt pushd_ignore_dups
+setopt promptsubst
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
+# EMACS mode
+bindkey -e
+# TODO: This might be neat: http://unix.stackexchange.com/a/47425
+# TODO: Nice list of bindings: http://zshwiki.org/home/zle/bindkeys
+# Make CTRL+Arrow skip words
+# rxvt
+bindkey "^[Od" backward-word
+bindkey "^[Oc" forward-word
+# xterm
+bindkey "^[[1;5D" backward-word
+bindkey "^[[1;5C" forward-word
+# gnome-terminal
+bindkey "^[OD" backward-word
+bindkey "^[OC" forward-word
 
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
+bindkey "^U" backward-kill-line
+bindkey "^Q" push-line-or-edit
 
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
+# Ignore interactive commands from history
+export HISTORY_IGNORE="(ls|bg|fg|pwd|exit|cd ..)"
 
-# Uncomment the following line to automatically update without prompting.
-# DISABLE_UPDATE_PROMPT="true"
+fpath=(/usr/share/zsh/vendor-completions/ $fpath)
 
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
+# ###################################################################
+# Plugin config: ZPLUG
+# ###################################################################
+export ZPLUG_HOME=$HOME/.zplug
 
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS=true
+if [ -f $ZPLUG_HOME/init.zsh ]; then
+  source $ZPLUG_HOME/init.zsh
 
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
+  zplug "plugins/extract", from:oh-my-zsh, ignore:oh-my-zsh.sh
+  zplug "plugins/pip", from:oh-my-zsh, ignore:oh-my-zsh.sh
+  zplug "plugins/sudo", from:oh-my-zsh, ignore:oh-my-zsh.sh
+  zplug "plugins/git", from:oh-my-zsh, ignore:oh-my-zsh.sh
+  zplug "plugins/web-search", from:oh-my-zsh, ignore:oh-my-zsh.sh
+  zplug "plugins/autojump", from:oh-my-zsh, ignore:oh-my-zsh.sh
 
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
+  zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme as:theme
+  zplug "marzocchi/zsh-notify", use:"notify.plugin.zsh"
+  zplug "oconnor663/zsh-sensible"
 
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+  zplug "zsh-users/zsh-completions"
+  zplug "zsh-users/zsh-autosuggestions"
+  zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
-# Uncomment the following line to display red dots whilst waiting for completion.
-COMPLETION_WAITING_DOTS="true"
+  # Install plugins if there are plugins that have not been installed
+  if ! zplug check --verbose; then
+    printf "Install zsh plugins? [y/N]: "
+    if read -q; then
+      echo; zplug install
+    fi
+  fi
 
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-DISABLE_UNTRACKED_FILES_DIRTY="true"
+  # Remove any plugins that are not in the list above
+  echo; zplug clean
 
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load?
-# Standard plugins can be found in ~/.oh-my-zsh/plugins/*
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(
-    git
-    web-search
-    sudo
-    autojump
-    zsh-autosuggestions
-    zsh-syntax-highlighting
-)
-
-source $ZSH/oh-my-zsh.sh
-
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
-  export EDITOR='vim'
+  # Then, source plugins and add commands to $PATH
+  zplug load # --verbose
 fi
 
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-
-# ###################################################################
-# Aliases
-#
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-# ###################################################################
-alias zshconfig="vim ~/.zshrc"
-alias ohmyzsh="vim ~/.oh-my-zsh"
-alias vimconfig="vim ~/.vimrc"
-alias tmuxconfig="vim ~/.tmux.conf"
-
-alias /="cd /"
-alias home="cd ~"
-alias dev="cd ~/dev"
-
-alias grep="grep  --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}"
-alias lsl="ls -l"
-alias lsal="ls -al"
-
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias .....='cd ../../../..'
-alias ......='cd ../../../../..'
-alias .......='cd ../../../../../..'
-alias ........='cd ../../../../../../..'
-alias .........='cd ../../../../../../../..'
+# Accept suggestion with ctrl-space
+bindkey '^ ' autosuggest-accept
+bindkey '^[[F' autosuggest-accept
 
 # ###################################################################
-# Helpful functions
+# Functions
 # ###################################################################
 # Command: mkcd - makes a directory and cd's into it
 function mkcd {
@@ -176,14 +130,10 @@ function dotfiles() {
   command yadm commit -a -m "Latest file updates"
   command yadm push
 }
+
+# ###################################################################
 # execute vte.sh directly (IMPORTANT FOR TILIX)
+# ###################################################################
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
     source /etc/profile.d/vte.sh
 fi
-
-# ###################################################################
-# Auto-suggest Configuration
-# ###################################################################
-
-# Accept suggestion with ctrl-space
-bindkey '^ ' autosuggest-accept

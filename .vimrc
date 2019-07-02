@@ -64,6 +64,9 @@ nnoremap , :
 " Hide last search highlights
 nmap <silent> <leader>/ :nohlsearch<CR>
 
+" Reload vim configuration file
+nnoremap <Leader>rn :source $MYVIMRC<CR>
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM navigation (tabs, windows, buffers)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -80,8 +83,8 @@ inoremap <S-Down> <Esc>:m+<CR>
 " Control + Direction to change panes
 noremap <C-l> <C-w>l
 noremap <C-h> <C-w>h
-noremap <C-j> <C-w>j
-noremap <C-k> <C-w>k
+noremap <C-k> <C-w>j
+noremap <C-i> <C-w>k
 
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
