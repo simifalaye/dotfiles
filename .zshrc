@@ -76,6 +76,7 @@ fpath=(/usr/share/zsh/vendor-completions/ $fpath)
 # Plugin config: ZPLUG
 # ###################################################################
 export ZPLUG_HOME=$HOME/.zplug
+ZPLUG_USE_CACHE=true
 
 if [ -f $ZPLUG_HOME/init.zsh ]; then
   source $ZPLUG_HOME/init.zsh
@@ -102,9 +103,7 @@ if [ -f $ZPLUG_HOME/init.zsh ]; then
       echo; zplug install
     fi
   fi
-
-  # Remove any plugins that are not in the list above
-  echo; zplug clean
+  # Use zplug clean to remove unspecified repos (plugins)
 
   # Then, source plugins and add commands to $PATH
   zplug load # --verbose
