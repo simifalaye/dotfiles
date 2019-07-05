@@ -46,6 +46,7 @@ set number
 
 " Allow mouse usage
 set mouse=a
+set ttymouse=xterm2
 
 " Buf file
 au! BufNewFile,BufRead *.rockspec setf lua
