@@ -98,3 +98,6 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+# Adds the fzf bash config to the shell
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

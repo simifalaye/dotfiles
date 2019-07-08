@@ -129,3 +129,6 @@ function dotfiles() {
   command yadm commit -a -m "Latest file updates"
   command yadm push
 }
+
+# Adds the fzf bash config to the shell
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
