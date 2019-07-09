@@ -13,19 +13,14 @@ export VISUAL=$EDITOR
 export PAGER=less
 
 ##
+## Paths
+## - Look for binaries in this dir also
+
+##
 ## Pager
 ##
 export PAGER=less
 # TODO: checkout http://superuser.com/questions/124846/mercurial-colour-output-piped-to-less/403748#403748
 export LESS='-iFMRSX -x4'
-
-##
-## User Configuration
-##
-# export MANPATH="/usr/local/man:$MANPATH"
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
 
 umask 022

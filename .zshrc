@@ -91,6 +91,7 @@ if [ -f $ZPLUG_HOME/init.zsh ]; then
   zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme as:theme
   zplug "marzocchi/zsh-notify", use:"notify.plugin.zsh"
   zplug "oconnor663/zsh-sensible"
+  zplug "MichaelAquilina/zsh-you-should-use"
 
   zplug "zsh-users/zsh-completions"
   zplug "zsh-users/zsh-autosuggestions"
