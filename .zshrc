@@ -110,9 +110,9 @@ if [ -f $ZPLUG_HOME/init.zsh ]; then
   zplug load # --verbose
 fi
 
-# Accept suggestion with ctrl-space
-bindkey '^ ' autosuggest-accept
+# Accept suggestion with end
 bindkey '^[[F' autosuggest-accept
+bindkey -r '^ ' autosuggest-accept
 
 # ###################################################################
 # Functions

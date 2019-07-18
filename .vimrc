@@ -37,6 +37,8 @@ let mapleader = " "
 " Set directories
 let vimplugdir='~/.vim/plugged'
 let vimautoloaddir='~/.vim/autoload'
+" Set tags file locations
+set tags=./tags,./.git/tags;
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -68,12 +70,32 @@ nmap <silent> <leader>/ :nohlsearch<CR>
 " Reload vim configuration file
 nnoremap <Leader>rn :source $MYVIMRC<CR>
 
+""" SYSTEM CLIPBOARD COPY & PASTE SUPPORT
+set pastetoggle=<F2>
+"Copy paste to/from clipboard
+vnoremap <C-c> "+y
+vnoremap <C-x> "+c
+vnoremap <C-v> c<ESC>:set paste<CR>o<ESC>"+]p:set nopaste<CR>
+inoremap <C-v> <ESC>:set paste<CR>o<ESC>"+]pa:set nopaste<CR>
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM navigation (tabs, windows, buffers)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Map Ctrl-/ to ? (backwards search)
+" map <c-/> ?
+
+" Hide last search highlights
+nmap <silent> <leader>/ :nohlsearch<CR>
+
 " Shift + Direction to change tabs
 noremap <S-l> gt
 noremap <S-h> gT
+
+" Control + Direction to change panes
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
 
 " Move lines up and down with shift + dir
 nnoremap <S-Up> :m-2<CR>
@@ -81,11 +103,17 @@ nnoremap <S-Down> :m+<CR>
 inoremap <S-Up> <Esc>:m-2<CR>
 inoremap <S-Down> <Esc>:m+<CR>
 
-" Control + Direction to change panes
-noremap <C-l> <C-w>l
-noremap <C-h> <C-w>h
-noremap <C-k> <C-w>j
-noremap <C-i> <C-w>k
+" Useful mappings for managing tabs
+map <leader>tn :tabnew<cr>
+map <leader>to :tabonly<cr>
+map <leader>tc :tabclose<cr>
+map <leader>tm :tabmove
+map <leader>t<leader> :tabnext
+
+" Let 'tl' toggle between this and the last accessed tab
+let g:lasttab = 1
+nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
+au TabLeave * let g:lasttab = tabpagenr()
 
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
@@ -98,6 +126,13 @@ map <leader>cd :cd %:p:h<cr>:pwd<cr>
 nnoremap j gj
 nnoremap k gk
 
+" Use tab to jump between blocks, because it's easier
+nnoremap <tab> %
+vnoremap <tab> %
+
+" Return to last edit position when opening files (You want this!)
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -105,6 +140,11 @@ nnoremap k gk
 " Save and quit -> Leader + s
 nnoremap <leader>w :w<cr>
 nnoremap <leader>s :wq<cr>
+
+"Map Ctrl + S to save in any mode
+noremap <silent> <C-S>          :update<CR>
+vnoremap <silent> <C-S>         <C-C>:update<CR>
+inoremap <silent> <C-S>         <C-O>:update<CR>
 
 " Quit file with Leader + q
 " Quit without saving
@@ -128,6 +168,12 @@ try
 catch
 endtry
 
+" :W sudo saves the file
+" (useful for handling the permission-denied error)
+if !exists(':W')
+    command W w !sudo tee % > /dev/null
+endif
+
 """"""""""""""""""""""""""""""
 " => Visual mode related
 """"""""""""""""""""""""""""""
@@ -135,6 +181,9 @@ endtry
 " Super useful! From an idea by Michael Naumann
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
+
+" When you press <leader>r you can search and replace the selected text
+vnoremap <silent> <leader>r :call VisualSelection('replace', '')<CR>
 
 """"""""""""""""""""""""""""""
 " => Helper functions
@@ -171,6 +220,17 @@ function! BuildYCM(info)
     !./install.py
   endif
 endfunction
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Turn persistent undo on
+"    means that you can undo even when you close a buffer/VIM
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+try
+    silent !mkdir ~/.vim/undodir > /dev/null 2>&1
+    set undodir=~/.vim/undodir
+    set undofile
+catch
+endtry
 
 
 " --------------------------------------------------------------------------------------------------
@@ -210,7 +270,7 @@ Plug 'vim-airline/vim-airline'
 " Comment stuff out
 Plug 'tpope/vim-commentary'
 " EasyClip is a plugin for Vim which contains a collection of clipboard related functionality
-Plug 'svermeulen/vim-easyclip'
+" Plug 'svermeulen/vim-easyclip'
 " A Vim plugin which shows a git diff in the 'gutter' (sign column)
 Plug 'airblade/vim-gitgutter'
 " A code-completion engine for Vim
@@ -223,6 +283,8 @@ Plug 'majutsushi/tagbar'
 Plug 'bruno-/vim-man'
 " Puts filetype glyphs in explorer plugins such as NERDTree
 Plug 'ryanoasis/vim-devicons'
+" Tmux Focus Events
+Plug 'tmux-plugins/vim-tmux-focus-events'
 
 " Initialize plugin system
 call plug#end()
@@ -231,15 +293,18 @@ call plug#end()
 " => Syntastic (syntax checker)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Sets up the standard include directories based on your current working directory
-function SyntasticSETUP()
-    let makedir = fnamemodify(findfile("Makefile", ",;"), ":.:h")
-    let include_dirs = split(substitute(substitute(system("cd " . shellescape(makedir) . " ; make debug_print | grep \'INC_DIRS:\'"), "INC_DIRS:", "", "g"), " *-I", " ", "g"))
-    let include_dirs = filter(include_dirs, 'v:val =~ "^\/"')
-    call add(include_dirs, makedir)
-    call add(include_dirs, makedir . "/../include")
-    let g:syntastic_c_include_dirs = include_dirs
-    let b:syntastic_c_cflags = ' -DLINUXPC -DDEV_PC -D_GNU_SOURCE -Wall -Werror -Wextra'
-endfunction
+if !exists('*SyntasticSETUP')
+    function SyntasticSETUP()
+        let makedir = fnamemodify(findfile("Makefile", ",;"), ":.:h")
+        let include_dirs = split(substitute(substitute(system("cd " . shellescape(makedir) . \
+         " ; make debug_print | grep \'INC_DIRS:\'"), "INC_DIRS:", "", "g"), " *-I", " ", "g"))
+        let include_dirs = filter(include_dirs, 'v:val =~ "^\/"')
+        call add(include_dirs, makedir)
+        call add(include_dirs, makedir . "/../include")
+        let g:syntastic_c_include_dirs = include_dirs
+        let b:syntastic_c_cflags = ' -DLINUXPC -DDEV_PC -D_GNU_SOURCE -Wall -Werror -Wextra'
+    endfunction
+endif
 
 autocmd BufNewFile,BufRead *.c,*.h call SyntasticSETUP()
 let g:syntastic_enable_signs=1
@@ -270,9 +335,6 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | execute "o
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 
-" Open NERDTree on the file you are editing
-nnoremap <silent><Leader>v :NERDTreeFind<CR>
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Theming: solarized, airline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -295,14 +357,12 @@ nnoremap <silent> <leader>d :GitGutterToggle<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vim easy clip
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set clipboard=unnamed
+" let g:EasyClipAlwaysMoveCursorToEndOfPaste = 1
+" let g:EasyClipAutoFormat = 1
+" let g:EasyClipUseSubstituteDefaults = 1
 
-let g:EasyClipAlwaysMoveCursorToEndOfPaste = 1
-let g:EasyClipAutoFormat = 1
-let g:EasyClipUseSubstituteDefaults = 1
-
-vnoremap <c-c> y
-imap <c-v> <plug>EasyClipInsertModePaste
+" vnoremap <C-c> y
+" imap <C-v> <plug>EasyClipInsertModePaste
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vim easy align
@@ -320,8 +380,9 @@ nmap ga <Plug>(EasyAlign)
 if executable('ag')
   let g:ackprg = 'ag --vimgrep --smart-case'
 endif
-" Map leader + a to ack
-nnoremap <Leader>a :Ack!<Space>
+
+" Map leader + g to ack
+nnoremap <Leader>g :Ack!<Space>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vim.commentary
@@ -330,11 +391,6 @@ nnoremap <Leader>a :Ack!<Space>
 autocmd FileType vim setlocal commentstring=\"\ %s
 autocmd FileType c,cpp,java setlocal commentstring=//\ %s
 autocmd FileType conf,bitbake setlocal commentstring=#\ %s
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Rainbow Parentheses
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:rainbow_active = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Tagbar
