@@ -70,14 +70,6 @@ nmap <silent> <leader>/ :nohlsearch<CR>
 " Reload vim configuration file
 nnoremap <Leader>rn :source $MYVIMRC<CR>
 
-""" SYSTEM CLIPBOARD COPY & PASTE SUPPORT
-set pastetoggle=<F2>
-"Copy paste to/from clipboard
-vnoremap <C-c> "+y
-vnoremap <C-x> "+c
-vnoremap <C-v> c<ESC>:set paste<CR>o<ESC>"+]p:set nopaste<CR>
-inoremap <C-v> <ESC>:set paste<CR>o<ESC>"+]pa:set nopaste<CR>
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM navigation (tabs, windows, buffers)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -270,7 +262,7 @@ Plug 'vim-airline/vim-airline'
 " Comment stuff out
 Plug 'tpope/vim-commentary'
 " EasyClip is a plugin for Vim which contains a collection of clipboard related functionality
-" Plug 'svermeulen/vim-easyclip'
+Plug 'svermeulen/vim-easyclip'
 " A Vim plugin which shows a git diff in the 'gutter' (sign column)
 Plug 'airblade/vim-gitgutter'
 " A code-completion engine for Vim
@@ -357,12 +349,13 @@ nnoremap <silent> <leader>d :GitGutterToggle<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vim easy clip
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" let g:EasyClipAlwaysMoveCursorToEndOfPaste = 1
-" let g:EasyClipAutoFormat = 1
-" let g:EasyClipUseSubstituteDefaults = 1
+set clipboard=unnamedplus
+let g:EasyClipAlwaysMoveCursorToEndOfPaste = 1
+let g:EasyClipAutoFormat = 1
+let g:EasyClipUseSubstituteDefaults = 1
 
-" vnoremap <C-c> y
-" imap <C-v> <plug>EasyClipInsertModePaste
+vnoremap <C-c> y
+imap <C-v> <plug>EasyClipInsertModePaste
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vim easy align
