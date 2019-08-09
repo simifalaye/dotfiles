@@ -349,13 +349,18 @@ nnoremap <silent> <leader>d :GitGutterToggle<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vim easy clip
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set clipboard=unnamedplus
+set clipboard=unnamed
 let g:EasyClipAlwaysMoveCursorToEndOfPaste = 1
 let g:EasyClipAutoFormat = 1
 let g:EasyClipUseSubstituteDefaults = 1
 
-vnoremap <C-c> y
+" Remap copy
+vmap <C-c> y
+" Remap Paste
 imap <C-v> <plug>EasyClipInsertModePaste
+vmap <C-v> s
+" Remap Cut
+vmap <C-x> m
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vim easy align

@@ -82,16 +82,13 @@ if [ -f $ZPLUG_HOME/init.zsh ]; then
   source $ZPLUG_HOME/init.zsh
 
   zplug "plugins/extract", from:oh-my-zsh, ignore:oh-my-zsh.sh
-  zplug "plugins/pip", from:oh-my-zsh, ignore:oh-my-zsh.sh
   zplug "plugins/sudo", from:oh-my-zsh, ignore:oh-my-zsh.sh
   zplug "plugins/git", from:oh-my-zsh, ignore:oh-my-zsh.sh
-  zplug "plugins/web-search", from:oh-my-zsh, ignore:oh-my-zsh.sh
   zplug "plugins/autojump", from:oh-my-zsh, ignore:oh-my-zsh.sh
 
   zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme as:theme
   zplug "marzocchi/zsh-notify", use:"notify.plugin.zsh"
   zplug "oconnor663/zsh-sensible"
-  zplug "MichaelAquilina/zsh-you-should-use"
 
   zplug "zsh-users/zsh-completions"
   zplug "zsh-users/zsh-autosuggestions"
