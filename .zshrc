@@ -12,31 +12,6 @@ test -r ~/.shell-env && . ~/.shell-env
 test -r ~/.shell-aliases && . ~/.shell-aliases
 test -r ~/.shell-common && . ~/.shell-common
 
-# Theme customization with powerlevel9k
-POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
-POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir dir_writable vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(disk_usage time status)
-POWERLEVEL9K_TIME_FORMAT="%D{\uf073 %d-%h}"
-POWERLEVEL9K_PROMPT_ON_NEWLINE=true
-POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=''
-POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX=' $ '
-POWERLEVEL9K_VCS_GIT_ICON='\uf09b'
-POWERLEVEL9K_OS_ICON_BACKGROUND="white"
-POWERLEVEL9K_OS_ICON_FOREGROUND="blue"
-POWERLEVEL9K_DIR_HOME_BACKGROUND="transparent"
-POWERLEVEL9K_DIR_HOME_FOREGROUND="blue"
-POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND="transparent"
-POWERLEVEL9K_DIR_HOME_SUBFOLDER_FOREGROUND="blue"
-POWERLEVEL9K_VCS_CLEAN_BACKGROUND="transparent"
-POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND="transparent"
-POWERLEVEL9K_VCS_MODIFIED_BACKGROUND="transparent"
-POWERLEVEL9K_VCS_CLEAN_FOREGROUND="040"
-POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND="red"
-POWERLEVEL9K_VCS_MODIFIED_FOREGROUND="yellow"
-POWERLEVEL9K_DIR_DEFAULT_BACKGROUND="transparent"
-POWERLEVEL9K_DIR_DEFAULT_FOREGROUND="blue"
-
 setopt appendhistory
 setopt autocd
 setopt correct_all
@@ -73,43 +48,46 @@ export HISTORY_IGNORE="(ls|bg|fg|pwd|exit|cd ..)"
 fpath=(/usr/share/zsh/vendor-completions/ $fpath)
 
 # ###################################################################
-# Plugin config: ZPLUG
+# Plugin config: ZGEN
 # ###################################################################
-export ZPLUG_HOME=$HOME/.zplug
-ZPLUG_USE_CACHE=true
+# load zgen
+if [ ! -f "${HOME}/.zgen/zgen.zsh" ]; then
+    git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
+fi
+source "${HOME}/.zgen/zgen.zsh"
 
-if [ -f $ZPLUG_HOME/init.zsh ]; then
-  source $ZPLUG_HOME/init.zsh
+# if the init scipt doesn't exist
+if ! zgen saved; then
+    echo "Creating a zgen save"
 
-  zplug "plugins/extract", from:oh-my-zsh, ignore:oh-my-zsh.sh
-  zplug "plugins/sudo", from:oh-my-zsh, ignore:oh-my-zsh.sh
-  zplug "plugins/git", from:oh-my-zsh, ignore:oh-my-zsh.sh
-  zplug "plugins/autojump", from:oh-my-zsh, ignore:oh-my-zsh.sh
+    # zgen oh-my-zsh
 
-  zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme as:theme
-  zplug "marzocchi/zsh-notify", use:"notify.plugin.zsh"
-  zplug "oconnor663/zsh-sensible"
+    # plugins
+    # zgen oh-my-zsh plugins/git
+    # zgen oh-my-zsh plugins/sudo
+    zgen load MichaelAquilina/zsh-you-should-use
+    zgen load zsh-users/zsh-syntax-highlighting
+    zgen load zsh-users/zsh-autosuggestions
 
-  zplug "zsh-users/zsh-completions"
-  zplug "zsh-users/zsh-autosuggestions"
-  zplug "zsh-users/zsh-syntax-highlighting", defer:2
+    # bulk load
+    zgen loadall <<EOPLUGINS
+        zsh-users/zsh-history-substring-search
+EOPLUGINS
+    # ^ can't indent this EOPLUGINS
 
-  # Install plugins if there are plugins that have not been installed
-  if ! zplug check --verbose; then
-    printf "Install zsh plugins? [y/N]: "
-    if read -q; then
-      echo; zplug install
-    fi
-  fi
-  # Use zplug clean to remove unspecified repos (plugins)
+    # completions
+    zgen load zsh-users/zsh-completions src
 
-  # Then, source plugins and add commands to $PATH
-  zplug load # --verbose
+    # theme
+    zgen load denysdovhan/spaceship-prompt spaceship
+
+    # save all to init script
+    zgen save
 fi
 
 # Accept suggestion with end
 bindkey '^[[F' autosuggest-accept
-bindkey -r '^ ' autosuggest-accept
+# bindkey -r '^ ' autosuggest-accept
 
 # ###################################################################
 # Functions
@@ -124,8 +102,8 @@ function hdi() {
 };
 # Command: Push dotfiles to github
 function dotfiles() {
-  command yadm commit -a -m "Latest file updates"
-  command yadm push
+    command yadm commit -a -m "Latest file updates"
+    command yadm push
 }
 
 # Adds the fzf bash config to the shell

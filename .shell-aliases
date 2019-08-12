@@ -6,12 +6,13 @@
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 # ###################################################################
-alias zshconfig="vim ~/.zshrc"
-alias ohmyzsh="vim ~/.oh-my-zsh"
-alias vimconfig="vim ~/.vimrc"
-alias tmuxconfig="vim ~/.tmux.conf"
-alias reloadzsh="source ~/.zshrc"
-alias reloadtmux="tmux source ~/.tmux.conf"
+
+# Conf
+alias confzsh="vim ~/.zshrc"
+alias confvim="vim ~/.vimrc"
+alias conftmux="vim ~/.tmux.conf"
+alias rezsh="source ~/.zshrc"
+alias retmux="tmux source ~/.tmux.conf"
 
 # ls aliases
 alias ls='ls --color=auto'
