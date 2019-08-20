@@ -32,34 +32,26 @@ set listchars=tab:T>
 set encoding=utf8
 "  ---------------------------------------------------------------------------
 
+"_____________
+"             |
+" Config      |
+"_____________|
+
+
 " Use leader to specify extra keybinding
 let mapleader = " "
-" Set directories
+
+" Set vim directories
+" Avoid using standard Vim directory names like 'plugin'
 let vimplugdir='~/.vim/plugged'
 let vimautoloaddir='~/.vim/autoload'
-" Set tags file locations
+
+" Set tags file locations for ctags
 set tags=./tags,./.git/tags;
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => VIM user interface
+" => Keybindings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Display line numbers
-set number
-
-" Allow mouse usage
-set mouse=a
-set ttymouse=xterm2
-
-" Buf file
-au! BufNewFile,BufRead *.rockspec setf lua
-
-" Set text line width for python files
-au BufRead,BufNewFile *.py setlocal textwidth=80
-
-" Better autocompletion for filenames, buffers, colors, etc.
-set wildmenu
-set wildmode=longest:full,full
-
 " Use ; for commands., do not have to hold shift to do commands
 nnoremap ; :
 nnoremap , :
@@ -69,12 +61,6 @@ nmap <silent> <leader>/ :nohlsearch<CR>
 
 " Reload vim configuration file
 nnoremap <Leader>rn :source $MYVIMRC<CR>
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => VIM navigation (tabs, windows, buffers)
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Map Ctrl-/ to ? (backwards search)
-" map <c-/> ?
 
 " Hide last search highlights
 nmap <silent> <leader>/ :nohlsearch<CR>
@@ -122,21 +108,12 @@ nnoremap k gk
 nnoremap <tab> %
 vnoremap <tab> %
 
-" Return to last edit position when opening files (You want this!)
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Files, backups and undo
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Save file with Leader + w
-" Save and quit -> Leader + s
-nnoremap <leader>w :w<cr>
-nnoremap <leader>s :wq<cr>
-
-"Map Ctrl + S to save in any mode
+" Save file with ctrl + s
 noremap <silent> <C-S>          :update<CR>
 vnoremap <silent> <C-S>         <C-C>:update<CR>
 inoremap <silent> <C-S>         <C-O>:update<CR>
+" Save and quit -> Leader + s
+nnoremap <leader>s :wq<cr>
 
 " Quit file with Leader + q
 " Quit without saving
@@ -144,6 +121,44 @@ inoremap <silent> <C-S>         <C-O>:update<CR>
 nnoremap <leader>q :q<cr>
 nnoremap <leader>x :q!<cr>
 nnoremap <leader>X :tabdo q<cr>
+
+" Visual mode pressing * or # searches for the current selection
+" Super useful! From an idea by Michael Naumann
+vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
+vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
+
+" fast scrolling
+nmap <C-k> 10k
+nmap <C-l> 3e
+nmap <C-j> 10j
+nmap <C-h> 3b
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => VIM user interface
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Display line numbers
+set number
+
+" Allow mouse usage
+set mouse=a
+set ttymouse=xterm2
+
+" Buf file
+au! BufNewFile,BufRead *.rockspec setf lua
+
+" Set text line width for python files
+au BufRead,BufNewFile *.py setlocal textwidth=80
+
+" Better autocompletion for filenames, buffers, colors, etc.
+set wildmenu
+set wildmode=longest:full,full
+
+" Return to last edit position when opening files (You want this!)
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Files, backups and undo
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Reload files changed outside vim
 set autoread
@@ -155,7 +170,8 @@ set noswapfile
 
 " Turn persistent undo on. Means that you can undo even when you close a buffer/VIM
 try
-    set undodir=~/.vim_runtime/temp_dirs/undodir
+    silent !mkdir ~/.vim/undodir > /dev/null 2>&1
+    set undodir=~/.vim/undodir
     set undofile
 catch
 endtry
@@ -166,20 +182,9 @@ if !exists(':W')
     command W w !sudo tee % > /dev/null
 endif
 
-""""""""""""""""""""""""""""""
-" => Visual mode related
-""""""""""""""""""""""""""""""
-" Visual mode pressing * or # searches for the current selection
-" Super useful! From an idea by Michael Naumann
-vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
-vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
-
-" When you press <leader>r you can search and replace the selected text
-vnoremap <silent> <leader>r :call VisualSelection('replace', '')<CR>
-
-""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
-""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 function! CmdLine(str)
     call feedkeys(":" . a:str)
@@ -213,23 +218,13 @@ function! BuildYCM(info)
   endif
 endfunction
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Turn persistent undo on
-"    means that you can undo even when you close a buffer/VIM
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-try
-    silent !mkdir ~/.vim/undodir > /dev/null 2>&1
-    set undodir=~/.vim/undodir
-    set undofile
-catch
-endtry
+"_____________
+"             |
+" Plugins     |
+"_____________|
 
 
-" --------------------------------------------------------------------------------------------------
-" Plugins
-" --------------------------------------------------------------------------------------------------
-
-"load plug vim if we do not have it yet
+"load plug vim if not installed yet
 if empty(glob(vimautoloaddir . '/plug.vim'))
   " TODO: else?
   if executable('curl')
@@ -239,16 +234,11 @@ if empty(glob(vimautoloaddir . '/plug.vim'))
   endif
 endif
 
-" Specify a directory for plugins
-" - Avoid using standard Vim directory names like 'plugin'
-call plug#begin('~/.vim/plugged')
-
+call plug#begin(vimplugdir)
 " Run your favorite search tool from Vim, with an enhanced results list.
 Plug 'mileszs/ack.vim'
 " Syntax checker
 Plug 'vim-syntastic/syntastic'
-" UI colors and look
-Plug 'altercation/vim-colors-solarized'
 " Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
 Plug 'junegunn/vim-easy-align'
 " Very well be the best Git wrapper of all time
@@ -257,8 +247,6 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 " The NERDTree is a file system explorer for the Vim editor
 Plug 'scrooloose/nerdtree'
-" Lean & mean status/tabline for vim that's light as air
-Plug 'vim-airline/vim-airline'
 " Comment stuff out
 Plug 'tpope/vim-commentary'
 " EasyClip is a plugin for Vim which contains a collection of clipboard related functionality
@@ -269,27 +257,26 @@ Plug 'airblade/vim-gitgutter'
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 " Auto-close scopes
 Plug 'Raimondi/delimitMate'
-" Nice browser for CTags
-Plug 'majutsushi/tagbar'
 " Man browser for Vim
 Plug 'bruno-/vim-man'
-" Puts filetype glyphs in explorer plugins such as NERDTree
-Plug 'ryanoasis/vim-devicons'
 " Tmux Focus Events
 Plug 'tmux-plugins/vim-tmux-focus-events'
+" Show indent level
+Plug 'Yggdroot/indentLine'
 
-" Initialize plugin system
+" Theming (Colorscheme, airline, icons for Nerdtree)
+Plug 'rakr/vim-one'
+Plug 'itchyny/lightline.vim'
+Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Syntastic (syntax checker)
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ==================== Syntastic (syntax checker) ====================
 " Sets up the standard include directories based on your current working directory
 if !exists('*SyntasticSETUP')
     function SyntasticSETUP()
         let makedir = fnamemodify(findfile("Makefile", ",;"), ":.:h")
         let include_dirs = split(substitute(substitute(system("cd " . shellescape(makedir) . \
-         " ; make debug_print | grep \'INC_DIRS:\'"), "INC_DIRS:", "", "g"), " *-I", " ", "g"))
+            " ; make debug_print | grep \'INC_DIRS:\'"), "INC_DIRS:", "", "g"), " *-I", " ", "g"))
         let include_dirs = filter(include_dirs, 'v:val =~ "^\/"')
         call add(include_dirs, makedir)
         call add(include_dirs, makedir . "/../include")
@@ -306,10 +293,7 @@ let g:syntastic_stl_format = '[%E{Err:%e Line:%fe}%B{, }%W{Warn:%w Line:%fw}]'
 let g:syntastic_c_remove_include_errors = 1
 let g:syntastic_check_on_open=0
 let g:syntastic_check_on_wq=0
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => NerdTree
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ==================== NerdTree ====================
 let g:NERDTreeDirArrowExpandable = '+'
 let g:NERDTreeDirArrowCollapsible = '-'
 let NERDTreeMinimalUI=0
@@ -325,30 +309,22 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | execute "o
 
 " Open NERDTree when starting vim up on opening a directory
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Theming: solarized, airline
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:solarized_termcolors=16
-let g:colarized_termtrans = 1
-let g:solarized_termcolors=256
-let g:solarized_visibility = "high"
-let g:solarized_contrast = "high"
-colorscheme solarized
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") |
+    \ exe 'NERDTree' argv()[0] | wincmd p | ene | endif
+" ==================== Theming ====================
+colorscheme one
 set background=dark
 
-let g:airline_powerline_fonts = 1
+let g:lightline = {
+      \ 'colorscheme': 'one',
+      \ }
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Git gutter (Git diff)
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Set the suggestion bg and fg colors
+highlight Pmenu ctermfg=15 ctermbg=0 guifg=#ffffff guibg=#000000
+" ==================== Git gutter ====================
 let g:gitgutter_enabled=0
 nnoremap <silent> <leader>d :GitGutterToggle<cr>
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Vim easy clip
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ==================== Syntastic (syntax checker) ====================
 set clipboard=unnamed
 let g:EasyClipAlwaysMoveCursorToEndOfPaste = 1
 let g:EasyClipAutoFormat = 1
@@ -361,19 +337,13 @@ imap <C-v> <plug>EasyClipInsertModePaste
 vmap <C-v> s
 " Remap Cut
 vmap <C-x> m
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Vim easy align
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ==================== Vim easy align ====================
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Ack.vim
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ==================== Ack.vim ====================
 " Use Ag for searches
 if executable('ag')
   let g:ackprg = 'ag --vimgrep --smart-case'
@@ -381,45 +351,12 @@ endif
 
 " Map leader + g to ack
 nnoremap <Leader>g :Ack!<Space>
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Vim.commentary
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ==================== Vim.commentary ====================
 " Set commentstring for file types
 autocmd FileType vim setlocal commentstring=\"\ %s
 autocmd FileType c,cpp,java setlocal commentstring=//\ %s
 autocmd FileType conf,bitbake setlocal commentstring=#\ %s
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Tagbar
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nmap <silent> <leader>tt :TagbarToggle<CR>
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => DelimMate
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ==================== DelimMate ====================
 " Match block delimiters for Ruby and C-like languages
 let b:delimitMate_expand_cr = 1
 execute "inoremap {<CR> {<CR>}<ESC>O"
-
-" --------------------------------------------------------------------------------------------------
-" File Type
-" --------------------------------------------------------------------------------------------------
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Bitbake
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" This sets up the syntax highlighting for BitBake files, like .bb, .bbclass and .inc
-if &compatible || version < 600
-    finish
-endif
-" .bb, .bbappend and .bbclass
-au BufNewFile,BufRead *.{bb,bbappend,bbclass}	set filetype=bitbake
-" .inc
-au BufNewFile,BufRead *.inc		set filetype=bitbake
-" .conf
-au BufNewFile,BufRead *.conf
-    \ if (match(expand("%:p:h"), "conf") > 0) |
-    \     set filetype=bitbake |
-    \ endif

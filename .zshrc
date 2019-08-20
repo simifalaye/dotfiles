@@ -12,6 +12,8 @@ test -r ~/.shell-env && . ~/.shell-env
 test -r ~/.shell-aliases && . ~/.shell-aliases
 test -r ~/.shell-common && . ~/.shell-common
 
+# Disable flow control with ctrl s (so we can ctrl+s save in vim)
+setopt noflowcontrol
 setopt appendhistory
 setopt autocd
 setopt correct_all
@@ -24,70 +26,39 @@ setopt interactive_comments
 setopt pushd_ignore_dups
 setopt promptsubst
 
+# Ignore interactive commands from history
+export HISTORY_IGNORE="(ls|bg|fg|pwd|exit|cd ..)"
+# Set vendor completions path
+fpath=(/usr/share/zsh/vendor-completions/ $fpath)
+
+# ###################################################################
+# Keybindings
+# ###################################################################
 # EMACS mode
 bindkey -e
 # TODO: This might be neat: http://unix.stackexchange.com/a/47425
 # TODO: Nice list of bindings: http://zshwiki.org/home/zle/bindkeys
+# Arrow keys right and left
+bindkey "^[OD" backward-char
+bindkey "^[OC" forward-char
 # Make CTRL+Arrow skip words
-# rxvt
-bindkey "^[Od" backward-word
-bindkey "^[Oc" forward-word
-# xterm
 bindkey "^[[1;5D" backward-word
 bindkey "^[[1;5C" forward-word
-# gnome-terminal
-bindkey "^[OD" backward-word
-bindkey "^[OC" forward-word
-
+# Line keys
 bindkey "^U" backward-kill-line
 bindkey "^Q" push-line-or-edit
 
-# Ignore interactive commands from history
-export HISTORY_IGNORE="(ls|bg|fg|pwd|exit|cd ..)"
-
-fpath=(/usr/share/zsh/vendor-completions/ $fpath)
-
 # ###################################################################
-# Plugin config: ZGEN
+# Plugin config: Antibody (MUST INSTALL ANTIBODY FIRST)
 # ###################################################################
-# load zgen
-if [ ! -f "${HOME}/.zgen/zgen.zsh" ]; then
-    git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
-fi
-source "${HOME}/.zgen/zgen.zsh"
-
-# if the init scipt doesn't exist
-if ! zgen saved; then
-    echo "Creating a zgen save"
-
-    # zgen oh-my-zsh
-
-    # plugins
-    # zgen oh-my-zsh plugins/git
-    # zgen oh-my-zsh plugins/sudo
-    zgen load MichaelAquilina/zsh-you-should-use
-    zgen load zsh-users/zsh-syntax-highlighting
-    zgen load zsh-users/zsh-autosuggestions
-
-    # bulk load
-    zgen loadall <<EOPLUGINS
-        zsh-users/zsh-history-substring-search
-EOPLUGINS
-    # ^ can't indent this EOPLUGINS
-
-    # completions
-    zgen load zsh-users/zsh-completions src
-
-    # theme
-    zgen load denysdovhan/spaceship-prompt spaceship
-
-    # save all to init script
-    zgen save
-fi
+source ~/.zsh_plugins.sh
 
 # Accept suggestion with end
 bindkey '^[[F' autosuggest-accept
-# bindkey -r '^ ' autosuggest-accept
+
+# Use up and down of history substring search
+bindkey '^[OA' history-substring-search-up
+bindkey '^[OB' history-substring-search-down
 
 # ###################################################################
 # Functions
@@ -96,15 +67,24 @@ bindkey '^[[F' autosuggest-accept
 function mkcd {
     command mkdir $1 && cd $1
 }
-# Command: hdi - runs howdoi with common settings
-function hdi() {
-    command howdoi $* -c -n 5;
-};
 # Command: Push dotfiles to github
 function dotfiles() {
     command yadm commit -a -m "Latest file updates"
     command yadm push
 }
+# Command: Reload the current shell
+function _reload_shell() {
+    echo $SHELL | grep "zsh" &> /dev/null
+    if [ $? -eq 0 ]; then
+        command [ -f ~/.zsh_plugins.txt ] && antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh
+        source ~/.zshrc
+    else
+        command echo "Into bash else"
+    fi
+}
 
 # Adds the fzf bash config to the shell
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
