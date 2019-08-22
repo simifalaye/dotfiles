@@ -239,7 +239,7 @@ call plug#begin(vimplugdir)
 Plug 'mileszs/ack.vim'
 " Syntax checker
 Plug 'vim-syntastic/syntastic'
-" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
+" Align lines into columns
 Plug 'junegunn/vim-easy-align'
 " Very well be the best Git wrapper of all time
 Plug 'tpope/vim-fugitive'
@@ -254,15 +254,19 @@ Plug 'svermeulen/vim-easyclip'
 " A Vim plugin which shows a git diff in the 'gutter' (sign column)
 Plug 'airblade/vim-gitgutter'
 " A code-completion engine for Vim
-Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+if executable('cmake') && executable('python') && executable('make') &&
+ \ executable('cc') && executable('c++')
+    Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+endif
 " Auto-close scopes
 Plug 'Raimondi/delimitMate'
-" Man browser for Vim
-Plug 'bruno-/vim-man'
-" Tmux Focus Events
-Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'tpope/vim-endwise'
 " Show indent level
 Plug 'Yggdroot/indentLine'
+" Multiple cursors
+Plug 'terryma/vim-multiple-cursors'
+" Tmux Focus Events
+" Plug 'tmux-plugins/vim-tmux-focus-events'
 
 " Theming (Colorscheme, airline, icons for Nerdtree)
 Plug 'rakr/vim-one'

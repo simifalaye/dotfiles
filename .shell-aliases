@@ -27,6 +27,11 @@ alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}"
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
+# bat aliases (a better cat)
+if type "bat" > /dev/null; then
+    alias cat="bat"
+fi
+
 # Navigation aliases
 alias home="cd ~"
 alias dev="cd ~/dev"

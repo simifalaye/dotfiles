@@ -82,6 +82,10 @@ function _reload_shell() {
         command echo "Into bash else"
     fi
 }
+# Command: Open directory in file explorer quietly
+function open() {
+    command nohup nautilus -w $1 > /dev/null 2>&1 &
+}
 
 # Adds the fzf bash config to the shell
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
