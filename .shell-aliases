@@ -7,13 +7,12 @@
 # For a full list of active aliases, run `alias`.
 # ###################################################################
 
-# Config files
+# config files
 alias zshconfig="vim ~/.zshrc"
 alias vimconfig="vim ~/.vimrc"
 alias tmuxconfig="vim ~/.tmux.conf"
 
-# Reload
-alias reloadshell="_reload_shell"
+# tmux
 alias reloadtmux="tmux source ~/.tmux.conf"
 
 # ls aliases
@@ -29,10 +28,10 @@ alias egrep='egrep --color=auto'
 
 # bat aliases (a better cat)
 if type "bat" > /dev/null; then
-    alias cat="bat"
+    alias cat="bat -p"
 fi
 
-# Navigation aliases
+# navigation aliases
 alias home="cd ~"
 alias dev="cd ~/dev"
 alias ..='cd ..'

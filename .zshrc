@@ -73,7 +73,7 @@ function dotfiles() {
     command yadm push
 }
 # Command: Reload the current shell
-function _reload_shell() {
+function reload_shell() {
     echo $SHELL | grep "zsh" &> /dev/null
     if [ $? -eq 0 ]; then
         command [ -f ~/.zsh_plugins.txt ] && antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh
@@ -85,6 +85,10 @@ function _reload_shell() {
 # Command: Open directory in file explorer quietly
 function open() {
     command nohup nautilus -w $1 > /dev/null 2>&1 &
+}
+# Command: ls when changing dirs
+function cd() {
+    builtin cd "$1" && ls
 }
 
 # Adds the fzf bash config to the shell
