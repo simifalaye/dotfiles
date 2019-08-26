@@ -26,6 +26,12 @@ setopt interactive_comments
 setopt pushd_ignore_dups
 setopt promptsubst
 
+# Add colors for WSL:
+# From medium.com how-to-setup-a-nice-looking-terminal-with-wsl...
+[ -f ~/oss/dircolors-solarized/dircolors.256dark ] && {
+    eval 'dircolors oss/dircolors-solarized/dircolors.256dark' &> /dev/null
+}
+
 # Ignore interactive commands from history
 export HISTORY_IGNORE="(ls|bg|fg|pwd|exit|cd ..)"
 # Set vendor completions path
@@ -73,7 +79,7 @@ function dotfiles() {
     command yadm push
 }
 # Command: Reload the current shell
-function reload_shell() {
+function reloadshell() {
     echo $SHELL | grep "zsh" &> /dev/null
     if [ $? -eq 0 ]; then
         command [ -f ~/.zsh_plugins.txt ] && antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh
