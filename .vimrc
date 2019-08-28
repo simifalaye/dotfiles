@@ -281,7 +281,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
-" ==================== Syntastic (syntax checker) ====================
+" ==================== Syntastic (syntax checker) ==================== "
 " Sets up the standard include directories based on your current working directory
 if !exists('*SyntasticSETUP')
     function SyntasticSETUP()
@@ -304,7 +304,7 @@ let g:syntastic_stl_format = '[%E{Err:%e Line:%fe}%B{, }%W{Warn:%w Line:%fw}]'
 let g:syntastic_c_remove_include_errors = 1
 let g:syntastic_check_on_open=0
 let g:syntastic_check_on_wq=0
-" ==================== NerdTree ====================
+" ==================== NerdTree ==================== "
 let g:NERDTreeDirArrowExpandable = '+'
 let g:NERDTreeDirArrowCollapsible = '-'
 let NERDTreeMinimalUI=0
@@ -322,20 +322,21 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | execute "o
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") |
     \ exe 'NERDTree' argv()[0] | wincmd p | ene | endif
-" ==================== Theming ====================
+" ==================== Theming ==================== "
 colorscheme one
 set background=dark
 
 let g:lightline = {
-      \ 'colorscheme': 'one',
+      \ 'colorscheme': 'wombat',
       \ }
+set laststatus=2
 
 " Set the suggestion bg and fg colors
 highlight Pmenu ctermfg=15 ctermbg=0 guifg=#ffffff guibg=#000000
-" ==================== Git gutter ====================
+" ==================== Git gutter ==================== "
 let g:gitgutter_enabled=0
 nnoremap <silent> <leader>d :GitGutterToggle<cr>
-" ==================== Syntastic (syntax checker) ====================
+" ==================== Syntastic (syntax checker) ==================== "
 set clipboard=unnamed
 let g:EasyClipAlwaysMoveCursorToEndOfPaste = 1
 let g:EasyClipAutoFormat = 1
@@ -348,13 +349,13 @@ imap <C-v> <plug>EasyClipInsertModePaste
 vmap <C-v> s
 " Remap Cut
 vmap <C-x> m
-" ==================== Vim easy align ====================
+" ==================== Vim easy align ==================== "
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
-" ==================== Ack.vim ====================
+" ==================== Ack.vim ==================== "
 " Use Ag for searches
 if executable('ag')
   let g:ackprg = 'ag --vimgrep --smart-case'
@@ -362,12 +363,12 @@ endif
 
 " Map leader + g to ack
 nnoremap <Leader>g :Ack!<Space>
-" ==================== Vim.commentary ====================
+" ==================== Vim.commentary ==================== "
 " Set commentstring for file types
 autocmd FileType vim setlocal commentstring=\"\ %s
 autocmd FileType c,cpp,java setlocal commentstring=//\ %s
 autocmd FileType conf,bitbake setlocal commentstring=#\ %s
-" ==================== DelimMate ====================
+" ==================== DelimMate ==================== "
 " Match block delimiters for Ruby and C-like languages
 let b:delimitMate_expand_cr = 1
 execute "inoremap {<CR> {<CR>}<ESC>O"
