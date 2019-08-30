@@ -66,6 +66,9 @@ bindkey '^[[F' autosuggest-accept
 bindkey '^[OA' history-substring-search-up
 bindkey '^[OB' history-substring-search-down
 
+# Lambda pure prompt settings
+PURE_NODE_ENABLED=0
+
 # ###################################################################
 # Functions
 # ###################################################################
@@ -90,7 +93,9 @@ function reloadshell() {
 }
 # Command: Open directory in file explorer quietly
 function open() {
-    command nohup nautilus -w $1 > /dev/null 2>&1 &
+    command -v jo >/dev/null 2>&1 && {
+        jo $1 >/dev/null 2>&1 &
+    }
 }
 # Command: ls when changing dirs
 function cd() {
@@ -99,6 +104,3 @@ function cd() {
 
 # Adds the fzf bash config to the shell
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh

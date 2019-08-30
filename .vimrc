@@ -166,7 +166,6 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 " Reload files changed outside vim
 set autoread
 
@@ -192,7 +191,6 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 function! CmdLine(str)
     call feedkeys(":" . a:str)
 endfunction
@@ -273,10 +271,12 @@ Plug 'Yggdroot/indentLine'
 " Multiple cursors
 Plug 'terryma/vim-multiple-cursors'
 " Tmux Focus Events
-" Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'tmux-plugins/vim-tmux-focus-events'
 
 " Theming (Colorscheme, airline, icons for Nerdtree)
+Plug 'morhetz/gruvbox'
 Plug 'rakr/vim-one'
+Plug 'AlessandroYorba/Sierra'
 Plug 'itchyny/lightline.vim'
 Plug 'ryanoasis/vim-devicons'
 call plug#end()
@@ -304,6 +304,7 @@ let g:syntastic_stl_format = '[%E{Err:%e Line:%fe}%B{, }%W{Warn:%w Line:%fw}]'
 let g:syntastic_c_remove_include_errors = 1
 let g:syntastic_check_on_open=0
 let g:syntastic_check_on_wq=0
+
 " ==================== NerdTree ==================== "
 let g:NERDTreeDirArrowExpandable = '+'
 let g:NERDTreeDirArrowCollapsible = '-'
@@ -322,20 +323,35 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | execute "o
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") |
     \ exe 'NERDTree' argv()[0] | wincmd p | ene | endif
-" ==================== Theming ==================== "
-colorscheme one
-set background=dark
 
+" ==================== Theming ==================== "
+" Enable true color support
+if (has("termguicolors"))
+    set termguicolors
+    set t_Co=256
+endif
+
+" Set theme
+" ---------------------
+" let g:one_allow_italics = 1
+" colorscheme one
+
+colorscheme gruvbox
+
+" let g:sierra_Pitch = 1
+" let g:sierra_Midnight = 1
+" colorscheme sierra
+
+set background=dark
 let g:lightline = {
-      \ 'colorscheme': 'wombat',
+      \ 'colorscheme': 'gruvbox',
       \ }
 set laststatus=2
 
-" Set the suggestion bg and fg colors
-highlight Pmenu ctermfg=15 ctermbg=0 guifg=#ffffff guibg=#000000
 " ==================== Git gutter ==================== "
 let g:gitgutter_enabled=0
 nnoremap <silent> <leader>d :GitGutterToggle<cr>
+
 " ==================== Syntastic (syntax checker) ==================== "
 set clipboard=unnamed
 let g:EasyClipAlwaysMoveCursorToEndOfPaste = 1
@@ -349,12 +365,14 @@ imap <C-v> <plug>EasyClipInsertModePaste
 vmap <C-v> s
 " Remap Cut
 vmap <C-x> m
+
 " ==================== Vim easy align ==================== "
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+
 " ==================== Ack.vim ==================== "
 " Use Ag for searches
 if executable('ag')
@@ -363,11 +381,13 @@ endif
 
 " Map leader + g to ack
 nnoremap <Leader>g :Ack!<Space>
+
 " ==================== Vim.commentary ==================== "
 " Set commentstring for file types
 autocmd FileType vim setlocal commentstring=\"\ %s
 autocmd FileType c,cpp,java setlocal commentstring=//\ %s
 autocmd FileType conf,bitbake setlocal commentstring=#\ %s
+
 " ==================== DelimMate ==================== "
 " Match block delimiters for Ruby and C-like languages
 let b:delimitMate_expand_cr = 1

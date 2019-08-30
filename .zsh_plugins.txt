@@ -1,10 +1,12 @@
 # plugins
 djui/alias-tips
+robbyrussell/oh-my-zsh path:plugins/autojump
 zsh-users/zsh-completions
 zsh-users/zsh-autosuggestions
 
-# theme
-romkatv/powerlevel10k
+# theme (async required for pure, order matters)
+mafredri/zsh-async
+marszall87/lambda-pure
 
 ## must be last!
 zdharma/fast-syntax-highlighting
