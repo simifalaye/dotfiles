@@ -144,8 +144,8 @@ set noswapfile
 
 " Turn persistent undo on. Means that you can undo even when you close a buffer/VIM
 try
-    silent !mkdir "~/.vim/undodir" > /dev/null 2>&1
-    set undodir="~/.vim/undodir"
+    silent !mkdir ~/.vim/undodir > /dev/null 2>&1
+    set undodir=~/.vim/undodir
     set undofile
 catch
 endtry
@@ -190,32 +190,34 @@ function! BuildYCM(info)
 endfunction
 
 " Sets up the standard include directories based on your current working directory
-if !exists('*SyntasticSETUP')
-    function SyntasticSETUP()
-        let makedir = fnamemodify(findfile("Makefile", ",;"), ":.:h")
-        let include_dirs = split(substitute(substitute(system("cd " . shellescape(makedir) . " ; make debug_print | grep \'INC_DIRS:\'"), "INC_DIRS:", "", "g"), " *-I", " ", "g"))
-        let include_dirs = filter(include_dirs, 'v:val =~ "^\/"')
-        call add(include_dirs, makedir)
-        call add(include_dirs, makedir . "/../include")
-        let g:syntastic_c_include_dirs = include_dirs
-        let b:syntastic_c_cflags = ' -DLINUXPC -DDEV_PC -D_GNU_SOURCE -Wall -Werror -Wextra'
-    endfunction
-endif
+function! SyntasticSETUP()
+    let makedir = fnamemodify(findfile("Makefile", ",;"), ":.:h")
+    let include_dirs = split(substitute(substitute(system("cd " . shellescape(makedir) . " ; make debug_print | grep \'INC_DIRS:\'"), "INC_DIRS:", "", "g"), " *-I", " ", "g"))
+    let include_dirs = filter(include_dirs, 'v:val =~ "^\/"')
+    call add(include_dirs, makedir)
+    call add(include_dirs, makedir . "/../include")
+    let g:syntastic_c_include_dirs = include_dirs
+    let b:syntastic_c_cflags = ' -DLINUXPC -DDEV_PC -D_GNU_SOURCE -Wall -Werror -Wextra'
+endfunction
+
+" Gets vim-plug
+function! GetVimPlug()
+    if executable('curl')
+        execute 'silent !curl -fLo ' . vimautoloaddir . '/plug.vim --create-dirs ' .
+              \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+        autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    endif
+endfunction
 
 " ==================== Plugins ==================== "
 "load plug vim if not installed yet
 if empty(glob(vimautoloaddir . '/plug.vim'))
-  " TODO: else?
-  if executable('curl')
-    execute 'silent !curl -fLo ' . vimautoloaddir . '/plug.vim --create-dirs ' .
-          \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-  endif
+    GetVimPlug()
 endif
 
 call plug#begin(vimplugdir)
 
-" Run your favorite search tool from Vim, with an enhanced results list. {{{
+" ========== Run your favorite search tool from Vim, with an enhanced results list. {{{
     Plug 'mileszs/ack.vim'
 
     " Use Ag for searches
@@ -227,7 +229,7 @@ call plug#begin(vimplugdir)
     nnoremap <Leader>g :Ack!<Space>
 " }}}
 
-" Syntax checker {{{
+" ========== Syntax checker {{{
     Plug 'vim-syntastic/syntastic'
 
     autocmd BufNewFile,BufRead *.c,*.h call SyntasticSETUP()
@@ -240,8 +242,9 @@ call plug#begin(vimplugdir)
     let g:syntastic_check_on_wq=0
 " }}}
 
-" Align lines into columns {{{
+" ========== Align lines into columns {{{
     Plug 'junegunn/vim-easy-align'
+
     " Start interactive EasyAlign in visual mode (e.g. vipga)
     xmap ga <Plug>(EasyAlign)
 
@@ -249,15 +252,15 @@ call plug#begin(vimplugdir)
     nmap ga <Plug>(EasyAlign)
 " }}}
 
-" Very well be the best Git wrapper of all time {{{
+" ========== Very well be the best Git wrapper of all time {{{
     Plug 'tpope/vim-fugitive'
 " }}}
 
-" Repeat.vim remaps . in a way that plugins can tap into it {{{
+" ========== Repeat.vim remaps . in a way that plugins can tap into it {{{
     Plug 'tpope/vim-repeat'
 " }}}
 
-" The NERDTree is a file system explorer for the Vim editor {{{
+" ========== A file system explorer for the Vim editor {{{
     Plug 'scrooloose/nerdtree'
 
     let g:NERDTreeDirArrowExpandable = '+'
@@ -279,7 +282,7 @@ call plug#begin(vimplugdir)
         \ exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 " }}}
 
-" Comment stuff out {{{
+" ========== Comment stuff out {{{
     Plug 'tpope/vim-commentary'
 
     " Set commentstring for file types
@@ -288,7 +291,7 @@ call plug#begin(vimplugdir)
     autocmd FileType conf,bitbake setlocal commentstring=#\ %s
 " }}}
 
-" Easier copy and paste {{{
+" ========== Easier copy and paste {{{
     Plug 'svermeulen/vim-easyclip'
 
     set clipboard=unnamed
@@ -305,20 +308,14 @@ call plug#begin(vimplugdir)
     vmap <C-x> m
 " }}}
 
-" A Vim plugin which shows a git diff in the 'gutter' (sign column) {{{
-    Plug 'airblade/vim-gitgutter'
-    let g:gitgutter_enabled=0
-    nnoremap <silent> <leader>d :GitGutterToggle<cr>
-    " }}}
-
-    " A code-completion engine for Vim {{{
+" ========== A code-completion engine for Vim {{{
     if executable('cmake') && executable('python') && executable('make') &&
      \ executable('cc') && executable('c++')
         Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
     endif
 " }}}
 
-" Auto-close scopes {{{
+" ========== Auto-close scopes {{{
     Plug 'Raimondi/delimitMate'
     Plug 'tpope/vim-endwise'
 
@@ -327,19 +324,19 @@ call plug#begin(vimplugdir)
     execute "inoremap {<CR> {<CR>}<ESC>O"
 " }}}
 
-" Show indent level {{{
+" ========== Show indent level {{{
     Plug 'Yggdroot/indentLine'
 " }}}
 
-" Multiple cursors {{{
+" ========== Multiple cursors {{{
     Plug 'terryma/vim-multiple-cursors'
 " }}}
 
-" Collection of language packs (syntax, indent, ftplugin) {{{
+" ========== Collection of language packs (syntax, indent, ftplugin) {{{
     Plug 'sheerun/vim-polyglot'
 " }}}
 
-" Fuzzy file finder {{{
+" ========== Fuzzy file finder {{{
     " PlugInstall/Update will clone fzf in fzfsourcedir and run the install script
     Plug 'junegunn/fzf', { 'dir': fzfsourcedir, 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
@@ -351,7 +348,7 @@ call plug#begin(vimplugdir)
     nnoremap <silent><c-e> :FZF<cr>
 " }}}
 
-" Ultimate snippets {{{
+" ========== Ultimate snippets {{{
     Plug 'SirVer/ultisnips'
     Plug 'honza/vim-snippets'
 
@@ -367,7 +364,7 @@ call plug#begin(vimplugdir)
     let g:UltiSnipsSnippetsDir=ultisnipsdirsave
 " }}}
 
-" Theming (Colorscheme, airline, icons for Nerdtree) {{{
+" ========== Theming (Colorscheme, airline, icons for Nerdtree) {{{
     Plug 'morhetz/gruvbox'
     Plug 'chriskempson/base16-vim'
     Plug 'itchyny/lightline.vim'

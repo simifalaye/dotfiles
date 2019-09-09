@@ -12,13 +12,11 @@ In this section will be listed all the Graphical Applications. A separate sectio
 ### Desktop Environment
 - [Rofi](https://github.com/davatorium/rofi) - A window switcher, Application launcher and dmenu replacement.
 - [i3-gaps](https://github.com/Airblader/i3) - A tiling window manager.
-- [Ursa Major](https://github.com/kgoettler/ursamajor) - A gtk theme.
+- [Materia](https://github.com/nana-4/materia-theme) - A material gtk theme
 - [Polybar](https://github.com/polybar/polybar) - A fast and easy-to-use tool for creating status bars.
 - [Compton](https://github.com/chjj/compton) - A compositor for x11.
-- [paper-icon-theme](https://github.com/snwh/paper-icon-theme) - Icons
 - [Zafiro](https://github.com/zayronxio/Zafiro-icons) - Icons
-- Roboto Sans - Font
-- Fira Mono - Font
+- DejaVu Sans - Font
 
 ### Productivity and Internet
 
@@ -56,13 +54,12 @@ I use ZSH shell:
 
 - [vim](https://vim.org) with [vim-plug](https://github.com/junegunn/vim-plug) - My primary text editor/
   - All my vim plugins can be found in the "Plugins" section of my ".vimrc"
-- [bat](https://github.com/sharkdp/bat) - A cat(1) clone with wings. 
+- [bat](https://github.com/sharkdp/bat) - A cat(1) clone with wings.
 
 ### Utilities
 
 - [tig](https://github.com/jonas/tig) - Text-mode interface for git
 - [pet](https://github.com/knqyf263/pet) - Simple command\-line snippet manager, written in Go
-- [santinic/how2](https://github.com/santinic/how2) -  stackoverflow from the terminal
 - [pwgen](https://linux.die.net/man/1/pwgen) - make pronounceable passwords.
 - [pass](https://www.passwordstore.org/) - password manager
 - [htop](https://github.com/hishamhm/htop) - htop is an interactive text-mode process viewer for Unix systems.
