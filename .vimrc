@@ -41,7 +41,6 @@ let mapleader = " "
 " Avoid using standard Vim directory names like 'plugin'
 let vimplugdir='~/.vim/plugged'
 let vimautoloaddir='~/.vim/autoload'
-let vimundosavedir="~/.vim/undodir"
 " Set ultisnips dir
 let ultisnipsdirsave="~/.vim/UltiSnips"
 " fzf source dir
@@ -145,8 +144,8 @@ set noswapfile
 
 " Turn persistent undo on. Means that you can undo even when you close a buffer/VIM
 try
-    silent !mkdir vimundosavedir > /dev/null 2>&1
-    set undodir=vimundosavedir
+    silent !mkdir "~/.vim/undodir" > /dev/null 2>&1
+    set undodir="~/.vim/undodir"
     set undofile
 catch
 endtry
