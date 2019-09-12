@@ -94,9 +94,3 @@ vmap <C-x> m
 nnoremap <silent><C-p> :GFiles<cr>
 nnoremap <silent><C-e> :FZF<cr>
 nnoremap <silent><C-y> :Snippets<cr>
-
-" Fugitive
-nnoremap <S-g>s :Gstatus<CR>
-nnoremap <S-g>a :Gwrite<CR>
-nnoremap <S-g>c :GCommit<CR>
-nnoremap <S-g>cs :Commits<CR>

@@ -59,16 +59,18 @@ try
 catch
 endtry
 " :W sudo saves the file
-" (useful for handling the permission-denied error)
 if !exists(':W')
     command W w !sudo tee % > /dev/null
 endif
+" Remove escape delay
+set timeoutlen=1000
+set ttimeoutlen=0
 
 "-- User Interface --"
 
 set hidden
 " Display line numbers
-set number relativenumber
+set number
 " Allow mouse usage
 set mouse=a
 set ttymouse=xterm2

@@ -7,14 +7,6 @@
 # For a full list of active aliases, run `alias`.
 # ###################################################################
 
-# config files
-alias zshconfig="vim ~/.zshrc"
-alias vimconfig="vim ~/.vimrc"
-alias tmuxconfig="vim ~/.tmux.conf"
-
-# tmux
-alias reloadtmux="tmux source ~/.tmux.conf"
-
 # ls aliases
 alias ls='ls --color=auto'
 alias ll='ls -alF'
@@ -26,10 +18,14 @@ alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}"
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
+# tmux aliases
+command -v tmux >/dev/null && alias reloadtmux="tmux source ~/.tmux.conf"
+
 # bat aliases (a better cat)
-if type "bat" > /dev/null; then
-    alias cat="bat -p"
-fi
+command -v bat >/dev/null && alias cat="bat -p"
+
+# gotop aliases (a graphical top)
+command -v gotop >/dev/null && alias tm="gotop"
 
 # navigation aliases
 alias home="cd ~"
@@ -42,8 +38,3 @@ alias ......='cd ../../../../..'
 alias .......='cd ../../../../../..'
 alias ........='cd ../../../../../../..'
 alias .........='cd ../../../../../../../..'
-alias cl="clear"
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'

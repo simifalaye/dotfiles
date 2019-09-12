@@ -51,4 +51,3 @@ Plug 'itchyny/lightline.vim'
 Plug 'ap/vim-buftabline'
 
 call plug#end()
-

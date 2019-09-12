@@ -5,6 +5,8 @@ My dotfile configuration for a linux system, managed by Yadm (Yet Another Dotfil
 
 Ubuntu 18.04.
 
+[![theme sample](https://raw.githubusercontent.com/simifalaye/dotfiles/master/.config/ubuntu_system.png)](https://raw.githubusercontent.com/simifalaye/dotfiles/master/.config/ubuntu_system.png)
+
 ## Graphical Applications
 
 In this section will be listed all the Graphical Applications. A separate section with Terminal applications after.
@@ -41,13 +43,12 @@ A big part of my Development life is spent on the Terminal, so having a good set
 
 I use ZSH shell:
 
-- [antibody](https://getantibody.github.io/) - A speed driven plugin manager.
-  - All of my zsh plugins can be found in ".zsh_plugins.txt".
+- [Zgen](https://github.com/tarjoilija/zgen) - A lightweight plugin manager.
+  - All of my zsh plugins can be found in ".zshrc".
 
 ### File Navigation and Search
 
 - [urbainvaes/fzf-marks](https://github.com/urbainvaes/fzf-marks) - Plugin to manage bookmarks in bash and zsh
-- [autojump](https://github.com/wting/autojump) - A cd command that learns - easily navigate directories from the command line.
 - [junegunn/fzf](https://github.com/junegunn/fzf) -  A command-line fuzzy finder
 
 ### Text Mainuplation
@@ -62,7 +63,7 @@ I use ZSH shell:
 - [pet](https://github.com/knqyf263/pet) - Simple command\-line snippet manager, written in Go
 - [pwgen](https://linux.die.net/man/1/pwgen) - make pronounceable passwords.
 - [pass](https://www.passwordstore.org/) - password manager
-- [htop](https://github.com/hishamhm/htop) - htop is an interactive text-mode process viewer for Unix systems.
+- [gotop](https://github.com/cjbassi/gotop) - An interactive text-mode process viewer for Unix systems.
 - [trash-cli](https://github.com/sindresorhus/trash-cli) - Move files and folders to the trash.
 - [tmux](https://github.com/tmux/tmux) and [tmuxp](https://github.com/tmux-python/tmuxp) - Terminal multiplexer and session manager.
 - [yadm](https://github.com/TheLocehiliosan/yadm) - Dotfiles Manager.

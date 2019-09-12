@@ -15,6 +15,7 @@ test -r ~/.shell-common && . ~/.shell-common
 # Disable flow control with ctrl s (so we can ctrl+s save in vim)
 setopt noflowcontrol
 setopt appendhistory
+setopt incappendhistory
 setopt autocd
 setopt correct_all
 setopt extendedglob
@@ -49,9 +50,39 @@ bindkey "^U" backward-kill-line
 bindkey "^Q" push-line-or-edit
 
 # ###################################################################
-# Plugin config: Antibody (MUST INSTALL ANTIBODY FIRST)
+# Plugin config: Zgen
 # ###################################################################
-source ~/.zsh_plugins.sh
+if [ ! -f "${HOME}/.zgen/zgen.zsh" ]; then
+    git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen" ||
+    {
+        echo "Failed to get zgen plugin manager."
+        exit 1
+    }
+fi
+
+# load zgen
+source "${HOME}/.zgen/zgen.zsh"
+if ! zgen saved; then
+    echo "Creating a zgen save"
+
+    # bulk load
+    zgen loadall <<EOPLUGINS
+        zsh-users/zsh-autosuggestions
+        zdharma/fast-syntax-highlighting
+        zsh-users/zsh-history-substring-search
+EOPLUGINS
+    # ^ can't indent this EOPLUGINS
+
+    # completions
+    zgen load zsh-users/zsh-completions src
+
+    # theme
+    zgen load mafredri/zsh-async
+    zgen load marszall87/lambda-pure
+
+    # save all to init script
+    zgen save
+fi
 
 # Accept suggestion with end
 bindkey '^[[F' autosuggest-accept
@@ -63,38 +94,9 @@ bindkey '^[OB' history-substring-search-down
 # Lambda pure prompt settings
 PURE_NODE_ENABLED=0
 
-# ###################################################################
-# Functions
-# ###################################################################
-# Command: mkcd - makes a directory and cd's into it
-function mkcd {
-    command mkdir $1 && cd $1
-}
-# Command: Push dotfiles to github
-function dotfiles() {
-    command yadm commit -a -m "Latest file updates"
-    command yadm push
-}
-# Command: Reload the current shell
-function reloadshell() {
-    echo $SHELL | grep "zsh" &> /dev/null
-    if [ $? -eq 0 ]; then
-        command [ -f ~/.zsh_plugins.txt ] && antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh
-        source ~/.zshrc
-    else
-        command echo "Into bash else"
-    fi
-}
-# Command: Open directory in file explorer quietly
-function open() {
-    command -v jo >/dev/null 2>&1 && {
-        jo $1 >/dev/null 2>&1 &
-    }
-}
-# Command: ls when changing dirs
-function cd() {
-    builtin cd "$1" && ls
-}
+##
+## END (Must be at the bottom of config)
+##
 
 # Adds the fzf bash config to the shell
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

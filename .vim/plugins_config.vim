@@ -21,13 +21,6 @@ let g:NERDTreeShowHidden = 1
 let g:NERDTreeAutoDeleteBuffer = 1
 let NERDTreeMinimalUI=1
 let NERDTreeShowBookmarks=1
-" Open a NERDTree automatically when vim starts up if no files were specified
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | execute "only" | endif
-" Open NERDTree when starting vim up on opening a directory
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") |
-    \ exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 
 "-- vim-commentary --"
 " Set commentstring for file types
@@ -36,7 +29,7 @@ autocmd FileType c,cpp,java setlocal commentstring=//\ %s
 autocmd FileType conf,bitbake setlocal commentstring=#\ %s
 
 "-- vim-easyclip --"
-set clipboard=unnamedplus
+set clipboard=unnamed
 let g:EasyClipAlwaysMoveCursorToEndOfPaste = 1
 let g:EasyClipAutoFormat = 1
 let g:EasyClipUseSubstituteDefaults = 1
@@ -68,7 +61,7 @@ let g:fzf_layout = { 'window': 'enew' }
 "-- UltiSnips --"
 " Trigger configuration. Do not use <tab> if you use
 " https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<S-tab>"
+let g:UltiSnipsExpandTrigger="<C-g>"
 let g:UltiSnipsJumpForwardTrigger="<S-tab>"
 let g:UltiSnipsJumpBackwardTrigger="<C-b>"
 let g:UltiSnipsEditSplit="horizontal"

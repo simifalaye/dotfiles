@@ -8,3 +8,44 @@ fi
 
 # disable flow control (ctrl + s,q)
 stty -ixon
+
+# ###################################################################
+# Functions
+# ###################################################################
+# Command: mkcd - makes a directory and cd's into it
+function mkcd {
+    command mkdir $1 && cd $1
+}
+# Command: Push dotfiles to github
+function dotfiles() {
+    command yadm commit -a -m "Latest file updates"
+    command yadm push
+}
+# Command: Reload the current shell
+function reloadshell() {
+    currentshell=$(ps -fp $$)
+    if [[ $currentshell =~ "zsh" ]]; then
+        zgen reset && source ~/.zshrc && echo "Zsh reloaded."
+    elif [[ $currentshell =~ "bash" ]]; then
+        source ~/.bashrc && echo "Bash reloaded."
+    else
+        echo "Failed to reload shell."
+    fi
+}
+# Command: ls when changing dirs
+function cd() {
+    builtin cd "$1" && ls
+}
+# Command: open config file
+function conf() {
+    if [[ $1 == "vim" ]]; then
+        filename="$HOME/.vim/"
+    elif [[ $1 == "tmux" ]]; then
+        filename="$HOME/.tmux.conf"
+    elif [[ $1 == "zsh" ]]; then
+        filename="$HOME/.zshrc"
+    else
+        filename="$HOME/.config/$1/config"
+    fi
+    [[ -z ${EDITOR} ]] || command $EDITOR $filename
+}
