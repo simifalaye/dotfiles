@@ -17,7 +17,9 @@ let g:syntastic_check_on_wq=0
 "-- nerdtree --"
 let g:NERDTreeDirArrowExpandable = '+'
 let g:NERDTreeDirArrowCollapsible = '-'
-let NERDTreeMinimalUI=0
+let g:NERDTreeShowHidden = 1
+let g:NERDTreeAutoDeleteBuffer = 1
+let NERDTreeMinimalUI=1
 let NERDTreeShowBookmarks=1
 " Open a NERDTree automatically when vim starts up if no files were specified
 autocmd StdinReadPre * let s:std_in=1
@@ -48,16 +50,28 @@ execute "inoremap {<CR> {<CR>}<ESC>O"
 " Default fzf layout
 " - down / up / left / right
 let g:fzf_layout = { 'down': '~40%' }
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+let g:fzf_layout = { 'window': 'enew' }
 
 "-- UltiSnips --"
 " Trigger configuration. Do not use <tab> if you use
 " https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger='<c-l>'
-let g:UltiSnipsJumpForwardTrigger='<c-f>'
-let g:UltiSnipsJumpBackwardTrigger='<c-b>'
-" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsExpandTrigger="<S-tab>"
+let g:UltiSnipsJumpForwardTrigger="<S-tab>"
+let g:UltiSnipsJumpBackwardTrigger="<C-b>"
 let g:UltiSnipsEditSplit="horizontal"
-" Snip file save dir
 let g:UltiSnipsSnippetsDir=ultisnipsdirsave
 
 "-- buftabline --"
@@ -83,3 +97,7 @@ let g:lightline = {
       \     'fugitive': 'LightlineFugitive',
       \   },
       \ }
+
+"-- Buftabline --"
+nnoremap <S-l> :bnext<CR>
+nnoremap <S-H> :bprev<CR>

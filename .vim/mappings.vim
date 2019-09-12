@@ -1,12 +1,18 @@
+" reload .vimrc
+nnoremap <leader>v :so $MYVIMRC<cr>:echo ".vimrc reloaded"<cr>
+
 " Use ; for commands., do not have to hold shift to do commands
 nnoremap ; :
 nnoremap , :
 
-" Hide last search highlights
-nmap <silent> <leader>/ :nohlsearch<CR>
+" Exit insert and command mode with jk
+imap jk <Esc>
+imap Jk <Esc>
+imap JK <Esc>
 
-" Reload vim configuration file
-nnoremap <Leader>rn :source $MYVIMRC<CR>
+" quick tab navigation
+nnoremap H gT
+nnoremap L gt
 
 " Hide last search highlights
 nmap <silent> <leader>/ :nohlsearch<CR>
@@ -17,9 +23,6 @@ nnoremap <S-Down> :m+<CR>
 inoremap <S-Up> <Esc>:m-2<CR>
 inoremap <S-Down> <Esc>:m+<CR>
 
-" Switch CWD to the directory of the open buffer
-map <leader>cd :cd %:p:h<cr>:pwd<cr>
-
 " Easy moves through wrapped lines
 nnoremap j gj
 nnoremap k gk
@@ -27,9 +30,6 @@ nnoremap k gk
 " Use tab to jump between blocks, because it's easier
 nnoremap <tab> %
 vnoremap <tab> %
-
-" Buf next
-nnoremap <C-b> :bun<CR>
 
 " VimSplits remappings
 nnoremap <Leader>ts <C-W>s:te<CR>
@@ -40,30 +40,33 @@ nnoremap <Leader>l <C-W><C-L>
 nnoremap <Leader>h <C-W><C-H>
 set splitbelow
 set splitright
-"This disables vim split lines
 set fillchars=""
 
-" Save file with ctrl + s
+" Save file with ctrl + s, save and quit with ctrl + a
 noremap <silent> <C-S> :update<CR>
-vnoremap <silent> <C-S> <C-C>:update<CR>
-inoremap <silent> <C-S> <C-O>:update<CR>
-" Save and quit -> ctrl + a
+vnoremap <silent> <C-S> <C-C>:update<CR><C-C>
+inoremap <silent> <C-S> <C-O>:update<CR><C-O>
 noremap <silent> <C-A> :wq<CR>
 vnoremap <silent> <C-A> <C-C>:wq<CR>
 inoremap <silent> <C-A> <C-O>:wq<CR>
 
-" Quit file with Leader + q
-" Quit without saving
-" Quit all tabs (must be in normal)
+" Quit file with Leader + q, Quit without saving, Quit all tabs
 nnoremap <leader>q :q<cr>
 nnoremap <leader>x :q!<cr>
-nnoremap <leader>X :tabdo q<cr>
+nnoremap <leader>X :qa!<cr>
 
-" fast scrolling
-nmap <C-k> 10k
-nmap <C-l> 3e
-nmap <C-j> 10j
-nmap <C-h> 3b
+" To open a new empty buffer
+" This replaces :tabnew which I used to bind to this mapping
+nmap <leader>tn :enew<cr>
+" Move to the next buffer
+nmap <leader>l :bnext<CR>
+" Move to the previous buffer
+nmap <leader>h :bprevious<CR>
+" Close the current buffer and move to the previous one
+" This replicates the idea of closing a tab
+nmap <leader>c :bp <BAR> bd #<CR>
+" Show all open buffers and their status
+nmap <leader>b :Buffers<CR>
 
 
 "-- Plugin Mappings --"
@@ -78,17 +81,22 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 " Bind nn to toggle NERDTree
-map <C-n> :NERDTreeToggle<CR>
-map <C-f> :NERDTreeFind<cr>
+map <leader>n :NERDTreeToggle<CR>
+map <leader>f :NERDTreeFind<cr>
 
-" Remap copy
+" Remap copy, paste, cut
 vmap <C-c> y
-" Remap Paste
 imap <C-v> <plug>EasyClipInsertModePaste
 vmap <C-v> s
-" Remap Cut
 vmap <C-x> m
 
 " FZF
 nnoremap <silent><C-p> :GFiles<cr>
 nnoremap <silent><C-e> :FZF<cr>
+nnoremap <silent><C-y> :Snippets<cr>
+
+" Fugitive
+nnoremap <S-g>s :Gstatus<CR>
+nnoremap <S-g>a :Gwrite<CR>
+nnoremap <S-g>c :GCommit<CR>
+nnoremap <S-g>cs :Commits<CR>

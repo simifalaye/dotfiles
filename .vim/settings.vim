@@ -1,4 +1,4 @@
-"-- Global Settings --"
+"-- Globals --"
 
 " Use leader to specify extra keybinding
 let mapleader = " "
@@ -14,7 +14,7 @@ let fzfsourcedir="~/.fzf"
 " Set tags file locations for ctags
 set tags=./tags,./.git/tags;
 
-"-- Work standar vim setup --"
+"-- Work standard vim setup --"
 
 filetype on         "identify file types
 filetype indent on  "indent based on filetype
@@ -66,8 +66,9 @@ endif
 
 "-- User Interface --"
 
+set hidden
 " Display line numbers
-set number
+set number relativenumber
 " Allow mouse usage
 set mouse=a
 set ttymouse=xterm2
@@ -80,6 +81,3 @@ set wildmenu
 set wildmode=longest:full,full
 " Return to last edit position when opening files (You want this!)
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-
-
-

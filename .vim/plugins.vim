@@ -11,9 +11,8 @@ Plug 'mileszs/ack.vim'
 "-- Syntax checker --"
 Plug 'vim-syntastic/syntastic'
 
-"-- A file system explorer for the Vim editor, buffers --"
+"-- A file system explorer for the Vim editor --"
 Plug 'scrooloose/nerdtree'
-Plug 'ap/vim-buftabline'
 
 "-- Tim Pope --"
 Plug 'tpope/vim-commentary'
@@ -49,6 +48,7 @@ Plug 'christoomey/vim-tmux-navigator'
 " -- Colorschemes, lightline -- "
 Plug 'chriskempson/base16-vim'
 Plug 'itchyny/lightline.vim'
+Plug 'ap/vim-buftabline'
 
 call plug#end()
 

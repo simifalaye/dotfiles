@@ -44,7 +44,7 @@ function! LightlineModified()
 endfunction
 
 function! LightlineReadonly()
-    return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? '' : ''
+    return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? '@' : ''
 endfunction
 
 function! LightlineFilename()
@@ -70,4 +70,20 @@ endfunction
 
 function! LightlineMode()
     return winwidth(0) > 60 ? lightline#mode() : ''
+endfunction
+
+"-- Lightline Nerdtree integration --"
+function! MyLightLinePercent()
+  if &ft !=? 'nerdtree'
+    return line('.') * 100 / line('$') . '%'
+  else
+    return ''
+  endif
+endfunction
+function! MyLightLineLineInfo()
+  if &ft !=? 'nerdtree'
+    return line('.').':'. col('.')
+  else
+    return ''
+  endif
 endfunction
