@@ -48,6 +48,7 @@ TERM xterm
 TERM xterm-256color
 TERM xterm-color
 TERM xterm-debian
+TERM st-256color
 
 # Special files
 

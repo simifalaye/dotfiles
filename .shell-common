@@ -18,7 +18,9 @@ function mkcd {
 }
 # Command: Push dotfiles to github
 function dotfiles() {
-    command yadm commit -a -m "Latest file updates"
+    message="Latest file updates"
+    [ -z "$1" ] || message=${1}
+    command yadm commit -a -m "$message"
     command yadm push
 }
 # Command: Reload the current shell
