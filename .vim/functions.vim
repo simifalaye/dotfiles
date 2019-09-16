@@ -11,79 +11,83 @@ endfunction
 
 " Sets up the standard include directories based on your current working directory (company setup)
 function! SyntasticSETUP()
-    let makedir = fnamemodify(findfile("Makefile", ",;"), ":.:h")
-    let include_dirs = split(substitute(substitute(system("cd " . shellescape(makedir) . " ; make debug_print | grep \'INC_DIRS:\'"), "INC_DIRS:", "", "g"), " *-I", " ", "g"))
-    let include_dirs = filter(include_dirs, 'v:val =~ "^\/"')
-    call add(include_dirs, makedir)
-    call add(include_dirs, makedir . "/../include")
-    let g:syntastic_c_include_dirs = include_dirs
-    let b:syntastic_c_cflags = ' -DLINUXPC -DDEV_PC -D_GNU_SOURCE -Wall -Werror -Wextra'
+  let makedir = fnamemodify(findfile("Makefile", ",;"), ":.:h")
+  let include_dirs = split(substitute(substitute(system("cd " . shellescape(makedir) . " ; make debug_print | grep \'INC_DIRS:\'"), "INC_DIRS:", "", "g"), " *-I", " ", "g"))
+  let include_dirs = filter(include_dirs, 'v:val =~ "^\/"')
+  call add(include_dirs, makedir)
+  call add(include_dirs, makedir . "/../include")
+  let g:syntastic_c_include_dirs = include_dirs
+  let b:syntastic_c_cflags = ' -DLINUXPC -DDEV_PC -D_GNU_SOURCE -Wall -Werror -Wextra'
 endfunction
 
 " Gets vim-plug
 function! GetVimPlug()
-    if executable('curl')
-        execute 'silent !curl -fLo ' . vimautoloaddir . '/plug.vim --create-dirs ' .
-              \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-        autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-    endif
+  if executable('curl')
+      execute 'silent !curl -fLo ' . vimautoloaddir . '/plug.vim --create-dirs ' .
+            \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+      autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  endif
 endfunction
 
 "-- Lightline Git Integration --"
 function! LightlineFugitive()
-    if exists("*fugitive#head")
-        let branch = fugitive#head()
-        return branch !=# '' ? ' '.branch : ''
-    endif
-    return ''
+  if exists("*fugitive#head")
+      let branch = fugitive#head()
+      return branch !=# '' ? ' '.branch : ''
+  endif
+  return ''
 endfunction
 
 "-- Various lightline functions --"
 function! LightlineModified()
-    return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+  return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
 endfunction
 
 function! LightlineReadonly()
-    return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? '@' : ''
+  return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? '@' : ''
 endfunction
 
 function! LightlineFilename()
-    return ('' != LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
-          \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
-          \  &ft == 'unite' ? unite#get_status_string() :
-          \  &ft == 'vimshell' ? vimshell#get_status_string() :
-          \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
-          \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
+  return ('' != LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
+        \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
+        \  &ft == 'unite' ? unite#get_status_string() :
+        \  &ft == 'vimshell' ? vimshell#get_status_string() :
+        \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
+        \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
 endfunction
 
 function! LightlineFileformat()
-    return winwidth(0) > 70 ? &fileformat : ''
+  return winwidth(0) > 70 ? &fileformat : ''
 endfunction
 
 function! LightlineFiletype()
-    return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+  return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
 endfunction
 
 function! LightlineFileencoding()
-    return winwidth(0) > 70 ? (&fenc !=# '' ? &fenc : &enc) : ''
+  return winwidth(0) > 70 ? (&fenc !=# '' ? &fenc : &enc) : ''
 endfunction
 
 function! LightlineMode()
-    return winwidth(0) > 60 ? lightline#mode() : ''
+  return winwidth(0) > 60 ? lightline#mode() : ''
 endfunction
 
-"-- Lightline Nerdtree integration --"
-function! MyLightLinePercent()
-  if &ft !=? 'nerdtree'
-    return line('.') * 100 / line('$') . '%'
+"Toggles explorer buffer
+function! ToggleVExplorer()
+  if exists("t:expl_buf_num")
+    let expl_win_num = bufwinnr(t:expl_buf_num)
+    if expl_win_num != -1
+      let cur_win_nr = winnr()
+      exec expl_win_num . 'wincmd w'
+      close
+      exec cur_win_nr . 'wincmd w'
+      unlet t:expl_buf_num
+    else
+      unlet t:expl_buf_num
+    endif
   else
-    return ''
-  endif
-endfunction
-function! MyLightLineLineInfo()
-  if &ft !=? 'nerdtree'
-    return line('.').':'. col('.')
-  else
-    return ''
+    exec '1wincmd w'
+    Vexplore
+    let t:expl_buf_num = bufnr("%")
   endif
 endfunction

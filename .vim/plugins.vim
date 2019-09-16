@@ -5,16 +5,10 @@ endif
 
 call plug#begin(vimplugdir)
 
-"-- Run your favorite search tool from Vim, with an enhanced results list. --"
-Plug 'mileszs/ack.vim'
-
 "-- Syntax checker --"
 Plug 'vim-syntastic/syntastic'
 
-"-- A file system explorer for the Vim editor --"
-Plug 'scrooloose/nerdtree'
-
-"-- Tim Pope --"
+"-- Tim Pope: comments, git wrapper, plugin helper --"
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
@@ -45,7 +39,7 @@ Plug 'honza/vim-snippets'
 ""-- Tmux plugins --"
 Plug 'christoomey/vim-tmux-navigator'
 
-" -- Colorschemes, lightline -- "
+" -- UI -- "
 Plug 'chriskempson/base16-vim'
 Plug 'itchyny/lightline.vim'
 Plug 'ap/vim-buftabline'

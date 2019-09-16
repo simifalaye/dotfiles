@@ -12,8 +12,7 @@ test -r ~/.shell-env && . ~/.shell-env
 test -r ~/.shell-aliases && . ~/.shell-aliases
 test -r ~/.shell-common && . ~/.shell-common
 
-# Disable flow control with ctrl s (so we can ctrl+s save in vim)
-setopt noflowcontrol
+setopt noflowcontrol # Disable ctrl s for flow control
 setopt appendhistory
 setopt incappendhistory
 setopt autocd
@@ -26,6 +25,7 @@ setopt hist_save_no_dups
 setopt interactive_comments
 setopt pushd_ignore_dups
 setopt promptsubst
+unsetopt correct_all # Remove corrections
 
 # Ignore interactive commands from history
 export HISTORY_IGNORE="(ls|bg|fg|pwd|exit|cd ..)"

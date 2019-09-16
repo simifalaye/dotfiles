@@ -1,9 +1,3 @@
-"-- Ack vim --"
-" Use Ag for searches
-if executable('ag')
-    let g:ackprg = 'ag --vimgrep --smart-case'
-endif
-
 "-- Syntastic --"
 autocmd BufNewFile,BufRead *.c,*.h call SyntasticSETUP()
 let g:syntastic_enable_signs=1
@@ -13,14 +7,6 @@ let g:syntastic_stl_format = '[%E{Err:%e Line:%fe}%B{, }%W{Warn:%w Line:%fw}]'
 let g:syntastic_c_remove_include_errors = 1
 let g:syntastic_check_on_open=0
 let g:syntastic_check_on_wq=0
-
-"-- nerdtree --"
-let g:NERDTreeDirArrowExpandable = '+'
-let g:NERDTreeDirArrowCollapsible = '-'
-let g:NERDTreeShowHidden = 1
-let g:NERDTreeAutoDeleteBuffer = 1
-let NERDTreeMinimalUI=1
-let NERDTreeShowBookmarks=1
 
 "-- vim-commentary --"
 " Set commentstring for file types
@@ -43,27 +29,18 @@ execute "inoremap {<CR> {<CR>}<ESC>O"
 " Default fzf layout
 " - down / up / left / right
 let g:fzf_layout = { 'down': '~40%' }
-let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Comment'],
-  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'prompt':  ['fg', 'Conditional'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
 let g:fzf_layout = { 'window': 'enew' }
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
 
 "-- UltiSnips --"
 " Trigger configuration. Do not use <tab> if you use
 " https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<C-g>"
-let g:UltiSnipsJumpForwardTrigger="<S-tab>"
-let g:UltiSnipsJumpBackwardTrigger="<C-b>"
+let g:UltiSnipsExpandTrigger="<C-y>"
+let g:UltiSnipsJumpForwardTrigger="<C-b>"
+let g:UltiSnipsJumpBackwardTrigger="<C-z>"
 let g:UltiSnipsEditSplit="horizontal"
 let g:UltiSnipsSnippetsDir=ultisnipsdirsave
 
@@ -85,8 +62,6 @@ let g:lightline = {
       \     'filetype': 'LightlineFiletype',
       \     'fileencoding': 'LightlineFileencoding',
       \     'mode': 'LightlineMode',
-      \     'ntree': 'MyLightLinePercent',
-      \     'lineinfo': 'MyLightLineLineInfo',
       \     'fugitive': 'LightlineFugitive',
       \   },
       \ }

@@ -83,3 +83,10 @@ set wildmenu
 set wildmode=longest:full,full
 " Return to last edit position when opening files (You want this!)
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+" Netrw setup
+"Set default width of explorer to make it appear like a sidebar. Also tree style.
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+let g:netrw_winsize = 2

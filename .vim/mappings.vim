@@ -1,10 +1,6 @@
 " reload .vimrc
 nnoremap <leader>v :so $MYVIMRC<cr>:echo ".vimrc reloaded"<cr>
 
-" Use ; for commands., do not have to hold shift to do commands
-nnoremap ; :
-nnoremap , :
-
 " Exit insert and command mode with jk
 imap jk <Esc>
 imap Jk <Esc>
@@ -68,6 +64,8 @@ nmap <leader>c :bp <BAR> bd #<CR>
 " Show all open buffers and their status
 nmap <leader>b :Buffers<CR>
 
+" Netrw
+noremap <silent> <leader>n :call ToggleVExplorer()<CR>
 
 "-- Plugin Mappings --"
 
@@ -80,10 +78,6 @@ xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 
-" Bind nn to toggle NERDTree
-map <leader>n :NERDTreeToggle<CR>
-map <leader>f :NERDTreeFind<cr>
-
 " Remap copy, paste, cut
 vmap <C-c> y
 imap <C-v> <plug>EasyClipInsertModePaste
@@ -92,5 +86,8 @@ vmap <C-x> m
 
 " FZF
 nnoremap <silent><C-p> :GFiles<cr>
-nnoremap <silent><C-e> :FZF<cr>
-nnoremap <silent><C-y> :Snippets<cr>
+nnoremap <silent><C-e> :Snippets<cr>
+nnoremap <silent>; :Buffers<CR>
+nnoremap <silent>f :Files<CR>
+nnoremap <silent>T :Tags<CR>
+nnoremap <silent>s :Ag<CR>
