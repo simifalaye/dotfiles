@@ -24,7 +24,6 @@ endif
 
 "-- Auto-close scopes --"
 Plug 'Raimondi/delimitMate'
-Plug 'tpope/vim-endwise'
 
 "-- junegunn: Fuzzy file finder, easy align --"
 " PlugInstall/Update will clone fzf in fzfsourcedir and run the install script

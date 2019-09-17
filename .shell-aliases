@@ -7,6 +7,9 @@
 # For a full list of active aliases, run `alias`.
 # ###################################################################
 
+# Editor
+alias vim="nvim"
+
 # ls aliases
 alias ls='ls --color=auto'
 alias ll='ls -alF'

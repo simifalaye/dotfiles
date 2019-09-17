@@ -14,7 +14,6 @@ if (has("termguicolors"))
 endif
 
 " Set theme
-set t_Co=256
 colorscheme base16-default-dark
 set background=dark
 set laststatus=2

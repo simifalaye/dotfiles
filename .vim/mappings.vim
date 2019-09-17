@@ -91,3 +91,7 @@ nnoremap <silent>; :Buffers<CR>
 nnoremap <silent>f :Files<CR>
 nnoremap <silent>T :Tags<CR>
 nnoremap <silent>s :Ag<CR>
+
+" Buftabline
+nnoremap <S-l> :bnext<CR>
+nnoremap <S-H> :bprev<CR>

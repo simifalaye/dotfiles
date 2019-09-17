@@ -8,7 +8,7 @@
 # with the zlogin files.
 
 # Source global definitions
-test -r ~/.shell-env && . ~/.shell-env
+test -r ~/.shell-env && . ~/.shell-env || . ~/.config/.shell-env
 test -r ~/.shell-aliases && . ~/.shell-aliases
 test -r ~/.shell-common && . ~/.shell-common
 

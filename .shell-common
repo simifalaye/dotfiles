@@ -41,7 +41,8 @@ function cd() {
 # Command: open config file
 function conf() {
     if [[ $1 == "vim" ]]; then
-        filename="$HOME/.vim/"
+        command $EDITOR $VIM_HOME_DIR/*.vim
+        return
     elif [[ $1 == "tmux" ]]; then
         filename="$HOME/.tmux.conf"
     elif [[ $1 == "zsh" ]]; then
@@ -49,5 +50,6 @@ function conf() {
     else
         filename="$HOME/.config/$1/config"
     fi
-    [[ -z ${EDITOR} ]] || command $EDITOR $filename
+
+    command $EDITOR $filename
 }

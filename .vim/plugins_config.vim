@@ -26,13 +26,23 @@ let b:delimitMate_expand_cr = 1
 execute "inoremap {<CR> {<CR>}<ESC>O"
 
 "-- fzf.vim --"
-" Default fzf layout
-" - down / up / left / right
-let g:fzf_layout = { 'down': '~40%' }
+let g:fzf_colors =
+  \ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
 let g:fzf_layout = { 'window': 'enew' }
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
-  \ 'ctrl-x': 'split',
+  \ 'ctrl-s': 'split',
   \ 'ctrl-v': 'vsplit' }
 
 "-- UltiSnips --"
@@ -67,5 +77,5 @@ let g:lightline = {
       \ }
 
 "-- Buftabline --"
-nnoremap <S-l> :bnext<CR>
-nnoremap <S-H> :bprev<CR>
+let g:buftabline_numbers = 1
+let g:buftabline_indicators = 1

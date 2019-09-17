@@ -220,8 +220,7 @@ bindsym XF86AudioLowerVolume    exec --no-startup-id pactl set-sink-volume 0 -5%
 bindsym XF86AudioMute           exec --no-startup-id pactl set-sink-mute 0 toggle
 
 # Rofi bindings
-set $mclip ~/oss/rofi-clipboard-manager/mclip.py
-bindsym $mod+g exec rofi -modi "clipboard:$mclip menu" -show clipboard -run-command '{cmd}'
+bindsym $mod+g exec rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
 bindsym $mod+p exec "rofi-pass"
 bindsym $mod+space exec "rofi -combi-modi window,drun -show combi"
 
@@ -232,6 +231,6 @@ exec --no-startup-id compton
 # Setup polybar
 exec --no-startup-id ~/.config/polybar/launch.sh
 # Clip manager
-exec_always --no-startup-id $mclip daemon
+exec --no-startup-id greenclip daemon
 # Setup alternate tiling (tiling in a spiral: fibonacci)
 exec_always --no-startup-id ~/oss/i3-alternating-layout/alternating_layouts.py
