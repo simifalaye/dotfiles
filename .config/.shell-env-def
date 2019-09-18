@@ -1,0 +1,33 @@
+##
+## Globals
+## - Used by config files
+export VIM_HOME_DIR="$HOME/.config/nvim"
+export FZF_SOURCE_DIR="$HOME/.fzf"
+
+##
+## Editors
+##
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='nvim'
+else
+  export EDITOR='nvim'
+fi
+export GIT_EDITOR="$EDITOR"
+export USE_EDITOR="$EDITOR"
+export VISUAL=$EDITOR
+export PAGER=less
+
+##
+## Paths
+##
+# set PATH so it includes user's private bin if it exists
+[ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
+
+##
+## Pager
+##
+export PAGER=less
+export LESS='-iFMRSX -x4'
+
+umask 022

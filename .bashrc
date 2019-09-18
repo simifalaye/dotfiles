@@ -17,7 +17,7 @@ esac
 
 # Source global definitions
 test -r /etc/bashrc && . /etc/bashrc
-test -r ~/.shell-env && . ~/.shell-env || . ~/.config/.shell-env
+test -r ~/.shell-env && . ~/.shell-env || . ~/.config/.shell-env-def
 test -r ~/.shell-aliases && . ~/.shell-aliases
 test -r ~/.shell-common && . ~/.shell-common
 
