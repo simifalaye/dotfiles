@@ -53,8 +53,8 @@ I use ZSH shell:
 
 ### Text Mainuplation
 
-- [vim](https://vim.org) with [vim-plug](https://github.com/junegunn/vim-plug) - My primary text editor/
-  - All my vim plugins can be found in the "Plugins" section of my ".vimrc"
+- [neovim](https://neovim.io/) with [vim-plug](https://github.com/junegunn/vim-plug) - My primary text editor/
+  - All my vim plugins can be found in the "plugins.vim" file
 - [bat](https://github.com/sharkdp/bat) - A cat(1) clone with wings.
 
 ### Utilities
