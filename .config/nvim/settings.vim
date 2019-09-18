@@ -13,6 +13,8 @@ let fzfsourcedir=fzf_src_dir
 
 " Set tags file locations for ctags
 set tags=./tags,./.git/tags;
+" Set clipboard
+set clipboard=unnamedplus
 
 "---------- Work standard vim setup ----------"
 
@@ -82,12 +84,6 @@ set wildmode=longest:full,full
 " Return to last edit position when opening files (You want this!)
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 " Netrw setup
-"Set default width of explorer to make it appear like a sidebar. Also tree style.
-let g:netrw_banner = 0
 let g:netrw_liststyle = 3
-let g:netrw_browse_split = 4
-let g:netrw_altv = 1
-let g:netrw_winsize = 23
-" Per default, netrw leaves unmodified buffers open. This autocommand
-" deletes netrw's buffer once it's hidden (using ':q', for example)
+" Deletes netrw's buffer once it's hidden (using ':q', for example)
 autocmd FileType netrw setl bufhidden=delete

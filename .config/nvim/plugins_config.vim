@@ -15,10 +15,10 @@ autocmd FileType c,cpp,java setlocal commentstring=//\ %s
 autocmd FileType conf,bitbake setlocal commentstring=#\ %s
 
 "-- vim-easyclip --"
-set clipboard=unnamedplus
+let g:EasyClipUseSubstituteDefaults = 1
+let g:EasyClipUsePasteDefaults = 0
 let g:EasyClipAlwaysMoveCursorToEndOfPaste = 1
 let g:EasyClipAutoFormat = 1
-let g:EasyClipUseSubstituteDefaults = 1
 
 "-- fzf.vim --"
 let g:fzf_colors =

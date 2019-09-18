@@ -5,13 +5,15 @@ call plug#begin(vimplugdir)
 "-- Syntax checker --"
 Plug 'vim-syntastic/syntastic'
 
+"-- Text manipulation --"
+Plug 'svermeulen/vim-easyclip'
+Plug 'junegunn/vim-easy-align'
+Plug 'matze/vim-move'
+
 "-- Tim Pope: comments, git wrapper, plugin helper --"
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
-
-"-- Easier copy and paste --"
-Plug 'svermeulen/vim-easyclip'
 
 "-- A code-completion engine for Vim --"
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -21,12 +23,18 @@ Plug 'Shougo/neosnippet-snippets'
 
 "-- junegunn: Fuzzy file finder, easy align --"
 " PlugInstall/Update will clone fzf in fzfsourcedir and run the install script
-Plug 'junegunn/fzf', { 'dir': fzfsourcedir, 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'junegunn/vim-easy-align'
+if executable('fzf')
+    Plug 'junegunn/fzf', { 'dir': fzfsourcedir, 'do': './install --all' }
+    Plug 'junegunn/fzf.vim'
+endif
 
-""-- Tmux plugins --"
-Plug 'christoomey/vim-tmux-navigator'
+"-- Tmux plugins --"
+if executable('tmux')
+    Plug 'christoomey/vim-tmux-navigator'
+endif
+
+"-- Easy quitting --"
+Plug 'mhinz/vim-sayonara', { 'on': 'Sayonara' }
 
 " -- UI -- "
 Plug 'mhinz/vim-startify'

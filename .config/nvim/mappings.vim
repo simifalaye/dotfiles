@@ -2,34 +2,19 @@
 nnoremap <leader>v :so $MYVIMRC<cr>:echo ".vimrc reloaded"<cr>
 
 " Exit insert and command mode with jk
-imap jk <Esc>
-imap Jk <Esc>
-imap JK <Esc>
+imap jk <C-c>
+imap kj <C-c>
 
 " Hide last search highlights
-nmap <silent> <leader>/ :nohlsearch<CR>
-
-" Move lines up and down with shift + dir
-nnoremap <S-Up> :m-2<CR>
-nnoremap <S-Down> :m+<CR>
-inoremap <S-Up> <Esc>:m-2<CR>
-inoremap <S-Down> <Esc>:m+<CR>
+nnoremap <silent> <leader><space> :nohlsearch<CR>
 
 " Easy moves through wrapped lines
 nnoremap j gj
 nnoremap k gk
 
-" Use tab to jump between blocks, because it's easier
-nnoremap <tab> %
-vnoremap <tab> %
-
 " VimSplits remappings
 nnoremap <Leader>ts <C-W>s:te<CR>
 nnoremap <Leader>tv <C-W>v:te<CR>
-nnoremap <Leader>j <C-W><C-J>
-nnoremap <Leader>k <C-W><C-K>
-nnoremap <Leader>l <C-W><C-L>
-nnoremap <Leader>h <C-W><C-H>
 set splitbelow
 set splitright
 set fillchars=""
@@ -38,25 +23,19 @@ set fillchars=""
 noremap <silent> <C-S> :update<CR>
 vnoremap <silent> <C-S> <C-C>:update<CR><C-C>
 inoremap <silent> <C-S> <C-O>:update<CR><C-O>
+nnoremap <C-x> :q<cr>
+nnoremap <leader>x :qa!<cr>
 
-" Quit file with Leader + q, Quit without saving, Quit all tabs
-nnoremap <leader>q :q<cr>
-nnoremap <leader>x :q!<cr>
-nnoremap <leader>X :qa!<cr>
-
-" Buffer
-nmap <leader>tn :enew<cr>
-nmap <leader>c :bp <BAR> bd #<CR>
-nmap <leader>b :Buffers<CR>
-nmap L :bnext<CR>
-nmap H :bprevious<CR>
+" Buffer Management
+nnoremap L :bnext<CR>
+nnoremap H :bprevious<CR>
 
 " Tab navigation
 nnoremap <leader>l gT
 nnoremap <leader>h gt
 
 " Netrw
-noremap <silent> <leader>n :call ToggleVExplorer()<CR>
+noremap <silent><leader>n :Explore<CR>
 
 "---------- Plugin Mappings ----------"
 
@@ -74,13 +53,15 @@ vmap <C-x> m
 imap <c-v> <plug>EasyClipInsertModePaste
 cmap <c-v> <plug>EasyClipCommandModePaste
 
-"-- FZF --"
+"-- FZF and Fugitive --"
 nnoremap <silent><C-p> :GFiles<cr>
 nnoremap <silent><C-e> :Snippets<cr>
+nnoremap <silent><C-f> :Ag<CR>
 nnoremap <silent>; :Buffers<CR>
-nnoremap <silent>f :Files<CR>
 nnoremap <silent>T :Tags<CR>
-nnoremap <silent>s :Ag<CR>
+nnoremap <S-g>l :Commits<CR>
+nnoremap <S-g>s :Gstatus<CR>
+nnoremap <S-g>d :Gdiff<CR>
 
 "-- Buftabline --"
 nnoremap <S-l> :bnext<CR>
@@ -93,6 +74,7 @@ inoremap <silent><expr> <Tab>
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
-" Carridge return to jump --"
-imap <silent><expr><CR>
-          \ pumvisible() ? "\<C-k>" : "<CR>"
+
+"-- Sayonara --"
+nmap <leader>q :Sayonara!<cr>
+nmap <leader>Q :Sayonara<cr>
