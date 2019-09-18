@@ -1,10 +1,4 @@
 ##
-## Globals
-## - Used by config files
-export VIM_HOME_DIR="$HOME/.config/nvim"
-export FZF_SOURCE_DIR="$HOME/.fzf"
-
-##
 ## Editors
 ##
 # Preferred editor for local and remote sessions

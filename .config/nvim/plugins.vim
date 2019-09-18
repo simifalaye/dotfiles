@@ -1,8 +1,5 @@
 "-- load plug vim if not installed yet --"
-if empty(glob(vimautoloaddir . '/plug.vim'))
-    GetVimPlug()
-endif
-
+call GetVimPlug(vimautoloaddir)
 call plug#begin(vimplugdir)
 
 "-- Syntax checker --"
@@ -32,6 +29,7 @@ Plug 'junegunn/vim-easy-align'
 Plug 'christoomey/vim-tmux-navigator'
 
 " -- UI -- "
+Plug 'mhinz/vim-startify'
 Plug 'chriskempson/base16-vim'
 Plug 'itchyny/lightline.vim'
 Plug 'ap/vim-buftabline'

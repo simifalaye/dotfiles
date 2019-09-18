@@ -44,7 +44,7 @@ nnoremap <leader>q :q<cr>
 nnoremap <leader>x :q!<cr>
 nnoremap <leader>X :qa!<cr>
 
-" To open a new empty buffer
+" Buffer
 nmap <leader>tn :enew<cr>
 nmap <leader>c :bp <BAR> bd #<CR>
 nmap <leader>b :Buffers<CR>
@@ -69,9 +69,10 @@ nmap ga <Plug>(EasyAlign)
 "-- EasyClip --"
 " Remap copy, paste, cut
 vmap <C-c> y
-imap <C-v> <plug>EasyClipInsertModePaste
 vmap <C-v> s
 vmap <C-x> m
+imap <c-v> <plug>EasyClipInsertModePaste
+cmap <c-v> <plug>EasyClipCommandModePaste
 
 "-- FZF --"
 nnoremap <silent><C-p> :GFiles<cr>

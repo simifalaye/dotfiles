@@ -7,7 +7,7 @@ let fzf_src_dir = !empty($FZF_SOURCE_DIR) ? $FZF_SOURCE_DIR : "~/.fzf"
 
 " Set directories
 let vimplugdir=vim_home_dir . "/plugged"
-let vimautoloaddir=vim_home_dir . "/autoload"
+let vimautoloaddir=$EDITOR == "nvim" ? $HOME . "/.local/share/nvim/site/autoload" : vim_home_dir . "/autoload"
 let vimundodir=vim_home_dir . "/undodir"
 let fzfsourcedir=fzf_src_dir
 

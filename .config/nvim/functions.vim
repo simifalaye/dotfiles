@@ -21,9 +21,9 @@ function! SyntasticSETUP()
 endfunction
 
 " Gets vim-plug
-function! GetVimPlug()
-  if executable('curl')
-      execute 'silent !curl -fLo ' . vimautoloaddir . '/plug.vim --create-dirs ' .
+function! GetVimPlug(dir)
+  if empty(glob(a:dir . '/plug.vim')) && executable('curl')
+      execute 'silent !curl -fLo ' . a:dir . '/plug.vim --create-dirs ' .
             \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
       autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
   endif
