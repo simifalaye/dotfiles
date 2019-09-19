@@ -8,14 +8,17 @@ Plug 'vim-syntastic/syntastic'
 "-- Text manipulation --"
 Plug 'svermeulen/vim-easyclip'
 Plug 'junegunn/vim-easy-align'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
+Plug 'Raimondi/delimitMate'
 Plug 'matze/vim-move'
 
-"-- Tim Pope: comments, git wrapper, plugin helper --"
-Plug 'tpope/vim-commentary'
+"-- Utilities --"
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
+Plug 'mhinz/vim-sayonara', { 'on': 'Sayonara' }
 
-"-- A code-completion engine for Vim --"
+"-- A code-completion engine and snippets --"
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 if executable('clang')
     Plug 'zchee/deoplete-clang'
@@ -23,21 +26,18 @@ endif
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 
-"-- junegunn: Fuzzy file finder, easy align --"
-" PlugInstall/Update will clone fzf in fzfsourcedir and run the install script
+"-- Files --"
+Plug 'scrooloose/nerdtree'
+Plug 'sheerun/vim-polyglot'
 if executable('fzf')
     Plug 'junegunn/fzf', { 'dir': fzfsourcedir, 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
 endif
 
-"-- Tmux plugins --"
+"-- Tmux --"
 if executable('tmux')
     Plug 'christoomey/vim-tmux-navigator'
 endif
-
-"-- Utilities --"
-Plug 'mhinz/vim-sayonara', { 'on': 'Sayonara' }
-Plug 'sheerun/vim-polyglot'
 
 " -- UI -- "
 Plug 'mhinz/vim-startify'

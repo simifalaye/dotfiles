@@ -12,19 +12,16 @@ nnoremap <silent> <leader><space> :nohlsearch<CR>
 nnoremap j gj
 nnoremap k gk
 
-" VimSplits remappings
+" Terminal bindings
 nnoremap <Leader>ts <C-W>s:te<CR>
 nnoremap <Leader>tv <C-W>v:te<CR>
-set splitbelow
-set splitright
-set fillchars=""
+tnoremap jk <C-\><C-n>
 
 " Save file with ctrl + s, save
 noremap <silent> <C-S> :update<CR>
 vnoremap <silent> <C-S> <C-C>:update<CR><C-C>
-inoremap <silent> <C-S> <C-O>:update<CR><C-O>
+inoremap <silent> <C-S> <C-O>:update<CR><C-C>
 nnoremap <C-x> :q<cr>
-nnoremap <leader>x :qa!<cr>
 
 " Buffer Management
 nnoremap L :bnext<CR>
@@ -34,10 +31,14 @@ nnoremap H :bprevious<CR>
 nnoremap <leader>l gT
 nnoremap <leader>h gt
 
-" Netrw
-noremap <silent><leader>n :Explore<CR>
-
 "---------- Plugin Mappings ----------"
+
+"-- Sayonara --"
+nmap <leader>q :Sayonara<cr>
+
+"-- Nerdtree --"
+nmap <C-c> :wincmd p<CR>
+nmap <C-n> :NERDTreeToggle<CR>:wincmd p<CR>
 
 "-- EasyAlign --"
 " Start interactive EasyAlign in visual mode (e.g. vipga)
@@ -56,7 +57,8 @@ cmap <c-v> <plug>EasyClipCommandModePaste
 "-- FZF and Fugitive --"
 nnoremap <silent><C-p> :GFiles<cr>
 nnoremap <silent><C-e> :Snippets<cr>
-nnoremap <silent><C-f> :Ag<CR>
+nnoremap <silent><C-f> :Files<CR>
+nnoremap <silent><C-a> :Ag<CR>
 nnoremap <silent>; :Buffers<CR>
 nnoremap <silent>T :Tags<CR>
 nnoremap <S-g>l :Commits<CR>
@@ -74,7 +76,3 @@ inoremap <silent><expr> <Tab>
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
-
-"-- Sayonara --"
-nmap <leader>q :Sayonara!<cr>
-nmap <leader>Q :Sayonara<cr>

@@ -83,7 +83,7 @@ set wildmenu
 set wildmode=longest:full,full
 " Return to last edit position when opening files (You want this!)
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-" Netrw setup
-let g:netrw_liststyle = 3
-" Deletes netrw's buffer once it's hidden (using ':q', for example)
-autocmd FileType netrw setl bufhidden=delete
+" VimSplits
+set splitbelow
+set splitright
+set fillchars=""
