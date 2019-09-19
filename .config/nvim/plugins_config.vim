@@ -12,14 +12,21 @@ let g:syntastic_check_on_wq=0
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 let g:NERDTreeMinimalUI = 1
 let g:NERDTreeStHatusline = " "
-let g:NERDTreeWinPos = "right"
+let g:NERDTreeWinPos = "left"
 
-"-- DeopleteMe --"
+"-- DeopleteMe & Neosnippets --"
 let g:SuperTabDefaultCompletionType = "<c-n>"
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 1
 let g:deoplete#sources#clang#libclang_path = "/usr/lib/llvm-6.0/lib/libclang.so.1"
 let g:deoplete#sources#clang#clang_header ="/usr/lib/llvm-6.0/lib/clang/"
+let g:neosnippet#snippets_directory=vim_home_dir . '/snippets'
+
+""-- ClangFormatter --"
+let g:clang_format#style_options = {
+            \ "BreakBeforeBraces" : "Allman",
+            \ "ColumnLimit" : "79",
+            \ "Standard" : "C++11"}
 
 "-- vim-commentary --"
 " Set commentstring for file types

@@ -10,7 +10,6 @@ fi
 export GIT_EDITOR="$EDITOR"
 export USE_EDITOR="$EDITOR"
 export VISUAL=$EDITOR
-export PAGER=less
 
 ##
 ## Paths

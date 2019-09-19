@@ -60,8 +60,7 @@ Thumbs.db
 
 # Directories #
 #####################
-build/
-_build/
+*build/
 oe-workdir/
 oe-logs/
 oe-workdir

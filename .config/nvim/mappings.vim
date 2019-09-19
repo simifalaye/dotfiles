@@ -23,10 +23,6 @@ vnoremap <silent> <C-S> <C-C>:update<CR><C-C>
 inoremap <silent> <C-S> <C-O>:update<CR><C-C>
 nnoremap <C-x> :q<cr>
 
-" Buffer Management
-nnoremap L :bnext<CR>
-nnoremap H :bprevious<CR>
-
 " Tab navigation
 nnoremap <leader>l gT
 nnoremap <leader>h gt
@@ -37,14 +33,13 @@ nnoremap <leader>h gt
 nmap <leader>q :Sayonara<cr>
 
 "-- Nerdtree --"
-nmap <C-c> :wincmd p<CR>
-nmap <C-n> :NERDTreeToggle<CR>:wincmd p<CR>
+nmap <C-n> :NERDTreeToggle<CR>
+
+"-- Commentary --"
+xmap / <Plug>Commentary
 
 "-- EasyAlign --"
-" Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
 
 "-- EasyClip --"
 " Remap copy, paste, cut
@@ -58,7 +53,7 @@ cmap <c-v> <plug>EasyClipCommandModePaste
 nnoremap <silent><C-p> :GFiles<cr>
 nnoremap <silent><C-e> :Snippets<cr>
 nnoremap <silent><C-f> :Files<CR>
-nnoremap <silent><C-a> :Ag<CR>
+nnoremap <silent><C-g> :Rg<CR>
 nnoremap <silent>; :Buffers<CR>
 nnoremap <silent>T :Tags<CR>
 nnoremap <S-g>l :Commits<CR>
@@ -76,3 +71,7 @@ inoremap <silent><expr> <Tab>
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+"-- Clang Formatter --"
+autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
