@@ -8,7 +8,7 @@
 # with the zlogin files.
 
 # Source global definitions
-test -r ~/.shell-env && . ~/.shell-env; . ~/.config/.shell-env-def
+test -r ~/.shell-env && . ~/.shell-env
 test -r ~/.shell-aliases && . ~/.shell-aliases
 test -r ~/.shell-common && . ~/.shell-common
 
@@ -27,8 +27,6 @@ setopt pushd_ignore_dups
 setopt promptsubst
 unsetopt correct_all # Remove corrections
 
-# Ignore interactive commands from history
-export HISTORY_IGNORE="(ls|bg|fg|pwd|exit|cd ..)"
 # Set vendor completions path
 fpath=(/usr/share/zsh/vendor-completions/ $fpath)
 
@@ -52,6 +50,8 @@ bindkey "^Q" push-line-or-edit
 # ###################################################################
 # Plugin config: Zgen
 # ###################################################################
+PROMPT_LEAN_TMUX=""
+
 if [ ! -f "${HOME}/.zgen/zgen.zsh" ]; then
     git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen" ||
     {
@@ -77,8 +77,7 @@ EOPLUGINS
     zgen load zsh-users/zsh-completions src
 
     # theme
-    zgen load mafredri/zsh-async
-    zgen load marszall87/lambda-pure
+    zgen load miekg/lean
 
     # save all to init script
     zgen save
@@ -91,12 +90,9 @@ bindkey '^[[F' autosuggest-accept
 bindkey '^[OA' history-substring-search-up
 bindkey '^[OB' history-substring-search-down
 
-# Lambda pure prompt settings
-PURE_NODE_ENABLED=0
-
-##
-## END (Must be at the bottom of config)
-##
+# ###################################################################
+# MUST BE AT THE END
+# ###################################################################
 
 # Adds the fzf bash config to the shell
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

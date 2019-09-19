@@ -1,13 +1,31 @@
+# ###################################################################
+# Config
+# ###################################################################
+
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='nvim'
+else
+  export EDITOR='nvim'
+fi
+export GIT_EDITOR="$EDITOR"
+export USE_EDITOR="$EDITOR"
+export VISUAL=$EDITOR
+
+# set PATH so it includes user's private bin if it exists
+[ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
+
+export PAGER=less
+export LESS='-iFMRSX -x4'
 # make less more friendly for non-text input files, see lesspipe(1)
 test -x /usr/bin/lesspipe && eval "$(SHELL=/bin/sh lesspipe)"
+# disable flow control (ctrl + s,q)
+stty -ixon
 
 # enable color support of ls
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
-
-# disable flow control (ctrl + s,q)
-stty -ixon
 
 # use rg for fzf
 [ -x "$(command -v rg)" ] && {
@@ -15,9 +33,13 @@ stty -ixon
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 }
 
+# Ignore interactive commands from history
+export HISTORY_IGNORE="(ls|bg|fg|pwd|exit|cd ..)"
+
 # ###################################################################
 # Functions
 # ###################################################################
+
 # Command: mkcd - makes a directory and cd's into it
 function mkcd {
     command mkdir $1 && cd $1
@@ -59,3 +81,5 @@ function conf() {
 
     command $EDITOR $filename
 }
+
+umask 022
