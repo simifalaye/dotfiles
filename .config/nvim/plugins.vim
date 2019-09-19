@@ -17,7 +17,9 @@ Plug 'tpope/vim-repeat'
 
 "-- A code-completion engine for Vim --"
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'zchee/deoplete-clang'
+if executable('clang')
+    Plug 'zchee/deoplete-clang'
+endif
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 
@@ -33,8 +35,9 @@ if executable('tmux')
     Plug 'christoomey/vim-tmux-navigator'
 endif
 
-"-- Easy quitting --"
+"-- Utilities --"
 Plug 'mhinz/vim-sayonara', { 'on': 'Sayonara' }
+Plug 'sheerun/vim-polyglot'
 
 " -- UI -- "
 Plug 'mhinz/vim-startify'
