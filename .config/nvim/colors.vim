@@ -14,6 +14,9 @@ if (has("termguicolors"))
 endif
 
 " Set theme
-colorscheme base16-default-dark
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
 set background=dark
 set laststatus=2

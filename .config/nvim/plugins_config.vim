@@ -62,7 +62,7 @@ let g:fzf_action = {
 
 "-- Lightline --"
 let g:lightline = {
-      \   'colorscheme': 'wombat',
+      \   'colorscheme': 'base16',
       \   'active': {
       \     'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename']]
       \   },

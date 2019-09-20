@@ -2,6 +2,7 @@
 # Config
 # ###################################################################
 
+### Editors:
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='nvim'
@@ -12,9 +13,11 @@ export GIT_EDITOR="$EDITOR"
 export USE_EDITOR="$EDITOR"
 export VISUAL=$EDITOR
 
+### Paths:
 # set PATH so it includes user's private bin if it exists
 [ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
 
+### Pager and flow:
 export PAGER=less
 export LESS='-iFMRSX -x4'
 # make less more friendly for non-text input files, see lesspipe(1)
@@ -22,17 +25,20 @@ test -x /usr/bin/lesspipe && eval "$(SHELL=/bin/sh lesspipe)"
 # disable flow control (ctrl + s,q)
 stty -ixon
 
-# enable color support of ls
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+### Colors:
+# Base16 Shell
+BASE16_SHELL="$HOME/.config/base16-shell"
+if [ ! -f "$BASE16_SHELL/profile_helper.sh" ]; then
+    git clone https://github.com/chriskempson/base16-shell.git $BASE16_SHELL
 fi
+[ -n "$PS1" ] && eval "$("$BASE16_SHELL/profile_helper.sh")"
 
+### Utilities:
 # use rg for fzf
 [ -x "$(command -v rg)" ] && {
     export FZF_DEFAULT_COMMAND='rg --files --hidden'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 }
-
 # Ignore interactive commands from history
 export HISTORY_IGNORE="(ls|bg|fg|pwd|exit|cd ..)"
 
@@ -80,6 +86,17 @@ function conf() {
     fi
 
     command $EDITOR $filename
+}
+# Command: tmux attach and detach
+function sess() {
+    if [[ -z "$1" ]]; then
+        command tmux detach
+    elif [[ "$1" =~ ^[0-9]+$ ]]; then
+        command tmux attach-session -t $1
+    else
+        echo "Not a valid session number."
+        return 1
+    fi
 }
 
 umask 022

@@ -1,9 +1,12 @@
 "---------- Globals ----------"
 
-" Use leader to specify extra keybinding
-let mapleader = " "
 let vim_home_dir = !empty($VIM_HOME_DIR) ? $VIM_HOME_DIR : "~/.vim"
 let fzf_src_dir = !empty($FZF_SOURCE_DIR) ? $FZF_SOURCE_DIR : "~/.fzf"
+
+" Use leader to specify extra keybinding
+let mapleader = " "
+" Set clipboard
+set clipboard=unnamedplus
 
 " Set directories
 let vimplugdir=vim_home_dir . "/plugged"
@@ -13,8 +16,6 @@ let fzfsourcedir=fzf_src_dir
 
 " Set tags file locations for ctags
 set tags=./tags,./.git/tags;
-" Set clipboard
-set clipboard=unnamedplus
 
 "---------- Work standard vim setup ----------"
 
@@ -87,3 +88,6 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 set splitbelow
 set splitright
 set fillchars=""
+" Disable Netrw
+let g:loaded_netrw = 1
+let g:loaded_netrwPlugin = 1

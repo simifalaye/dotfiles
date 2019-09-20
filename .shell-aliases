@@ -21,9 +21,6 @@ alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}"
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
-# tmux aliases
-command -v tmux >/dev/null && alias reloadtmux="tmux source ~/.tmux.conf"
-
 # bat aliases (a better cat)
 command -v bat >/dev/null && alias cat="bat -p"
 

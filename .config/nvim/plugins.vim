@@ -40,6 +40,7 @@ endif
 " -- UI -- "
 Plug 'mhinz/vim-startify'
 Plug 'chriskempson/base16-vim'
+Plug 'daviesjamie/vim-base16-lightline'
 Plug 'itchyny/lightline.vim'
 Plug 'ap/vim-buftabline'
 

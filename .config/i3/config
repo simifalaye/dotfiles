@@ -45,7 +45,7 @@ client.unfocused        $base01 $base00 $base05 $base01 $base01
 client.urgent           $base08 $base08 $base00 $base08 $base08
 client.placeholder      $base00 $base00 $base05 $base00 $base00
 
-for_window [class="^.*"] border pixel 1
+for_window [class="^.*"] border pixel 0
 gaps inner 10
 gaps outer 5
 # Only enable gaps on a workspace when there is at least one container
@@ -110,13 +110,21 @@ bindsym $mod+Shift+Tab workspace prev_on_output
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
 
-# change focus between tiling / floating windows
-
 # focus the parent container
 bindsym $mod+a focus parent
 
 # focus the child container
 bindsym $mod+d focus child
+
+# Make the currently focused window a scratchpad
+bindsym $mod+minus move scratchpad
+
+# Show the first scratchpad window
+bindsym $mod+plus scratchpad show, floating disable
+
+# View cheatsheets
+bindsym $mod+Control+v exec --no-startup-id $HOME/.config/i3/cheatsheet.sh $HOME/.config/nvim/cheatsheet.txt
+for_window [instance="st" title="Cheatsheet"] floating enable, fullscreen enable
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
