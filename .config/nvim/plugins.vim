@@ -27,10 +27,8 @@ Plug 'Shougo/neosnippet-snippets'
 
 "-- Files --"
 Plug 'scrooloose/nerdtree'
-if executable('fzf')
-    Plug 'junegunn/fzf', { 'dir': fzfsourcedir, 'do': './install --all' }
-    Plug 'junegunn/fzf.vim'
-endif
+Plug 'junegunn/fzf', { 'dir': fzfsourcedir, 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 
 "-- Tmux --"
 if executable('tmux')
