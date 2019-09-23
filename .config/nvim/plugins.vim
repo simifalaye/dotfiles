@@ -8,7 +8,7 @@ Plug 'svermeulen/vim-easyclip'
 Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
-Plug 'Raimondi/delimitMate'
+Plug 'cohama/lexima.vim'
 Plug 'matze/vim-move'
 
 "-- Utilities --"

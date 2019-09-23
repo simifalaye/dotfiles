@@ -19,8 +19,8 @@ if ! zgen saved; then
 fi
 
 # Load additional config
-_load $ZDOTDIR/config.zsh
 _load $ZDOTDIR/prompt.zsh
+_load $ZDOTDIR/config.zsh
 _load $ZDOTDIR/keybinds.zsh
 
 ########## END #########

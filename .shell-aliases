@@ -104,7 +104,7 @@ function cd()
 function conf()
 {
     prog=$1
-    [ "$prog" == "vim" ] && prog="nvim"
+    [[ $prog == "vim" ]] && prog="nvim"
 
     command $EDITOR $HOME/.config/$prog
 }

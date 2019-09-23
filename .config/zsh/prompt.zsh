@@ -32,7 +32,7 @@ prompt_init() {
   [[ -n $EMACS ]] || ZLE_RPROMPT_INDENT=0
   # prevent percentage showing up
   # if output doesn't end with a newline
-  export PROMPT_EOL_MARK=
+  export PROMPT_EOL_MARK=''
 
   # prompt_opts=(cr subst percent)
   setopt promptsubst
@@ -61,13 +61,12 @@ prompt_init() {
   # show username@host if logged in through SSH
   if [[ -n $SSH_CONNECTION ]]; then
     prompt_username='%m '
-    if [[ $(whoami) != hlissner ]]; then
+    if [[ $(whoami) != simifa ]]; then
       prompt_username="%n.$prompt_username"
     fi
   fi
 
-  RPROMPT='%F{blue}%~%F{magenta}${vcs_info_msg_0_}$(prompt_git_dirty)%f'
-  PROMPT='%F{blue}${prompt_username}%f${PROMPT_SYMBOL:-$ } '
+  PROMPT=$'%F{blue}%~%F{magenta}${vcs_info_msg_0_}$(prompt_git_dirty)%f\n%F{blue}${prompt_username}%f${PROMPT_SYMBOL:-$ }'
 }
 
 prompt_init "$@"
