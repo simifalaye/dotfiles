@@ -27,7 +27,7 @@ Plug 'Shougo/neosnippet-snippets'
 
 "-- Files --"
 Plug 'scrooloose/nerdtree'
-Plug 'junegunn/fzf', { 'dir': fzfsourcedir, 'do': './install --all' }
+Plug 'junegunn/fzf', { 'dir': fzfsourcedir, 'do': './install --all --xdg' }
 Plug 'junegunn/fzf.vim'
 
 "-- Tmux --"

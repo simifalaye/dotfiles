@@ -1,6 +1,5 @@
 # Source global definitions
 test -r ~/.shell-aliases && . ~/.shell-aliases
-test -r ~/.shell-env && . ~/.shell-env
 
 ########## Plugin config: Zgen #########
 # Load config and prompt
@@ -15,7 +14,7 @@ if ! zgen saved; then
     zgen load zdharma/fast-syntax-highlighting
     zgen load zsh-users/zsh-history-substring-search
     zgen load zsh-users/zsh-completions src
-    zgen load marzocchi/zsh-notify
+    zgen load urbainvaes/fzf-marks
     zgen load miekg/lean # Theme
 
     # save all to init script
@@ -26,5 +25,5 @@ _load $ZDOTDIR/keybinds.zsh
 
 ########## END #########
 
-# Adds the fzf bash config to the shell
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] &&
+    source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh

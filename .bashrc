@@ -14,7 +14,6 @@
 
 # Source global definitions
 test -r ~/.shell-aliases && . ~/.shell-aliases
-test -r ~/.shell-env && . ~/.shell-env
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -81,3 +80,5 @@ test -f /etc/bash_completion && . /etc/bash_completion
 
 # Adds the fzf bash config to the shell
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.bash ] && source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.bash

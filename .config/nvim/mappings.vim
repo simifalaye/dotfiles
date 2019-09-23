@@ -1,16 +1,20 @@
-" reload .vimrc
-nnoremap <leader>v :so $MYVIMRC<cr>:echo ".vimrc reloaded"<cr>
-
+"---------- General Mappings ----------"
 " Exit insert and command mode with jk
 imap jk <C-c>
-imap kj <C-c>
+
+" reload .vimrc
+nnoremap <leader>v :so $MYVIMRC<cr>:echo ".vimrc reloaded"<cr>
 
 " Hide last search highlights
 nnoremap <silent> <leader><space> :nohlsearch<CR>
 
-" Easy moves through wrapped lines
+" Easy moves through lines (and wrapped ones)
 nnoremap j gj
 nnoremap k gk
+nnoremap B ^
+nnoremap E $
+nnoremap $ <nop>
+nnoremap ^ <nop>
 
 " Terminal bindings
 nnoremap <Leader>ts <C-W>s:te<CR>
@@ -34,6 +38,7 @@ nmap <leader>q :Sayonara<cr>
 
 "-- Nerdtree --"
 nmap <C-n> :NERDTreeToggle<CR>
+nmap <leader>n :NERDTreeFind<CR>
 
 "-- Commentary --"
 xmap / <Plug>Commentary

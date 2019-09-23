@@ -67,3 +67,4 @@ I use ZSH shell:
 - [trash-cli](https://github.com/sindresorhus/trash-cli) - Move files and folders to the trash.
 - [tmux](https://github.com/tmux/tmux) and [tmuxp](https://github.com/tmux-python/tmuxp) - Terminal multiplexer and session manager.
 - [yadm](https://github.com/TheLocehiliosan/yadm) - Dotfiles Manager.
+- [mdless](https://github.com/ttscoff/mdless) - Markdown file viewer.

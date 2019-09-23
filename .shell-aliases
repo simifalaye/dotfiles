@@ -3,16 +3,22 @@
 # Editor
 command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
 
-# ls aliases
+# Common task aliases
+alias q=exit
+alias clr=clear
 alias ls='ls --color=auto'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-
-# grep aliases
 alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}"
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
+
+# navigation aliases
+alias home="cd ~"
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
 
 # bat aliases (a better cat)
 command -v bat >/dev/null && alias cat="bat -p"
@@ -26,18 +32,6 @@ command -v tmux >/dev/null && {
     alias ta='tmux attach -t'
     alias tl='tmux ls'
 }
-
-# navigation aliases
-alias home="cd ~"
-alias dev="cd ~/dev"
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias .....='cd ../../../..'
-alias ......='cd ../../../../..'
-alias .......='cd ../../../../../..'
-alias ........='cd ../../../../../../..'
-alias .........='cd ../../../../../../../..'
 
 ########## Private Functions ##########
 
@@ -85,6 +79,9 @@ function _load_repo
 
 ########## Public Functions ##########
 
+# mkdir and cd into it
+take() { mkdir "$1" && cd "$1"; };
+
 # Push dotfiles to github
 function dotfiles()
 {
@@ -121,4 +118,3 @@ function reloadshell()
         echo "Failed to reload shell."
     fi
 }
-

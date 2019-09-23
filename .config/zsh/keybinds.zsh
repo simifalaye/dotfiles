@@ -20,6 +20,23 @@ bindkey -M vicmd 'H'  run-help
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
+# <5.0.8 doesn't have visual map
+if is-at-least 5.0.8; then
+  # add vimmish text-object support to zsh
+  autoload -U select-quoted; zle -N select-quoted
+  for m in visual viopp; do
+    for c in {a,i}{\',\",\`}; do
+      bindkey -M $m $c select-quoted
+    done
+  done
+  autoload -U select-bracketed; zle -N select-bracketed
+  for m in visual viopp; do
+    for c in {a,i}${(s..)^:-'()[]{}<>bB'}; do
+      bindkey -M $m $c select-bracketed
+    done
+  done
+fi
+
 # C-z to toggle current process (background/foreground)
 fancy-ctrl-z () {
   if [[ $#BUFFER -eq 0 ]]; then
@@ -32,6 +49,14 @@ fancy-ctrl-z () {
 }
 zle -N fancy-ctrl-z
 bindkey '^Z' fancy-ctrl-z
+
+# Expand aliases
+function expand-alias() {
+  zle _expand_alias
+  zle self-insert
+}
+zle -N expand-alias
+bindkey -M main ' ' expand-alias
 
 # Fix the DEL key
 bindkey -M vicmd "^[[3~" delete-char
