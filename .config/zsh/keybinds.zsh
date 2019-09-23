@@ -1,24 +1,21 @@
 autoload -U is-at-least
 
-########## emacs-mode #########
-bindkey -e
-# TODO: This might be neat: http://unix.stackexchange.com/a/47425
-# TODO: Nice list of bindings: http://zshwiki.org/home/zle/bindkeys
-# Make CTRL+Arrow skip words
-# rxvt
-bindkey "^[Od" backward-word
-bindkey "^[Oc" forward-word
-# xterm
-bindkey "^[[1;5D" backward-word
-bindkey "^[[1;5C" forward-word
-# gnome-terminal
-bindkey "^[OD" backward-word
-bindkey "^[OC" forward-word
+########## vi-mode bindings #########
+bindkey -v
+bindkey -M viins 'jk' vi-cmd-mode
+bindkey -M viins ' ' magic-space
+# Edit line in vim with ctrl-e:
+autoload edit-command-line; zle -N edit-command-line
+bindkey '^e' edit-command-line
 
-# Line mappings
-bindkey "^U" backward-kill-line
-bindkey "^Q" push-line-or-edit
-
+bindkey -M viins '^s' history-incremental-pattern-search-backward
+bindkey -M viins '^u' backward-kill-line
+bindkey -M viins '^w' backward-kill-word
+bindkey -M viins '^g' push-line-or-edit
+bindkey -M viins '^a' beginning-of-line
+bindkey -M viins '^e' end-of-line
+bindkey -M vicmd '^k' kill-line
+bindkey -M vicmd 'H'  run-help
 # bind UP and DOWN arrow keys
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
@@ -35,3 +32,14 @@ fancy-ctrl-z () {
 }
 zle -N fancy-ctrl-z
 bindkey '^Z' fancy-ctrl-z
+
+# Fix the DEL key
+bindkey -M vicmd "^[[3~" delete-char
+bindkey "^[[3~" delete-char
+
+# Fix vimmish ESC
+bindkey -sM vicmd '^[' '^G'
+bindkey -rM viins '^X'
+bindkey -M viins '^X,' _history-complete-newer \
+  '^X/' _history-complete-older \
+  '^X`' _bash_complete-word

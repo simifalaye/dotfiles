@@ -1,7 +1,7 @@
 ########## Aliases ##########
 
 # Editor
-alias vim="nvim"
+command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
 
 # ls aliases
 alias ls='ls --color=auto'

@@ -5,7 +5,12 @@ _load_repo chriskempson/base16-shell $BASE16_SHELL
 [ -n "$PS1" ] && eval "$("$BASE16_PROFILE")"
 
 ########## Utilities ##########
-_is_callable "rg" && export FZF_DEFAULT_COMMAND='rg --files --hidden'; export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+setopt PROMPT_SUBST
+_is_callable "rg" &&
+{
+    export FZF_DEFAULT_COMMAND='rg --files --hidden'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+}
 
 ## Jobs
 setopt LONG_LIST_JOBS     # List jobs in the long format by default.
