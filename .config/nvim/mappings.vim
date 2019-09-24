@@ -1,6 +1,6 @@
 "---------- General Mappings ----------"
 " Exit insert and command mode with jk
-imap jk <C-c>
+imap jk <esc>
 
 " reload .vimrc
 nnoremap <leader>v :so $MYVIMRC<cr>:echo ".vimrc reloaded"<cr>
@@ -50,7 +50,7 @@ nmap <leader>q :Sayonara<cr>
 
 "-- Nerdtree --"
 nmap <C-n> :NERDTreeToggle<CR>
-nmap <leader>n :NERDTreeFind<CR>
+nmap <leader>o :silent! NERDTreeFind<CR>
 
 "-- Commentary --"
 nmap // gcc

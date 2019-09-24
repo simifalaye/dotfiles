@@ -17,8 +17,8 @@ bindkey -M viins '^e' end-of-line
 bindkey -M vicmd '^k' kill-line
 bindkey -M vicmd 'H'  run-help
 # bind UP and DOWN arrow keys
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+bindkey '^[OA' history-substring-search-up
+bindkey '^[OB' history-substring-search-down
 
 # <5.0.8 doesn't have visual map
 if is-at-least 5.0.8; then

@@ -43,9 +43,11 @@ Plug 'chriskempson/base16-vim'
 Plug 'daviesjamie/vim-base16-lightline'
 Plug 'itchyny/lightline.vim'
 Plug 'ap/vim-buftabline'
+Plug 'myusuf3/numbers.vim'
 
 "-- Syntax, language --"
 Plug 'vim-syntastic/syntastic'
 Plug 'sheerun/vim-polyglot'
+Plug 'kergoth/vim-bitbake'
 
 call plug#end()

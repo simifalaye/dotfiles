@@ -40,10 +40,7 @@ set backspace=indent,eol,start "for ssh terminals
 set vb t_vb=        "shush, no beep
 set scrolloff=5     "keep 5 lines of context at end of file when scrolling
 set complete=.,w,b,u,U,t,i,d  " do lots of scanning on tab completion
-autocmd BufWritePre * :%s/\s\+$//e "remove trailing white space on save
-highlight SpecialKey ctermfg=1
-set list
-set listchars=tab:T>
+au! BufNewFile,BufRead *.rockspec setf lua
 set encoding=utf8
 
 "---------- Files, backups and undo ----------"
@@ -82,6 +79,11 @@ au BufRead,BufNewFile *.py setlocal textwidth=80
 " Better autocompletion for filenames, buffers, colors, etc.
 set wildmenu
 set wildmode=longest:full,full
+" Remove trailing whitespace on save
+autocmd BufWritePre * :%s/\s\+$//e
+" Show specific characters
+set list
+set listchars=tab:T>,trail:.,extends:>,precedes:<,nbsp:+
 " Return to last edit position when opening files (You want this!)
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 " VimSplits

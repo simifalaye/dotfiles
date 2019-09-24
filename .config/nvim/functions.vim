@@ -23,17 +23,17 @@ endfunction
 " Gets vim-plug
 function! GetVimPlug(dir)
   if empty(glob(a:dir . '/plug.vim')) && executable('curl')
-      execute 'silent !curl -fLo ' . a:dir . '/plug.vim --create-dirs ' .
-            \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-      autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    execute 'silent !curl -fLo ' . a:dir . '/plug.vim --create-dirs ' .
+          \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
   endif
 endfunction
 
 "-- Lightline Git Integration --"
 function! LightlineFugitive()
   if exists("*fugitive#head")
-      let branch = fugitive#head()
-      return branch !=# '' ? ' '.branch : ''
+    let branch = fugitive#head()
+    return branch !=# '' ? ' '.branch : ''
   endif
   return ''
 endfunction
