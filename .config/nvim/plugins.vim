@@ -9,11 +9,9 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'cohama/lexima.vim'
 Plug 'matze/vim-move'
-Plug 'svermeulen/vim-easyclip'
 " Fix vim copy-paste
-"Plug 'sickill/vim-pasta'
-"Plug 'svermeulen/vim-cutlass'
-"Plug 'svermeulen/vim-subversive'
+Plug 'sickill/vim-pasta'
+Plug 'svermeulen/vim-subversive'
 
 "-- Utilities --"
 Plug 'tpope/vim-fugitive'

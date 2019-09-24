@@ -16,6 +16,18 @@ nnoremap E $
 nnoremap $ <nop>
 nnoremap ^ <nop>
 
+" Blackhole register
+nnoremap c "_c
+xnoremap c "_c
+nnoremap cc "_S
+nnoremap C "_C
+xnoremap C "_C
+nnoremap d "_d
+xnoremap d "_d
+nnoremap dd "_dd
+nnoremap D "_D
+nnoremap D "_D
+
 " Terminal bindings
 nnoremap <Leader>ts <C-W>s:te<CR>
 nnoremap <Leader>tv <C-W>v:te<CR>
@@ -41,21 +53,21 @@ nmap <C-n> :NERDTreeToggle<CR>
 nmap <leader>n :NERDTreeFind<CR>
 
 "-- Commentary --"
-nmap <leader>/ gcc
-xmap / <Plug>(Commentary)
+nmap // gcc
+xmap / <Plug>Commentary
 
 "-- EasyAlign --"
 " start interactive EasyAlign for a motion/text object (e.g. <leader>aip)
 nmap <leader>a <Plug>(EasyAlign)
 xmap <enter> <Plug>(EasyAlign)
 
-"-- EasyClip --"
-" Remap copy, paste, cut
-vmap <C-c> y
-vmap <C-v> s
-vmap <C-x> m
-imap <c-v> <plug>EasyClipInsertModePaste
-cmap <c-v> <plug>EasyClipCommandModePaste
+"-- Subversive --"
+nmap s <plug>(SubversiveSubstitute)
+nmap ss <plug>(SubversiveSubstituteLine)
+nmap S <plug>(SubversiveSubstituteToEndOfLine)
+nmap <leader>s <plug>(SubversiveSubstituteRange)
+xmap <leader>s <plug>(SubversiveSubstituteRange)
+nmap <leader>ss <plug>(SubversiveSubstituteWordRange)
 
 "-- FZF and Fugitive --"
 nnoremap <silent><C-p> :GFiles<cr>

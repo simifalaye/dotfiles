@@ -34,13 +34,6 @@ autocmd FileType vim setlocal commentstring=\"\ %s
 autocmd FileType c,cpp,java setlocal commentstring=//\ %s
 autocmd FileType conf,bitbake setlocal commentstring=#\ %s
 
-"-- vim-easyclip --"
-let g:EasyClipUseSubstituteDefaults = 1
-let g:EasyClipUsePasteDefaults = 0
-let g:EasyClipAlwaysMoveCursorToEndOfPaste = 1
-let g:EasyClipAutoFormat = 1
-nmap <leader>cu <plug>EasyClipToggleFormattedPaste
-
 "-- fzf.vim --"
 let g:fzf_colors =
   \ { 'fg':      ['fg', 'Normal'],

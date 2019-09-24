@@ -11,6 +11,17 @@ export VIM_HOME_DIR="$XDG_CONFIG_HOME/nvim"
 export FZF_SOURCE_DIR="$XDG_CONFIG_HOME/.fzf"
 export TMUX_HOME="$XDG_CONFIG_HOME/tmux"
 
+# wsl specific
+if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
+    export IS_WSL_DEVICE=true
+    # IMPORTANT (for vim copy paste)
+    export DISPLAY=:0
+    # For wsl dir colors
+    LS_COLORS="ow=01;36;40" && export LS_COLORS
+    # Wsl file/folder permissions metadata
+    umask 022
+fi
+
 ########## Editors ##########
 export EDITOR='nvim'
 export GIT_EDITOR="$EDITOR"
@@ -30,5 +41,3 @@ stty -ixon
 
 # Ignore basic commands in history
 export HISTORY_IGNORE="(ls|bg|fg|pwd|exit|cd ..)"
-
-umask 022
