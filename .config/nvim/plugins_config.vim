@@ -39,6 +39,7 @@ let g:EasyClipUseSubstituteDefaults = 1
 let g:EasyClipUsePasteDefaults = 0
 let g:EasyClipAlwaysMoveCursorToEndOfPaste = 1
 let g:EasyClipAutoFormat = 1
+nmap <leader>cu <plug>EasyClipToggleFormattedPaste
 
 "-- fzf.vim --"
 let g:fzf_colors =

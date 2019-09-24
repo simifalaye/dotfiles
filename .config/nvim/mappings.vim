@@ -41,10 +41,13 @@ nmap <C-n> :NERDTreeToggle<CR>
 nmap <leader>n :NERDTreeFind<CR>
 
 "-- Commentary --"
-xmap / <Plug>Commentary
+nmap <leader>/ gcc
+xmap / <Plug>(Commentary)
 
 "-- EasyAlign --"
-xmap ga <Plug>(EasyAlign)
+" start interactive EasyAlign for a motion/text object (e.g. <leader>aip)
+nmap <leader>a <Plug>(EasyAlign)
+xmap <enter> <Plug>(EasyAlign)
 
 "-- EasyClip --"
 " Remap copy, paste, cut
