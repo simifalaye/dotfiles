@@ -5,6 +5,7 @@ export XDG_DATA_HOME=~/.local/share
 export XDG_BIN_HOME=~/.local/bin
 export BASHRC_FILE_LOC="$HOME/.bashrc"
 export ZSHRC_FILE_LOC="$XDG_CONFIG_HOME/zsh/.zshrc"
+export BROWSER='firefox'
 
 ########## Program Variables ##########
 export VIM_HOME_DIR="$XDG_CONFIG_HOME/nvim"

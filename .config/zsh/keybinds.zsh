@@ -50,14 +50,6 @@ fancy-ctrl-z () {
 zle -N fancy-ctrl-z
 bindkey '^Z' fancy-ctrl-z
 
-# Expand aliases
-function expand-alias() {
-  zle _expand_alias
-  zle self-insert
-}
-zle -N expand-alias
-bindkey -M main ' ' expand-alias
-
 # Fix the DEL key
 bindkey -M vicmd "^[[3~" delete-char
 bindkey "^[[3~" delete-char

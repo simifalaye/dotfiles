@@ -43,6 +43,16 @@ set complete=.,w,b,u,U,t,i,d  " do lots of scanning on tab completion
 au! BufNewFile,BufRead *.rockspec setf lua
 set encoding=utf8
 
+"---------- General config ----------"
+
+" Remove escape delay
+set timeoutlen=1000
+set ttimeoutlen=0
+" fast tty
+if !has('nvim')
+  set ttyfast
+endif
+
 "---------- Files, backups and undo ----------"
 
 " Reload files changed outside vim
@@ -61,9 +71,6 @@ set undofile
 if !exists(':W')
     command W w !sudo tee % > /dev/null
 endif
-" Remove escape delay
-set timeoutlen=1000
-set ttimeoutlen=0
 
 "---------- User Interface ----------"
 
@@ -72,10 +79,6 @@ set hidden
 set number
 " Allow mouse usage
 set mouse=a
-" Buf file
-au! BufNewFile,BufRead *.rockspec setf lua
-" Set text line width for python files
-au BufRead,BufNewFile *.py setlocal textwidth=80
 " Better autocompletion for filenames, buffers, colors, etc.
 set wildmenu
 set wildmode=longest:full,full

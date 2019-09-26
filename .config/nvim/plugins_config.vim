@@ -15,7 +15,6 @@ let g:NERDTreeStHatusline = " "
 let g:NERDTreeWinPos = "left"
 
 "-- DeopleteMe & Neosnippets --"
-let g:SuperTabDefaultCompletionType = "<c-n>"
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 1
 let g:deoplete#sources#clang#libclang_path = "/usr/lib/llvm-6.0/lib/libclang.so.1"

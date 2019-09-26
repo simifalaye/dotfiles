@@ -2,14 +2,12 @@
 call GetVimPlug(vimautoloaddir)
 call plug#begin(vimplugdir)
 
-
 "-- Text manipulation --"
 Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
-Plug 'cohama/lexima.vim'
+Plug 'Raimondi/delimitMate'
 Plug 'matze/vim-move'
-" Fix vim copy-paste
 Plug 'sickill/vim-pasta'
 Plug 'svermeulen/vim-subversive'
 

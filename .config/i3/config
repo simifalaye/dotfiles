@@ -10,7 +10,7 @@
 
 set $mod Mod4
 
-# Monitor globals
+# Globals
 set $primary-monitor "HDMI-1"
 set $secondary-monitor "HDMI-2"
 
@@ -118,13 +118,16 @@ bindsym $mod+d focus child
 
 # Make the currently focused window a scratchpad
 bindsym $mod+minus move scratchpad
-
-# Show the first scratchpad window
-bindsym $mod+plus scratchpad show, floating disable
+# Show the first scratchpad window (Also works as a toggle)
+bindsym $mod+plus scratchpad show
 
 # View cheatsheets
-bindsym $mod+Control+v exec --no-startup-id $HOME/.config/i3/cheatsheet.sh $HOME/.config/nvim/cheatsheet.txt
+bindsym $mod+Control+v exec --no-startup-id $HOME/.config/i3/scripts/cheatsheet $HOME/.config/i3/cheatsheets/cheatsheet.txt
 for_window [instance="st" title="Cheatsheet"] floating enable, fullscreen enable
+
+# Startup mutt
+bindsym $mod+e focus output $primary-monitor, exec --no-startup-id $HOME/.config/i3/scripts/mutt_toggle
+for_window [instance="st" title="Email"] mark email, floating enable, resize set 1400 800, move position center, border 1px
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
@@ -200,10 +203,7 @@ bindsym $mod+c exec gnome-control-center
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
 
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
+        # Grow and shrink the window
         bindsym h resize shrink width 10 px or 10 ppt
         bindsym j resize shrink height 10 px or 10 ppt
         bindsym k resize grow height 10 px or 10 ppt
