@@ -14,11 +14,6 @@ alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}"
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
-# navigation aliases
-alias home="cd ~"
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
 
 # bat aliases (a better cat)
 command -v bat >/dev/null && alias cat="bat -p"
@@ -32,6 +27,19 @@ command -v tmux >/dev/null && {
     alias ta='tmux attach -t'
     alias tl='tmux ls'
 }
+
+# Bookmarks
+alias home="cd ~; ll"
+alias dl='cd ~/Downloads; ll'
+alias dev='cd ~/dev; ll'
+alias dl='cd ~/Downloads; ll'
+alias docs='cd ~/Documents; ll'
+alias works='cd ~/Workspaces; ll'
+alias pics='cd ~/Pictures; ll'
+alias vids='cd ~/Videos; ll'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
 
 ########## Private Functions ##########
 

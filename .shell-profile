@@ -1,10 +1,15 @@
 ########## ENV ##########
+USER_LANGUAGE="en_US.UTF-8"
+
 export XDG_CACHE_HOME=~/.cache
 export XDG_CONFIG_HOME=~/.config
 export XDG_DATA_HOME=~/.local/share
 export XDG_BIN_HOME=~/.local/bin
 export BASHRC_FILE_LOC="$HOME/.bashrc"
 export ZSHRC_FILE_LOC="$XDG_CONFIG_HOME/zsh/.zshrc"
+export LC_ALL=${USER_LANGUAGE}
+export LANG=${USER_LANGUAGE}
+export LANGUAGE=${USER_LANGUAGE}
 export BROWSER='firefox'
 
 ########## Program Variables ##########

@@ -6,9 +6,6 @@ cmap jk <esc>
 " reload .vimrc
 nnoremap <leader>r :so $MYVIMRC<cr>:echo ".vimrc reloaded"<cr>
 
-" Hide last search highlights
-nnoremap <silent> <leader><space> :nohlsearch<CR>
-
 " Easy moves through lines (and wrapped ones)
 nnoremap j gj
 nnoremap k gk
@@ -63,6 +60,12 @@ map <leader>et :tabe %%
 " reselect pasted text
 nnoremap <leader>v V`]
 
+" % matchit shortcut, but only in normal mode!
+nmap <Tab> %
+
+" Hide last search highlights
+nnoremap <silent> <leader><space> :nohlsearch<CR>
+
 "---------- Plugin Mappings ----------"
 
 "-- Sayonara --"
@@ -72,7 +75,7 @@ nmap <leader>q :NERDTreeClose<cr>:Sayonara<cr>
 nmap <leader>n :NERDTreeToggle<CR>
 nmap <leader>f :silent! NERDTreeFind<CR>
 
-""-- EasyAlign --"
+"-- EasyAlign --"
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)

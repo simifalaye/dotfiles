@@ -5,7 +5,7 @@ My dotfile configuration for a linux system, managed by Yadm (Yet Another Dotfil
 
 Ubuntu 18.04.
 
-[![theme sample](https://raw.githubusercontent.com/simifalaye/dotfiles/master/.config/ubuntu_system.png)](https://raw.githubusercontent.com/simifalaye/dotfiles/master/.config/ubuntu_system.png)
+[![theme sample](https://raw.githubusercontent.com/simifalaye/dotfiles/master/.config/ubuntu_system.png)](https://raw.githubusercontent.com/simifalaye/dotfiles/master/.config/meta/ubuntu_system.png)
 
 ## Graphical Applications
 
@@ -24,12 +24,13 @@ In this section will be listed all the Graphical Applications. A separate sectio
 
 - [Libreoffice](https://libreoffice.org) - Office suite.
 - [Firefox](https://www.mozilla.org/pt-PT/firefox/) - My primary internet browser.
+    - [MaterialFox](https://github.com/muckSponge/MaterialFox) - Better looking css for firefox.
 - [Mattermost](https://mattermost.com/) - Text Chat.
 
 ### Utilities
 
 - [Nautilus](https://wiki.gnome.org/action/show/Apps/Files?action=show&redirect=Apps%2FNautilus) - File manager.
-- [Gnome Terminal](https://help.gnome.org/users/gnome-terminal/stable/) - A terminal emulator for Linux using GTK+ 3.
+- [st](https://st.suckless.org/) - A fast and lightweight terminal
 - [Bleachbit](https://www.bleachbit.org/) - System cleaner tool.
 - [Peek](https://github.com/phw/peek) - Simple animated GIF screen recorder with an easy to use interface.
 
@@ -68,3 +69,4 @@ I use ZSH shell:
 - [tmux](https://github.com/tmux/tmux) and [tmuxp](https://github.com/tmux-python/tmuxp) - Terminal multiplexer and session manager.
 - [yadm](https://github.com/TheLocehiliosan/yadm) - Dotfiles Manager.
 - [mdless](https://github.com/ttscoff/mdless) - Markdown file viewer.
+- [ripgrep](https://github.com/BurntSushi/ripgrep) - A faster grep

@@ -5,17 +5,12 @@ let fzf_src_dir = !empty($FZF_SOURCE_DIR) ? $FZF_SOURCE_DIR : "~/.fzf"
 
 " Use leader to specify extra keybinding
 let mapleader = " "
-" Set clipboard
-set clipboard=unnamedplus
 
 " Set directories
 let vimplugdir=vim_home_dir . "/plugged"
 let vimautoloaddir=$EDITOR == "nvim" ? $HOME . "/.local/share/nvim/site/autoload" : vim_home_dir . "/autoload"
 let vimundodir=vim_home_dir . "/undodir"
 let fzfsourcedir=fzf_src_dir
-
-" Set tags file locations for ctags
-set tags=./tags,./.git/tags;
 
 "---------- Work standard vim setup ----------"
 
@@ -45,6 +40,8 @@ set encoding=utf8
 
 "---------- General config ----------"
 
+" Set clipboard
+set clipboard=unnamedplus
 " Remove escape delay
 set timeoutlen=1000
 set ttimeoutlen=0
@@ -52,9 +49,13 @@ set ttimeoutlen=0
 if !has('nvim')
   set ttyfast
 endif
+" Set tags file locations for ctags
+set tags=./tags,./.git/tags;
 
 "---------- Files, backups and undo ----------"
 
+" Allow buffers to remain hidden when not in use
+set hidden
 " Reload files changed outside vim
 set autoread
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
@@ -74,7 +75,6 @@ endif
 
 "---------- User Interface ----------"
 
-set hidden
 " Display line numbers
 set number
 " Allow mouse usage
