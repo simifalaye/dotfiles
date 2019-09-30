@@ -1,4 +1,6 @@
-"-- Syntastic --"
+" Syntastic
+" ---------
+
 autocmd BufNewFile,BufRead *.c,*.h call SyntasticSETUP()
 let g:syntastic_enable_signs=1
 let g:syntastic_enable_highlighting=1
@@ -8,32 +10,42 @@ let g:syntastic_c_remove_include_errors = 1
 let g:syntastic_check_on_open=0
 let g:syntastic_check_on_wq=0
 
-"-- Nerdtree --"
+" NerdTree
+" --------
+
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 let g:NERDTreeMinimalUI = 1
 let g:NERDTreeStHatusline = " "
 let g:NERDTreeWinPos = "left"
 
-"-- DeopleteMe & Neosnippets --"
+" DeopleteMe & Neosnippets
+" -------------------------
+
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 1
 let g:deoplete#sources#clang#libclang_path = "/usr/lib/llvm-6.0/lib/libclang.so.1"
 let g:deoplete#sources#clang#clang_header ="/usr/lib/llvm-6.0/lib/clang/"
 let g:neosnippet#snippets_directory=vim_home_dir . '/snippets'
 
-""-- ClangFormatter --"
+" ClangFormatter
+" --------------
+
 let g:clang_format#style_options = {
             \ "BreakBeforeBraces" : "Allman",
             \ "ColumnLimit" : "79",
             \ "Standard" : "C++11"}
 
-"-- vim-commentary --"
+" Vim Commentary
+" --------------
+
 " Set commentstring for file types
 autocmd FileType vim setlocal commentstring=\"\ %s
 autocmd FileType c,cpp,java setlocal commentstring=//\ %s
 autocmd FileType conf,bitbake setlocal commentstring=#\ %s
 
-"-- fzf.vim --"
+" Fzf vim
+" --------
+
 let g:fzf_colors =
   \ { 'fg':      ['fg', 'Normal'],
   \ 'bg':      ['bg', 'Normal'],
@@ -53,7 +65,9 @@ let g:fzf_action = {
   \ 'ctrl-s': 'split',
   \ 'ctrl-v': 'vsplit' }
 
-"-- Lightline --"
+" Lightline
+" ---------
+
 let g:lightline = {
       \   'colorscheme': 'base16',
       \   'active': {
@@ -71,6 +85,8 @@ let g:lightline = {
       \   },
       \ }
 
-"-- Buftabline --"
+" Buftabline
+" -----------
+
 let g:buftabline_numbers = 1
 let g:buftabline_indicators = 1

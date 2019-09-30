@@ -1,5 +1,20 @@
+# Description
+# ===========
+# This is the first user configuration entry point for any running zsh
+# shell session. This file is always sourced:
+# +----------------+-----------+-----------+------+
+# |                |Interactive|Interactive|Script|
+# |                |login      |non-login  |      |
+# +----------------+-----------+-----------+------+
+# |~/.zshenv       |    y      |    y      |  y   |
+# +----------------+-----------+-----------+------+
+# |$ZDOTDIR/.zshrc |    y      |    y      |  n   |
+# +----------------+-----------+-----------+------+
+# |$ZDOT../.zlogout|    y      |    n      |  n   |
+# +----------------+-----------+-----------+------+
+
 # Source global definitions
-test -r ~/.shell-profile && . ~/.shell-profile
+test -r ~/.config/shell/shell-profile && . ~/.config/shell/shell-profile
 
 # Move ZDOTDIR from $HOME to reduce dotfile pollution.
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"

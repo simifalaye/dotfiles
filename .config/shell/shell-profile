@@ -1,18 +1,22 @@
-########## ENV ##########
+# ENV
+# ---
+
 USER_LANGUAGE="en_US.UTF-8"
 
 export XDG_CACHE_HOME=~/.cache
 export XDG_CONFIG_HOME=~/.config
 export XDG_DATA_HOME=~/.local/share
 export XDG_BIN_HOME=~/.local/bin
-export BASHRC_FILE_LOC="$HOME/.bashrc"
-export ZSHRC_FILE_LOC="$XDG_CONFIG_HOME/zsh/.zshrc"
+export SHELL_CONF_HOME=~/.config/shell
 export LC_ALL=${USER_LANGUAGE}
 export LANG=${USER_LANGUAGE}
 export LANGUAGE=${USER_LANGUAGE}
 export BROWSER='firefox'
+export TESTENVS="PROFILE"
 
-########## Program Variables ##########
+# Program Variables
+# -----------------
+
 export VIM_HOME_DIR="$XDG_CONFIG_HOME/nvim"
 export FZF_SOURCE_DIR="$XDG_CONFIG_HOME/.fzf"
 export TMUX_HOME="$XDG_CONFIG_HOME/tmux"
@@ -28,16 +32,23 @@ if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
     umask 022
 fi
 
-########## Editors ##########
+# Editors
+# -------
+
 export EDITOR='nvim'
 export GIT_EDITOR="$EDITOR"
 export USE_EDITOR="$EDITOR"
 export VISUAL=$EDITOR
 
-########## Paths ##########
-[ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
+# Paths
+# -----
 
-########## Pager and flow: ##########
+[ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
+[ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
+
+# Pager and flow
+# --------------
+
 export PAGER=less
 export LESS='-iFMRSX -x4'
 # make less more friendly for non-text input files, see lesspipe(1)

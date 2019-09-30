@@ -1,10 +1,14 @@
-########## Colors: Base16 Shell ##########
+# Colors: Base16 Shell
+# ---------------------
+
 BASE16_SHELL="$HOME/.config/base16-shell"
 BASE16_PROFILE="$BASE16_SHELL/profile_helper.sh"
 _load_repo chriskempson/base16-shell $BASE16_SHELL
 [ -n "$PS1" ] && eval "$("$BASE16_PROFILE")"
 
-########## Utilities ##########
+# Utilities
+# ---------
+
 setopt PROMPT_SUBST
 _is_callable "rg" &&
 {
@@ -12,7 +16,9 @@ _is_callable "rg" &&
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 }
 
-## Jobs
+# Jobs
+# ----
+
 setopt LONG_LIST_JOBS     # List jobs in the long format by default.
 setopt AUTO_RESUME        # Attempt to resume existing job before creating a new process.
 setopt NOTIFY             # Report status of background jobs immediately.
@@ -21,7 +27,9 @@ unsetopt HUP              # Don't kill jobs on shell exit.
 unsetopt CHECK_JOBS       # Don't report on jobs when shell exit.
 unsetopt FLOW_CONTROL     # Disable ctrl s for flow control
 
-########## History ##########
+# History
+# --------
+
 HISTFILE="$XDG_CACHE_HOME/zhistory"
 HISTSIZE=1000                    # Max events to store in internal history.
 SAVEHIST=1000                    # Max events to store in history file.
@@ -38,7 +46,9 @@ setopt HIST_SAVE_NO_DUPS         # Do not write a duplicate event to the history
 setopt HIST_VERIFY               # Do not execute immediately upon history expansion.
 setopt HIST_BEEP                 # Beep when accessing non-existent history.
 
-########## Directories ##########
+# Directories
+# -----------
+
 DIRSTACKSIZE=9
 setopt AUTO_CD              # Auto changes to a directory without typing cd.
 setopt AUTO_PUSHD           # Push the old directory onto the stack on cd.

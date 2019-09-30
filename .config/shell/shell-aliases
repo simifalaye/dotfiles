@@ -1,4 +1,5 @@
-########## Aliases ##########
+# Aliases
+# -------
 
 # Editor
 command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
@@ -6,7 +7,7 @@ command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
 # Common task aliases
 alias q=exit
 alias clr=clear
-alias ls='ls --color=auto'
+alias ls='ls --color=auto --group-directories-first'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
@@ -29,19 +30,20 @@ command -v tmux >/dev/null && {
 }
 
 # Bookmarks
-alias home="cd ~; ll"
-alias dl='cd ~/Downloads; ll'
-alias dev='cd ~/dev; ll'
-alias dl='cd ~/Downloads; ll'
-alias docs='cd ~/Documents; ll'
-alias works='cd ~/Workspaces; ll'
-alias pics='cd ~/Pictures; ll'
-alias vids='cd ~/Videos; ll'
+alias home="cd ~; ls"
+alias dl='cd ~/Downloads; ls'
+alias dev='cd ~/dev; ls'
+alias dl='cd ~/Downloads; ls'
+alias docs='cd ~/Documents; ls'
+alias works='cd ~/Workspaces; ls'
+alias pics='cd ~/Pictures; ls'
+alias vids='cd ~/Videos; ls'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 
-########## Private Functions ##########
+# Private Functions
+# -----------------
 
 function _is_interactive { [[ $- == *i* || -n $EMACS ]]; }
 
@@ -85,7 +87,8 @@ function _load_repo
     [ -z "$src" ] || _load $dest/$src
 }
 
-########## Public Functions ##########
+# Public Functions
+# -----------------
 
 # mkdir and cd into it
 take() { mkdir "$1" && cd "$1"; };
@@ -119,10 +122,33 @@ function reloadshell()
 {
     currentshell=$(ps -fp $$)
     if [[ $currentshell =~ "zsh" ]]; then
-        zgen reset && source $ZSHRC_FILE_LOC && echo "Zsh reloaded."
+        zgen reset && source $ZDOTDIR/.zshrc && echo "Zsh reloaded."
     elif [[ $currentshell =~ "bash" ]]; then
-        source $BASHRC_FILE_LOC && echo "Bash reloaded."
+        source $SHELL_CONF_HOME/bashrc && echo "Bash reloaded."
     else
         echo "Failed to reload shell."
     fi
+}
+
+# Back up a file. Usage "backupthis <filename>"
+backupthis() {
+    cp -riv $1 ${1}-$(date +%Y%m%d%H%M).backup;
+}
+
+# Colourise man pages
+man() {
+    env \
+    LESS_TERMCAP_mb=$(tput bold; tput setaf 6) \
+    LESS_TERMCAP_md=$(tput bold; tput setaf 6) \
+    LESS_TERMCAP_me=$(tput sgr0) \
+    LESS_TERMCAP_se=$(tput rmso; tput sgr0) \
+    LESS_TERMCAP_ue=$(tput rmul; tput sgr0) \
+    LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 4) \
+    LESS_TERMCAP_mr=$(tput rev) \
+    LESS_TERMCAP_mh=$(tput dim) \
+    LESS_TERMCAP_ZN=$(tput ssubm) \
+    LESS_TERMCAP_ZV=$(tput rsubm) \
+    LESS_TERMCAP_ZO=$(tput ssupm) \
+    LESS_TERMCAP_ZW=$(tput rsupm) \
+        man "$@"
 }

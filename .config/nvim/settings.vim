@@ -1,58 +1,54 @@
-"---------- Globals ----------"
-
-let vim_home_dir = !empty($VIM_HOME_DIR) ? $VIM_HOME_DIR : "~/.vim"
-let fzf_src_dir = !empty($FZF_SOURCE_DIR) ? $FZF_SOURCE_DIR : "~/.fzf"
+" Globals
+" -------
+" Variables that will be used in the whole vim config
 
 " Use leader to specify extra keybinding
 let mapleader = " "
-
-" Set directories
+" Get useful env variables if set
+let vim_home_dir = !empty($VIM_HOME_DIR) ? $VIM_HOME_DIR : "~/.vim"
+let fzf_src_dir = !empty($FZF_SOURCE_DIR) ? $FZF_SOURCE_DIR : "~/.fzf"
+" Set directory variables
 let vimplugdir=vim_home_dir . "/plugged"
 let vimautoloaddir=$EDITOR == "nvim" ? $HOME . "/.local/share/nvim/site/autoload" : vim_home_dir . "/autoload"
 let vimundodir=vim_home_dir . "/undodir"
 let fzfsourcedir=fzf_src_dir
 
-"---------- Work standard vim setup ----------"
+" General settings
+" ----------------
+" Read documentation about each option by executing :h <option>
 
-filetype on         "identify file types
-filetype indent on  "indent based on filetype
-filetype plugin on  "enable file-specific plugins
-syntax on           "filetype syntax highlighting
-set expandtab       "Turn tabs into spaces
-set tabstop=4       "use 4-space tabs when [tab] is pressed
-set shiftwidth=4    "use 4-space tabs when reading files
-set showmatch       "highlight the bracket match
-set ruler           "always show the bottom line
-set showmode        "show mode (INSERT/OVER) in ruler
-set autoindent      "auto-indent when going to a new line
-set smartindent     "guess the indent level based on code
-set showcmd         "show partial cmd in ruler
-set ignorecase      "ignore case when searching (search in all lower case!)
-set smartcase       "If upper case is provided in searching, search for it
-set incsearch       "highlight search terms as you search
-set hlsearch        "highlight search results
-set backspace=indent,eol,start "for ssh terminals
-set vb t_vb=        "shush, no beep
-set scrolloff=5     "keep 5 lines of context at end of file when scrolling
-set complete=.,w,b,u,U,t,i,d  " do lots of scanning on tab completion
-au! BufNewFile,BufRead *.rockspec setf lua
-set encoding=utf8
+filetype on                    " identify file types
+filetype indent on             " indent based on filetype
+filetype plugin on             " enable file-specific plugins
+syntax on                      " filetype syntax highlighting
+set expandtab                  " Turn tabs into spaces
+set tabstop=4                  " use 4-space tabs when [tab] is pressed
+set shiftwidth=4               " use 4-space tabs when reading files
+set showmatch                  " highlight the bracket match
+set ruler                      " always show the bottom line
+set showmode                   " show mode (INSERT/OVER) in ruler
+set autoindent                 " auto-indent when going to a new line
+set smartindent                " guess the indent level based on code
+set showcmd                    " show partial cmd in ruler
+set ignorecase                 " ignore case when searching (search in all lower case!)
+set smartcase                  " If upper case is provided in searching, search for it
+set incsearch                  " highlight search terms as you search
+set hlsearch                   " highlight search results
+set backspace=indent,eol,start " for ssh terminals
+set vb t_vb=                   " shush, no beep
+set scrolloff=5                " keep 5 lines of context at end of file when scrolling
+set complete=.,w,b,u,U,t,i,d   " do lots of scanning on tab completion
+set encoding=utf8              " default character encoding
+                               " Custom settings
+set clipboard=unnamedplus      " set clipboard to use
+set timeoutlen=1000            " remove escape delay
+set ttimeoutlen=0              " remove escape delay
+set tags=./tags,./.git/tags;   " Set tags file locations for ctags
+set wildmenu                   " enable tab completion in commands
+set wildmode=longest:full,full " settings for how to complete matched strings
 
-"---------- General config ----------"
-
-" Set clipboard
-set clipboard=unnamedplus
-" Remove escape delay
-set timeoutlen=1000
-set ttimeoutlen=0
-" fast tty
-if !has('nvim')
-  set ttyfast
-endif
-" Set tags file locations for ctags
-set tags=./tags,./.git/tags;
-
-"---------- Files, backups and undo ----------"
+" Files and buffers
+" -----------------
 
 " Allow buffers to remain hidden when not in use
 set hidden
@@ -73,15 +69,13 @@ if !exists(':W')
     command W w !sudo tee % > /dev/null
 endif
 
-"---------- User Interface ----------"
+" User Interface
+" --------------
 
 " Display line numbers
 set number
 " Allow mouse usage
 set mouse=a
-" Better autocompletion for filenames, buffers, colors, etc.
-set wildmenu
-set wildmode=longest:full,full
 " Remove trailing whitespace on save
 autocmd BufWritePre * :%s/\s\+$//e
 " Show specific characters
@@ -96,3 +90,10 @@ set fillchars=""
 " Disable Netrw
 let g:loaded_netrw = 1
 let g:loaded_netrwPlugin = 1
+
+" Helpers
+" -------
+
+" abbreviations (try not to use common words)
+iab tdate <c-r>=strftime("%Y-%m-%d")<cr>
+iab mename Simi Falaye

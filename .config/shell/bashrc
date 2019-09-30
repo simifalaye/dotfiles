@@ -1,8 +1,11 @@
+# Description
+# ===========
 # At startup, depending on the case:
 # - run as a login shell (or with the option --login), it executes profile (or
 # bash_profile instead if it exists (only user-specific version));
 # - run as an interactive, non-login shell, it executes bashrc (the system-wide
 # version is called bash.bashrc).
+# (see: http://www.solipsys.co.uk/new/BashInitialisationFiles.html)
 #
 # At exit, it executes ~/.bash_logout (the system-wide version is called
 # bash.bash_logout).
@@ -12,8 +15,10 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
+export TESTENVS="BASHRC"
+
 # Source global definitions
-test -r ~/.shell-aliases && . ~/.shell-aliases
+test -r $SHELL_CONF_HOME/shell-aliases && . $SHELL_CONF_HOME/shell-aliases
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options

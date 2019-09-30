@@ -1,15 +1,7 @@
-" Install ycm on system
-function! BuildYCM(info)
-  " info is a dictionary with 3 fields
-  " - name:   name of the plugin
-  " - status: 'installed', 'updated', or 'unchanged'
-  " - force:  set on PlugInstall! or PlugUpdate!
-  if a:info.status == 'installed' || a:info.force
-    !./install.py
-  endif
-endfunction
+" Company syntastic setup
+" -----------------------
 
-" Sets up the standard include directories based on your current working directory (company setup)
+" Sets up the standard include directories based on your current working directory
 function! SyntasticSETUP()
   let makedir = fnamemodify(findfile("Makefile", ",;"), ":.:h")
   let include_dirs = split(substitute(substitute(system("cd " . shellescape(makedir) . " ; make debug_print | grep \'INC_DIRS:\'"), "INC_DIRS:", "", "g"), " *-I", " ", "g"))
@@ -21,6 +13,8 @@ function! SyntasticSETUP()
 endfunction
 
 " Gets vim-plug
+" -------------
+
 function! GetVimPlug(dir)
   if empty(glob(a:dir . '/plug.vim')) && executable('curl')
     execute 'silent !curl -fLo ' . a:dir . '/plug.vim --create-dirs ' .
@@ -29,7 +23,9 @@ function! GetVimPlug(dir)
   endif
 endfunction
 
-"-- Lightline Git Integration --"
+" Various lightline functions
+" ---------------------------
+
 function! LightlineFugitive()
   if exists("*fugitive#head")
     let branch = fugitive#head()
@@ -38,7 +34,6 @@ function! LightlineFugitive()
   return ''
 endfunction
 
-"-- Various lightline functions --"
 function! LightlineModified()
   return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
 endfunction

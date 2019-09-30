@@ -1,7 +1,9 @@
 # Source global definitions
-test -r ~/.shell-aliases && . ~/.shell-aliases
+test -r $SHELL_CONF_HOME/shell-aliases && . $SHELL_CONF_HOME/shell-aliases
 
-########## Plugin config: Zgen #########
+# Plugin config: Zgen
+# -------------------
+
 # Load config and prompt
 _load $ZDOTDIR/config.zsh
 _load $ZDOTDIR/prompt.zsh
@@ -23,7 +25,8 @@ fi
 # Load keybinds
 _load $ZDOTDIR/keybinds.zsh
 
-########## END #########
+# MUST LOAD LAST
+# ---------------
 
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] &&
     source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh

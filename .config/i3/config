@@ -1,25 +1,24 @@
+# Description
+# ===========
 # It will not be overwritten, so edit it as you like.
-#
-# Should you change your keyboard layout some time, delete
-# this file and re-run i3-config-wizard(1).
-#
-
 # i3 config file (v4)
-#
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
-set $mod Mod4
 
 # Globals
+# -------
+
+set $mod Mod4
 set $primary-monitor "HDMI-1"
 set $secondary-monitor "HDMI-2"
 
-# ==================== Apperence/Behavior ====================
+# Apperence/Behavior
+# ------------------
 
 # Font for window titles.
 font pango:DejaVu Sans Mono 10
 
-##### Base16 Default Dark Theme ####
+# Base16 Default Dark Theme
 set $base00 #181818
 set $base01 #282828
 set $base02 #383838
@@ -53,7 +52,8 @@ gaps outer 5
 # window focus follows your mouse movements as the mouse crosses window borders
 focus_follows_mouse no
 
-# ==================== Key Bindings ====================
+# Key Bindings
+# -------------
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -232,7 +232,8 @@ bindsym $mod+g exec rofi -modi "clipboard:greenclip print" -show clipboard -run-
 bindsym $mod+p exec "rofi-pass"
 bindsym $mod+space exec "rofi -combi-modi window,drun -show combi"
 
-# ==================== Startup ====================
+# Startup
+# -------
 
 # Compton
 exec --no-startup-id compton

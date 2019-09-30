@@ -1,4 +1,6 @@
-"---------- General Mappings ----------"
+" General Mappings
+" ================
+
 " Exit insert and command mode with jk
 imap jk <esc>
 cmap jk <esc>
@@ -66,47 +68,49 @@ nmap <Tab> %
 " Hide last search highlights
 nnoremap <silent> <leader><space> :nohlsearch<CR>
 
-"---------- Plugin Mappings ----------"
+" Plugin Mappings
+" ===============
 
-"-- Sayonara --"
+" Sayonara
+" --------
 nmap <leader>q :NERDTreeClose<cr>:Sayonara<cr>
-
-"-- Nerdtree --"
+" Nerdtree
+" --------
 nmap <leader>n :NERDTreeToggle<CR>
 nmap <leader>f :silent! NERDTreeFind<CR>
-
-"-- EasyAlign --"
+" EasyAlign
+" ---------
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
-
-"-- Subversive --"
+" Subversive
+" ----------
 nmap s <plug>(SubversiveSubstitute)
 nmap ss <plug>(SubversiveSubstituteLine)
 nmap S <plug>(SubversiveSubstituteToEndOfLine)
 nmap <leader>s <plug>(SubversiveSubstituteRange)
 xmap <leader>s <plug>(SubversiveSubstituteRange)
 nmap <leader>ss <plug>(SubversiveSubstituteWordRange)
-
-"-- FZF and Fugitive --"
+" FZF and Fugitive
+" ----------------
 nnoremap <silent><C-p> :GFiles<cr>
 nnoremap <silent><C-e> :Snippets<cr>
 nnoremap <silent><C-f> :Files<CR>
 nnoremap <silent><C-g> :Rg<CR>
 nnoremap <silent>; :Buffers<CR>
-
-"-- Buftabline --"
+" Buftabline
+" ----------
 nnoremap <S-l> :bnext<CR>
 nnoremap <S-H> :bprev<CR>
-
-"-- Deoplete and Neosnippets --"
+" Deoplete and Neosnippets
+" ------------------------
 inoremap <silent><expr> <Tab>
             \ pumvisible() ? "\<C-n>" : "<Tab>"
 imap <C-j> <Plug>(neosnippet_expand_or_jump)
 smap <C-j> <Plug>(neosnippet_expand_or_jump)
 xmap <C-j> <Plug>(neosnippet_expand_target)
-
-"-- Clang Formatter --"
+" Clang Formatter
+" ---------------
 autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
 autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>

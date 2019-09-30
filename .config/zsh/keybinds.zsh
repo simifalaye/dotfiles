@@ -1,6 +1,6 @@
-autoload -U is-at-least
+# vi-mode bindings
+# ----------------
 
-########## vi-mode bindings #########
 bindkey -v
 bindkey -M viins 'jk' vi-cmd-mode
 bindkey -M viins ' ' magic-space
