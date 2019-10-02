@@ -17,6 +17,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 let g:NERDTreeMinimalUI = 1
 let g:NERDTreeStHatusline = " "
 let g:NERDTreeWinPos = "left"
+let g:NERDTreeShowHidden = 1
 
 " DeopleteMe & Neosnippets
 " -------------------------
@@ -25,7 +26,7 @@ let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 1
 let g:deoplete#sources#clang#libclang_path = "/usr/lib/llvm-6.0/lib/libclang.so.1"
 let g:deoplete#sources#clang#clang_header ="/usr/lib/llvm-6.0/lib/clang/"
-let g:neosnippet#snippets_directory=vim_home_dir . '/snippets'
+let g:neosnippet#snippets_directory=vimhomedir . '/snippets'
 
 " ClangFormatter
 " --------------

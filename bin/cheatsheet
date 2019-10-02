@@ -1,0 +1,16 @@
+#!/bin/bash
+
+[ -x /usr/local/bin/mdless ] && LESSCMD="mdless" || LESSCMD="less"
+[ -x /usr/local/bin/st ] && TERMCMD="st" || TERMCMD="gnome-terminal"
+
+path=${1}
+
+if [ -f $path ]; then
+    if $(echo "$path" | grep "vim" > /dev/null 2>&1); then
+        $TERMCMD -c "cheatsheet" -e $LESSCMD $path $XDG_CONFIG_HOME/nvim/mappings.vim
+    else
+        $TERMCMD -c "cheatsheet" -e $LESSCMD $path
+    fi
+else
+    notify-send "Cheatsheet dne"
+fi

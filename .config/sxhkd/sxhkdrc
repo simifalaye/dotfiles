@@ -1,0 +1,101 @@
+# vim: filetype=conf
+# SXHKD module with WM-agnostic keys
+#
+# ~/.config/sxhkd/sxhkdrc
+#
+# Other modules should be available at ~/.config/sxhkd/
+#
+
+# Description
+# ===========
+#
+# Partial configuration file for the Simple X Hotkey Daemon.  Meant to
+# work with `bspwm`.
+
+# Index with key chord chain mnemonics
+# ====================================
+#
+# Key chord chains are used for less common or ancillary commands, or
+# for when assigning direct keybindings would become unwieldy.  The idea
+# is to scope bindings so as to avoid conflicts.
+#
+# Environment: super + e ; ...
+# Executables which typically run in the console: super + x ; ...
+# Graphical applications: super + g ; ...
+# Assign (node flags): super + a ; ...
+# Split (split ratios): super + s ; ...
+
+# Environment
+# -----------
+
+# The following commands are:
+#
+# c == toggle compton
+# p == reload polybar
+# s == reload sxhkd
+# v == vim cheatsheet
+#
+# Recall that these depend on fils in ~/bin:
+super + e ; {c,p,s,v}
+    { \
+    toggle_compton, \
+    killall -q polybar && polybar --reload top & && notify-send "Polybar config" "Reloaded", \
+    pkill -USR1 -x sxhkd && notify-send -i debian-logo "sxhkd config" "Reloaded key bindings", \
+    cheatsheet $XDG_CONFIG_HOME/meta/cheatsheets/vim.txt \
+    }
+
+# Session management (lock)
+ctrl + alt + {Home,Delete,l}
+    gnome-screensaver-command --lock
+
+# Main programs
+# -------------
+
+# Terminal emulator with and without TMUX.  I normally use `tmux` which
+# is ideal for working on multiple terminals, switching sessions, and
+# the like.  I think it fits perfectly into a console-based workflow and
+# complements the features of a tiling WM.  No need to spawn tens of
+# terminals, like a barbarian!  Watch my screen cast on the matter:
+# https://protesilaos.com/codelog/2019-01-13-tmux-demo-bspwm/
+super + {_, shift + } Return
+    {st, firefox}
+
+# GUI programs.  Where these are alternatives to common CLI tools they
+# are mapped to the same number as their counterparts, but prepended
+# with a `g` (mnemonic for GUI).
+super + g ; {f}
+    { \
+    notify-send -i nautilus "Run GUI program" "Launching File Manager" && nautilus \
+    }
+
+# # CLI programs.  Any browser and/or file manager should be assigned the
+# # numbers 1 and 2 respectively, in order to keep consistency with the
+# # above-defined GUIs.
+# super + x ; {3-5}
+#     xterm -e {mutt,newsboat,ncmpcpp}
+
+# Toggle email
+super + n
+    toggle_email
+
+# # Bring up the help text for common keybindings
+# super + {F1,Home}
+#     xterm -class "my_float_window" \
+#     -geometry '100x30' -e less "$HOME/.config/sxhkd/cheatsheet_sxhkdrc.txt"
+
+# Run Rofi dmenu
+super + @space
+    rofi -combi-modi "window,drun" -show combi
+super + p
+    rofi-pass
+
+# Media controls
+# --------------
+
+# Volume controls
+XF86AudioRaiseVolume
+    pactl set-sink-volume 0 +5%
+XF86AudioLowerVolume
+    pactl set-sink-volume 0 -5%
+XF86AudioMute
+    pactl set-sink-mute 0 toggle

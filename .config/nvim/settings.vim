@@ -5,13 +5,12 @@
 " Use leader to specify extra keybinding
 let mapleader = " "
 " Get useful env variables if set
-let vim_home_dir = !empty($VIM_HOME_DIR) ? $VIM_HOME_DIR : "~/.vim"
-let fzf_src_dir = !empty($FZF_SOURCE_DIR) ? $FZF_SOURCE_DIR : "~/.fzf"
+let vimhomedir = !empty($VIM_HOME_DIR) ? $VIM_HOME_DIR : "~/.vim"
+let fzfsourcedir = !empty($FZF_SOURCE_DIR) ? $FZF_SOURCE_DIR : "~/.fzf"
 " Set directory variables
-let vimplugdir=vim_home_dir . "/plugged"
-let vimautoloaddir=$EDITOR == "nvim" ? $HOME . "/.local/share/nvim/site/autoload" : vim_home_dir . "/autoload"
-let vimundodir=vim_home_dir . "/undodir"
-let fzfsourcedir=fzf_src_dir
+let vimplugdir=vimhomedir . "/plugged"
+let vimautoloaddir=$EDITOR == "nvim" ? $HOME . "/.local/share/nvim/site/autoload" : vimhomedir . "/autoload"
+let vimundodir=vimhomedir . "/undodir"
 
 " General settings
 " ----------------

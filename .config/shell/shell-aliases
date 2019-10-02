@@ -1,48 +1,4 @@
-# Aliases
-# -------
-
-# Editor
-command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
-
-# Common task aliases
-alias q=exit
-alias clr=clear
-alias ls='ls --color=auto --group-directories-first'
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}"
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
-
-
-# bat aliases (a better cat)
-command -v bat >/dev/null && alias cat="bat -p"
-
-# gotop aliases (a graphical top)
-command -v gotop >/dev/null && alias tm="gotop"
-
-# tmux aliases
-command -v tmux >/dev/null && {
-    alias tmux='tmux -f "$XDG_CONFIG_HOME/tmux/tmux.conf"'
-    alias ta='tmux attach -t'
-    alias tl='tmux ls'
-}
-
-# Bookmarks
-alias home="cd ~; ls"
-alias dl='cd ~/Downloads; ls'
-alias dev='cd ~/dev; ls'
-alias dl='cd ~/Downloads; ls'
-alias docs='cd ~/Documents; ls'
-alias works='cd ~/Workspaces; ls'
-alias pics='cd ~/Pictures; ls'
-alias vids='cd ~/Videos; ls'
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-
-# Private Functions
+# Helpers
 # -----------------
 
 function _is_interactive { [[ $- == *i* || -n $EMACS ]]; }
@@ -87,7 +43,52 @@ function _load_repo
     [ -z "$src" ] || _load $dest/$src
 }
 
-# Public Functions
+# Aliases
+# -------
+
+# Editor
+command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
+
+# Common task aliases
+alias q=exit
+alias clr=clear
+alias ls='ls --color=auto --group-directories-first'
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}"
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# bat aliases (a better cat)
+_is_callable bat && alias cat="bat -p"
+
+# gotop aliases (a graphical top)
+_is_callable gotop && alias tm="gotop"
+
+# tmux aliases
+_is_callable tmux &&
+{
+    alias tmux='tmux -f "$XDG_CONFIG_HOME/tmux/tmux.conf"'
+    alias ta='tmux attach -t'
+    alias tl='tmux ls'
+}
+
+# Bookmarks
+alias home="cd ~"
+alias dl='cd ~/Downloads'
+alias dev='cd ~/dev'
+alias dl='cd ~/Downloads'
+alias docs='cd ~/Documents'
+alias works='cd ~/Workspaces'
+alias pics='cd ~/Pictures'
+alias vids='cd ~/Videos'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+
+# Functions
 # -----------------
 
 # mkdir and cd into it
@@ -113,8 +114,11 @@ function conf()
 {
     prog=$1
     [[ $prog == "vim" ]] && prog="nvim"
-
-    command $EDITOR $HOME/.config/$prog
+    if [[ ! -z "$prog" ]]; then
+        command $EDITOR $HOME/.config/$prog
+    else
+        cd $HOME/.config && ls
+    fi
 }
 
 # Command: Reload the current shell

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+ERR_FILE="$HOME/.config/i3/output.txt"
+NAME="Email"
+
+id=$(xdo id -n $NAME);
+if [ -z "$id" ]; then
+  st -c scratchpad -n $NAME -e neomutt;
+else
+  action='hide';
+  case "$(xprop -id $id | awk '/window state: / {print $3}')" in
+      *drawn*)
+          action='show'
+          ;;
+  esac
+
+  xdo $action -n $NAME
+fi

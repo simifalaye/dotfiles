@@ -1,6 +1,8 @@
 # vim: filetype=neomuttrc
 
-# Mail Options --------------------------------------
+# Mail Options
+# -------------
+
 set realname = "Simi Falaye"
 set from = "simi.falaye@vecima.com"
 set sendmail = "msmtp -a work"
@@ -14,6 +16,8 @@ set auto_tag = yes
 set signature ="/home/simifa/.config/mutt/signature"
 
 # Index view options
+# ------------------
+
 set sort     = threads
 set sort_aux = reverse-last-date-received
 set sort_re
@@ -22,6 +26,8 @@ bind index _ collapse-all
 set index_format="%5C   %zs %?X?A& ?    %-40.40s    %-20.20F (%e/%E) %>  %D  "
 
 # Mail boxes
+# ----------
+
 unmailboxes *
 set spoolfile = "+INBOX"
 set record = "+Sent\ Items"
@@ -29,7 +35,8 @@ set postponed = "+Drafts"
 set trash = "+Deleted\ Items"
 mailboxes =work ===================== "=INBOX" "=Archive" "=Code\ Review" "=Jira" "=Confluence" "=Jenkins" "=Sent\ Items" "=Deleted\ Items" "=Drafts"
 
-# Basic Options --------------------------------------
+# Basic Options
+# -------------
 
 set wait_key = no        # shut up, mutt
 set timeout = 3          # idle time before scanning
@@ -40,7 +47,9 @@ unset mark_old           # read/new is good enough for me
 set pipe_decode          # remove headers and eval mimes when piping
 set thorough_search      # strip headers and eval mimes before searching
 
-# Keybindings --------------------------------------
+# Keybindings
+# -----------
+
 macro index o "<shell-escape>mailsync -V work<enter>" "run mbsync to sync work"
 bind index,pager gg noop
 bind index,pager g noop
