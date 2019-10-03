@@ -63,9 +63,10 @@ super + {_, shift + } Return
 # GUI programs.  Where these are alternatives to common CLI tools they
 # are mapped to the same number as their counterparts, but prepended
 # with a `g` (mnemonic for GUI).
-super + g ; {f}
+super + g ; {f, t}
     { \
-    notify-send -i nautilus "Run GUI program" "Launching File Manager" && nautilus \
+    notify-send -i nautilus "Run GUI program" "Launching File Manager" && nautilus, \
+    notify-send -i gnome-tweaks "Run GUI program" "Launching tweaks" && gnome-tweaks, \
     }
 
 # # CLI programs.  Any browser and/or file manager should be assigned the

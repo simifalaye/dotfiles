@@ -13,7 +13,9 @@ In this section will be listed all the Graphical Applications. A separate sectio
 
 ### Desktop Environment
 - [Rofi](https://github.com/davatorium/rofi) - A window switcher, Application launcher and dmenu replacement.
-- [i3-gaps](https://github.com/Airblader/i3) - A tiling window manager.
+- [Bspwm](https://github.com/baskerville/bspwm) - A tiling window manager based on binary space partitioning
+- [Bspwm-gnome](https://github.com/shizonic/bspwm-gnome) - Use bspwm with GNOME session integration
+- [Sxhkd](https://github.com/baskerville/sxhkd) - Simple X hotkey daemon
 - [Materia](https://github.com/nana-4/materia-theme) - A material gtk theme
 - [Polybar](https://github.com/polybar/polybar) - A fast and easy-to-use tool for creating status bars.
 - [Compton](https://github.com/chjj/compton) - A compositor for x11.

@@ -40,7 +40,7 @@ super + shift + {h,j,k,l}
 # Cyclical behaviour.  Move in the opposite direction while also holding
 # down `shift`.
 {super,alt} + {_,shift +} Tab
-    bspc {desktop,node} -f {next,prev}.local
+    bspc {desktop,node} -f {next,prev}.local.occupied
 
 # Switch to the {next,previous} monitor.  This brings focus to that
 # monitor's active desktop.

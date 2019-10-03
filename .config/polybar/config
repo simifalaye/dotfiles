@@ -42,32 +42,6 @@ scroll-up = i3wm-wsnext
 scroll-down = i3wm-wsprev
 
 
-[module/i3]
-type = internal/i3
-index-sort = true
-enable-click = true
-ws-icon-0 = 1; 
-ws-icon-1 = 2; 
-ws-icon-2 = 3; 
-ws-icon-4 = 4; 
-format = <label-state> <label-mode>
-label-mode =
-label-mode-background = ${colors.accent}
-label-focused = %icon%
-label-focused-background = ${colors.linecolor}
-label-focused-foreground = ${colors.foreground}
-label-focused-overline = ${colors.linecolor}
-label-focused-underline = ${colors.linecolor}
-label-focused-padding = 3
-label-unfocused = %icon%
-label-unfocused-padding = 3
-label-urgent = %icon%!
-label-urgent-background = #bd2c40
-label-urgent-padding = 3
-label-visible = %icon%
-label-visible-padding = 3
-
-
 [module/bspwm]
 type = internal/bspwm
 pin-workspaces = true
@@ -103,13 +77,13 @@ label-empty-padding = 3
 
 [module/power-menu]
 type = custom/menu
-label-open = ^
-label-close = .
-label-separator = /
+label-open = 
+label-close = 
+label-separator = |
 label-separator-margin = 1
-menu-0-0 = Terminate WM
+menu-0-0 = Signout
 menu-0-0-foreground = ${colors.foreground}
-menu-0-0-exec = bspc quit -1
+menu-0-0-exec = bspc quit
 menu-0-1 = Reboot
 menu-0-1-foreground = ${colors.foreground}
 menu-0-1-exec = menu-open-1
@@ -131,18 +105,6 @@ menu-2-0-exec = sudo poweroff
 menu-2-1 = Cancel
 menu-2-1-foreground = ${colors.foreground}
 menu-2-1-exec = menu-open-0
-
-
-[module/i3msg]
-type = internal/i3
-format =<label-state><label-mode>
-label-mode = %mode%
-label-mode-padding = 3
-label-mode-background = ${colors.accent}
-label-focused =
-label-unfocused =
-label-urgent =
-label-visible =
 
 
 [module/volume]
