@@ -12,7 +12,8 @@ Plug 'matze/vim-move'                     " Move text between lines and columns
 Plug 'sickill/vim-pasta'                  " Paste text by predicting indent level
 Plug 'svermeulen/vim-subversive'          " Replace and substitute text
 Plug 'tpope/vim-fugitive'                 " Git wrapper
-Plug 'tpope/vim-repeat'                   " Allow plugins to repeat commands with
+Plug 'tpope/vim-repeat'                   " Allow plugins to dot repeat commands
+Plug 'rstacruz/vim-closer'                " Autoclose scopes
 Plug 'mhinz/vim-sayonara',
     \ { 'on': 'Sayonara' }                " Smart buffer closing
 Plug 'Shougo/deoplete.nvim',

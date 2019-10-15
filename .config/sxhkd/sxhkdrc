@@ -1,4 +1,5 @@
 # vim: filetype=conf
+
 # SXHKD module with WM-agnostic keys
 #
 # ~/.config/sxhkd/sxhkdrc
@@ -15,15 +16,13 @@
 # Index with key chord chain mnemonics
 # ====================================
 #
-# Key chord chains are used for less common or ancillary commands, or
+# Key chord chains are used for less common commands, or
 # for when assigning direct keybindings would become unwieldy.  The idea
 # is to scope bindings so as to avoid conflicts.
 #
 # Environment: super + e ; ...
 # Executables which typically run in the console: super + x ; ...
 # Graphical applications: super + g ; ...
-# Assign (node flags): super + a ; ...
-# Split (split ratios): super + s ; ...
 
 # Environment
 # -----------
@@ -58,13 +57,14 @@ ctrl + alt + {Home,Delete,l}
 # terminals, like a barbarian!  Watch my screen cast on the matter:
 # https://protesilaos.com/codelog/2019-01-13-tmux-demo-bspwm/
 super + {_, shift + } Return
-    {st, firefox}
+    {st, st -e tmux new-session -A -s 'Default'}
 
 # GUI programs.  Where these are alternatives to common CLI tools they
 # are mapped to the same number as their counterparts, but prepended
 # with a `g` (mnemonic for GUI).
-super + g ; {f, t}
+super + g ; {b, f, t}
     { \
+    notify-send -i firefox "Run GUI program" "Launching Browser" && firefox, \
     notify-send -i nautilus "Run GUI program" "Launching File Manager" && nautilus, \
     notify-send -i gnome-tweaks "Run GUI program" "Launching tweaks" && gnome-tweaks, \
     }
@@ -78,11 +78,6 @@ super + g ; {f, t}
 # Toggle email
 super + n
     toggle_email
-
-# # Bring up the help text for common keybindings
-# super + {F1,Home}
-#     xterm -class "my_float_window" \
-#     -geometry '100x30' -e less "$HOME/.config/sxhkd/cheatsheet_sxhkdrc.txt"
 
 # Run Rofi dmenu
 super + @space

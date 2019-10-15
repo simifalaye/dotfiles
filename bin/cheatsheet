@@ -1,10 +1,20 @@
 #!/bin/bash
 
+# Description
+# ===========
+# Displays a cheatsheet in a floating window
+# Requirements:
+#   - A pager (less or mdless)
+#   - A notification daemon running
+#
+# Args: The path to the text file
+# Outputs: A notification for error messages
+# Side-effect: Starts a new floating window to display the cheatsheet
+
 [ -x /usr/local/bin/mdless ] && LESSCMD="mdless" || LESSCMD="less"
 [ -x /usr/local/bin/st ] && TERMCMD="st" || TERMCMD="gnome-terminal"
 
 path=${1}
-
 if [ -f $path ]; then
     if $(echo "$path" | grep "vim" > /dev/null 2>&1); then
         $TERMCMD -c "cheatsheet" -e $LESSCMD $path $XDG_CONFIG_HOME/nvim/mappings.vim

@@ -1,9 +1,20 @@
 #!/bin/sh
 
-ERR_FILE="$HOME/.config/i3/output.txt"
-NAME="Email"
+# Description
+# ===========
+# Displays neomutt email
+# Requirements:
+#   - xdo
+#   - neomutt
+#
+# Args: None
+# Outputs: Nothing
+# Side-effect: Starts a neomutt floating window or toggles
+#              its hidden state if already running
 
+NAME="Email"
 id=$(xdo id -n $NAME);
+
 if [ -z "$id" ]; then
   st -c scratchpad -n $NAME -e neomutt;
 else
@@ -15,4 +26,5 @@ else
   esac
 
   xdo $action -n $NAME
+  xdo activate -n $NAME
 fi

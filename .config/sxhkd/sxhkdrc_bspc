@@ -1,5 +1,5 @@
 # vim: filetype=conf
-#
+
 # SXHKD module with BPSWM-specific commands
 #
 # ~/.config/sxhkd/sxhkdrc_bspc
@@ -12,6 +12,12 @@
 #
 # Partial configuration file for the Simple X Hotkey Daemon.  Meant to
 # work with `bspwm`.
+
+# Index with key chord chain mnemonics
+# ====================================
+#
+# Assign (node flags): super + a ; ...
+# Split (split ratios): super + s ; ...
 
 # Close {or kill} currently focused node
 super + {_,shift + }q
@@ -39,8 +45,10 @@ super + shift + {h,j,k,l}
 # `super` focus {next,previous} desktop in the current monitor.
 # Cyclical behaviour.  Move in the opposite direction while also holding
 # down `shift`.
-{super,alt} + {_,shift +} Tab
-    bspc {desktop,node} -f {next,prev}.local.occupied
+alt + {_,shift +} Tab
+    bspc node -f {next,prev}.local
+super + {_,shift +} Tab
+    bspc desktop -f {next,prev}.local.occupied
 
 # Switch to the {next,previous} monitor.  This brings focus to that
 # monitor's active desktop.

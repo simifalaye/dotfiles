@@ -13,7 +13,13 @@ let g:syntastic_check_on_wq=0
 " NerdTree
 " --------
 
+" Close vim if last window
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" Open vim directory in side bar
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") |
+                 \    exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] |
+                 \ endif
 let g:NERDTreeMinimalUI = 1
 let g:NERDTreeStHatusline = " "
 let g:NERDTreeWinPos = "left"

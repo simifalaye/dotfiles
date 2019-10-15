@@ -34,6 +34,12 @@ nnoremap dd "_dd
 nnoremap D "_D
 nnoremap D "_D
 
+" Custom text objects
+" ie = inner entire buffer
+onoremap ie :exec "normal! ggVG"<cr>
+" iv = current viewable text in the buffer
+onoremap iv :exec "normal! HVL"<cr>
+
 " Terminal bindings
 nnoremap <Leader>ts <C-W>s:te<CR>
 nnoremap <Leader>tv <C-W>v:te<CR>
@@ -74,24 +80,32 @@ nnoremap <silent> <leader><space> :nohlsearch<CR>
 " Sayonara
 " --------
 nmap <leader>q :NERDTreeClose<cr>:Sayonara<cr>
+
 " Nerdtree
 " --------
 nmap <leader>n :NERDTreeToggle<CR>
 nmap <leader>f :silent! NERDTreeFind<CR>
+
 " EasyAlign
 " ---------
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+
 " Subversive
 " ----------
+" substitute motion1 with clipboard (ex: siw)
 nmap s <plug>(SubversiveSubstitute)
+" substitute line with clipboard
 nmap ss <plug>(SubversiveSubstituteLine)
 nmap S <plug>(SubversiveSubstituteToEndOfLine)
+" substitute motion1 in motion2 with prompt (ex: siwip)
 nmap <leader>s <plug>(SubversiveSubstituteRange)
 xmap <leader>s <plug>(SubversiveSubstituteRange)
+" substitue word with prompt
 nmap <leader>ss <plug>(SubversiveSubstituteWordRange)
+
 " FZF and Fugitive
 " ----------------
 nnoremap <silent><C-p> :GFiles<cr>
@@ -99,10 +113,12 @@ nnoremap <silent><C-e> :Snippets<cr>
 nnoremap <silent><C-f> :Files<CR>
 nnoremap <silent><C-g> :Rg<CR>
 nnoremap <silent>; :Buffers<CR>
+
 " Buftabline
 " ----------
 nnoremap <S-l> :bnext<CR>
 nnoremap <S-H> :bprev<CR>
+
 " Deoplete and Neosnippets
 " ------------------------
 inoremap <silent><expr> <Tab>
@@ -110,6 +126,7 @@ inoremap <silent><expr> <Tab>
 imap <C-j> <Plug>(neosnippet_expand_or_jump)
 smap <C-j> <Plug>(neosnippet_expand_or_jump)
 xmap <C-j> <Plug>(neosnippet_expand_target)
+
 " Clang Formatter
 " ---------------
 autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
