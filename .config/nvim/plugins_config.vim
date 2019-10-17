@@ -24,6 +24,8 @@ let g:NERDTreeMinimalUI = 1
 let g:NERDTreeStHatusline = " "
 let g:NERDTreeWinPos = "left"
 let g:NERDTreeShowHidden = 1
+let g:NERDTreeShowBookmarks = 1
+let g:NERDTreeCustomOpenArgs = {'file': {'reuse': 'all', 'where': 'p', 'stay': 1}, 'dir': {}}
 
 " DeopleteMe & Neosnippets
 " -------------------------
@@ -33,14 +35,6 @@ let g:deoplete#enable_ignore_case = 1
 let g:deoplete#sources#clang#libclang_path = "/usr/lib/llvm-6.0/lib/libclang.so.1"
 let g:deoplete#sources#clang#clang_header ="/usr/lib/llvm-6.0/lib/clang/"
 let g:neosnippet#snippets_directory=vimhomedir . '/snippets'
-
-" ClangFormatter
-" --------------
-
-let g:clang_format#style_options = {
-            \ "BreakBeforeBraces" : "Allman",
-            \ "ColumnLimit" : "79",
-            \ "Standard" : "C++11"}
 
 " Vim Commentary
 " --------------
@@ -53,8 +47,8 @@ autocmd FileType conf,bitbake setlocal commentstring=#\ %s
 " Fzf vim
 " --------
 
-let g:fzf_colors =
-  \ { 'fg':      ['fg', 'Normal'],
+let g:fzf_colors = {
+  \ 'fg':      ['fg', 'Normal'],
   \ 'bg':      ['bg', 'Normal'],
   \ 'hl':      ['fg', 'Comment'],
   \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
@@ -76,7 +70,7 @@ let g:fzf_action = {
 " ---------
 
 let g:lightline = {
-      \   'colorscheme': 'base16',
+      \   'colorscheme': 'wombat',
       \   'active': {
       \     'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename']]
       \   },

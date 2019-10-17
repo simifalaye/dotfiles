@@ -38,7 +38,6 @@ set vb t_vb=                   " shush, no beep
 set scrolloff=5                " keep 5 lines of context at end of file when scrolling
 set complete=.,w,b,u,U,t,i,d   " do lots of scanning on tab completion
 set encoding=utf8              " default character encoding
-                               " Custom settings
 set clipboard=unnamedplus      " set clipboard to use
 set timeoutlen=1000            " remove escape delay
 set ttimeoutlen=0              " remove escape delay
@@ -49,6 +48,7 @@ set wildmode=longest:full,full " settings for how to complete matched strings
 " Files and buffers
 " -----------------
 
+set ttyfast
 " Allow buffers to remain hidden when not in use
 set hidden
 " Reload files changed outside vim
@@ -57,6 +57,7 @@ set autoread
 set nobackup
 set nowb
 set noswapfile
+set nowritebackup
 " Turn persistent undo on. Means that you can undo even when you close a buffer/VIM
 if !isdirectory(vimundodir)
     call mkdir(vimundodir, "", 0755)
@@ -73,6 +74,7 @@ endif
 
 " Display line numbers
 set number
+set relativenumber
 " Allow mouse usage
 set mouse=a
 " Remove trailing whitespace on save
@@ -95,4 +97,3 @@ let g:loaded_netrwPlugin = 1
 
 " abbreviations (try not to use common words)
 iab tdate <c-r>=strftime("%Y-%m-%d")<cr>
-iab mename Simi Falaye
