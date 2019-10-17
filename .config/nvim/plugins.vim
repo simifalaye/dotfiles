@@ -30,8 +30,8 @@ Plug 'junegunn/fzf.vim'
 
 " UI
 Plug 'chriskempson/base16-vim'
-Plug 'itchyny/lightline.vim'
-Plug 'ap/vim-buftabline'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'mhinz/vim-startify'
 
 " Code completion / Language specific

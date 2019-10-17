@@ -19,7 +19,7 @@ In this section will be listed all the Graphical Applications. A separate sectio
 - [Materia](https://github.com/nana-4/materia-theme) - A material gtk theme
 - [Polybar](https://github.com/polybar/polybar) - A fast and easy-to-use tool for creating status bars.
 - [Compton](https://github.com/chjj/compton) - A compositor for x11.
-- [Zafiro](https://github.com/zayronxio/Zafiro-icons) - Icons
+- [Papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme) - Icons
 - DejaVu Sans - Font
 
 ### Productivity and Internet

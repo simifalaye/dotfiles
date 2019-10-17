@@ -90,7 +90,7 @@ noremap <Leader>v :<C-u>vsplit<CR>
 " Tab navigation
 nnoremap <leader><right> gT
 nnoremap <leader><left> gt
-" Move through buffer on buftabline
+" Move through buffers on tab line
 nnoremap <S-l> :bnext<CR>
 nnoremap <S-H> :bprev<CR>
 " Toggle NERDTree

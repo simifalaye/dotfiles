@@ -66,7 +66,7 @@ super + g ; {b, f, t, c}
     { \
     notify-send -i firefox "Run GUI program" "Launching Browser" && firefox, \
     notify-send -i nautilus "Run GUI program" "Launching File Manager" && nautilus, \
-    notify-send -i gnome-tweaks "Run GUI program" "Launching tweaks" && gnome-tweaks, \
+    notify-send -i gnome-settings "Run GUI program" "Launching tweaks" && gnome-tweaks, \
     notify-send -i gnome-calendar "Run GUI program" "Launching Cal" && gnome-calendar, \
     }
 

@@ -66,28 +66,9 @@ let g:fzf_action = {
   \ 'ctrl-s': 'split',
   \ 'ctrl-v': 'vsplit' }
 
-" Lightline
+" Airline.
 " ---------
 
-let g:lightline = {
-      \   'colorscheme': 'wombat',
-      \   'active': {
-      \     'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename']]
-      \   },
-      \   'component_function': {
-      \     'modified': 'LightlineModified',
-      \     'readonly': 'LightlineReadonly',
-      \     'filename': 'LightlineFilename',
-      \     'fileformat': 'LightlineFileformat',
-      \     'filetype': 'LightlineFiletype',
-      \     'fileencoding': 'LightlineFileencoding',
-      \     'mode': 'LightlineMode',
-      \     'fugitive': 'LightlineFugitive',
-      \   },
-      \ }
-
-" Buftabline
-" -----------
-
-let g:buftabline_numbers = 1
-let g:buftabline_indicators = 1
+let g:airline_theme='base16'
+let g:airline_extensions = ['branch', 'tabline', 'syntastic']
+" let g:airline_powerline_fonts = 1

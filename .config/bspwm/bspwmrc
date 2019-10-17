@@ -93,11 +93,6 @@ _bc presel_feedback_color "#2a2829"
 # Set mouse pointer
 xsetroot -cursor_name left_ptr
 
-# Gnome-flashback is specifically designed to recover some functionality
-# already moved to mutter or gnome-shell. So, it comes with some features
-# built in but easy to disable if you want to.
-_check gnome-flashback && gnome-flashback &
-
 # The hotkey daemon that handles all custom key bindings, including the
 # ones that control BSPWM.  No real need to check for the presence of
 # this executable, because it is a dependency of the BSPWM package.
@@ -110,6 +105,9 @@ _check compton && compton --config "$HOME"/.config/compton/compton.conf &
 
 # Launch polybar
 _check polybar && polybar --reload top &
+
+# Launch dunst
+_check dunst && dunst -config "$HOME"/.config/dunst/dunstrc &
 
 # Set keyboard layout
 setxkbmap -layout 'us'
