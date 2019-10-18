@@ -1,3 +1,4 @@
+# vi: ft=cfg
 [global]
     # Display
     # --------
@@ -164,7 +165,6 @@
     # Paths to default icons.
     icon_path = /usr/share/icons/Papirus/16x16/apps:/usr/share/icons/Papirus/16x16/devices:/usr/share/icons/Papirus/16x16/mimetypes:/usr/share/icons/Papirus/16x16/places:/usr/share/icons/Papirus/16x16/status:/usr/share/icons/Papirus/16x16/actions
 
-
     # History
     # --------
 
@@ -238,10 +238,10 @@
     # On the US keyboard layout "grave" is normally above TAB and left
     # of "1". Make sure this key actually exists on your keyboard layout,
     # e.g. check output of 'xmodmap -pke'
-    history = ctrl+shift+period
+    history = ctrl+shift+comma
 
     # Context menu.
-    context = ctrl+shift+comma
+    context = ctrl+shift+period
 
 [urgency_low]
     # IMPORTANT: colors have to be defined in quotation marks.

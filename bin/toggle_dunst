@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Description
+# ===========
+# Toggles dunst notifications
+# Requirements: dunst
+#
+# Args: None
+# Outputs: Error messages
+# Side-effect: Starts or kills a dunst process
+
+command -v dunst > /dev/null || { echo "Dunst is not installed."; exit 1; }
+
+if pgrep -x dunst; then
+    pkill -x dunst
+else
+    dunst -config "$HOME/.config/dunst/dunstrc" &
+fi

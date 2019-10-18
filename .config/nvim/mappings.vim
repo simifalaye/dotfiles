@@ -94,8 +94,10 @@ nnoremap <leader><left> gt
 nnoremap <S-l> :bnext<CR>
 nnoremap <S-H> :bprev<CR>
 " Toggle NERDTree
-nmap <leader>n :NERDTreeToggle<CR>
-nmap <leader>f :silent! NERDTreeFind<CR>
+nmap <C-n> :NERDTreeToggle<CR>
+nmap <C-f> :silent! NERDTreeFind<CR>
+" leader+leader toggles between buffers
+nnoremap <leader><leader> <c-^>
 
 " Code completion and snippets
 " ----------------------------
@@ -107,8 +109,7 @@ xmap <C-j> <Plug>(neosnippet_expand_target)
 
 " FZF and Fugitive
 " ----------------
-nnoremap <silent><C-p> :GFiles<cr>
+nnoremap <silent><C-p> :Files<cr>
 nnoremap <silent><C-e> :Snippets<cr>
-nnoremap <silent><C-f> :Files<CR>
 nnoremap <silent><C-g> :Rg<CR>
 nnoremap <silent>; :Buffers<CR>

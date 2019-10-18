@@ -60,7 +60,7 @@ set noswapfile
 set nowritebackup
 " Turn persistent undo on. Means that you can undo even when you close a buffer/VIM
 if !isdirectory(vimundodir)
-    call mkdir(vimundodir, "", 0755)
+    call mkdir(vimundodir, "", 0644)
 endif
 execute "set undodir=".vimundodir
 set undofile
@@ -72,7 +72,7 @@ endif
 " User Interface
 " --------------
 
-" Display line numbers
+" Display line numbers (relative to current line)
 set number
 set relativenumber
 " Allow mouse usage
@@ -94,6 +94,6 @@ let g:loaded_netrwPlugin = 1
 
 " Helpers
 " -------
-
 " abbreviations (try not to use common words)
+
 iab tdate <c-r>=strftime("%Y-%m-%d")<cr>

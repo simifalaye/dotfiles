@@ -30,16 +30,18 @@
 # The following commands are:
 #
 # c == toggle compton
+# d == toggle dunst
 # p == reload polybar
 # s == reload sxhkd
 # v == vim cheatsheet
 #
 # Recall that these depend on fils in ~/bin:
-super + e ; {c,p,s,v}
+super + e ; {c,d,p,s,v}
     { \
-    toggle_compton, \
+    toggle_compton && notify-send -i ubuntu-logo-icon "Compton" "Toggled", \
+    toggle_dunst && notify-send -i ubuntu-logo-icon "Dunst" "Toggled", \
     killall -q polybar && polybar --reload top & && notify-send "Polybar config" "Reloaded", \
-    pkill -USR1 -x sxhkd && notify-send -i debian-logo "sxhkd config" "Reloaded key bindings", \
+    pkill -USR1 -x sxhkd && notify-send -i ubuntu-logo-icon "sxhkd config" "Reloaded key bindings", \
     cheatsheet $XDG_CONFIG_HOME/meta/cheatsheets/vim.txt \
     }
 

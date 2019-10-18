@@ -14,34 +14,7 @@ _check() {
 
 # Visual options
 # ==============
-#
-# Things to bear in mind about certain configurations:
-#
-# 1. single_monocle true == Does not recognise receptacles, so if you
-#    have a single window and insert a receptacle, the window will
-#    remain in monocle view.  Desired behaviour is to tile accordingly.
-# 2. borderless_monocle true == Smart borders are bad in multi-monitor
-#    setups because you cannot tell which window has focus when
-#    a monocle exists on each monitor.  Single monitor is okay.
-# 3. ignore_ewmh_focus true == This is very opinionated as it completely
-#    prevents focus stealing.  Adapt accordingly.
-# 4. pointer_modifier mod1 == enables mouse actions while holding down
-#    the Alt key (see below---bonus: the following two also work in the
-#    popular desktop environments).
-# 5. pointer_action1 move == Alt + Right Click allows you to drag
-#    a floating window.  Also works for switching the position of tiled
-#    windows, if that is your thing.
-# 6. pointer_action2 resize_side == Alt + Left Click allows you to
-#    resize the nearest side of the focused window.  Works for both
-#    tiled and floating windows.
-# 7. external_rules_command bspwm_external_rules == References the
-#    script of mine that implements window rules and some custom
-#    behaviours.  The script is also part of my dotfiles.  Window rules
-#    can be included herein, but I prefer to keep them separate.
-# 8. Colours are edited programmatically by my `tempus` script.  Do not
-#    edit them manually (edit the script instead).  These colours
-#    concern the following:
-#
+# Notable (see: man bspc):
 #    * normal_border_color   == unfocused windows
 #    * active_border_color   == focused window, unfocused monitor
 #    * focused_border_color  == focused window, focused monitor
