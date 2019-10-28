@@ -76,11 +76,14 @@ _check sxhkd && sxhkd -c "$HOME"/.config/sxhkd/sxhkdrc{,_bspc} &
 # use transparent areas in any of my interfaces).
 _check compton && compton --config "$HOME"/.config/compton/compton.conf &
 
-# Launch polybar
-_check polybar && polybar --reload top &
-
 # Launch dunst
 _check dunst && dunst -config "$HOME"/.config/dunst/dunstrc &
+
+# Start the gnome flashback daemon (Important to start after dunst)
+_check gnome-flashback && gnome-flashback &
+
+# Launch polybar
+_check polybar && polybar --reload top &
 
 # Set keyboard layout
 setxkbmap -layout 'us'

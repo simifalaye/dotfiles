@@ -39,8 +39,6 @@ nmap S <plug>(SubversiveSubstituteToEndOfLine)
 " substitute motion1 in motion2 with prompt (ex: siwip)
 nmap <leader>s <plug>(SubversiveSubstituteRange)
 xmap <leader>s <plug>(SubversiveSubstituteRange)
-" substitue word in range with prompt
-nmap <leader>ss <plug>(SubversiveSubstituteWordRange)
 
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
@@ -85,8 +83,8 @@ nmap <Tab> %
 " ------------------------------
 
 " Split window
-noremap <Leader>h :<C-u>split<CR>
-noremap <Leader>v :<C-u>vsplit<CR>
+noremap <leader>- :<C-u>split<CR>
+noremap <leader>\ :<C-u>vsplit<CR>
 " Tab navigation
 nnoremap <leader><right> gT
 nnoremap <leader><left> gt
@@ -101,11 +99,14 @@ nnoremap <leader><leader> <c-^>
 
 " Code completion and snippets
 " ----------------------------
-inoremap <silent><expr> <Tab>
-            \ pumvisible() ? "\<C-n>" : "<Tab>"
-imap <C-j> <Plug>(neosnippet_expand_or_jump)
-smap <C-j> <Plug>(neosnippet_expand_or_jump)
-xmap <C-j> <Plug>(neosnippet_expand_target)
+
+" Use <TAB> to select the popup menu:
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+" Press enter key to trigger snippet expansion
+" The parameters are the same as `:help feedkeys()`
+inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
 
 " FZF and Fugitive
 " ----------------

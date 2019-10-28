@@ -1,15 +1,3 @@
-" Syntastic
-" ---------
-
-autocmd BufNewFile,BufRead *.c,*.h call SyntasticSETUP()
-let g:syntastic_enable_signs=1
-let g:syntastic_enable_highlighting=1
-let g:syntastic_enable_balloons=1
-let g:syntastic_stl_format = '[%E{Err:%e Line:%fe}%B{, }%W{Warn:%w Line:%fw}]'
-let g:syntastic_c_remove_include_errors = 1
-let g:syntastic_check_on_open=0
-let g:syntastic_check_on_wq=0
-
 " NerdTree
 " --------
 
@@ -28,14 +16,24 @@ let g:NERDTreeShowHidden = 1
 let g:NERDTreeShowBookmarks = 1
 let g:NERDTreeCustomOpenArgs = {'file': {'reuse': 'all', 'where': 'p', 'stay': 1}, 'dir': {}}
 
-" DeopleteMe & Neosnippets
-" -------------------------
+" Ncm2 & Ultisnips
+" ----------------
 
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_ignore_case = 1
-let g:deoplete#sources#clang#libclang_path = "/usr/lib/llvm-6.0/lib/libclang.so.1"
-let g:deoplete#sources#clang#clang_header ="/usr/lib/llvm-6.0/lib/clang/"
-let g:neosnippet#snippets_directory=vimhomedir . '/snippets'
+" enable ncm2 for all buffers
+autocmd BufEnter * call ncm2#enable_for_buffer()
+" IMPORTANT: :help Ncm2PopupOpen for more information
+set completeopt=noinsert,menuone,noselect
+" suppress the annoying 'match x of y'
+set shortmess+=c
+" path to directory where libclang.so can be found
+let g:ncm2_pyclang#library_path = '/usr/lib/llvm-6.0/lib/libclang-6.0.so.1'
+" UltiSnips
+let g:UltiSnipsSnippetsDir = vimhomedir . '/UltiSnips'
+let g:UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
+let g:UltiSnipsListSnippets = '<c-l>'
+let g:UltiSnipsJumpForwardTrigger = "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
+let g:UltiSnipsRemoveSelectModeMappings = 0
 
 " Vim Commentary
 " --------------
@@ -43,7 +41,7 @@ let g:neosnippet#snippets_directory=vimhomedir . '/snippets'
 " Set commentstring for file types
 autocmd FileType vim setlocal commentstring=\"\ %s
 autocmd FileType c,cpp,java setlocal commentstring=//\ %s
-autocmd FileType conf,bitbake setlocal commentstring=#\ %s
+autocmd FileType conf,bitbake,cfg setlocal commentstring=#\ %s
 
 " Fzf vim
 " --------
@@ -70,6 +68,7 @@ let g:fzf_action = {
 " Airline.
 " ---------
 
-let g:airline_theme='base16'
-let g:airline_extensions = ['branch', 'tabline', 'syntastic']
-" let g:airline_powerline_fonts = 1
+let g:airline_theme = 'zenburn'
+let g:airline_powerline_fonts = 0
+let g:airline_extensions = ['tabline', 'branch']
+let g:airline#extensions#tabline#tab_nr_type = 1

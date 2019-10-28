@@ -20,7 +20,7 @@ filetype on                    " identify file types
 filetype indent on             " indent based on filetype
 filetype plugin on             " enable file-specific plugins
 syntax on                      " filetype syntax highlighting
-set expandtab                  " Turn tabs into spaces
+set expandtab                  " turn tabs into spaces
 set tabstop=4                  " use 4-space tabs when [tab] is pressed
 set shiftwidth=4               " use 4-space tabs when reading files
 set showmatch                  " highlight the bracket match
@@ -30,7 +30,7 @@ set autoindent                 " auto-indent when going to a new line
 set smartindent                " guess the indent level based on code
 set showcmd                    " show partial cmd in ruler
 set ignorecase                 " ignore case when searching (search in all lower case!)
-set smartcase                  " If upper case is provided in searching, search for it
+set smartcase                  " if upper case is provided in searching, search for it
 set incsearch                  " highlight search terms as you search
 set hlsearch                   " highlight search results
 set backspace=indent,eol,start " for ssh terminals
@@ -41,13 +41,18 @@ set encoding=utf8              " default character encoding
 set clipboard=unnamedplus      " set clipboard to use
 set timeoutlen=1000            " remove escape delay
 set ttimeoutlen=0              " remove escape delay
-set tags=./tags,./.git/tags;   " Set tags file locations for ctags
+set tags=./tags,./.git/tags;   " set tags file locations for ctags
 set wildmenu                   " enable tab completion in commands
 set wildmode=longest:full,full " settings for how to complete matched strings
+set showtabline=2              " always show tab bar
+set laststatus=2               " always show status line
+set lazyredraw                 " don't redraw when we don't have to
+set nostartofline              " don't reset cursor to start of line when moving
 
 " Files and buffers
 " -----------------
 
+" Send more characters at a given time
 set ttyfast
 " Allow buffers to remain hidden when not in use
 set hidden
@@ -92,8 +97,12 @@ set fillchars=""
 let g:loaded_netrw = 1
 let g:loaded_netrwPlugin = 1
 
-" Helpers
+" Misc
 " -------
-" abbreviations (try not to use common words)
 
+" turn on spell checking and automatic wrapping for certain files
+autocmd Filetype gitcommit,mail setlocal spell textwidth=72
+
+" abbreviations (try not to use common words)
 iab tdate <c-r>=strftime("%Y-%m-%d")<cr>
+

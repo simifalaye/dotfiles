@@ -52,12 +52,7 @@ ctrl + alt + {Home,Delete,l}
 # Main programs
 # -------------
 
-# Terminal emulator with and without TMUX.  I normally use `tmux` which
-# is ideal for working on multiple terminals, switching sessions, and
-# the like.  I think it fits perfectly into a console-based workflow and
-# complements the features of a tiling WM.  No need to spawn tens of
-# terminals, like a barbarian!  Watch my screen cast on the matter:
-# https://protesilaos.com/codelog/2019-01-13-tmux-demo-bspwm/
+# Terminal emulator with and without TMUX.
 super + {_, shift + } Return
     {st, st -e tmux new-session -A -s 'Default'}
 
@@ -72,9 +67,7 @@ super + g ; {b, f, t, c}
     notify-send -i gnome-calendar "Run GUI program" "Launching Cal" && gnome-calendar, \
     }
 
-# # CLI programs.  Any browser and/or file manager should be assigned the
-# # numbers 1 and 2 respectively, in order to keep consistency with the
-# # above-defined GUIs.
+# CLI programs.
 # super + x ; {3-5}
 #     xterm -e {mutt,newsboat,ncmpcpp}
 

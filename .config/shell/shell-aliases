@@ -69,7 +69,7 @@ _is_callable gotop && alias tm="gotop"
 # tmux aliases
 _is_callable tmux &&
 {
-    alias tmux='tmux -f "$XDG_CONFIG_HOME/tmux/tmux.conf"'
+    alias tmux='tmux -f ~/.config/tmux/tmux.conf'
     alias ta='tmux attach -t'
     alias tl='tmux ls'
 }
