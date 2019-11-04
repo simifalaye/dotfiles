@@ -6,15 +6,14 @@ call GetVimPlug(vimautoloaddir)
 call plug#begin(vimplugdir)
 
 " Text manipulation
+Plug 'AndrewRadev/splitjoin.vim'
 Plug 'junegunn/vim-easy-align'
-Plug 'kana/vim-textobj-user'
-Plug 'kana/vim-textobj-function'
 Plug 'matze/vim-move'
 Plug 'sickill/vim-pasta'
 Plug 'svermeulen/vim-subversive'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
-Plug 'vim-scripts/argtextobj.vim'
+Plug 'wellle/targets.vim'
 
 " Integration Utilities
 Plug 'christoomey/vim-tmux-navigator'

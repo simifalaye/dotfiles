@@ -15,6 +15,8 @@ let g:NERDTreeWinPos = "left"
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeShowBookmarks = 1
 let g:NERDTreeCustomOpenArgs = {'file': {'reuse': 'all', 'where': 'p', 'stay': 1}, 'dir': {}}
+let g:NERDTreeDirArrowExpandable = '+'
+let g:NERDTreeDirArrowCollapsible = '-'
 
 " Ncm2 & Ultisnips
 " ----------------

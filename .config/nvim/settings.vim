@@ -50,55 +50,46 @@ set lazyredraw                 " don't redraw when we don't have to
 set nostartofline              " don't reset cursor to start of line when moving
 
 " Files and buffers
-" -----------------
 
-" Send more characters at a given time
-set ttyfast
-" Allow buffers to remain hidden when not in use
-set hidden
-" Reload files changed outside vim
-set autoread
-" Turn backup off, since most stuff is in SVN, git et.c anyway...
-set nobackup
-set nowb
-set noswapfile
-set nowritebackup
+set ttyfast       " Send more characters at a given time
+set hidden        " Allow buffers to remain hidden when not in use
+set autoread      " Reload files changed outside vim
+set nobackup      " Turn backup off
+set noswapfile    " Turn swap files off
+set nowritebackup " Turn write backup off
+set undofile      " Turn on undo file
+
+" User Interface
+
+set number                         " Display line numbers
+set relativenumber                 " Disply line numbers relative to current line
+set mouse=a                        " Allow mouse usage
+autocmd BufWritePre * :%s/\s\+$//e " Remove trailing whitespace on save
+set list                           " Show specific characters
+set listchars=tab:T>,trail:.,extends:>,precedes:<,nbsp:+
+set splitbelow                     " Fix splits
+set splitright                     " Fix splits
+set fillchars=""                   " Fix splits
+
+" Misc
+" -------
+
 " Turn persistent undo on. Means that you can undo even when you close a buffer/VIM
 if !isdirectory(vimundodir)
     call mkdir(vimundodir, "", 0644)
 endif
 execute "set undodir=".vimundodir
-set undofile
 " :W sudo saves the file
 if !exists(':W')
     command W w !sudo tee % > /dev/null
 endif
 
-" User Interface
-" --------------
-
-" Display line numbers (relative to current line)
-set number
-set relativenumber
-" Allow mouse usage
-set mouse=a
-" Remove trailing whitespace on save
-autocmd BufWritePre * :%s/\s\+$//e
-" Show specific characters
-set list
-set listchars=tab:T>,trail:.,extends:>,precedes:<,nbsp:+
-" Return to last edit position when opening files (You want this!)
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-" VimSplits
-set splitbelow
-set splitright
-set fillchars=""
 " Disable Netrw
 let g:loaded_netrw = 1
 let g:loaded_netrwPlugin = 1
 
-" Misc
-" -------
+" Return to last edit position when opening files (You want this!)
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 " turn on spell checking and automatic wrapping for certain files
 autocmd Filetype gitcommit,mail setlocal spell textwidth=72

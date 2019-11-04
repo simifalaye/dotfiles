@@ -54,7 +54,7 @@ ctrl + alt + {Home,Delete,l}
 
 # Terminal emulator with and without TMUX.
 super + {_, shift + } Return
-    {st, st -e tmux new-session -A -s 'Default'}
+    {st, st -e tmux -f ~/.config/tmux/tmux.conf new-session -A -s 'Default'}
 
 # GUI programs.  Where these are alternatives to common CLI tools they
 # are mapped to the same number as their counterparts, but prepended
