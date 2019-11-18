@@ -26,7 +26,7 @@ monitors=$(xrandr | grep " connected " | awk '{ print$1 }')
 primary_monitor=$(echo -e "$monitors" | awk 'NR==1 {print; exit}')
 secondary_monitor=$(echo -e "$monitors" | awk 'NR==2 {print; exit}')
 [ -z "$primary_monitor" ] || bspc monitor "$primary_monitor" -d 1 2 3 4
-[ -z "$secondary_monitor" ] || bspc monitor "$secondary_monitor" -d 1 2
+[ -z "$secondary_monitor" ] || bspc monitor "$secondary_monitor" -d 5 6
 
 _bc border_width 0
 _bc window_gap 10

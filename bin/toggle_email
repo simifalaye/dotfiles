@@ -13,10 +13,17 @@
 #              its hidden state if already running
 
 NAME="Email"
+CLASS="scratchpad"
 id=$(xdo id -n $NAME);
 
 if [ -z "$id" ]; then
-  st -c scratchpad -n $NAME -e neomutt;
+  st -c $CLASS -n $NAME -e neomutt &
+
+  sleep 0.1
+  id=$(xdo id -n $NAME);
+  if [ ! -z "$id" ]; then
+    xdo activate -n $NAME
+  fi
 else
   action='hide';
   case "$(xprop -id $id | awk '/window state: / {print $3}')" in

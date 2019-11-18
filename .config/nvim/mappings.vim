@@ -17,7 +17,7 @@ map <leader>o :setlocal spell! spelllang=en_us<CR>
 noremap <silent> <C-S> :update<CR>
 vnoremap <silent> <C-S> <C-C>:update<CR><C-C>
 inoremap <silent> <C-S> <C-O>:update<CR><C-C>
-nmap <leader>q :NERDTreeClose<cr>:Sayonara<cr>
+nmap <leader>q :Sayonara<cr>
 nnoremap <C-q> :q<cr>
 
 " Text manipulation
@@ -39,8 +39,6 @@ xmap <leader>s <plug>(SubversiveSubstituteRange)
 xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
-" Auto-bracket.
-inoremap {<CR> {<CR>}<Esc>O
 " +/- increment and decrement.
 nnoremap + <C-a>| nnoremap - <C-x>
 
@@ -87,8 +85,8 @@ nnoremap <leader><left> gt
 nnoremap <S-l> :bnext<CR>
 nnoremap <S-h> :bprev<CR>
 " Toggle NERDTree
-nmap <leader><leader> :NERDTreeToggle<CR>
-nmap <leader>f :silent! NERDTreeFind<CR>
+noremap <silent> <Leader>n :NERDTreeToggle<CR>
+noremap <silent> <Leader>f :NERDTreeFind<CR>
 " Backspace toggles between buffers
 nnoremap <BS> <C-^>
 
@@ -104,7 +102,13 @@ inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
 
 " FZF and Fugitive
 " ----------------
-nnoremap <silent><C-p> :Files<cr>
 nnoremap <silent><C-e> :Snippets<cr>
 nnoremap <silent><C-g> :Rg<CR>
 nnoremap <silent>; :Buffers<CR>
+
+silent! !git rev-parse --is-inside-work-tree
+if v:shell_error == 0
+  noremap <C-p> :GFiles --cached --others --exclude-standard<CR>
+else
+  noremap <C-p> :Files<CR>
+endif

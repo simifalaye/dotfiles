@@ -1,17 +1,3 @@
-" Globals
-" -------
-" Variables that will be used in the whole vim config
-
-" Use leader to specify extra keybinding
-let mapleader = " "
-" Get useful env variables if set
-let vimhomedir = !empty($VIM_HOME_DIR) ? $VIM_HOME_DIR : "~/.vim"
-let fzfsourcedir = !empty($FZF_SOURCE_DIR) ? $FZF_SOURCE_DIR : "~/.fzf"
-" Set directory variables
-let vimplugdir=vimhomedir . "/plugged"
-let vimautoloaddir=$EDITOR == "nvim" ? $HOME . "/.local/share/nvim/site/autoload" : vimhomedir . "/autoload"
-let vimundodir=vimhomedir . "/undodir"
-
 " General settings
 " ----------------
 " Read documentation about each option by executing :h <option>
@@ -21,8 +7,6 @@ filetype indent on             " indent based on filetype
 filetype plugin on             " enable file-specific plugins
 syntax on                      " filetype syntax highlighting
 set expandtab                  " turn tabs into spaces
-set tabstop=4                  " use 4-space tabs when [tab] is pressed
-set shiftwidth=4               " use 4-space tabs when reading files
 set showmatch                  " highlight the bracket match
 set ruler                      " always show the bottom line
 set showmode                   " show mode (INSERT/OVER) in ruler
@@ -44,7 +28,6 @@ set ttimeoutlen=0              " remove escape delay
 set tags=./tags,./.git/tags;   " set tags file locations for ctags
 set wildmenu                   " enable tab completion in commands
 set wildmode=longest:full,full " settings for how to complete matched strings
-set showtabline=2              " always show tab bar
 set laststatus=2               " always show status line
 set lazyredraw                 " don't redraw when we don't have to
 set nostartofline              " don't reset cursor to start of line when moving
@@ -94,6 +77,5 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 " turn on spell checking and automatic wrapping for certain files
 autocmd Filetype gitcommit,mail setlocal spell textwidth=72
 
-" abbreviations (try not to use common words)
+" Abbreviations (try not to use common words)
 iab tdate <c-r>=strftime("%Y-%m-%d")<cr>
-

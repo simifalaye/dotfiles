@@ -3,20 +3,23 @@
 
 " Close vim if last window
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-" Open vim directory in side bar
+" " Open vim directory in side bar
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") |
                  \    exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] |
                  \    exe 'NERDTreeFocus' |
                  \ endif
+" Refresh on load
+autocmd BufEnter * call NERDTreeRefresh()
 let g:NERDTreeMinimalUI = 1
 let g:NERDTreeStHatusline = " "
 let g:NERDTreeWinPos = "left"
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeShowBookmarks = 1
 let g:NERDTreeCustomOpenArgs = {'file': {'reuse': 'all', 'where': 'p', 'stay': 1}, 'dir': {}}
-let g:NERDTreeDirArrowExpandable = '+'
-let g:NERDTreeDirArrowCollapsible = '-'
+let g:NERDTreeDirArrowExpandable  = "▷"
+let g:NERDTreeDirArrowCollapsible = "◢"
+
 
 " Ncm2 & Ultisnips
 " ----------------
@@ -36,6 +39,8 @@ let g:UltiSnipsListSnippets = '<c-l>'
 let g:UltiSnipsJumpForwardTrigger = "<c-j>"
 let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
 let g:UltiSnipsRemoveSelectModeMappings = 0
+let g:NERDTreeUpdateOnCursorHold = 0
+let g:NERDTreeUpdateOnWrite      = 0
 
 " Vim Commentary
 " --------------
@@ -74,3 +79,11 @@ let g:airline_theme = 'zenburn'
 let g:airline_powerline_fonts = 0
 let g:airline_extensions = ['tabline', 'branch']
 let g:airline#extensions#tabline#tab_nr_type = 1
+
+" Pear Tree
+" ----------
+
+let g:pear_tree_repeatable_expand = 0
+let g:pear_tree_smart_backspace   = 1
+let g:pear_tree_smart_closers     = 1
+let g:pear_tree_smart_openers     = 1
