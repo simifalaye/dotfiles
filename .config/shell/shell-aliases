@@ -76,7 +76,6 @@ _is_callable tmux &&
 
 # Bookmarks
 alias home="cd ~"
-alias dl='cd ~/Downloads'
 alias dev='cd ~/dev'
 alias dl='cd ~/Downloads'
 alias docs='cd ~/Documents'

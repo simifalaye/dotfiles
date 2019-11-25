@@ -4,7 +4,10 @@
 " reload .vimrc
 nnoremap <leader>r :so $MYVIMRC<cr>:echo ".vimrc reloaded"<cr>
 " Quickly switch vim modes
-imap jk <esc>
+inoremap jk <Esc>
+inoremap JK <Esc>
+inoremap Jk <Esc>
+inoremap jK <Esc>
 cmap jk <esc>
 " Hide last search highlights
 nnoremap <silent> <leader>/ :nohlsearch<CR>
@@ -14,11 +17,11 @@ map <leader>o :setlocal spell! spelllang=en_us<CR>
 " Save and quit
 " -------------
 
-noremap <silent> <C-S> :update<CR>
-vnoremap <silent> <C-S> <C-C>:update<CR><C-C>
-inoremap <silent> <C-S> <C-O>:update<CR><C-C>
-nmap <leader>q :Sayonara<cr>
-nnoremap <C-q> :q<cr>
+noremap <silent> <leader>w :update<CR>
+nmap <leader>q :Bdelete<cr>
+nmap <leader>x :q<cr>
+" Save file which you forgot to open with sudo
+cnoremap w!! w !sudo tee % >/dev/null
 
 " Text manipulation
 " -------------------
@@ -42,8 +45,8 @@ nmap ga <Plug>(EasyAlign)
 " +/- increment and decrement.
 nnoremap + <C-a>| nnoremap - <C-x>
 
-" Ease of use remaps
-" ------------------
+" Remaps
+" -------
 
 " Easy moves through wrapped lines
 nnoremap j gj
@@ -71,6 +74,9 @@ vmap < <gv
 vmap > >gv
 " reselect pasted text
 nnoremap <leader>v V`]
+" Always search using regex
+nnoremap / /\v
+vnoremap / /\v
 
 " Files Buffers, Splits and Tabs
 " ------------------------------
@@ -102,7 +108,7 @@ inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
 
 " FZF and Fugitive
 " ----------------
-nnoremap <silent><C-e> :Snippets<cr>
+nnoremap <silent><C-s> :Snippets<cr>
 nnoremap <silent><C-g> :Rg<CR>
 nnoremap <silent>; :Buffers<CR>
 

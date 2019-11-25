@@ -1,4 +1,3 @@
-export TESTENVS="BPROFILE"
 # Source global definitions
 test -r ~/.config/shell/shell-profile && . ~/.config/shell/shell-profile
 # Source bashrc

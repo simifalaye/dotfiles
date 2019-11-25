@@ -1,7 +1,3 @@
-" Globals
-" -------------------
-source ~/.config/nvim/variables.vim
-
 " Vim Editor Settings
 " -------------------
 source ~/.config/nvim/settings.vim

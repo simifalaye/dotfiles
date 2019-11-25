@@ -9,7 +9,13 @@ endfunction
 
 " Refresh nerdtree
 function! NERDTreeRefresh()
-    if &filetype == "nerdtree"
-        silent exe substitute(mapcheck("R"), "<CR>", "", "")
-    endif
+  if &filetype == "nerdtree"
+      silent exe substitute(mapcheck("R"), "<CR>", "", "")
+  endif
+endfunction
+
+" Check if backspace is hit
+function! CheckBackspace() abort
+  let l:column = col('.') - 1
+  return !l:column || getline('.')[l:column - 1] =~ '\s'
 endfunction

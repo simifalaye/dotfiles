@@ -2,16 +2,16 @@
 # ===========
 # This is the first user configuration entry point for any running zsh
 # shell session. This file is always sourced:
-# +----------------+-----------+-----------+------+
-# |                |Interactive|Interactive|Script|
-# |                |login      |non-login  |      |
-# +----------------+-----------+-----------+------+
-# |~/.zshenv       |    y      |    y      |  y   |
-# +----------------+-----------+-----------+------+
-# |$ZDOTDIR/.zshrc |    y      |    y      |  n   |
-# +----------------+-----------+-----------+------+
-# |$ZDOT../.zlogout|    y      |    n      |  n   |
-# +----------------+-----------+-----------+------+
+# +-----------------+-----------+-----------+------+
+# |                 |Interactive|Interactive|Script|
+# |                 |login      |non-login  |      |
+# +-----------------+-----------+-----------+------+
+# |~/.zshenv        |    y      |    y      |  y   |
+# +-----------------+-----------+-----------+------+
+# |$ZDOTDIR/.zshrc  |    y      |    y      |  n   |
+# +-----------------+-----------+-----------+------+
+# |$ZDOTDIR/.zlogout|    y      |    n      |  n   |
+# +-----------------+-----------+-----------+------+
 
 # Source global definitions
 test -r ~/.config/shell/shell-profile && . ~/.config/shell/shell-profile

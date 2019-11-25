@@ -72,8 +72,8 @@ super + g ; {b, f, t, c}
 #     xterm -e {mutt,newsboat,ncmpcpp}
 
 # Toggle email
-super + n
-    toggle_email
+# super + n
+#     toggle_email
 
 # Run Rofi dmenu
 super + @space
