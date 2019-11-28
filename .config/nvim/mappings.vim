@@ -3,24 +3,28 @@
 
 " reload .vimrc
 nnoremap <leader>r :so $MYVIMRC<cr>:echo ".vimrc reloaded"<cr>
-" Quickly switch vim modes
+
+" vim-plug
+nnoremap <localleader>i :so $MYVIMRC<bar>PlugInstall<cr>
+nnoremap <localleader>c :so $MYVIMRC<bar>PlugClean<cr>
+nnoremap <localleader>u :so $MYVIMRC<bar>PlugUpdate<cr>
+nnoremap <localleader>U :PlugUpgrade<cr>
+
+" Quickly switch back to normal mode
 inoremap jk <Esc>
 inoremap JK <Esc>
 inoremap Jk <Esc>
 inoremap jK <Esc>
 cmap jk <esc>
-" Hide last search highlights
-nnoremap <silent> <leader>/ :nohlsearch<CR>
-" Spell-check set to leader+o, 'o' for 'orthography':
-map <leader>o :setlocal spell! spelllang=en_us<CR>
 
 " Save and quit
 " -------------
 
 noremap <silent> <leader>w :update<CR>
 nmap <leader>q :Bdelete<cr>
+nmap <leader>Q :Bwipeout<cr>
 nmap <leader>x :q<cr>
-" Save file which you forgot to open with sudo
+nmap <leader>X :q!<cr>
 cnoremap w!! w !sudo tee % >/dev/null
 
 " Text manipulation
@@ -30,20 +34,26 @@ cnoremap w!! w !sudo tee % >/dev/null
 onoremap ie :exec "normal! ggVG"<cr>
 " @TextObj : iv = current viewable text in the buffer
 onoremap iv :exec "normal! HVL"<cr>
-" Substitute motion1 with clipboard (ex: siw)
+" Copy and paste
+nmap <c-n> <plug>(YoinkPostPasteSwapBack)
+nmap <c-p> <plug>(YoinkPostPasteSwapForward)
+nmap y <plug>(YoinkYankPreserveCursorPosition)
+xmap y <plug>(YoinkYankPreserveCursorPosition)
+nmap p <plug>(YoinkPaste_p)
+nmap P <plug>(YoinkPaste_P)
+" Substitute motion1 with clipboard (ex: siw, ss, S)
 nmap s <plug>(SubversiveSubstitute)
-" Substitute line with clipboard
+xmap s <plug>(SubversiveSubstitute)
 nmap ss <plug>(SubversiveSubstituteLine)
 nmap S <plug>(SubversiveSubstituteToEndOfLine)
-" Substitute motion1 in motion2 with prompt (ex: siwip)
+" Substitute motion1 in motion2 with prompt or with vim-abolish(ex: siwip)
 nmap <leader>s <plug>(SubversiveSubstituteRange)
 xmap <leader>s <plug>(SubversiveSubstituteRange)
-" Start interactive EasyAlign in visual mode (e.g. vipga)
+nmap <leader><leader>s <plug>(SubversiveSubvertRange)
+xmap <leader><leader>s <plug>(SubversiveSubvertRange)
+" Start interactive EasyAlign in visual/normal mode (e.g. vipga, gaip)
 xmap ga <Plug>(EasyAlign)
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
-" +/- increment and decrement.
-nnoremap + <C-a>| nnoremap - <C-x>
 
 " Remaps
 " -------
@@ -77,6 +87,10 @@ nnoremap <leader>v V`]
 " Always search using regex
 nnoremap / /\v
 vnoremap / /\v
+" Hide last search highlights
+nnoremap <silent> <leader>/ :nohlsearch<CR>
+" Spell-check set to leader+o, 'o' for 'orthography':
+map <leader>o :setlocal spell! spelllang=en_us<CR>
 
 " Files Buffers, Splits and Tabs
 " ------------------------------
@@ -85,12 +99,9 @@ vnoremap / /\v
 noremap <leader>- :<C-u>split<CR>
 noremap <leader>\ :<C-u>vsplit<CR>
 " Tab navigation
-nnoremap <leader><right> gT
-nnoremap <leader><left> gt
-" Move through buffers on tab line
-nnoremap <S-l> :bnext<CR>
-nnoremap <S-h> :bprev<CR>
-" Toggle NERDTree
+nnoremap <S-l> gT
+nnoremap <S-h> gt
+" NERDTree
 noremap <silent> <Leader>n :NERDTreeToggle<CR>
 noremap <silent> <Leader>f :NERDTreeFind<CR>
 " Backspace toggles between buffers
@@ -111,10 +122,9 @@ inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
 nnoremap <silent><C-s> :Snippets<cr>
 nnoremap <silent><C-g> :Rg<CR>
 nnoremap <silent>; :Buffers<CR>
-
 silent! !git rev-parse --is-inside-work-tree
 if v:shell_error == 0
-  noremap <C-p> :GFiles --cached --others --exclude-standard<CR>
+  noremap <C-f> :GFiles --cached --others --exclude-standard<CR>
 else
-  noremap <C-p> :Files<CR>
+  noremap <C-f> :Files<CR>
 endif

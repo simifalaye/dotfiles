@@ -114,7 +114,7 @@ function conf()
     prog=$1
     [[ $prog == "vim" ]] && prog="nvim"
     if [[ ! -z "$prog" ]]; then
-        command $EDITOR $HOME/.config/$prog
+        command $EDITOR $HOME/.config/$prog/*
     else
         cd $HOME/.config && ls
     fi

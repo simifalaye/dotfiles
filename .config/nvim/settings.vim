@@ -15,6 +15,7 @@ endif
 " General settings
 " ----------------
 " Read documentation about each option by executing :h <option>
+" or "K" in normal mode when cursor is over the setting
 
 filetype on                    " identify file types
 filetype indent on             " indent based on filetype
@@ -43,7 +44,7 @@ set wildmenu                   " enable tab completion in commands
 set wildmode=longest:full,full " settings for how to complete matched strings
 set lazyredraw                 " don't redraw when we don't have to
 set nostartofline              " don't reset cursor to start of line when moving
-set cmdheight=2                " bottom section height
+set cmdheight=1                " bottom section height
 
 " Files and buffers
 set hidden        " Allow buffers to remain hidden when not in use
@@ -94,3 +95,5 @@ autocmd Filetype gitcommit,mail,md setlocal spell textwidth=72
 
 " Abbreviations (try not to use common words)
 iab tdate <c-r>=strftime("%Y-%m-%d")<cr>
+iab todo: @TODO:
+iab fixme: @FIXME:
