@@ -16,6 +16,16 @@ function! CheckBackspace() abort
   return !l:column || getline('.')[l:column - 1] =~ '\s'
 endfunction
 
+" Fzf call Files or GFiles based on if in git dir
+function! SmartFilesFunc(...)
+  silent! !git rev-parse --is-inside-work-tree
+  if v:shell_error == 0
+    return call("fzf#vim#gitfiles", a:000)
+  else
+    return call("fzf#vim#files", a:000)
+  endif
+endfunction
+
 " Various lightline functions
 " ---------------------------
 

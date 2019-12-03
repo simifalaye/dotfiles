@@ -6,8 +6,8 @@ call GetVimPlug(vimautoloaddir)
 call plug#begin(vimplugdir)
 
 " Text manipulation
+Plug 'cohama/lexima.vim'
 Plug 'junegunn/vim-easy-align'
-Plug 'spf13/vim-autoclose'
 Plug 'svermeulen/vim-subversive'
 Plug 'svermeulen/vim-yoink'
 Plug 'tpope/vim-abolish'
@@ -17,9 +17,10 @@ Plug 'wellle/targets.vim'
 
 " Integration Utilities
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'mhinz/vim-signify'
+Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-sleuth'
 
 " Files / Buffers
 Plug 'airblade/vim-rooter'
@@ -34,14 +35,8 @@ Plug 'itchyny/lightline.vim'
 Plug 'mhinz/vim-startify'
 
 " Code completion / Languages
-Plug 'ncm2/ncm2'
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-pyclang'
-Plug 'ncm2/ncm2-ultisnips'
-Plug 'ncm2/ncm2-neoinclude' | Plug 'Shougo/neoinclude.vim'
-Plug 'roxma/nvim-yarp'
 Plug 'sheerun/vim-polyglot'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 call plug#end()

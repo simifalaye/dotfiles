@@ -34,6 +34,7 @@
 *.log
 *.sql
 *.sqlite
+compile_commands.json
 
 # OS generated files #
 ######################
@@ -61,8 +62,6 @@ Thumbs.db
 # Directories #
 #####################
 *build/
-oe-workdir/
-oe-logs/
 oe-workdir
 oe-logs
 *.egg-info/
@@ -72,6 +71,5 @@ htmlcov/
 # Ctags #
 #####################
 tags
-TAGS
-tags
 .tags
+TAGS

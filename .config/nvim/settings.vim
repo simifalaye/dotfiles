@@ -6,11 +6,7 @@ let mapleader = " "
 let vimhomedir = has('nvim') ? "~/.config/nvim" : "~/.vim"
 let fzfsourcedir = !empty($FZF_SOURCE_DIR) ? $FZF_SOURCE_DIR : "~/.fzf"
 let vimplugdir=vimhomedir . "/plugged"
-if has('nvim')
-  let vimautoloaddir = $HOME . "/.local/share/nvim/site/autoload"
-else
-  let vimautoloaddir = vimhomedir ."/autoload"
-endif
+let vimautoloaddir = vimhomedir ."/autoload"
 
 " General settings
 " ----------------
@@ -92,6 +88,10 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 
 " File type settings
 autocmd Filetype gitcommit,mail,md setlocal spell textwidth=72
+autocmd FileType vim setlocal commentstring=\"\ %s
+autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 commentstring=//\ %s
+autocmd FileType java setlocal shiftwidth=2 tabstop=2 commentstring=//\ %s
+autocmd FileType conf,bitbake,cfg setlocal commentstring=#\ %s
 
 " Abbreviations (try not to use common words)
 iab tdate <c-r>=strftime("%Y-%m-%d")<cr>
