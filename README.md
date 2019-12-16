@@ -26,7 +26,6 @@ In this section will be listed all the Graphical Applications. A separate sectio
 
 - [Libreoffice](https://libreoffice.org) - Office suite.
 - [Firefox](https://www.mozilla.org/pt-PT/firefox/) - My primary internet browser.
-    - [MaterialFox](https://github.com/muckSponge/MaterialFox) - Better looking css for firefox.
 - [Mattermost](https://mattermost.com/) - Text Chat.
 
 ### Utilities
@@ -72,3 +71,4 @@ I use ZSH shell:
 - [yadm](https://github.com/TheLocehiliosan/yadm) - Dotfiles Manager.
 - [mdless](https://github.com/ttscoff/mdless) - Markdown file viewer.
 - [ripgrep](https://github.com/BurntSushi/ripgrep) - A faster grep
+- [scrot](https://github.com/dreamer/scrot) - Screenshot utility

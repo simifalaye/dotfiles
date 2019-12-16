@@ -35,7 +35,7 @@
 # s == reload sxhkd
 # v == vim cheatsheet
 #
-# Recall that these depend on fils in ~/bin:
+# Recall that these depend on files in ~/bin:
 super + e ; {c,d,p,s,v}
     { \
     toggle_compton && notify-send -i ubuntu-logo-icon "Compton" "Toggled", \
@@ -46,8 +46,8 @@ super + e ; {c,d,p,s,v}
     }
 
 # Session management (lock)
-ctrl + alt + {Home,Delete,l}
-    gnome-screensaver-command --lock
+super + {ctrl + alt, BackSpace}
+    screenlock
 
 # Main programs
 # -------------
@@ -68,12 +68,8 @@ super + g ; {b, f, t, c}
     }
 
 # CLI programs.
-# super + x ; {3-5}
-#     xterm -e {mutt,newsboat,ncmpcpp}
-
-# Toggle email
-# super + n
-#     toggle_email
+# super + x ; {1-3}
+#     st -e {mutt,newsboat,ncmpcpp}
 
 # Run Rofi dmenu
 super + @space

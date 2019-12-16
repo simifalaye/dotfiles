@@ -1,13 +1,3 @@
-" Globals
-" -------
-" Variables that will be used in the whole vim config
-
-let mapleader = " "
-let vimhomedir = has('nvim') ? "~/.config/nvim" : "~/.vim"
-let fzfsourcedir = !empty($FZF_SOURCE_DIR) ? $FZF_SOURCE_DIR : "~/.fzf"
-let vimplugdir=vimhomedir . "/plugged"
-let vimautoloaddir = vimhomedir ."/autoload"
-
 " General settings
 " ----------------
 " Read documentation about each option by executing :h <option>
@@ -43,6 +33,7 @@ set nostartofline              " don't reset cursor to start of line when moving
 set cmdheight=1                " bottom section height
 
 " Files and buffers
+
 set hidden        " Allow buffers to remain hidden when not in use
 set autoread      " Reload files changed outside vim
 set nobackup      " Turn backup off
@@ -51,10 +42,10 @@ set nowritebackup " Turn write backup off
 set undofile      " Turn on undo file
 
 " User Interface
+
 set number                         " Display line numbers
 set relativenumber                 " Disply line numbers relative to current line
 set mouse=a                        " Allow mouse usage
-autocmd BufWritePre * :%s/\s\+$//e " Remove trailing whitespace on save
 set list                           " Show specific characters
 set listchars=tab:T>,trail:.,extends:>,precedes:<,nbsp:+
 set splitbelow                     " Fix splits
@@ -62,6 +53,7 @@ set splitright                     " Fix splits
 set fillchars=""                   " Fix splits
 
 " History
+
 set history=1000                  " Remember more commands
 if has('persistent_undo')
     set undofile                  " Persistent undo
@@ -78,22 +70,3 @@ if !has("nvim")
   set smarttab
   set ttyfast
 endif
-
-" Disable Netrw
-let g:loaded_netrw = 1
-let g:loaded_netrwPlugin = 1
-
-" Return to last edit position when opening files (You want this!)
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-
-" File type settings
-autocmd Filetype gitcommit,mail,md setlocal spell textwidth=72
-autocmd FileType vim setlocal commentstring=\"\ %s
-autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 commentstring=//\ %s
-autocmd FileType java setlocal shiftwidth=2 tabstop=2 commentstring=//\ %s
-autocmd FileType conf,bitbake,cfg setlocal commentstring=#\ %s
-
-" Abbreviations (try not to use common words)
-iab tdate <c-r>=strftime("%Y-%m-%d")<cr>
-iab todo: @TODO:
-iab fixme: @FIXME:
