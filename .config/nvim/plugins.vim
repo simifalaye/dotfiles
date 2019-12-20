@@ -22,7 +22,7 @@ Plug 'wellle/targets.vim'
 " Integration Utilities
 " ---------------------
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-fugitive', { 'on': [ 'Gstatus', 'Gblame', 'Gdiff' ] }
 Plug 'tpope/vim-repeat'
 
 " Files / Buffers
@@ -50,14 +50,15 @@ Plug 'junegunn/fzf.vim'
     \ 'ctrl-t': 'tab split',
     \ 'ctrl-s': 'split',
     \ 'ctrl-v': 'vsplit' }
-Plug 'moll/vim-bbye'
+Plug 'moll/vim-bbye', { 'on': ['Bdelete', 'Bclose'] }
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
   " Close vim if last window
   autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-  let g:NERDTreeMinimalUI           = v:true
   let g:NERDTreeWinPos              = "left"
+  let g:NERDTreeMinimalUI           = v:true
   let g:NERDTreeShowHidden          = v:true
   let g:NERDTreeShowBookmarks       = v:true
+  let g:NERDTreeHighlightCursorline = v:true
   let g:NERDTreeDirArrowExpandable  = '+'
   let g:NERDTreeDirArrowCollapsible = '-'
 
@@ -66,7 +67,7 @@ Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
 Plug 'chriskempson/base16-vim'
 Plug 'itchyny/lightline.vim'
   let g:lightline = {
-    \   'colorscheme': 'base16_sf',
+    \   'colorscheme': 'wombat',
     \   'active': {
     \     'left': [[ 'mode', 'paste' ], [ 'fugitive', 'filename']]
     \   },
@@ -106,4 +107,5 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
         \]
 
 call plug#end()
-call helpers#lightline#customColor()
+" Call setup functions
+call helpers#lightline#floating()

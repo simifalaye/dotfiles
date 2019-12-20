@@ -19,7 +19,7 @@ set t_Co=256
 set background=dark
 let base16colorspace=256
 if filereadable(expand(vimcolordir))
-  exec "source " . vimcolordir
+    exec "source " . vimcolordir
 else
-  colorscheme base16-default-dark
+    colorscheme base16-default-dark
 endif

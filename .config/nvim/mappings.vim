@@ -1,13 +1,12 @@
 " General Mappings
 " ----------------
+inoremap jk <Esc>
 " Config mappings
 nnoremap <localleader>r :so $MYVIMRC<cr>:echo ".vimrc reloaded"<cr>
 nnoremap <localleader>i :so $MYVIMRC<bar>PlugInstall<cr>
 nnoremap <localleader>c :so $MYVIMRC<bar>PlugClean<cr>
 nnoremap <localleader>u :so $MYVIMRC<bar>PlugUpdate<cr>
 nnoremap <localleader>U :PlugUpgrade<cr>
-" Quickly switch back to normal mode
-inoremap jk <Esc>l
 
 " Save and quit
 " -------------
@@ -49,25 +48,25 @@ nmap ga <Plug>(EasyAlign)
 nnoremap cos :set spell!<Enter>
 nnoremap coh :set hlsearch!<Enter>
 " Reselect pasted text
-nnoremap <leader>v V`]
+nnoremap <leader>p V`]
 
 " Files Buffers, Splits and Tabs
 " ------------------------------
-" Tab navigation
-nnoremap <Tab> gT
-nnoremap <S-Tab> gt
-" Toggles between buffers
-nnoremap <BS> <C-^>
-" Zoom
+" Tab/buffer navigation, zoom
+nnoremap <Tab> gT | nnoremap <S-Tab> gt
+nnoremap H :bprevious<CR> | nnoremap L :bnext<CR>
+nnoremap <leader>b <C-^>
 nnoremap <leader>z :call functions#zoom()<CR>
-" Fzf
+" Fzf and NERDTree
 nnoremap <silent><C-s> :Snippets<CR>
 nnoremap <silent><C-g> :Rg<CR>
 nnoremap <silent>;     :Buffers<CR>
 nnoremap <silent>,     :SmartFiles<CR>
-" NERDTree
-noremap <silent> <C-n> :NERDTreeToggle<CR>
-noremap <silent> <C-f> :NERDTreeFind<CR>
+nnoremap <silent> <C-n> :NERDTreeToggle<CR>
+nnoremap <silent> <C-f> :NERDTreeFind<CR>
+" Split with startify
+nnoremap <silent><Leader>v :vsplit \| :Startify<cr>
+nnoremap <silent><Leader>h :split \| :Startify<cr>
 
 " Code completion and snippets
 " ----------------------------

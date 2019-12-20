@@ -11,9 +11,6 @@ export SHELL_CONF_HOME=~/.config/shell
 export LC_ALL=${USER_LANGUAGE}
 export LANG=${USER_LANGUAGE}
 export LANGUAGE=${USER_LANGUAGE}
-export BROWSER='firefox'
-export TESTENVS="PROFILE"
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/bin/java
 
 # Program Variables
 # -----------------

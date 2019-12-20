@@ -59,6 +59,7 @@ alias l='ls -CF'
 alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}"
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
+_is_callable xdg-open && alias open="xdg-open"
 
 # bat aliases (a better cat)
 _is_callable bat && alias cat="bat -p"

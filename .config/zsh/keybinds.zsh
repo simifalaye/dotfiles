@@ -22,30 +22,32 @@ bindkey '^[OB' history-substring-search-down
 
 # <5.0.8 doesn't have visual map
 if is-at-least 5.0.8; then
-  # add vimmish text-object support to zsh
-  autoload -U select-quoted; zle -N select-quoted
-  for m in visual viopp; do
-    for c in {a,i}{\',\",\`}; do
-      bindkey -M $m $c select-quoted
+    # add vimmish text-object support to zsh
+    autoload -U select-quoted; zle -N select-quoted
+    for m in visual viopp; do
+        for c in {a,i}{\',\",\`}; do
+            bindkey -M $m $c select-quoted
+        done
     done
-  done
-  autoload -U select-bracketed; zle -N select-bracketed
-  for m in visual viopp; do
-    for c in {a,i}${(s..)^:-'()[]{}<>bB'}; do
-      bindkey -M $m $c select-bracketed
+
+    autoload -U select-bracketed; zle -N select-bracketed
+    for m in visual viopp; do
+        for c in {a,i}${(s..)^:-'()[]{}<>bB'}; do
+            bindkey -M $m $c select-bracketed
+        done
     done
-  done
 fi
 
 # C-z to toggle current process (background/foreground)
-fancy-ctrl-z () {
-  if [[ $#BUFFER -eq 0 ]]; then
-    BUFFER="fg"
-    zle accept-line
-  else
-    zle push-input
-    zle clear-screen
-  fi
+fancy-ctrl-z ()
+{
+    if [[ $#BUFFER -eq 0 ]]; then
+        BUFFER="fg"
+        zle accept-line
+    else
+        zle push-input
+        zle clear-screen
+    fi
 }
 zle -N fancy-ctrl-z
 bindkey '^Z' fancy-ctrl-z
@@ -58,5 +60,5 @@ bindkey "^[[3~" delete-char
 bindkey -sM vicmd '^[' '^G'
 bindkey -rM viins '^X'
 bindkey -M viins '^X,' _history-complete-newer \
-  '^X/' _history-complete-older \
-  '^X`' _bash_complete-word
+    '^X/' _history-complete-older \
+    '^X`' _bash_complete-word

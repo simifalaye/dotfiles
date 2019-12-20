@@ -66,6 +66,7 @@ autocmd Filetype gitcommit,mail,md setl spell        tw=72
 autocmd FileType vim               setl shiftwidth=2 ts=2 cms=\"\ %s
 autocmd FileType c,cpp             setl shiftwidth=4 ts=4 cms=//\ %s
 autocmd FileType java              setl shiftwidth=2 ts=2 cms=//\ %s
+autocmd FileType sh,zsh            setl shiftwidth=4 ts=4 cms=#\ %s
 autocmd FileType conf,bitbake,cfg  setl cms=#\ %s
 
 " Abbreviations (try not to use common words)

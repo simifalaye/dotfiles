@@ -16,8 +16,6 @@ if ! zgen saved; then
     zgen load zdharma/fast-syntax-highlighting
     zgen load zsh-users/zsh-history-substring-search
     zgen load zsh-users/zsh-completions src
-    zgen load urbainvaes/fzf-marks
-    zgen load miekg/lean # Theme
 
     # save all to init script
     zgen save

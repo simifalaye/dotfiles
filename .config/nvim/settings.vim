@@ -31,6 +31,7 @@ set wildmode=longest:full,full " settings for how to complete matched strings
 set lazyredraw                 " don't redraw when we don't have to
 set nostartofline              " don't reset cursor to start of line when moving
 set cmdheight=1                " bottom section height
+set selection=old              " no new line when using $
 
 " Files and buffers
 
@@ -63,6 +64,7 @@ if has('persistent_undo')
 endif
 
 " Vim-only overrides
+
 if !has("nvim")
   filetype plugin indent on
   syntax enable

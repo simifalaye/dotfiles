@@ -9,7 +9,7 @@ _load_repo chriskempson/base16-shell $BASE16_SHELL
 # Utilities
 # ---------
 
-setopt PROMPT_SUBST
+setopt PROMPT_SUBST # Allow prompt substitution
 _is_callable "rg" &&
 {
     export FZF_DEFAULT_COMMAND='rg --files --hidden'

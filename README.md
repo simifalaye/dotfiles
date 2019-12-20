@@ -20,6 +20,7 @@ In this section will be listed all the Graphical Applications. A separate sectio
 - [Polybar](https://github.com/polybar/polybar) - A fast and easy-to-use tool for creating status bars.
 - [Compton](https://github.com/chjj/compton) - A compositor for x11.
 - [Papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme) - Icons
+- [i3lock](https://github.com/i3/i3lock) - Screen locker
 - DejaVu Sans - Font
 
 ### Productivity and Internet
