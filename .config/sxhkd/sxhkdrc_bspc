@@ -104,8 +104,8 @@ super + m
 # dimensions inside the split it would normally occupy as a tile (I have
 # never found a practical use for this).  Floating windows have their
 # own dimensions and can be stacked on top of each other.
-super + {t,shift + space,f}
-    bspc node -t {tiled,floating,fullscreen}
+super + {t,f,shift + f}
+    bspc node -t {tiled,fullscreen,floating}
 
 # Make node split ratios equal or balanced.  The former applies to the
 # root of the tree to equalise all split ratios.  The latter applies to

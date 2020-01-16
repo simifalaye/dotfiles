@@ -25,6 +25,8 @@ _load $ZDOTDIR/keybinds.zsh
 
 # MUST LOAD LAST
 # ---------------
-
+# Fzf
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] &&
     source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
+# autojump
+[ -f /usr/share/autojump/autojump.sh ] && source /usr/share/autojump/autojump.sh

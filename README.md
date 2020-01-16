@@ -73,3 +73,4 @@ I use ZSH shell:
 - [mdless](https://github.com/ttscoff/mdless) - Markdown file viewer.
 - [ripgrep](https://github.com/BurntSushi/ripgrep) - A faster grep
 - [scrot](https://github.com/dreamer/scrot) - Screenshot utility
+- [autojump](https://github.com/wting/autojump) - A cd command that learns

@@ -22,7 +22,6 @@ set vb t_vb=                   " shush, no beep
 set scrolloff=5                " keep 5 lines of context at end of file when scrolling
 set complete=.,w,b,u,U,t,i,d   " do lots of scanning on tab completion
 set encoding=utf8              " default character encoding
-set clipboard=unnamedplus      " set clipboard to use
 set timeoutlen=1000            " remove escape delay
 set ttimeoutlen=0              " remove escape delay
 set tags=./tags,./.git/tags;   " set tags file locations for ctags
@@ -44,14 +43,19 @@ set undofile      " Turn on undo file
 
 " User Interface
 
-set number                         " Display line numbers
-set relativenumber                 " Disply line numbers relative to current line
-set mouse=a                        " Allow mouse usage
-set list                           " Show specific characters
+set number                          " Display line numbers
+set relativenumber                  " Disply line numbers relative to current line
+set mouse=a                         " Allow mouse usage
+set list                            " Show specific characters
 set listchars=tab:T>,trail:.,extends:>,precedes:<,nbsp:+
-set splitbelow                     " Fix splits
-set splitright                     " Fix splits
-set fillchars=""                   " Fix splits
+set splitbelow                      " Fix splits
+set splitright                      " Fix splits
+set fillchars=""                    " Fix splits
+if has('clipboard')
+  set clipboard=unnamed,unnamedplus " set clipboard to use
+else
+  set clipboard=unnamed
+endif
 
 " History
 

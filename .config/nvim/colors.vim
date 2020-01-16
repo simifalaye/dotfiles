@@ -23,3 +23,8 @@ if filereadable(expand(vimcolordir))
 else
     colorscheme base16-default-dark
 endif
+" Specific to colorscheme
+highlight clear LineNr
+highlight clear SignColumn
+highlight LineNr guifg=#383838
+

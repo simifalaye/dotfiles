@@ -8,11 +8,6 @@ call plug#begin(vimplugdir)
 " Text manipulation
 " -----------------
 Plug 'junegunn/vim-easy-align'
-Plug 'Raimondi/delimitMate'
-  let delimitMate_expand_cr            = v:true
-  let delimitMate_expand_space         = v:true
-  let delimitMate_smart_quotes         = v:true
-  let delimitMate_expand_inside_quotes = v:false
 Plug 'sickill/vim-pasta'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
@@ -24,10 +19,12 @@ Plug 'wellle/targets.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-fugitive', { 'on': [ 'Gstatus', 'Gblame', 'Gdiff' ] }
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-sleuth'
 
 " Files / Buffers
 " ---------------
 Plug 'airblade/vim-rooter'
+  let g:rooter_patterns = ['Rakefile', '.git', '.git/']
 Plug 'junegunn/fzf', {'dir': fzfsourcedir,'do': './install --all --xdg'}
 Plug 'junegunn/fzf.vim'
   let g:fzf_layout = { 'down': '~40%' }
@@ -56,6 +53,7 @@ Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
   autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
   let g:NERDTreeWinPos              = "left"
   let g:NERDTreeMinimalUI           = v:true
+  let g:NERDTreeQuitOnOpen          = v:true
   let g:NERDTreeShowHidden          = v:true
   let g:NERDTreeShowBookmarks       = v:true
   let g:NERDTreeHighlightCursorline = v:true
@@ -91,20 +89,21 @@ Plug 'sheerun/vim-polyglot'
   let g:polyglot_disabled = ['markdown']
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
   let g:UltiSnipsSnippetsDir              = vimhomedir . '/UltiSnips'
-  let g:UltiSnipsExpandTrigger            = "<Plug>(ultisnips_expand)"
-  let g:UltiSnipsListSnippets             = '<c-l>'
+  let g:UltiSnipsExpandTrigger            = "<cr>"
+  let g:UltiSnipsListSnippets             = "<c-l>"
   let g:UltiSnipsJumpForwardTrigger       = "<c-j>"
   let g:UltiSnipsJumpBackwardTrigger      = "<c-k>"
-  let g:UltiSnipsRemoveSelectModeMappings = v:false
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-  set shortmess+=c
-  " set signcolumn=yes
-  " Default is 4000, lower it for better performance
-  set updatetime=300
-  let g:coc_global_extensions = [
-        \ 'coc-json',
-        \ 'coc-snippets',
-        \]
+Plug 'ycm-core/YouCompleteMe', {'do': function('functions#buildYCM')}
+  let g:ycm_global_ycm_extra_conf = '~/.config/nvim/.ycm_extra_conf.py'
+  let g:ycm_confirm_extra_conf=0
+  let g:ycm_clangd_uses_ycmd_caching = 0
+  let g:ycm_clangd_args = ['-log=verbose', '-pretty', '-query-driver=/home/**/usr/bin/arm*linux-gnueabi-g++']
+  let g:ycm_show_diagnostics_ui = 0
+  let g:ycm_max_num_candidates = 30
+  nnoremap <C-]> :YcmCompleter GoToDefinitionElseDeclaration<CR>
+  nnoremap gr :YcmCompleter GoToReferences<CR>
+  nnoremap gi :YcmCompleter GoToImplementation<CR>
+  nnoremap gd :YcmCompleter GetDoc<CR>
 
 call plug#end()
 " Call setup functions

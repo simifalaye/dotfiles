@@ -139,6 +139,13 @@ backupthis() {
     cp -riv $1 ${1}-$(date +%Y%m%d%H%M).backup;
 }
 
+# Rename pane
+function renamepane()
+{
+    name=$1
+    printf '\033]2;%s\033\\' $name
+}
+
 # Colourise man pages
 man() {
     env \

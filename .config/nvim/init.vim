@@ -35,7 +35,6 @@ nnoremap d "_d
 xnoremap d "_d
 nnoremap dd "_dd
 nnoremap D "_D
-nnoremap D "_D
 
 " Autocommands
 " ------------
@@ -62,12 +61,9 @@ augroup trailingwhitespace
 augroup end
 
 " File type settings
-autocmd Filetype gitcommit,mail,md setl spell        tw=72
-autocmd FileType vim               setl shiftwidth=2 ts=2 cms=\"\ %s
-autocmd FileType c,cpp             setl shiftwidth=4 ts=4 cms=//\ %s
-autocmd FileType java              setl shiftwidth=2 ts=2 cms=//\ %s
-autocmd FileType sh,zsh            setl shiftwidth=4 ts=4 cms=#\ %s
-autocmd FileType conf,bitbake,cfg  setl cms=#\ %s
+autocmd Filetype gitcommit,mail,md     setl spell tw=72
+autocmd FileType c,cpp,java            setl cms=//\ %s
+autocmd FileType conf,bitbake,cfg,zsh  setl cms=#\ %s
 
 " Abbreviations (try not to use common words)
 " -------------------------------------------

@@ -34,7 +34,6 @@
 *.log
 *.sql
 *.sqlite
-compile_commands.json
 
 # OS generated files #
 ######################
@@ -50,6 +49,11 @@ Thumbs.db
 ########################
 *.coverage
 *.lock
+.tags
+.ccls
+tags
+compile_commands.json
+compilation_db.bbclass
 
 # Temp files #
 #####################
@@ -67,9 +71,4 @@ oe-logs
 *.egg-info/
 htmlcov/
 .vscode/
-
-# Ctags #
-#####################
-tags
-.tags
-TAGS
+.clangd/

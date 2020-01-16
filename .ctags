@@ -1,7 +1,6 @@
 --recurse=yes
 --exclude=.git
---exclude=build/*
---exclude=build-dorado/*
+--exclude=build*
 --exclude=log/*
 --exclude=oe-logs/*
 --exclude=oe-workdir/*
