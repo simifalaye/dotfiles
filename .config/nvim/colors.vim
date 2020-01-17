@@ -27,4 +27,3 @@ endif
 highlight clear LineNr
 highlight clear SignColumn
 highlight LineNr guifg=#383838
-

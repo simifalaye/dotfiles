@@ -24,6 +24,26 @@
 # Executables which typically run in the console: super + x ; ...
 # Graphical applications: super + g ; ...
 
+# Run Rofi dmenu
+super + @space
+    rofi -combi-modi "window,drun" -show combi
+super + p
+    rofi-pass
+
+# Terminal emulator with and without TMUX.
+super + {_, shift + } Return
+    {st, st -e tmux -f ~/.config/tmux/tmux.conf new-session -A -s 'Default'}
+
+# Screenshots (requires `scrot`). The first one is of the entire X session
+# (including all active monitors). The other one is for the focused window.
+# Note that `scrot` also has an interactive mode that I do not use.
+Print
+    scrot -m -z '%Y-%m-%d_%H:%M:%S_$wx$h.png' -e 'mv $f ~/Pictures' && \
+    notify-send -i gnome-screenshot "Screen view screenshot" "Saved image to Pictures"
+super + Print
+    scrot -u -z '%Y-%m-%d_%H:%M:%S_$wx$h$n.png' -e 'mv $f ~/Pictures' && \
+    notify-send -i gnome-screenshot "Window view screenshot" "Saved image to Pictures"
+
 # Environment
 # -----------
 
@@ -49,26 +69,24 @@ super + e ; {c,d,p,s,v}
 super + {ctrl + alt, BackSpace}
     screenlock
 
-# Screenshots (requires `scrot`). The first one is of the entire X session
-# (including all active monitors). The other one is for the focused window.
-# Note that `scrot` also has an interactive mode that I do not use.
-Print
-    scrot -m -z '%Y-%m-%d_%H:%M:%S_$wx$h.png' -e 'mv $f ~/Pictures' && \
-    notify-send -i gnome-screenshot "Screen view screenshot" "Saved image to Pictures"
-super + Print
-    scrot -u -z '%Y-%m-%d_%H:%M:%S_$wx$h$n.png' -e 'mv $f ~/Pictures' && \
-    notify-send -i gnome-screenshot "Window view screenshot" "Saved image to Pictures"
+# Executables: CLI programs.
+# -------------------------
 
-# Main programs
-# -------------
+# The following commands are:
+#
+# j == Joplin
+super + x ; {j}
+    st -e {joplin}
 
-# Terminal emulator with and without TMUX.
-super + {_, shift + } Return
-    {st, st -e tmux -f ~/.config/tmux/tmux.conf new-session -A -s 'Default'}
+# Graphical Apps
+# --------------
 
-# GUI programs.  Where these are alternatives to common CLI tools they
-# are mapped to the same number as their counterparts, but prepended
-# with a `g` (mnemonic for GUI).
+# The following commands are:
+#
+# b == Firefox (Browser)
+# f == Nautilus (Files)
+# t == Tweaks
+# c == Calendar
 super + g ; {b, f, t, c}
     { \
     notify-send -i firefox "Run GUI program" "Launching Browser" && firefox, \
@@ -76,16 +94,6 @@ super + g ; {b, f, t, c}
     notify-send -i gnome-settings "Run GUI program" "Launching tweaks" && gnome-tweaks, \
     notify-send -i gnome-calendar "Run GUI program" "Launching Cal" && gnome-calendar, \
     }
-
-# CLI programs.
-# super + x ; {1-3}
-#     st -e {mutt,newsboat,ncmpcpp}
-
-# Run Rofi dmenu
-super + @space
-    rofi -combi-modi "window,drun" -show combi
-super + p
-    rofi-pass
 
 # Media controls
 # --------------

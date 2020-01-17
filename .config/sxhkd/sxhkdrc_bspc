@@ -47,7 +47,7 @@ super + shift + {h,j,k,l}
 # down `shift`.
 alt + {_,shift +} Tab
     bspc node -f {next,prev}.local
-super + {_,shift +} Tab
+super + {_,shift +} n
     bspc desktop -f {next,prev}.local.occupied
 
 # Switch to the {next,previous} monitor.  This brings focus to that

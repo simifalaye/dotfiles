@@ -9,7 +9,6 @@ call plug#begin(vimplugdir)
 " -----------------
 Plug 'junegunn/vim-easy-align'
 Plug 'sickill/vim-pasta'
-Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'wellle/targets.vim'
@@ -29,7 +28,6 @@ Plug 'junegunn/fzf', {'dir': fzfsourcedir,'do': './install --all --xdg'}
 Plug 'junegunn/fzf.vim'
   let g:fzf_layout = { 'down': '~40%' }
   let g:fzf_buffers_jump = v:true
-  command! -bang -nargs=* -complete=dir SmartFiles call functions#smartFiles(<q-args>)
   let g:fzf_colors = {
     \ 'fg':      ['fg', 'Normal'],
     \ 'bg':      ['bg', 'Normal'],
@@ -86,25 +84,27 @@ Plug 'mhinz/vim-startify'
 " Code completion / Languages
 " ---------------------------
 Plug 'sheerun/vim-polyglot'
-  let g:polyglot_disabled = ['markdown']
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
   let g:UltiSnipsSnippetsDir              = vimhomedir . '/UltiSnips'
-  let g:UltiSnipsExpandTrigger            = "<cr>"
+  let g:UltiSnipsExpandTrigger            = "<c-j>"
   let g:UltiSnipsListSnippets             = "<c-l>"
   let g:UltiSnipsJumpForwardTrigger       = "<c-j>"
   let g:UltiSnipsJumpBackwardTrigger      = "<c-k>"
-Plug 'ycm-core/YouCompleteMe', {'do': function('functions#buildYCM')}
-  let g:ycm_global_ycm_extra_conf = '~/.config/nvim/.ycm_extra_conf.py'
-  let g:ycm_confirm_extra_conf=0
-  let g:ycm_clangd_uses_ycmd_caching = 0
-  let g:ycm_clangd_args = ['-log=verbose', '-pretty', '-query-driver=/home/**/usr/bin/arm*linux-gnueabi-g++']
-  let g:ycm_show_diagnostics_ui = 0
-  let g:ycm_max_num_candidates = 30
-  nnoremap <C-]> :YcmCompleter GoToDefinitionElseDeclaration<CR>
-  nnoremap gr :YcmCompleter GoToReferences<CR>
-  nnoremap gi :YcmCompleter GoToImplementation<CR>
-  nnoremap gd :YcmCompleter GetDoc<CR>
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-file.vim'
+Plug 'prabirshrestha/asyncomplete-buffer.vim'
+Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
+Plug 'yami-beta/asyncomplete-omni.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'prabirshrestha/vim-lsp'
+  let g:lsp_highlight_references_enabled = 1
+  " Autoclose preview window when completion is done
+  autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
 call plug#end()
+
 " Call setup functions
 call helpers#lightline#floating()
+call helpers#asyncomplete#setupSources()
+call helpers#lsp#setupSources()

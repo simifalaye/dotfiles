@@ -32,11 +32,14 @@ vnoremap <         <gv
 vnoremap >         >gv
 nnoremap /         /\v
 vnoremap /         /\v
+nnoremap n         nzz
+nnoremap N         Nzz
 vnoremap .         :normal .<cr>
 nnoremap siw       "_diwP
 nnoremap ss        "_ddP
 nnoremap S         "_Dp
 vnoremap y         ygv<Esc>
+nnoremap <Tab>     %
 nnoremap <C-e>     5<C-e>
 nnoremap <C-y>     5<C-y>
 nnoremap <leader>/ :nohl<CR>
@@ -55,20 +58,28 @@ nnoremap cos :set spell!<Enter>
 nnoremap <leader>p V`]
 " find the conflict line of git
 map <leader>fc /\v^[<\|=>]{7}( .*\|$)<CR>
+" move selected lines
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
 
 " Files Buffers, Splits and Tabs
 " ------------------------------
 " Tab/buffer navigation, zoom
-nnoremap <C-Right> gT | nnoremap <C-Left> gt
+nnoremap <Right> gT | nnoremap <Left> gt
 nnoremap H :bprevious<CR> | nnoremap L :bnext<CR>
 nnoremap <BS> <C-^>
 nnoremap <leader>z :call functions#zoom()<CR>
-" Fzf and NERDTree
-nnoremap <silent><C-s> :Snippets<CR>
-nnoremap <silent><C-g> :Rg<CR>
-nnoremap <silent><C-p> :SmartFiles<CR>
-nnoremap <silent><CR>  :Buffers<CR>
+" NERDTree
 nnoremap <silent><C-n> :call functions#nerdTreeToggleFind()<CR>
+" Fzf
+nnoremap <silent><C-p> :SmartFiles<CR>
+nnoremap <silent>,     :Buffers<CR>
+command! -bang -nargs=* -complete=dir SmartFiles call functions#smartFiles(<q-args>)
+if executable('rg')
+  let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
+  command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
+  nnoremap <silent> <C-f> :Find<CR>
+endif
 " Split with startify
 nnoremap <silent><Leader>v :vsplit \| :Startify<CR>
 nnoremap <silent><Leader>h :split \| :Startify<CR>
@@ -79,3 +90,18 @@ nnoremap <silent> gib :Gblame<Enter>
 nnoremap <silent> gid :Gdiff<Enter>
 nnoremap <silent> gil :0Glog<Enter>
 nnoremap <silent> gis :Gstatus<Enter>
+
+" Completion
+" ----------------
+" Expand with tab and shift-tab
+inoremap <silent><expr> <TAB>
+  \ pumvisible() ? "\<C-n>" :
+  \ functions#checkBackspace() ? "\<TAB>" :
+  \ asyncomplete#force_refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" Key bindings for vim-lsp.
+nnoremap <silent> <C-]> :LspDefinition<cr>
+nnoremap <silent> gr :LspReferences<cr>
+nnoremap <silent> gd :LspDocumentSymbol<cr>
+nnoremap <silent> gh :LspHover<cr>
+nnoremap <f2> :LspRename<cr>
