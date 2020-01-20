@@ -15,10 +15,9 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-export TESTENVS="BASHRC"
-
 # Source global definitions
 test -r $SHELL_CONF_HOME/shell-aliases && . $SHELL_CONF_HOME/shell-aliases
+test -r $SHELL_CONF_HOME/shell-functions && . $SHELL_CONF_HOME/shell-functions
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options

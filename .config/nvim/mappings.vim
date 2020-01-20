@@ -11,12 +11,13 @@ nnoremap <localleader>U :PlugUpgrade<CR>
 " Save and quit
 " -------------
 cnoremap W!        w !sudo tee % >/dev/null
-nnoremap <leader>a :cclose<CR>
+nnoremap <leader>c :cclose<CR>
 noremap  <leader>w :update<CR>
 nmap     <leader>q :Bdelete<CR>
-nmap     <leader>Q :Bwipeout<CR>
-nmap     <leader>x :q<CR>
-nmap     <leader>X :q!<CR>
+nmap     q         :q<CR>
+nmap     W         :wa<CR>
+nmap     Q         :qa<CR>
+nmap     X         :qa!<CR>
 
 " Remaps
 " -------
@@ -34,14 +35,12 @@ nnoremap /         /\v
 vnoremap /         /\v
 nnoremap n         nzz
 nnoremap N         Nzz
-vnoremap .         :normal .<cr>
+vnoremap .         :normal .<CR>
 nnoremap siw       "_diwP
 nnoremap ss        "_ddP
 nnoremap S         "_Dp
 vnoremap y         ygv<Esc>
 nnoremap <Tab>     %
-nnoremap <C-e>     5<C-e>
-nnoremap <C-y>     5<C-y>
 nnoremap <leader>/ :nohl<CR>
 
 " Text manipulation
@@ -74,6 +73,7 @@ nnoremap <silent><C-n> :call functions#nerdTreeToggleFind()<CR>
 " Fzf
 nnoremap <silent><C-p> :SmartFiles<CR>
 nnoremap <silent>,     :Buffers<CR>
+nnoremap <silent>t     :BTags<CR>
 command! -bang -nargs=* -complete=dir SmartFiles call functions#smartFiles(<q-args>)
 if executable('rg')
   let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
@@ -100,8 +100,8 @@ inoremap <silent><expr> <TAB>
   \ asyncomplete#force_refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 " Key bindings for vim-lsp.
-nnoremap <silent> <C-]> :LspDefinition<cr>
-nnoremap <silent> gr :LspReferences<cr>
-nnoremap <silent> gd :LspDocumentSymbol<cr>
-nnoremap <silent> gh :LspHover<cr>
-nnoremap <f2> :LspRename<cr>
+nnoremap <silent> <C-]> :LspDefinition<CR>
+nnoremap <silent> gr :LspReferences<CR>
+nnoremap <silent> gd :LspDocumentSymbol<CR>
+nnoremap <silent> gh :LspHover<CR>
+nnoremap <F2> :LspRename<CR>

@@ -1,5 +1,6 @@
 # Source global definitions
 test -r $SHELL_CONF_HOME/shell-aliases && . $SHELL_CONF_HOME/shell-aliases
+test -r $SHELL_CONF_HOME/shell-functions && . $SHELL_CONF_HOME/shell-functions
 
 # Plugin config: Zgen
 # -------------------

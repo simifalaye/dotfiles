@@ -1,53 +1,5 @@
-# Helpers
-# -----------------
-
-function _is_interactive { [[ $- == *i* || -n $EMACS ]]; }
-
-function _is_callable
-{
-    for cmd in "$@"; do
-        command -v "$cmd" >/dev/null || return 1
-    done
-}
-
-function _is_wsl
-{
-    if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
-        return 0
-    fi
-    return 1
-}
-
-function _load
-{
-    test -r $1 && source $1 || echo "Failed to source $1"
-}
-
-function _load_all
-{
-    for src in "$@"; do
-        _load $src
-    done
-}
-
-function _load_repo
-{
-    local target=$1
-    local dest=$2
-    local src=$3
-    if [ ! -d $dest ]; then
-        url=https://github.com/$target
-        mkdir -p $dest
-        git clone "$url" "$dest" || >&2 echo "Failed to load repo $url"
-    fi
-    [ -z "$src" ] || _load $dest/$src
-}
-
 # Aliases
 # -------
-
-# Editor
-command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
 
 # Common task aliases
 alias q=exit
@@ -59,23 +11,28 @@ alias l='ls -CF'
 alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}"
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
-_is_callable xdg-open && alias open="xdg-open"
+
+# Editor
+command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
+
+# Open file in proper program
+command -v xdg-open >/dev/null && alias open="xdg-open"
 
 # bat aliases (a better cat)
-_is_callable bat && alias cat="bat -p"
+command -v bat >/dev/null && alias cat="bat -p"
 
 # gotop aliases (a graphical top)
-_is_callable gotop && alias tm="gotop"
+command -v gotop >/dev/null && alias tm="gotop"
 
 # tmux aliases
-_is_callable tmux &&
+command -v tmux >/dev/null &&
 {
     alias tmux='tmux -f ~/.config/tmux/tmux.conf'
     alias ta='tmux attach -t'
     alias tl='tmux ls'
 }
 
-# Bookmarks
+# Navigation
 alias home="cd ~"
 alias dev='cd ~/dev'
 alias dl='cd ~/Downloads'
@@ -86,80 +43,3 @@ alias vids='cd ~/Videos'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-
-
-# Functions
-# -----------------
-
-# mkdir and cd into it
-take() { mkdir "$1" && cd "$1"; };
-
-# Push dotfiles to github
-function dotfiles()
-{
-    message="Latest file updates"
-    [ -z "$1" ] || message=${1}
-    command yadm commit -a -m "$message"
-    command yadm push
-}
-
-# ls when changing dirs
-function cd()
-{
-    builtin cd "$1" && ls
-}
-
-# open config file
-function conf()
-{
-    prog=$1
-    [[ $prog == "vim" ]] && prog="nvim"
-    if [[ ! -z "$prog" ]]; then
-        command $EDITOR `find $HOME/.config/$prog -maxdepth 1 -type f`
-    else
-        cd $HOME/.config && ls
-    fi
-}
-
-# Command: Reload the current shell
-function reloadshell()
-{
-    currentshell=$(ps -fp $$)
-    if [[ $currentshell =~ "zsh" ]]; then
-        zgen reset && source $ZDOTDIR/.zshrc && echo "Zsh reloaded."
-    elif [[ $currentshell =~ "bash" ]]; then
-        source $SHELL_CONF_HOME/bashrc && echo "Bash reloaded."
-    else
-        echo "Failed to reload shell."
-    fi
-}
-
-# Back up a file. Usage "backupthis <filename>"
-backupthis() {
-    cp -riv $1 ${1}-$(date +%Y%m%d%H%M).backup;
-}
-
-# Rename pane
-function renamepane()
-{
-    name=$1
-    printf '\033]2;%s\033\\' $name
-}
-
-# Colourise man pages
-man() {
-    env \
-    LESS_TERMCAP_mb=$(tput bold; tput setaf 6) \
-    LESS_TERMCAP_md=$(tput bold; tput setaf 6) \
-    LESS_TERMCAP_me=$(tput sgr0) \
-    LESS_TERMCAP_se=$(tput rmso; tput sgr0) \
-    LESS_TERMCAP_ue=$(tput rmul; tput sgr0) \
-    LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 4) \
-    LESS_TERMCAP_mr=$(tput rev) \
-    LESS_TERMCAP_mh=$(tput dim) \
-    LESS_TERMCAP_ZN=$(tput ssubm) \
-    LESS_TERMCAP_ZV=$(tput rsubm) \
-    LESS_TERMCAP_ZO=$(tput ssupm) \
-    LESS_TERMCAP_ZW=$(tput rsupm) \
-        man "$@"
-}

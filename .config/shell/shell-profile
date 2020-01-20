@@ -12,14 +12,7 @@ export LC_ALL=${USER_LANGUAGE}
 export LANG=${USER_LANGUAGE}
 export LANGUAGE=${USER_LANGUAGE}
 
-# Program Variables
-# -----------------
-
-export VIM_HOME_DIR="$XDG_CONFIG_HOME/nvim"
-export FZF_SOURCE_DIR="$XDG_CONFIG_HOME/.fzf"
-export TMUX_HOME="$XDG_CONFIG_HOME/tmux"
-
-# wsl specific
+# Wsl specific
 if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
     export IS_WSL_DEVICE=true
     # IMPORTANT (for vim copy paste)
@@ -29,6 +22,14 @@ if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
     # Wsl file/folder permissions metadata
     umask 022
 fi
+
+
+# Program Variables
+# -----------------
+
+export VIM_HOME_DIR="$XDG_CONFIG_HOME/nvim"
+export FZF_SOURCE_DIR="$XDG_CONFIG_HOME/.fzf"
+export TMUX_HOME="$XDG_CONFIG_HOME/tmux"
 
 # Editors
 # -------
@@ -53,6 +54,5 @@ export LESS='-iFMRSX -x4'
 test -x /usr/bin/lesspipe && eval "$(SHELL=/bin/sh lesspipe)"
 # disable flow control (ctrl + s,q)
 stty -ixon
-
 # Ignore basic commands in history
 export HISTORY_IGNORE="(ls|bg|fg|pwd|exit|cd ..)"

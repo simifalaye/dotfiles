@@ -8,7 +8,6 @@ call plug#begin(vimplugdir)
 " Text manipulation
 " -----------------
 Plug 'junegunn/vim-easy-align'
-Plug 'sickill/vim-pasta'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'wellle/targets.vim'
