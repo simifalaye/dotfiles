@@ -1,0 +1,48 @@
+#!/bin/bash
+# vim: ft=sh
+
+# Volume controls
+# ================
+# Requires the following script for it to work: get_progress_string
+
+_amixer_get()
+{
+    amixer -c 1 -M -D pulse get Master | \
+        grep -m 1 "Front.*Playback" | awk 'NR > 1 {print $1}' RS='[' FS=']' | sed -n ${1}p
+}
+
+# Main
+# ======
+
+# Message ID
+msgId="991049"
+
+# Change the volume or toggle mute
+case $1 in
+    inc)
+        pactl set-sink-volume 0 +5%
+        ;;
+    dec)
+        pactl set-sink-volume 0 -5%
+        ;;
+    mute)
+        pactl set-sink-mute 0 toggle
+        ;;
+    *)
+        echo "Error: Not a valid volume command"
+esac
+
+volume_status="$(_amixer_get 2)"
+volume_level="$(_amixer_get 1 | sed 's/[^0-9]*//g')"
+
+if [ "$volume_level" = 0 ] || [ "$volume_status" = "off" ]; then
+    # mute
+    dunstify -a "changeVolume" -u low -i notification-audio-volume-muted -r "$msgId" "Volume muted"
+else
+    # volume notification
+    dunstify -a "changeVolume" -u low -i notification-audio-volume-high -r "$msgId" \
+        "Volume: ${volume_level}%" "$(get_progress_string 10 "<b>◉ </b>" "○ " "$volume_level")"
+fi
+
+# Play sound
+canberra-gtk-play -i audio-volume-change -d "changeVolume"

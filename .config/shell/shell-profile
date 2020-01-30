@@ -11,6 +11,7 @@ export SHELL_CONF_HOME=~/.config/shell
 export LC_ALL=${USER_LANGUAGE}
 export LANG=${USER_LANGUAGE}
 export LANGUAGE=${USER_LANGUAGE}
+export TERMCMD=st
 
 # Wsl specific
 if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then

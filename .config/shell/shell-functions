@@ -68,7 +68,6 @@ function cd()
 function conf()
 {
     prog=$1
-    [[ $prog == "vim" ]] && prog="nvim"
     if [[ ! -z "$prog" ]]; then
         command $EDITOR `find $HOME/.config/$prog -maxdepth 1 -type f`
     else

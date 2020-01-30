@@ -24,12 +24,6 @@
 # Executables which typically run in the console: super + x ; ...
 # Graphical applications: super + g ; ...
 
-# Run Rofi dmenu
-super + @space
-    rofi -combi-modi "window,drun" -show combi
-super + p
-    rofi-pass
-
 # Terminal emulator with and without TMUX.
 super + {_, shift + } Return
     {st, st -e tmux -f ~/.config/tmux/tmux.conf new-session -A -s 'Default'}
@@ -38,11 +32,13 @@ super + {_, shift + } Return
 # (including all active monitors). The other one is for the focused window.
 # Note that `scrot` also has an interactive mode that I do not use.
 Print
-    scrot -m -z '%Y-%m-%d_%H:%M:%S_$wx$h.png' -e 'mv $f ~/Pictures' && \
-    notify-send -i gnome-screenshot "Screen view screenshot" "Saved image to Pictures"
+    screenshot
 super + Print
-    scrot -u -z '%Y-%m-%d_%H:%M:%S_$wx$h$n.png' -e 'mv $f ~/Pictures' && \
-    notify-send -i gnome-screenshot "Window view screenshot" "Saved image to Pictures"
+    screenshot -c
+
+# Select password from "pass" (requires "passmenu" script)
+super + p
+    passmenu
 
 # Environment
 # -----------
@@ -67,12 +63,12 @@ super + e ; {c,d,p,s,v}
 
 # Session management (lock)
 super + {ctrl + alt, BackSpace}
-    screenlock
+    slock
 
-# Executables: CLI programs.
+# Executables: CLI programs
 # -------------------------
 
-# The following commands are:
+# The following commands are
 #
 # j == Joplin
 super + x ; {j}
@@ -100,8 +96,8 @@ super + g ; {b, f, t, c}
 
 # Volume controls
 XF86AudioRaiseVolume
-    pactl set-sink-volume 0 +5%
+    change_volume inc
 XF86AudioLowerVolume
-    pactl set-sink-volume 0 -5%
+    change_volume dec
 XF86AudioMute
-    pactl set-sink-mute 0 toggle
+    change_volume mute

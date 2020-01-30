@@ -1,0 +1,127 @@
+#!/bin/bash
+
+# Globals
+# ----------
+
+DATA_FILE="/tmp/dwm-status2d.txt"
+NETWORK_INT_KEY="network_int"
+TOKEN="^c#928374^|^d^"
+
+# Helper functions
+# -----------------
+
+write_value()
+{
+    key=${1}
+    value=${2}
+
+    # Write
+    sed -i '/^'"$key"'/!{q100};s/=.*$/='"$value"'/' $DATA_FILE > /dev/null 2>&1 || {
+        printf "%s" "$key=$value" >> $DATA_FILE
+    }
+}
+
+read_value()
+{
+    key=${1}
+    value=""
+
+    # Read and Return
+    value=$(awk -F= -v key="$key" '$1==key {print $2}' $DATA_FILE)
+    echo "$value"
+}
+
+# Status Items
+# --------------
+
+# Staus Item: Network interface name
+_network_interface()
+{
+    int_name=$(ip route get 8.8.8.8 2>/dev/null| awk '{print $5}')
+
+    printf "🌐: %s" "$int_name"
+}
+
+# Status Item: Local time
+_local_time()
+{
+    time=$(date +%a\ %d\ %b\ %H:%M)
+
+    printf "%s" "$time"
+}
+
+# Status Item: Mem usage
+_mem_usage()
+{
+    mem_usage=$(free -t | grep Mem | awk '{printf("%.2f"), $3/$2*100}')
+    mem_str=""
+    if (( $(echo "$mem_usage < 33" |bc -l) )); then
+        mem_str=$(printf "^c#b8bb26^RAM: %s%%^d^" "$mem_usage")
+    elif (( $(echo "$mem_usage < 66" |bc -l) )); then
+        mem_str=$(printf "^c#d79921^RAM: %s%%^d^" "$mem_usage")
+    else
+        mem_str=$(printf "^c#b8bb26^RAM: %s%%^d^" "$mem_usage")
+    fi
+
+    printf "%s" "$mem_str"
+}
+
+# Status Item: Disk space used
+_disk_usage()
+{
+    used=$(df -h | grep '/$' | awk '{print $3}')
+    tot=$(df -h | grep '/$' | awk '{print $2}')
+    usage=$(printf "%s / %s" "$used" "$tot")
+
+    printf "%s" ": $usage"
+}
+
+# Check the sound volume and whether it is muted or not.  Output the
+# appropriate indicators.
+_volume()
+{
+    command -v amixer > /dev/null || return 1
+    _amixer_get() {
+        amixer -c 1 -M -D pulse get Master | \
+            grep -m 1 "Front.*Playback" | awk 'NR > 1 {print $1}' RS='[' FS=']' | sed -n ${1}p
+    }
+
+    volume_status="$(_amixer_get 2)"
+    volume_level="$(_amixer_get 1 | sed 's/[^0-9]*//g')"
+
+    if [ "$volume_status" = "off" ] || [ "$volume_level" -eq 0 ]; then
+        volume_str=$(printf "^c#cc241d^🔇^d^")
+    elif [ "$volume_level" -le 33 ]; then
+        volume_str=$(printf "^c#cc241d^🔈 %s%%^d^" "$volume_level")
+    elif [ "$volume_level" -le 66 ]; then
+        volume_str=$(printf "^c#d79921^🔉 %s%%^d^" "$volume_level")
+    else
+        volume_str=$(printf "^c#b8bb26^🔊 %s%%^d^" "$volume_level")
+    fi
+
+    printf "%s" "$volume_str"
+}
+
+##########################
+# MAIN
+##########################
+
+while :; do
+    net=$(_network_interface)
+    write_value "$NETWORK_INT_KEY" "$net"
+
+    sleep 300
+done &
+
+while :; do
+    volume=$(_volume)
+    disk=$(_disk_usage)
+    mem=$(_mem_usage)
+    time=$(_local_time)
+    [ -f "$DATA_FILE" ] && net=$(read_value "$NETWORK_INT_KEY") || net="🌐 N/A"
+
+    # STATUS
+    xsetroot -name "${volume} $TOKEN ${net} $TOKEN ${disk} $TOKEN ${mem} $TOKEN ${time}"
+
+    sleep 1
+done

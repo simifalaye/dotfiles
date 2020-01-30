@@ -12,16 +12,13 @@ Ubuntu 18.04.
 In this section will be listed all the Graphical Applications. A separate section with Terminal applications after.
 
 ### Desktop Environment
-- [Rofi](https://github.com/davatorium/rofi) - A window switcher, Application launcher and dmenu replacement.
-- [Bspwm](https://github.com/baskerville/bspwm) - A tiling window manager based on binary space partitioning
-- [Bspwm-gnome](https://github.com/shizonic/bspwm-gnome) - Use bspwm with GNOME session integration
+- [Dmenu](http://tools.suckless.org/dmenu/) - dmenu is a dynamic menu for X
+- [Dwm](http://dwm.suckless.org/) - A dynamic window manager
+- [slock](https://tools.suckless.org/slock) - Screen locker
 - [Sxhkd](https://github.com/baskerville/sxhkd) - Simple X hotkey daemon
 - [Materia](https://github.com/nana-4/materia-theme) - A material gtk theme
-- [Polybar](https://github.com/polybar/polybar) - A fast and easy-to-use tool for creating status bars.
 - [Compton](https://github.com/chjj/compton) - A compositor for x11.
 - [Papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme) - Icons
-- [i3lock](https://github.com/i3/i3lock) - Screen locker
-- DejaVu Sans - Font
 
 ### Productivity and Internet
 
@@ -53,6 +50,7 @@ I use ZSH shell:
 
 - [urbainvaes/fzf-marks](https://github.com/urbainvaes/fzf-marks) - Plugin to manage bookmarks in bash and zsh
 - [junegunn/fzf](https://github.com/junegunn/fzf) -  A command-line fuzzy finder
+- [nnn](https://github.com/jarun/nnn) - Terminal file manager
 
 ### Text Mainuplation
 
@@ -68,9 +66,10 @@ I use ZSH shell:
 - [pass](https://www.passwordstore.org/) - password manager
 - [gotop](https://github.com/cjbassi/gotop) - An interactive text-mode process viewer for Unix systems.
 - [trash-cli](https://github.com/sindresorhus/trash-cli) - Move files and folders to the trash.
-- [tmux](https://github.com/tmux/tmux) and [tmuxp](https://github.com/tmux-python/tmuxp) - Terminal multiplexer and session manager.
+- [tmux](https://github.com/tmux/tmux) - Terminal multiplexer.
 - [yadm](https://github.com/TheLocehiliosan/yadm) - Dotfiles Manager.
 - [mdless](https://github.com/ttscoff/mdless) - Markdown file viewer.
 - [ripgrep](https://github.com/BurntSushi/ripgrep) - A faster grep
 - [scrot](https://github.com/dreamer/scrot) - Screenshot utility
 - [autojump](https://github.com/wting/autojump) - A cd command that learns
+- [zathura](https://pwmt.org) - A pdf reader

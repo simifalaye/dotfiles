@@ -6,9 +6,15 @@ function! helpers#lsp#setupSources() abort
      au User lsp_setup call lsp#register_server({
         \ 'name': 'ccls',
         \ 'cmd': {server_info->['ccls']},
-        \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-        \ 'initialization_options': {'cache': {'directory': '/tmp/ccls/cache' }},
+        \ 'root_uri': {server_info->lsp#utils#path_to_uri(
+        \   lsp#utils#find_nearest_parent_file_directory(
+        \     lsp#utils#get_buffer_path(), '.ccls'))},
+        \ 'initialization_options': {
+        \     'cache': {'directory': expand('~/.cache/ccls')},
+        \     'completion': {'detailedLabel': v:false},
+        \ },
         \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
         \ })
+     autocmd FileType c,cpp,objc,objcpp setlocal omnifunc=lsp#complete
   endif
 endfunction

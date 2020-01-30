@@ -76,15 +76,17 @@ PROGRESS "Validating"
 
 # Check if in build appliance
 _is_callable devtool bitbake && [ -n "$BUILDDIR" ] || _err "Must be inside build appliance"
-# Invoke  usage
-[[ $# -ne 2 ]] | [[ -d $SRCPATH ]] || _err "$USAGE"
+# Invoke usage
+if [ $# -gt 2 ] || [ -z "$RECIPE" ] || ([ -n "$SRCPATH" ] && [ ! -d "$SRCPATH" ]); then
+    _err "$USAGE"
+fi
 
 PROGRESS "Setup devtool"
 
 # Run devtool if not already devtool'd
 stat=$(devtool status)
 if ! echo "$stat" | grep -q "$RECIPE:"; then
-    devtool modify -n "$RECIPE" "$SRCPATH" || _err "Devtool failed"
+    devtool modify -n $RECIPE $SRCPATH || _err "Devtool failed"
     sleep 1
 fi
 

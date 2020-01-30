@@ -7,6 +7,8 @@ filetype on                    " identify file types
 filetype indent on             " indent based on filetype
 filetype plugin on             " enable file-specific plugins
 set expandtab                  " turn tabs into spaces
+set tabstop=4                  " use 4-space tabs when [tab] is pressed
+set shiftwidth=4               " use 4-space tabs when reading files
 set showmatch                  " highlight the bracket match
 set ruler                      " always show the bottom line
 set showmode                   " show mode (INSERT/OVER) in ruler
@@ -43,28 +45,29 @@ set undofile      " Turn on undo file
 
 " User Interface
 
-set number                          " Display line numbers
-set relativenumber                  " Disply line numbers relative to current line
-set mouse=a                         " Allow mouse usage
-set list                            " Show specific characters
-set listchars=tab:T>,trail:.,extends:>,precedes:<,nbsp:+
-set splitbelow                      " Fix splits
-set splitright                      " Fix splits
-set fillchars=""                    " Fix splits
+set number         " Display line numbers
+set relativenumber " Disply line numbers relative to current line
+set mouse=a        " Allow mouse usage
+set list           " Show specific characters
+set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
+set splitbelow     " Fix splits
+set splitright     " Fix splits
+set fillchars=""   " Fix splits
+set cursorline     " Add cursorline on current line
+
+" History
+
+set history=1000                    " Remember more commands
+if has('persistent_undo')
+    set undofile                    " Persistent undo
+    set undodir=~/.cache/vim/undo   " Set undo directory
+    set undolevels=1000             " Max number of changes
+    set undoreload=10000            " Max lines to save for undo on a buffer reload
+endif
 if has('clipboard')
   set clipboard=unnamed,unnamedplus " set clipboard to use
 else
   set clipboard=unnamed
-endif
-
-" History
-
-set history=1000                  " Remember more commands
-if has('persistent_undo')
-    set undofile                  " Persistent undo
-    set undodir=~/.cache/vim/undo " Set undo directory
-    set undolevels=1000           " Max number of changes
-    set undoreload=10000          " Max lines to save for undo on a buffer reload
 endif
 
 " Vim-only overrides

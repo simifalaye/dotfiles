@@ -10,38 +10,36 @@ nnoremap <localleader>U :PlugUpgrade<CR>
 
 " Save and quit
 " -------------
+command! Bclose call functions#bufcloseCloseIt()
 cnoremap W!        w !sudo tee % >/dev/null
 nnoremap <leader>c :cclose<CR>
 noremap  <leader>w :update<CR>
-nmap     <leader>q :Bdelete<CR>
-nmap     q         :q<CR>
+nmap     <leader>q :Bclose<CR>
+nmap     Q         :q<CR>
 nmap     W         :wa<CR>
-nmap     Q         :qa<CR>
 nmap     X         :qa!<CR>
 
 " Remaps
 " -------
-nnoremap ;         :
-nnoremap j         gj
-nnoremap k         gk
-nnoremap m         d
-xnoremap m         d
-nnoremap mm        dd
-nnoremap M         D
-nnoremap Y         y$
-vnoremap <         <gv
-vnoremap >         >gv
-nnoremap /         /\v
-vnoremap /         /\v
-nnoremap n         nzz
-nnoremap N         Nzz
-vnoremap .         :normal .<CR>
-nnoremap siw       "_diwP
-nnoremap ss        "_ddP
-nnoremap S         "_Dp
-vnoremap y         ygv<Esc>
-nnoremap <Tab>     %
-nnoremap <leader>/ :nohl<CR>
+nnoremap j     gj
+nnoremap k     gk
+nnoremap m     d
+nnoremap mm    dd
+nnoremap M     D
+nnoremap Y     y$
+nnoremap /     /\v
+nnoremap n     nzz
+nnoremap N     Nzz
+nnoremap p     p`[v`]=
+nnoremap <Tab> %
+vnoremap /     /\v
+vnoremap .     :normal .<CR>
+vnoremap y     ygv<Esc>
+vnoremap <     <gv
+vnoremap >     >gv
+xnoremap m     d
+map      f     <Plug>Sneak_s
+map      F     <Plug>Sneak_S
 
 " Text manipulation
 " -------------------
@@ -53,13 +51,18 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 " Toggle common options
 nnoremap cos :set spell!<Enter>
-" Reselect pasted text
-nnoremap <leader>p V`]
-" find the conflict line of git
+" Find the conflict line of git
 map <leader>fc /\v^[<\|=>]{7}( .*\|$)<CR>
-" move selected lines
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
+" Add closing brackets
+inoremap {<CR> {<CR>}<Esc>O
+inoremap {; {<CR>};<Esc>O
+" s for substitute
+nmap s <plug>(SubversiveSubstitute)
+nmap ss <plug>(SubversiveSubstituteLine)
+nmap S <plug>(SubversiveSubstituteToEndOfLine)
+" Highlight pasted text | remove highlight
+nnoremap <leader>p V`]
+nnoremap <leader>/ :nohl<CR>
 
 " Files Buffers, Splits and Tabs
 " ------------------------------
@@ -72,14 +75,9 @@ nnoremap <leader>z :call functions#zoom()<CR>
 nnoremap <silent><C-n> :call functions#nerdTreeToggleFind()<CR>
 " Fzf
 nnoremap <silent><C-p> :SmartFiles<CR>
+nnoremap <silent><C-f> :Find<CR>
 nnoremap <silent>,     :Buffers<CR>
 nnoremap <silent>t     :BTags<CR>
-command! -bang -nargs=* -complete=dir SmartFiles call functions#smartFiles(<q-args>)
-if executable('rg')
-  let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
-  command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
-  nnoremap <silent> <C-f> :Find<CR>
-endif
 " Split with startify
 nnoremap <silent><Leader>v :vsplit \| :Startify<CR>
 nnoremap <silent><Leader>h :split \| :Startify<CR>
@@ -93,15 +91,16 @@ nnoremap <silent> gis :Gstatus<Enter>
 
 " Completion
 " ----------------
-" Expand with tab and shift-tab
-inoremap <silent><expr> <TAB>
-  \ pumvisible() ? "\<C-n>" :
-  \ functions#checkBackspace() ? "\<TAB>" :
-  \ asyncomplete#force_refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" Expand with tab, shift-tab and enter
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <CR>    pumvisible() ? "\<C-y>" : "\<CR>"
 " Key bindings for vim-lsp.
-nnoremap <silent> <C-]> :LspDefinition<CR>
+nnoremap <silent> gd :LspDefinition<CR>
 nnoremap <silent> gr :LspReferences<CR>
-nnoremap <silent> gd :LspDocumentSymbol<CR>
+nnoremap <silent> gi :LspImplementation<CR>
 nnoremap <silent> gh :LspHover<CR>
-nnoremap <F2> :LspRename<CR>
+nnoremap <silent> ]d :LspNextDiagnostic<CR>
+nnoremap <silent> [d :LspPreviousDiagnostic<CR>
+nnoremap <silent> <A-d> :LspDocumentDiagnostics<CR>
+nnoremap <silent> <A-r> :LspRename<CR>
