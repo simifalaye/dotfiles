@@ -1,12 +1,10 @@
-# Dotfiles
-My dotfile configuration for a linux system, managed by Yadm (Yet Another Dotfile Manager)
-
 <div align="center">
 <h3>Dotfiles</h3>
-<img src="https://raw.githubusercontent.com/simifalaye/dotfiles/master/.config/ubuntu_system.png">
+<img src="https://github.com/simifalaye/dotfiles/raw/master/.config/meta/ubuntu_system.png">
 
 `Ubuntu` `Gnome / Dwm` `base16`
 </div>
+My dotfile configuration for a linux system, managed by Yadm
 
 ## Graphical Applications
 
