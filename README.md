@@ -1,19 +1,20 @@
 # Dotfiles
 My dotfile configuration for a linux system, managed by Yadm (Yet Another Dotfile Manager)
 
-## Base system
+<div align="center">
+<h3>Dotfiles</h3>
+<img src="https://raw.githubusercontent.com/simifalaye/dotfiles/master/.config/ubuntu_system.png">
 
-Ubuntu 18.04.
-
-[![theme sample](https://raw.githubusercontent.com/simifalaye/dotfiles/master/.config/ubuntu_system.png)](https://raw.githubusercontent.com/simifalaye/dotfiles/master/.config/meta/ubuntu_system.png)
+`Ubuntu` `Gnome / Dwm` `base16`
+</div>
 
 ## Graphical Applications
 
 In this section will be listed all the Graphical Applications. A separate section with Terminal applications after.
 
 ### Desktop Environment
-- [Dmenu](http://tools.suckless.org/dmenu/) - dmenu is a dynamic menu for X
 - [Dwm](http://dwm.suckless.org/) - A dynamic window manager
+- [Dmenu](http://tools.suckless.org/dmenu/) - dmenu is a dynamic menu for X
 - [slock](https://tools.suckless.org/slock) - Screen locker
 - [Sxhkd](https://github.com/baskerville/sxhkd) - Simple X hotkey daemon
 - [Materia](https://github.com/nana-4/materia-theme) - A material gtk theme
@@ -44,13 +45,13 @@ A big part of my Development life is spent on the Terminal, so having a good set
 I use ZSH shell:
 
 - [Zgen](https://github.com/tarjoilija/zgen) - A lightweight plugin manager.
-  - All of my zsh plugins can be found in ".zshrc".
+  - All of my zsh plugins can be found in "~/.config/zsh/.zshrc".
 
 ### File Navigation and Search
 
 - [urbainvaes/fzf-marks](https://github.com/urbainvaes/fzf-marks) - Plugin to manage bookmarks in bash and zsh
 - [junegunn/fzf](https://github.com/junegunn/fzf) -  A command-line fuzzy finder
-- [nnn](https://github.com/jarun/nnn) - Terminal file manager
+- [ripgrep](https://github.com/BurntSushi/ripgrep) - A faster grep
 
 ### Text Mainuplation
 
@@ -68,8 +69,5 @@ I use ZSH shell:
 - [trash-cli](https://github.com/sindresorhus/trash-cli) - Move files and folders to the trash.
 - [tmux](https://github.com/tmux/tmux) - Terminal multiplexer.
 - [yadm](https://github.com/TheLocehiliosan/yadm) - Dotfiles Manager.
-- [mdless](https://github.com/ttscoff/mdless) - Markdown file viewer.
-- [ripgrep](https://github.com/BurntSushi/ripgrep) - A faster grep
 - [scrot](https://github.com/dreamer/scrot) - Screenshot utility
-- [autojump](https://github.com/wting/autojump) - A cd command that learns
 - [zathura](https://pwmt.org) - A pdf reader
