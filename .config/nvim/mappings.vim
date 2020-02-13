@@ -2,53 +2,47 @@
 " ----------------
 inoremap jk <Esc>
 " Config mappings
-nnoremap <localleader>r :so $MYVIMRC<CR>:echo ".vimrc reloaded"<CR>
+nnoremap <localleader>r :so $MYVIMRC<bar>echo ".vimrc reloaded"<CR>
 nnoremap <localleader>i :so $MYVIMRC<bar>PlugInstall<CR>
 nnoremap <localleader>c :so $MYVIMRC<bar>PlugClean<CR>
-nnoremap <localleader>u :so $MYVIMRC<bar>PlugUpdate<CR>
-nnoremap <localleader>U :PlugUpgrade<CR>
 
 " Save and quit
 " -------------
 command! Bclose call functions#bufcloseCloseIt()
-cnoremap W!        w !sudo tee % >/dev/null
-nnoremap <leader>c :cclose<CR>
+cnoremap W!!       w !sudo tee % >/dev/null
 noremap  <leader>w :update<CR>
 nmap     <leader>q :Bclose<CR>
-nmap     Q         :q<CR>
-nmap     W         :wa<CR>
-nmap     X         :qa!<CR>
+nmap     q         :q<CR>
 
 " Remaps
 " -------
-nnoremap j     gj
-nnoremap k     gk
-nnoremap m     d
-nnoremap mm    dd
-nnoremap M     D
-nnoremap Y     y$
-nnoremap /     /\v
-nnoremap n     nzz
-nnoremap N     Nzz
-nnoremap p     p`[v`]=
-nnoremap <Tab> %
-vnoremap /     /\v
-vnoremap .     :normal .<CR>
-vnoremap y     ygv<Esc>
-vnoremap <     <gv
-vnoremap >     >gv
-xnoremap m     d
-map      f     <Plug>Sneak_s
-map      F     <Plug>Sneak_S
+nnoremap j         gj
+nnoremap k         gk
+nnoremap x         d
+xnoremap x         d
+nnoremap xx        dd
+nnoremap X         D
+vnoremap y         ygv<Esc>
+nnoremap Y         y$
+nnoremap /         /\v
+nnoremap n         nzz
+nnoremap N         Nzz
+nnoremap p         p`[v`]=
+vnoremap <         <gv
+vnoremap >         >gv
+nmap     s         <plug>(SubversiveSubstitute)
+nmap     ss        <plug>(SubversiveSubstituteLine)
+nmap     S         <plug>(SubversiveSubstituteToEndOfLine)
+nmap     <leader>s <plug>(SubversiveSubstituteRange)
+xmap     <leader>s <plug>(SubversiveSubstituteRange)
+xmap     ga        <Plug>(EasyAlign)
+nmap     ga        <Plug>(EasyAlign)
 
-" Text manipulation
+" Editing
 " -------------------
 " @TextObjects: ie = inner entire buffer, iv = current viewable text
 onoremap ie :exec "normal! ggVG"<CR>
 onoremap iv :exec "normal! HVL"<CR>
-" Start interactive EasyAlign in visual/normal mode (e.g. vipga, gaip)
-xmap ga <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
 " Toggle common options
 nnoremap cos :set spell!<Enter>
 " Find the conflict line of git
@@ -56,10 +50,6 @@ map <leader>fc /\v^[<\|=>]{7}( .*\|$)<CR>
 " Add closing brackets
 inoremap {<CR> {<CR>}<Esc>O
 inoremap {; {<CR>};<Esc>O
-" s for substitute
-nmap s <plug>(SubversiveSubstitute)
-nmap ss <plug>(SubversiveSubstituteLine)
-nmap S <plug>(SubversiveSubstituteToEndOfLine)
 " Highlight pasted text | remove highlight
 nnoremap <leader>p V`]
 nnoremap <leader>/ :nohl<CR>
@@ -67,40 +57,52 @@ nnoremap <leader>/ :nohl<CR>
 " Files Buffers, Splits and Tabs
 " ------------------------------
 " Tab/buffer navigation, zoom
-nnoremap <Right> gT | nnoremap <Left> gt
-nnoremap H :bprevious<CR> | nnoremap L :bnext<CR>
-nnoremap <BS> <C-^>
+nnoremap <S-h> :bp<CR> | nnoremap <S-l> :bn<CR>
+nnoremap <leader>l <C-^>
 nnoremap <leader>z :call functions#zoom()<CR>
 " NERDTree
-nnoremap <silent><C-n> :call functions#nerdTreeToggleFind()<CR>
+nnoremap <silent><C-n> :NERDTreeToggle<CR>
+nnoremap <silent><leader>n :NERDTreeFind<CR>
 " Fzf
 nnoremap <silent><C-p> :SmartFiles<CR>
 nnoremap <silent><C-f> :Find<CR>
+nnoremap <silent><C-g> :SwitchSess<CR>
 nnoremap <silent>,     :Buffers<CR>
 nnoremap <silent>t     :BTags<CR>
 " Split with startify
-nnoremap <silent><Leader>v :vsplit \| :Startify<CR>
-nnoremap <silent><Leader>h :split \| :Startify<CR>
+nnoremap <silent><Leader>v :vsplit<bar>Startify<CR>
+nnoremap <silent><Leader>h :split<bar>Startify<CR>
+" Delete all buffers except this
+command! BufOnly silent! execute "%bd|e#|bd#"
+nnoremap <Leader>bd :BufOnly<CR>
 
 " Git
 " ----------------
-nnoremap <silent> gib :Gblame<Enter>
-nnoremap <silent> gid :Gdiff<Enter>
-nnoremap <silent> gil :0Glog<Enter>
-nnoremap <silent> gis :Gstatus<Enter>
+nnoremap <silent> gib :Gblame<CR>
+nnoremap <silent> gid :Gdiff<CR>
+nnoremap <silent> gil :Glog<CR>
+nnoremap <silent> gis :Gstatus<CR>
 
-" Completion
-" ----------------
-" Expand with tab, shift-tab and enter
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <CR>    pumvisible() ? "\<C-y>" : "\<CR>"
-" Key bindings for vim-lsp.
-nnoremap <silent> gd :LspDefinition<CR>
-nnoremap <silent> gr :LspReferences<CR>
-nnoremap <silent> gi :LspImplementation<CR>
-nnoremap <silent> gh :LspHover<CR>
-nnoremap <silent> ]d :LspNextDiagnostic<CR>
-nnoremap <silent> [d :LspPreviousDiagnostic<CR>
-nnoremap <silent> <A-d> :LspDocumentDiagnostics<CR>
-nnoremap <silent> <A-r> :LspRename<CR>
+" Coc
+" ----
+" Use tab for trigger completion with characters ahead and navigate.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ helpers#coc#checkBackspace() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+" CocList mappings
+nnoremap <silent> <leader>d  :CocList diagnostics<cr>
+nnoremap <silent> <leader>o  :CocList outline<cr>
+" Use K to show documentation in preview window
+nnoremap <silent> K :call helpers#coc#showDocumentation()<CR>
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+" Yank list
+nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>

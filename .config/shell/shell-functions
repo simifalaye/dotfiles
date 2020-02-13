@@ -1,5 +1,5 @@
-# Helpers (Non-callable)
-# ----------------------
+# Helpers
+# -------
 
 function _is_interactive { [[ $- == *i* || -n $EMACS ]]; }
 
@@ -80,7 +80,7 @@ function reloadshell()
 {
     currentshell=$(ps -fp $$)
     if [[ $currentshell =~ "zsh" ]]; then
-        zgen reset && source $ZDOTDIR/.zshrc && echo "Zsh reloaded."
+        source $ZDOTDIR/.zshrc && echo "Zsh reloaded."
     elif [[ $currentshell =~ "bash" ]]; then
         source $SHELL_CONF_HOME/bashrc && echo "Bash reloaded."
     else
@@ -91,13 +91,6 @@ function reloadshell()
 # Command: Back up a file. Usage "backupthis <filename>"
 backupthis() {
     cp -riv $1 ${1}-$(date +%Y%m%d%H%M).backup;
-}
-
-# Command: Rename tmux pane
-function renamepane()
-{
-    name=$1
-    printf '\033]2;%s\033\\' $name
 }
 
 # Command: Colourise man pages

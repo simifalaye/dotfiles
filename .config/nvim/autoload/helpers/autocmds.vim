@@ -25,7 +25,7 @@ endfunction
 ""
 function! helpers#autocmds#stripTrailingWhitespace() abort
   " Don't strip on these filetypes
-  if &ft =~ 'ruby\|javascript\|perl\|gitsendemail'
+  if &ft =~ 'ruby\|javascript\|perl\|gitsendemail\|markdown'
     return
   endif
   %s/\s\+$//e

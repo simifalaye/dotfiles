@@ -47,8 +47,30 @@ function! helpers#lightline#fugitive() abort
   return ''
 endfunction
 
-" Remove the background color from the status/tab line
-function helpers#lightline#floating() abort
+""
+" Basic setup
+""
+function helpers#lightline#setup() abort
+  let g:lightline = {
+        \   'colorscheme': 'wombat',
+        \   'active': {
+        \     'left': [[ 'mode', 'paste' ],
+        \              [ 'fugitive', 'filename' ]]
+        \   },
+        \   'component_function': {
+        \     'modified': 'helpers#lightline#fileModified',
+        \     'readonly': 'helpers#lightline#readOnly',
+        \     'filename': 'helpers#lightline#fileName',
+        \     'fileformat': 'helpers#lightline#fileFormat',
+        \     'filetype': 'helpers#lightline#fileType',
+        \     'fileencoding': 'helpers#lightline#fileEnc',
+        \     'mode': 'helpers#lightline#mode',
+        \     'fugitive': 'helpers#lightline#fugitive',
+        \   },
+        \   'subseparator': { 'left': '>', 'right': '' }
+        \ }
+
+  " Remove the background color from the status/tab line
   let s:palette = g:lightline#colorscheme#{g:lightline.colorscheme}#palette
   let s:palette.normal.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
   let s:palette.inactive.middle = s:palette.normal.middle

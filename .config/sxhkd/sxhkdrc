@@ -33,12 +33,17 @@ super + {_, shift + } Return
 # Note that `scrot` also has an interactive mode that I do not use.
 Print
     screenshot
-super + Print
-    screenshot -c
+shift + Print
+    screenshot -w
 
 # Select password from "pass" (requires "passmenu" script)
-super + p
-    passmenu
+# Or select power menu
+super + {p,P}
+    {passmenu,dmenu_power}
+
+# Run Rofi menu
+super + @space
+    j4-dmenu-desktop
 
 # Environment
 # -----------

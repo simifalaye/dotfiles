@@ -50,20 +50,36 @@ _local_time()
     printf "%s" "$time"
 }
 
+# Status Item: Cpu usage
+_cpu_usage()
+{
+    usage=$(ps -Ao %cpu | awk '{s+=$1} END {printf("%.1f",s/8);}')
+    str=""
+    if (( $(echo "$usage < 33" |bc -l) )); then
+        str=$(printf "^c#b8bb26^CPU: %s%%^d^" "$usage")
+    elif (( $(echo "$usage < 66" |bc -l) )); then
+        str=$(printf "^c#d79921^CPU: %s%%^d^" "$usage")
+    else
+        str=$(printf "^c#b8bb26^CPU: %s%%^d^" "$usage")
+    fi
+
+    printf "%s" "$str"
+}
+
 # Status Item: Mem usage
 _mem_usage()
 {
-    mem_usage=$(free -t | grep Mem | awk '{printf("%.2f"), $3/$2*100}')
-    mem_str=""
-    if (( $(echo "$mem_usage < 33" |bc -l) )); then
-        mem_str=$(printf "^c#b8bb26^RAM: %s%%^d^" "$mem_usage")
-    elif (( $(echo "$mem_usage < 66" |bc -l) )); then
-        mem_str=$(printf "^c#d79921^RAM: %s%%^d^" "$mem_usage")
+    usage=$(free -t | grep Mem | awk '{printf("%.2f"), $3/$2*100}')
+    str=""
+    if (( $(echo "$usage < 33" |bc -l) )); then
+        str=$(printf "^c#b8bb26^RAM: %s%%^d^" "$usage")
+    elif (( $(echo "$usage < 66" |bc -l) )); then
+        str=$(printf "^c#d79921^RAM: %s%%^d^" "$usage")
     else
-        mem_str=$(printf "^c#b8bb26^RAM: %s%%^d^" "$mem_usage")
+        str=$(printf "^c#b8bb26^RAM: %s%%^d^" "$usage")
     fi
 
-    printf "%s" "$mem_str"
+    printf "%s" "$str"
 }
 
 # Status Item: Disk space used
@@ -116,12 +132,13 @@ done &
 while :; do
     volume=$(_volume)
     disk=$(_disk_usage)
+    cpu=$(_cpu_usage)
     mem=$(_mem_usage)
     time=$(_local_time)
     [ -f "$DATA_FILE" ] && net=$(read_value "$NETWORK_INT_KEY") || net="🌐 N/A"
 
     # STATUS
-    xsetroot -name "${volume} $TOKEN ${net} $TOKEN ${disk} $TOKEN ${mem} $TOKEN ${time}"
+    xsetroot -name "${volume} $TOKEN ${net} $TOKEN ${disk} $TOKEN ${cpu} $TOKEN ${mem} $TOKEN ${time}"
 
     sleep 1
 done

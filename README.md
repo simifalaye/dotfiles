@@ -2,17 +2,18 @@
 <h3>Dotfiles</h3>
 <img src="https://github.com/simifalaye/dotfiles/raw/master/.config/meta/ubuntu_system.png">
 
-`Ubuntu` `Gnome / Dwm` `base16`
+`Ubuntu Gnome` / `Dwm base16`
 </div>
 My dotfile configuration for a linux system, managed by Yadm
 
 ## Graphical Applications
 
-In this section will be listed all the Graphical Applications. A separate section with Terminal applications after.
+In this section will be listed all the Graphical Applications. A separate section with Terminal applications after
 
 ### Desktop Environment
 - [Dwm](http://dwm.suckless.org/) - A dynamic window manager
 - [Dmenu](http://tools.suckless.org/dmenu/) - dmenu is a dynamic menu for X
+    - [Dmenu-Desktop](https://github.com/enkore/j4-dmenu-desktop) - run dmenu for desktop apps
 - [slock](https://tools.suckless.org/slock) - Screen locker
 - [Sxhkd](https://github.com/baskerville/sxhkd) - Simple X hotkey daemon
 - [Materia](https://github.com/nana-4/materia-theme) - A material gtk theme

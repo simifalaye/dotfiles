@@ -1,21 +1,3 @@
-# Colors: Base16 Shell
-# ---------------------
-
-BASE16_SHELL="$HOME/.config/base16-shell"
-BASE16_PROFILE="$BASE16_SHELL/profile_helper.sh"
-_load_repo chriskempson/base16-shell $BASE16_SHELL
-[ -n "$PS1" ] && eval "$("$BASE16_PROFILE")"
-
-# Utilities
-# ---------
-
-setopt PROMPT_SUBST # Allow prompt substitution
-_is_callable "rg" &&
-{
-    export FZF_DEFAULT_COMMAND='rg --files --hidden'
-    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-}
-
 # Jobs
 # ----
 

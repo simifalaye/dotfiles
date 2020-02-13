@@ -6,24 +6,29 @@
 # (including all active monitors). The other one is for the focused window.
 # Note that `scrot` also has an interactive mode that I do not use.
 
-usage()
-{
-    echo "Usage: screenshot <option>"
-    echo "Takes a screenshot of entire X session including all active monitors"
-    echo "Options:"
-    echo "    -c: screenshot only the focused window"
-    exit 0
+DIR="~/Pictures/Scrots"
+
+function print_help() {
+    echo "Usage: $0 <argument>"
+    echo "-f: Fullscreen"
+    echo "-s: Select an Area"
+    echo "-w: Select a Window"
 }
 
-[[ $# -ge 2 ]] && usage
+function send_noti() {
+    notify-send -i gnome-screenshot "screenshot" "Screenshot has been saved to $DIR."
+}
 
-case "$1" in
-    -c)
-        scrot -u -z '%y-%m-%d_%h:%m:%s_$wx$h$n.png' -e 'mv $f ~/pictures' && \
-        notify-send -i gnome-screenshot "window view screenshot" "saved image to pictures"
-        ;;
-    *)
-        scrot -m -z '%y-%m-%d_%h:%m:%s_$wx$h.png' -e 'mv $f ~/pictures' && \
-        notify-send -i gnome-screenshot "screen view screenshot" "saved image to pictures"
-        ;;
-esac
+if [ $# -eq 0 ]; then
+    sleep 0.2 && scrot 'scrot-%F_%H%M%S_$wx$h.png' -e 'mv $f '$DIR'' && send_noti
+elif [ $# -eq 1 ]; then
+    case $1 in
+        "-h") print_help;;
+        "-f") sleep 0.2 && scrot 'scrot-%F_%H%M%S_$wx$h.png' -e 'mv $f '$DIR'' && send_noti;;
+        "-s") sleep 0.2 && scrot -sz 'scrot-%F_%H%M%S_$wx$h.png' -e 'mv $f '$DIR'' && send_noti;;
+        "-w") sleep 0.2 && scrot -u 'scrot-%F_%H%M%S_$wx$h.png' -e 'mv $f '$DIR'' && send_noti;;
+        *) print_help;;
+    esac
+else
+    print_help
+fi

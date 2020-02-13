@@ -18,12 +18,13 @@ endif
 set t_Co=256
 set background=dark
 let base16colorspace=256
-if filereadable(expand(vimcolordir))
-    exec "source " . vimcolordir
+if filereadable(expand(vimcolor))
+    exec "source " . vimcolor
 else
     colorscheme base16-default-dark
 endif
 " Specific to colorscheme
 highlight clear LineNr
 highlight clear SignColumn
+highlight Normal guibg=NONE ctermbg=NONE
 highlight LineNr guifg=#383838

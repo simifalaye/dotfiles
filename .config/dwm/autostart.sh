@@ -1,4 +1,5 @@
 #!/bin/bash
+# IMPORTANT: Must have autostart patch to run this script on dwm start
 
 # Truncate a couple of common commands that are used herein.
 _check() {
@@ -24,6 +25,8 @@ xsetroot -cursor_name left_ptr
 xset r rate 350 40
 # Restore background settings
 _check nitrogen && nitrogen --restore
+# Fix Java apps
+_check wmname && wmname LG3D
 
 # Run Apps
 # ---------

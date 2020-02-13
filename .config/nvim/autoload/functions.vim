@@ -1,7 +1,11 @@
 " Misc Functions
 " ===============
 
+""
 " Gets vim-plug from github
+"
+" @param {string} dir: directory to put vim-plug in
+""
 function! functions#getVimPlug(dir)
   if empty(glob(a:dir . '/plug.vim')) && executable('curl')
     execute 'silent !curl -fLo ' . a:dir . '/plug.vim --create-dirs ' .
@@ -10,9 +14,11 @@ function! functions#getVimPlug(dir)
   endif
 endfunction
 
+""
 " Zoom into a pane, making it full screen (in a tab)
 " Triggering the plugin again from the zoomed in tab brings it back
 " to its original pane location
+""
 function functions#zoom()
   if winnr('$') > 1
     tab split
@@ -22,7 +28,9 @@ function functions#zoom()
   endif
 endfunction
 
+""
 " Toggle nerd tree
+""
 function! functions#nerdTreeToggleFind()
   if exists("g:NERDTree") && g:NERDTree.IsOpen()
     NERDTreeClose
@@ -33,21 +41,20 @@ function! functions#nerdTreeToggleFind()
   endif
 endfunction
 
+""
 " Don't close window, when deleting a buffer
+""
 function! functions#bufcloseCloseIt()
   let l:currentBufNum = bufnr("%")
   let l:alternateBufNum = bufnr("#")
-
   if buflisted(l:alternateBufNum)
     buffer #
   else
     bnext
   endif
-
   if bufnr("%") == l:currentBufNum
     new
   endif
-
   if buflisted(l:currentBufNum)
     execute("bdelete! ".l:currentBufNum)
   endif

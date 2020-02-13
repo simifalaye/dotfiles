@@ -6,7 +6,7 @@ let vimhomedir     = has('nvim') ? "~/.config/nvim" : "~/.vim"
 let fzfsourcedir   = !empty($FZF_SOURCE_DIR) ? $FZF_SOURCE_DIR : "~/.fzf"
 let vimplugdir     = vimhomedir . "/plugged"
 let vimautoloaddir = vimhomedir ."/autoload"
-let vimcolordir    = "~/.vimrc_background"
+let vimcolor       = "~/.vimrc_background"
 
 " Disable
 " -------
@@ -61,10 +61,11 @@ augroup trailingwhitespace
 augroup end
 
 " File type settings
+autocmd FileType conf,bitbake,cfg,zsh  setl cms=#\ %s
 autocmd Filetype gitcommit,mail,md     setl spell tw=72
 autocmd FileType c,cpp                 setl cms=//\ %s
 autocmd FileType java                  setl cms=//\ %s sw=2 ts=2
-autocmd FileType conf,bitbake,cfg,zsh  setl cms=#\ %s
+autocmd FileType vim                   setl sw=2 ts=2 cms=\"\ %s
 
 " Abbreviations (try not to use common words)
 " -------------------------------------------
