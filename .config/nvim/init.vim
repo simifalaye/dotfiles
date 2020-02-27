@@ -12,17 +12,17 @@ let vimcolor       = "~/.vimrc_background"
 " -------
 
 " Disable unused built-in plugins.
-let g:loaded_gzip = v:true
-let g:loaded_rrhelper = v:true
-let g:loaded_tarPlugin = v:true
-let g:loaded_zipPlugin = v:true
-let g:loaded_netrwPlugin = v:true
+let g:loaded_gzip              = v:true
+let g:loaded_rrhelper          = v:true
+let g:loaded_tarPlugin         = v:true
+let g:loaded_zipPlugin         = v:true
+let g:loaded_netrwPlugin       = v:true
 let g:loaded_netrwFileHandlers = v:true
-let g:loaded_netrwSettings = v:true
-let g:loaded_2html_plugin = v:true
-let g:loaded_vimballPlugin = v:true
-let g:loaded_getscriptPlugin = v:true
-let g:loaded_logipat = v:true
+let g:loaded_netrwSettings     = v:true
+let g:loaded_2html_plugin      = v:true
+let g:loaded_vimballPlugin     = v:true
+let g:loaded_getscriptPlugin   = v:true
+let g:loaded_logipat           = v:true
 let g:loaded_tutor_mode_plugin = v:true
 
 " Disable copy for cut actions
@@ -35,6 +35,22 @@ nnoremap d "_d
 xnoremap d "_d
 nnoremap dd "_dd
 nnoremap D "_D
+xnoremap p "_dP
+
+" Abbreviations (try not to use common words)
+" -------------------------------------------
+
+iab tdate <c-r>=strftime("%Y-%m-%d")<cr>
+iab todo: @TODO:
+iab fixme: @FIXME:
+
+" Source config files
+" -------------------
+
+source ~/.config/nvim/settings.vim
+source ~/.config/nvim/plugins.vim
+source ~/.config/nvim/colors.vim
+source ~/.config/nvim/mappings.vim
 
 " Autocommands
 " ------------
@@ -61,23 +77,10 @@ augroup trailingwhitespace
 augroup end
 
 " File type settings
-autocmd FileType conf,bitbake,cfg,zsh  setl cms=#\ %s
-autocmd Filetype gitcommit,mail,md     setl spell tw=72
-autocmd FileType c,cpp                 setl cms=//\ %s
-autocmd FileType java                  setl cms=//\ %s sw=2 ts=2
-autocmd FileType vim                   setl sw=2 ts=2 cms=\"\ %s
-
-" Abbreviations (try not to use common words)
-" -------------------------------------------
-
-iab tdate <c-r>=strftime("%Y-%m-%d")<cr>
-iab todo: @TODO:
-iab fixme: @FIXME:
-
-" Source config files
-" -------------------
-
-source ~/.config/nvim/settings.vim
-source ~/.config/nvim/plugins.vim
-source ~/.config/nvim/colors.vim
-source ~/.config/nvim/mappings.vim
+augroup filetypesettings
+  autocmd!
+  autocmd FileType markdown          let b:indentLine_enabled = 0
+  autocmd Filetype gitcommit,mail,md setl spell        tw=72
+  autocmd FileType java              setl shiftwidth=2 tabstop=2
+  autocmd FileType vim               setl shiftwidth=2 tabstop=2
+augroup end

@@ -3,9 +3,6 @@
 # SXHKD module with WM-agnostic keys
 #
 # ~/.config/sxhkd/sxhkdrc
-#
-# Other modules should be available at ~/.config/sxhkd/
-#
 
 # Description
 # ===========
@@ -21,12 +18,7 @@
 # is to scope bindings so as to avoid conflicts.
 #
 # Environment: super + e ; ...
-# Executables which typically run in the console: super + x ; ...
 # Graphical applications: super + g ; ...
-
-# Terminal emulator with and without TMUX.
-super + {_, shift + } Return
-    {st, st -e tmux -f ~/.config/tmux/tmux.conf new-session -A -s 'Default'}
 
 # Screenshots (requires `scrot`). The first one is of the entire X session
 # (including all active monitors). The other one is for the focused window.
@@ -40,8 +32,7 @@ shift + Print
 # Or select power menu
 super + {p,P}
     {passmenu,dmenu_power}
-
-# Run Rofi menu
+# App launcher with dmenu
 super + @space
     j4-dmenu-desktop
 
@@ -52,32 +43,21 @@ super + @space
 #
 # c == toggle compton
 # d == toggle dunst
-# p == reload polybar
 # s == reload sxhkd
 # v == vim cheatsheet
 #
 # Recall that these depend on files in ~/bin:
-super + e ; {c,d,p,s,v}
+super + e ; {c,d,s,v}
     { \
     toggle_compton && notify-send -i ubuntu-logo-icon "Compton" "Toggled", \
     toggle_dunst && notify-send -i ubuntu-logo-icon "Dunst" "Toggled", \
-    killall -q polybar && polybar --reload top & && notify-send "Polybar config" "Reloaded", \
     pkill -USR1 -x sxhkd && notify-send -i ubuntu-logo-icon "sxhkd config" "Reloaded key bindings", \
-    cheatsheet $XDG_CONFIG_HOME/meta/cheatsheets/vim.txt \
+    st -e less $XDG_CONFIG_HOME/meta/cheatsheets/vim.txt \
     }
 
 # Session management (lock)
 super + {ctrl + alt, BackSpace}
     slock
-
-# Executables: CLI programs
-# -------------------------
-
-# The following commands are
-#
-# j == Joplin
-super + x ; {j}
-    st -e {joplin}
 
 # Graphical Apps
 # --------------
@@ -85,14 +65,12 @@ super + x ; {j}
 # The following commands are:
 #
 # b == Firefox (Browser)
-# f == Nautilus (Files)
-# t == Tweaks
+# f == NNN (Files)
 # c == Calendar
-super + g ; {b, f, t, c}
+super + g ; {b,f,c}
     { \
     notify-send -i firefox "Run GUI program" "Launching Browser" && firefox, \
-    notify-send -i nautilus "Run GUI program" "Launching File Manager" && nautilus, \
-    notify-send -i gnome-settings "Run GUI program" "Launching tweaks" && gnome-tweaks, \
+    notify-send -i nautilus "Run GUI program" "Launching File Manager" && st -e n, \
     notify-send -i gnome-calendar "Run GUI program" "Launching Cal" && gnome-calendar, \
     }
 

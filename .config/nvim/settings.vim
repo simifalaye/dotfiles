@@ -33,6 +33,8 @@ set lazyredraw                 " don't redraw when we don't have to
 set nostartofline              " don't reset cursor to start of line when moving
 set cmdheight=1                " bottom section height
 set selection=old              " no new line when using $
+set conceallevel=2             " Allow concealing of certain syntax
+set nocompatible
 
 " Files and buffers
 

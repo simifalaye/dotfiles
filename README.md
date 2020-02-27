@@ -43,14 +43,14 @@ A big part of my Development life is spent on the Terminal, so having a good set
 
 I use ZSH shell:
 
-- [Zgen](https://github.com/tarjoilija/zgen) - A lightweight plugin manager.
+- [Zplug](https://github.com/zplug/zplug) - A lightweight plugin manager.
   - All of my zsh plugins can be found in "~/.config/zsh/.zshrc".
 
 ### File Navigation and Search
 
-- [urbainvaes/fzf-marks](https://github.com/urbainvaes/fzf-marks) - Plugin to manage bookmarks in bash and zsh
 - [junegunn/fzf](https://github.com/junegunn/fzf) -  A command-line fuzzy finder
 - [ripgrep](https://github.com/BurntSushi/ripgrep) - A faster grep
+- [vifm](https://github.com/vifm/vifm) - A Terminal file manager
 
 ### Text Mainuplation
 
@@ -70,3 +70,4 @@ I use ZSH shell:
 - [yadm](https://github.com/TheLocehiliosan/yadm) - Dotfiles Manager.
 - [scrot](https://github.com/dreamer/scrot) - Screenshot utility
 - [zathura](https://pwmt.org) - A pdf reader
+- [sxiv](https://github.com/muennich/sxiv) - Simple x image viewer

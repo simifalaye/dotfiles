@@ -27,15 +27,9 @@ command -v gotop >/dev/null && alias tm="gotop"
 # tmux aliases
 command -v tmux >/dev/null &&
 {
-    alias tmux='tmux -f ~/.config/tmux/tmux.conf'
+    alias tdef="tmux new-session -A -s 'Default'"
     alias ta='tmux attach -t'
     alias tl='tmux ls'
-}
-
-# git aliasses
-command -v git >/dev/null &&
-{
-    alias gbr='git branch --merged | egrep -v "(^\*|master|develop)" | xargs git branch -d'
 }
 
 # Navigation

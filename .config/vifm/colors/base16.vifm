@@ -1,0 +1,67 @@
+" Base16-default-dark
+"
+" This colorscheme is based on base16 colorscheme for vim
+
+" Base16 colorspace
+let $base00        = 00
+let $base01        = 18
+let $base02        = 19
+let $base03        = 08
+let $base04        = 20
+let $base05        = 07
+let $base06        = 21
+let $base07        = 15
+let $base08        = 01
+let $base09        = 16
+let $base0A        = 03
+let $base0B        = 02
+let $base0C        = 06
+let $base0D        = 04
+let $base0E        = 05
+let $base0F        = 17
+
+" Colors
+let $fg   = $base04
+let $dfg  = $base03
+let $efg  = $base0B
+let $sfg  = $base05
+let $tfg  = $base01
+let $slbg = $base0A
+let $slfg = $base00
+
+highlight clear
+
+highlight TopLine cterm=none ctermfg=0 ctermbg=default
+highlight TopLineSel cterm=none ctermfg=0 ctermbg=default
+highlight CurrLine cterm=reverse ctermfg=default ctermbg=default
+highlight OtherLine cterm=bold ctermfg=default ctermbg=default
+highlight JobLine cterm=bold ctermfg=default ctermbg=default
+highlight CmdLine cterm=none ctermfg=default ctermbg=default
+highlight Link cterm=none ctermfg=132 ctermbg=default
+highlight BrokenLink cterm=bold ctermfg=167 ctermbg=default
+highlight Device cterm=none,standout ctermfg=214 ctermbg=default
+highlight Fifo cterm=none ctermfg=172 ctermbg=default
+highlight Socket cterm=bold ctermfg=223 ctermbg=default
+
+if layoutis('split')
+    let $bbg = $base01
+    let $bfg = $base06
+else
+    let $bbg = 'default'
+    let $bfg = 'default'
+endif
+
+execute 'highlight Border cterm=none ctermfg='     . $slfg . ' ctermbg=' . $bbg
+execute 'highlight TopLine cterm=none ctermfg='    . $bfg  . ' ctermbg=' . $bbg
+execute 'highlight TopLineSel cterm=none ctermfg=' . $bfg  . ' ctermbg=' . $bbg
+execute 'highlight Win cterm=none ctermfg='        . $fg   . ' ctermbg=' . 'default'
+execute 'highlight TabLine cterm=none ctermfg='    . $tfg  . ' ctermbg=' . $slbg
+execute 'highlight TabLineSel cterm=none ctermfg=' . $slfg . ' ctermbg=' . $slbg
+execute 'highlight Selected cterm=none ctermfg='   . $sfg  . ' ctermbg=' . 'default'
+execute 'highlight Directory cterm=none ctermfg='  . $dfg  . ' ctermbg=' . 'default'
+execute 'highlight StatusLine cterm=none ctermfg=' . $slfg . ' ctermbg=' . $slbg
+execute 'highlight ErrorMsg cterm=none ctermfg='   . $sfg  . ' ctermbg=' . 'default'
+execute 'highlight WildMenu cterm=none ctermfg='   . $sfg  . ' ctermbg=' . 'default'
+execute 'highlight Executable cterm=none ctermfg=' . $efg  . ' ctermbg=' . 'default'
+
+highlight WildMenu cterm=reverse ctermfg=default ctermbg=default

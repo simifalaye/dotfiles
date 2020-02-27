@@ -29,19 +29,6 @@ function functions#zoom()
 endfunction
 
 ""
-" Toggle nerd tree
-""
-function! functions#nerdTreeToggleFind()
-  if exists("g:NERDTree") && g:NERDTree.IsOpen()
-    NERDTreeClose
-  elseif filereadable(expand('%'))
-    NERDTreeFind
-  else
-    NERDTreeToggle
-  endif
-endfunction
-
-""
 " Don't close window, when deleting a buffer
 ""
 function! functions#bufcloseCloseIt()

@@ -44,11 +44,19 @@ function! helpers#fzf#setup() abort
   " CMD: Find
   if executable('rg')
     let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
-    command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
+    let s:grep_cmd = 'rg --column --line-number --no-heading
+          \ --fixed-strings
+          \ --ignore-case
+          \ --hidden
+          \ --follow
+          \ --glob "!.git/*"
+          \ --color "always" '
+    command! -bang -nargs=* Find
+          \ call fzf#vim#grep(s:grep_cmd . shellescape(<q-args>) . '| tr -d "\017"', 1, <bang>0)
   endif
   " CMD: SwitchSess
-  command! -bang -nargs=* SwitchSess call fzf#run({'source': prosession#ListSessions(),
-              \ 'sink': 'Prosession', 'down': '30%'})
+  command! -bang -nargs=* SwitchSess
+        \ call fzf#run({'source': prosession#ListSessions(), 'sink': 'Prosession', 'down': '30%'})
 
   " Basic setup
   call helpers#fzf#general()

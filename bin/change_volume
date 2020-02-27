@@ -3,13 +3,17 @@
 
 # Volume controls
 # ================
-# Requires the following script for it to work: get_progress_string
+# Requirements:
+# - Following scripts must be executable in $PATH:
+#     # get_progress_string
+#     # volume_amixer
+requirements=get_progress_string,volume_amixer
 
-_amixer_get()
-{
-    amixer -c 1 -M -D pulse get Master | \
-        grep -m 1 "Front.*Playback" | awk 'NR > 1 {print $1}' RS='[' FS=']' | sed -n ${1}p
-}
+for cmd in $(echo $requirements | sed "s/,/ /g"); do
+    command -v "$cmd" >/dev/null || {
+        echo "Requires: $cmd" && exit 1
+    }
+done
 
 # Main
 # ======
@@ -32,8 +36,8 @@ case $1 in
         echo "Error: Not a valid volume command"
 esac
 
-volume_status="$(_amixer_get 2)"
-volume_level="$(_amixer_get 1 | sed 's/[^0-9]*//g')"
+volume_status="$(volume_amixer status)"
+volume_level="$(volume_amixer level)"
 
 if [ "$volume_level" = 0 ] || [ "$volume_status" = "off" ]; then
     # mute

@@ -31,7 +31,6 @@ fi
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
 export VIM_HOME_DIR="$XDG_CONFIG_HOME/nvim"
 export FZF_SOURCE_DIR="$XDG_CONFIG_HOME/.fzf"
-export TMUX_HOME="$XDG_CONFIG_HOME/tmux"
 
 # Editors
 # -------

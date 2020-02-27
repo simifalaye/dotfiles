@@ -2,6 +2,7 @@
 # ----------------
 
 bindkey -v
+bindkey -M viins 'jk' vi-cmd-mode
 bindkey -M viins ' ' magic-space
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line
@@ -15,9 +16,6 @@ bindkey -M viins '^a' beginning-of-line
 bindkey -M viins '^e' end-of-line
 bindkey -M vicmd '^k' kill-line
 bindkey -M vicmd 'H'  run-help
-# bind UP and DOWN arrow keys
-bindkey '^[OA' history-substring-search-up
-bindkey '^[OB' history-substring-search-down
 
 # <5.0.8 doesn't have visual map
 if is-at-least 5.0.8; then

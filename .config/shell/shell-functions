@@ -47,7 +47,7 @@ function _load_repo
 # --------------------
 
 # Command: mkdir and cd into it
-take() { mkdir "$1" && cd "$1"; };
+mkcd() { mkdir "$1" && cd "$1"; };
 
 # Command: Push dotfiles to github
 function dotfiles()
