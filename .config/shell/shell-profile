@@ -7,6 +7,7 @@ export XDG_CACHE_HOME=~/.cache
 export XDG_CONFIG_HOME=~/.config
 export XDG_DATA_HOME=~/.local/share
 export XDG_BIN_HOME=~/.local/bin
+export SHELL=/bin/zsh
 export SHELL_CONF_HOME=~/.config/shell
 export LC_ALL=${USER_LANGUAGE}
 export LANG=${USER_LANGUAGE}
@@ -31,6 +32,8 @@ fi
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
 export VIM_HOME_DIR="$XDG_CONFIG_HOME/nvim"
 export FZF_SOURCE_DIR="$XDG_CONFIG_HOME/.fzf"
+export LPASS_CLIPBOARD_COMMAND="xclip -selection clipboard -in -l 3"
+export LPASS_AGENT_TIMEOUT=0
 
 # Editors
 # -------

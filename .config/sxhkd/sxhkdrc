@@ -31,7 +31,7 @@ shift + Print
 # Select password from "pass" (requires "passmenu" script)
 # Or select power menu
 super + {p,P}
-    {passmenu,dmenu_power}
+    {~/bin/lpass-dmenu copy,dmenu_power}
 # App launcher with dmenu
 super + @space
     j4-dmenu-desktop

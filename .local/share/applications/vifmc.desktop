@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Vi Files
+GenericName=FM
+Comment=Vi[m] like ncurses based file manager
+Keywords=shell;prompt;command;commandline;cmd;vifm;
+Exec=st -c "Vifm" -e zsh -ilc ~/bin/vifmrun
+Icon=org.gnome.Terminal
+Type=Application
+Categories=GNOME;GTK;System;TerminalEmulator;
+StartupNotify=true
+X-GNOME-SingleWindow=false
+OnlyShowIn=GNOME;Unity;
+StartupWMClass=Vifm

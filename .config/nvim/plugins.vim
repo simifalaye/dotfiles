@@ -38,12 +38,23 @@ Plug 'lambdalisue/fern.vim'
 " ---
 Plug 'chriskempson/base16-vim'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
-  let g:airline_theme='zenburn'
+  let g:airline_theme = 'tomorrow'
+  let g:airline_powerline_fonts = 0
+  let g:airline_section_z = "%p%% %l:%c"
+  let g:airline#extensions#tabline#enabled = 1
+  let g:airline#extensions#tabline#tab_nr_type = 1
+  let g:airline#extensions#tabline#fnamemod = ':t'
+  let g:airline#extensions#branch#enabled = 0
+  let g:airline#extensions#whitespace#enabled = 0
+  let g:airline#extensions#hunks#non_zero_only = 1
 Plug 'Yggdroot/indentLine'
 
 " Code completion / Languages
 " ---------------------------
 Plug 'sheerun/vim-polyglot'
+Plug 'plasticboy/vim-markdown'
+    let g:vim_markdown_auto_insert_bullets = 0
+    let g:vim_markdown_new_list_item_indent = 0
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
   let g:UltiSnipsSnippetsDir         = vimhomedir . '/UltiSnips'
   let g:UltiSnipsExpandTrigger       = "<c-j>"

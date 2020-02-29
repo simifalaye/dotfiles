@@ -8,7 +8,8 @@ My dotfile configuration for a linux system, managed by Yadm
 
 ## Graphical Applications
 
-In this section will be listed all the Graphical Applications. A separate section with Terminal applications after
+In this section will be listed all the Graphical Applications. A separate
+section with Terminal applications after
 
 ### Desktop Environment
 - [Dwm](http://dwm.suckless.org/) - A dynamic window manager
@@ -37,7 +38,8 @@ In this section will be listed all the Graphical Applications. A separate sectio
 
 ## Terminal Applications
 
-A big part of my Development life is spent on the Terminal, so having a good set of tools there is essential.
+A big part of my Development life is spent on the Terminal, so having a good
+set of tools there is essential.
 
 ### Shell configuration
 

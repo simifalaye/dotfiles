@@ -7,11 +7,13 @@ nnoremap <localleader>i :so $MYVIMRC<bar>PlugInstall<CR>
 nnoremap <localleader>c :so $MYVIMRC<bar>PlugClean<CR>
 " Save and quit
 command! Bclose call functions#bufcloseCloseIt()
+command! BufOnly silent! execute "%bd|e#|bd#"
 cnoremap W!!       w !sudo tee % >/dev/null
 noremap  <leader>w :update<CR>
 nmap     <leader>q :q<CR>
+nmap     <leader>Q :qa<CR>
 nmap     q         :Bclose<CR>
-nmap     Q         :qa<CR>
+nmap     Q         :BufOnly<CR>
 
 " Remaps
 " -------
@@ -70,9 +72,6 @@ nnoremap <silent><C-p> :SmartFiles<CR>
 nnoremap <silent><C-f> :Find<CR>
 nnoremap <silent><C-g> :SwitchSess<CR>
 nnoremap <silent>,     :Buffers<CR>
-" Delete all buffers except this
-command! BufOnly silent! execute "%bd|e#|bd#"
-nnoremap <leader>bo :BufOnly<CR>
 " Git
 nnoremap <silent> gib :Gblame<CR>
 nnoremap <silent> gid :Gdiff<CR>

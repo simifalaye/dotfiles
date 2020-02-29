@@ -19,7 +19,7 @@ set t_Co=256
 set background=dark
 let base16colorspace=256
 colorscheme base16-default-dark
-" Remove unnecessary colors
 highlight clear LineNr
 highlight clear SignColumn
+highlight clear CursorLine
 highlight LineNr guifg=#383838

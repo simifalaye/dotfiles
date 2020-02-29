@@ -39,6 +39,13 @@ esac
 volume_status="$(volume_amixer status)"
 volume_level="$(volume_amixer level)"
 
+# Cap volume
+if [ $volume_level -gt 100 ]; then
+    pactl set-sink-volume 0 100% && volume_level=100
+elif [ $volume_level -lt 0 ]; then
+    pactl set-sink-volume 0 0% && volume_level=0
+fi
+
 if [ "$volume_level" = 0 ] || [ "$volume_status" = "off" ]; then
     # mute
     dunstify -a "changeVolume" -u low -i notification-audio-volume-muted -r "$msgId" "Volume muted"

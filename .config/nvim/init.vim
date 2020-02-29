@@ -6,7 +6,6 @@ let vimhomedir     = has('nvim') ? "~/.config/nvim" : "~/.vim"
 let fzfsourcedir   = !empty($FZF_SOURCE_DIR) ? $FZF_SOURCE_DIR : "~/.fzf"
 let vimplugdir     = vimhomedir . "/plugged"
 let vimautoloaddir = vimhomedir ."/autoload"
-let vimcolor       = "~/.vimrc_background"
 
 " Disable
 " -------
