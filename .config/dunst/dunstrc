@@ -225,8 +225,8 @@
     #              invoke it. If there are multiple and no default, open the context menu.
     # * close_current: Close current notification.
     # * close_all: Close all notifications.
-    mouse_left_click = close_current
-    mouse_middle_click = do_action
+    mouse_left_click = do_action
+    mouse_middle_click = close_current
     mouse_right_click = close_all
 
     # Experimental features that may or may not work correctly. Do not expect them
@@ -275,3 +275,72 @@
     msg_urgency = critical
     background = "#ab4642"
     foreground = "#e8e8e8"
+
+    # Every section that isn't one of the above is interpreted as a rules to
+    # override settings for certain messages.
+    #
+    # Messages can be matched by
+    #    appname (discouraged, see desktop_entry)
+    #    body
+    #    category
+    #    desktop_entry
+    #    icon
+    #    match_transient
+    #    msg_urgency
+    #    stack_tag
+    #    summary
+    #
+    # and you can override the
+    #    background
+    #    foreground
+    #    format
+    #    frame_color
+    #    fullscreen
+    #    new_icon
+    #    set_stack_tag
+    #    set_transient
+    #    timeout
+    #    urgency
+    #
+    # Shell-like globbing will get expanded.
+    #
+    # Instead of the appname filter, it's recommended to use the desktop_entry filter.
+    # GLib based applications export their desktop-entry name. In comparison to the appname,
+    # the desktop-entry won't get localized.
+    #
+    # SCRIPTING
+    # You can specify a script that gets run when the rule matches by
+    # setting the "script" option.
+    # The script will be called as follows:
+    #   script appname summary body icon urgency
+    # where urgency can be "LOW", "NORMAL" or "CRITICAL".
+    #
+    # NOTE: if you don't want a notification to be displayed, set the format
+    # to "".
+    # NOTE: It might be helpful to run dunst -print in a terminal in order
+    # to find fitting options for rules.
+
+    # Disable the transient hint so that idle_threshold cannot be bypassed from the
+    # client
+[transient_disable]
+   match_transient = yes
+   set_transient = no
+    # Make the handling of transient notifications more strict by making them not
+    # be placed in history.
+[transient_history_ignore]
+    match_transient = yes
+    history_ignore = yes
+
+# [script-test]
+#     summary = "*script*"
+#     script = ~/bin/dunst_test.sh
+
+#[ignore]
+#    # This notification will not be displayed
+#    summary = "foobar"
+#    format = ""
+
+#[skip-display]
+#    # This notification will not be displayed, but will be included in the history
+#    summary = "foobar"
+#    skip_display = yes

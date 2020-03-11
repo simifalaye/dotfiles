@@ -241,12 +241,8 @@ filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
         \ gpicview %c,
         \ {View in shotwell}
         \ shotwell,
-fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.xpm
-        \ image_preview draw %px %py %pw %ph %c
-        \ %pc
-        \ image_preview clear
-" fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
-"          \ convert -identify %f -verbose /dev/null
+fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
+        \ convert -identify %f -verbose /dev/null
 
 " OpenRaster
 filextype *.ora
@@ -407,6 +403,12 @@ set vifminfo=dhistory,savedirs,chistory,state,tui,shistory,
 
 "Open all images in current directory in sxiv thumbnail mode
 nnoremap sx :!sxiv -t %d & <cr>
+" Quit
+nnoremap <space>q :q<cr>
+" Open directory in nautilus
+nnoremap <space>n :!nautilus .<cr>
+" Extract
+nnoremap <space>x :!extract %f<cr>
 
 " Start shell in current directory
 nnoremap s :shell<cr>
@@ -438,15 +440,12 @@ nnoremap cc cw<c-u>
 nnoremap A cw
 
 " Open console in current directory
-nnoremap ,t :!xterm &<cr>
+nnoremap <space>t :!xterm &<cr>
 
 " Open editor to edit vifmrc and apply settings after returning to vifm
-nnoremap ,c :write | edit $MYVIFMRC | restart<cr>
+nnoremap <space>e :write | edit $MYVIFMRC | restart<cr>
 " Open gvim to edit vifmrc
-nnoremap ,C :!gvim --remote-tab-silent $MYVIFMRC &<cr>
-
-" Toggle wrap setting on ,w key
-nnoremap ,w :set wrap!<cr>
+nnoremap <space>E :!gvim --remote-tab-silent $MYVIFMRC &<cr>
 
 " Example of standard two-panel file managers mappings
 nnoremap <f3> :!less %f<cr>
@@ -455,13 +454,6 @@ nnoremap <f5> :copy<cr>
 nnoremap <f6> :move<cr>
 nnoremap <f7> :mkdir<space>
 nnoremap <f8> :delete<cr>
-
-" Remaps
-unmap q/
-unmap q:
-unmap q=
-unmap q?
-nnoremap q :q<cr>
 
 " ------------------------------------------------------------------------------
 

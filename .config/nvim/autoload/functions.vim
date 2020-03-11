@@ -46,3 +46,46 @@ function! functions#bufcloseCloseIt()
     execute("bdelete! ".l:currentBufNum)
   endif
 endfunction
+
+" StatusLine
+" ==========
+
+""
+" Get mode str
+""
+function! functions#statMode(mode)
+  let l:cur_mode = 'x'
+  if a:mode == 'n'
+    let l:cur_mode = 'n'
+  elseif a:mode == 'i'
+    let l:cur_mode = 'i'
+  elseif a:mode ==? 'c'
+    let l:cur_mode = 'c'
+  elseif a:mode ==? 'r'
+    let l:cur_mode = 'r'
+  else
+    let l:cur_mode = 'v'
+  endif
+  return toupper(l:cur_mode) . ' '
+endfunction
+
+""
+" Get readonly status
+""
+function! functions#statReadOnly()
+  if &readonly || !&modifiable
+    return ''
+  else
+    return ''
+endfunction
+
+""
+" Get git branch
+""
+function! functions#statGitBranch()
+  let git = fugitive#head()
+  if git != ''
+    return ' '.fugitive#head()
+  else
+    return ''
+endfunction

@@ -21,12 +21,16 @@ done
 # Message ID
 msgId="991049"
 
+volume_status="$(volume_amixer status)"
+volume_level="$(volume_amixer level)"
 # Change the volume or toggle mute
 case $1 in
     inc)
+        [ "$volume_status" = "off" ] && pactl set-sink-mute 0 toggle
         pactl set-sink-volume 0 +5%
         ;;
     dec)
+        [ "$volume_status" = "off" ] && pactl set-sink-mute 0 toggle
         pactl set-sink-volume 0 -5%
         ;;
     mute)
@@ -35,9 +39,6 @@ case $1 in
     *)
         echo "Error: Not a valid volume command"
 esac
-
-volume_status="$(volume_amixer status)"
-volume_level="$(volume_amixer level)"
 
 # Cap volume
 if [ $volume_level -gt 100 ]; then

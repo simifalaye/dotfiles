@@ -7,8 +7,7 @@
 # Description
 # ===========
 #
-# Partial configuration file for the Simple X Hotkey Daemon.  Meant to
-# work with `bspwm`.
+# Configuration file for the Simple X Hotkey Daemon.
 
 # Index with key chord chain mnemonics
 # ====================================
@@ -28,13 +27,13 @@ Print
 shift + Print
     screenshot -w
 
+# App launcher with dmenu
+alt + @space
+    j4-dmenu-desktop
 # Select password from "pass" (requires "passmenu" script)
 # Or select power menu
 super + {p,P}
     {~/bin/lpass-dmenu copy,dmenu_power}
-# App launcher with dmenu
-super + @space
-    j4-dmenu-desktop
 
 # Environment
 # -----------
@@ -50,13 +49,13 @@ super + @space
 super + e ; {c,d,s,v}
     { \
     toggle_compton && notify-send -i ubuntu-logo-icon "Compton" "Toggled", \
-    toggle_dunst && notify-send -i ubuntu-logo-icon "Dunst" "Toggled", \
+    reload_dunst && notify-send -i ubuntu-logo-icon "Dunst" "Reloaded", \
     pkill -USR1 -x sxhkd && notify-send -i ubuntu-logo-icon "sxhkd config" "Reloaded key bindings", \
     st -e less $XDG_CONFIG_HOME/meta/cheatsheets/vim.txt \
     }
 
 # Session management (lock)
-super + {ctrl + alt, BackSpace}
+super + l
     slock
 
 # Graphical Apps
@@ -70,7 +69,7 @@ super + {ctrl + alt, BackSpace}
 super + g ; {b,f,c}
     { \
     notify-send -i firefox "Run GUI program" "Launching Browser" && firefox, \
-    notify-send -i nautilus "Run GUI program" "Launching File Manager" && st -e n, \
+    notify-send -i nautilus "Run GUI program" "Launching Files" && st -c "Vifm" -e zsh -ilc vifm, \
     notify-send -i gnome-calendar "Run GUI program" "Launching Cal" && gnome-calendar, \
     }
 

@@ -34,9 +34,10 @@ zinit wait lucid for \
 zinit light rupa/z
 
 # Theme
-zinit light denysdovhan/spaceship-prompt && spaceship_vi_mode_enable
-export SPACESHIP_VI_MODE_INSERT="!"
-export SPACESHIP_VI_MODE_NORMAL="#"
+zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
+zinit light sindresorhus/pure
+PURE_PROMPT_SYMBOL='➜'
+PURE_PROMPT_VICMD_SYMBOL='!'
 
 # Additional Configs
 # ------------------

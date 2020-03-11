@@ -1,15 +1,4 @@
 ""
-" Toggle relative numbers in Insert/Normal mode.
-"
-" @param {string} command Command to be executed on toggle.
-""
-function! helpers#autocmds#togglenumbers(command) abort
-  if &l:number && empty(&buftype)
-    execute a:command
-  endif
-endfunction
-
-""
 " Jump to last known position and center buffer around cursor.
 ""
 function! helpers#autocmds#jumplast() abort

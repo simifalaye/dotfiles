@@ -45,7 +45,7 @@ set of tools there is essential.
 
 I use ZSH shell:
 
-- [Zplug](https://github.com/zplug/zplug) - A lightweight plugin manager.
+- [Zinit](https://github.com/zdharma/zinit) - A lightweight plugin manager.
   - All of my zsh plugins can be found in "~/.config/zsh/.zshrc".
 
 ### File Navigation and Search
@@ -64,9 +64,8 @@ I use ZSH shell:
 
 - [tig](https://github.com/jonas/tig) - Text-mode interface for git
 - [pet](https://github.com/knqyf263/pet) - Simple command\-line snippet manager, written in Go
-- [pwgen](https://linux.die.net/man/1/pwgen) - make pronounceable passwords.
-- [pass](https://www.passwordstore.org/) - password manager
-- [gotop](https://github.com/cjbassi/gotop) - An interactive text-mode process viewer for Unix systems.
+- [lastpass-cli](https://github.com/lastpass/lastpass-cli) - password manager
+- [htop](https://hisham.hm/htop/) - An interactive text-mode process viewer for Unix systems.
 - [trash-cli](https://github.com/sindresorhus/trash-cli) - Move files and folders to the trash.
 - [tmux](https://github.com/tmux/tmux) - Terminal multiplexer.
 - [yadm](https://github.com/TheLocehiliosan/yadm) - Dotfiles Manager.

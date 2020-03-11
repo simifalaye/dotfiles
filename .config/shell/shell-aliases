@@ -21,13 +21,10 @@ command -v xdg-open >/dev/null && alias open="xdg-open"
 # bat aliases (a better cat)
 command -v bat >/dev/null && alias cat="bat -p"
 
-# gotop aliases (a graphical top)
-command -v gotop >/dev/null && alias tm="gotop"
-
 # tmux aliases
 command -v tmux >/dev/null &&
 {
-    alias tdef="tmux new-session -A -s 'Default'"
+    alias twork="tmux new-session -A -s 'Work'"
     alias ta='tmux attach -t'
     alias tl='tmux ls'
 }

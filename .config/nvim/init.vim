@@ -36,50 +36,39 @@ nnoremap dd "_dd
 nnoremap D "_D
 xnoremap p "_dP
 
-" Abbreviations (try not to use common words)
-" -------------------------------------------
-
-iab tdate <c-r>=strftime("%Y-%m-%d")<cr>
-iab todo: @TODO:
-iab fixme: @FIXME:
-
 " Source config files
 " -------------------
 
 source ~/.config/nvim/settings.vim
 source ~/.config/nvim/plugins.vim
-source ~/.config/nvim/colors.vim
 source ~/.config/nvim/mappings.vim
+source ~/.config/nvim/colors.vim
 
 " Autocommands
 " ------------
 
-" Toggle relative numbers in Insert/Normal mode.
-augroup togglenumbers
-  autocmd!
-  autocmd InsertEnter,BufLeave,WinLeave,FocusLost *
-        \ call helpers#autocmds#togglenumbers('setlocal norelativenumber')
-  autocmd InsertLeave,BufEnter,WinEnter,FocusGained *
-        \ call helpers#autocmds#togglenumbers('setlocal relativenumber')
-augroup end
-
+" Toggle cursorline
+augroup CursorLine
+    autocmd!
+    autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+    autocmd WinLeave * setlocal nocursorline
+augroup END
 " Jump to last known position and center buffer around cursor.
 augroup jumplast
   autocmd!
   autocmd BufWinEnter ?* call helpers#autocmds#jumplast()
 augroup end
-
 " Remove trailing whitespace on save
 augroup trailingwhitespace
   autocmd!
   autocmd BufWritePre * call helpers#autocmds#stripTrailingWhitespace()
 augroup end
-
 " File type settings
 augroup filetypesettings
   autocmd!
   autocmd FileType markdown          let b:indentLine_enabled = 0
   autocmd Filetype gitcommit,mail,md setl spell        tw=72
-  autocmd FileType java              setl shiftwidth=2 tabstop=2
+  autocmd FileType c,cpp             setl shiftwidth=4 tabstop=4 commentstring=//\ %s
+  autocmd FileType java              setl shiftwidth=2 tabstop=2 commentstring=//\ %s
   autocmd FileType vim               setl shiftwidth=2 tabstop=2
 augroup end
