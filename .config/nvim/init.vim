@@ -71,4 +71,5 @@ augroup filetypesettings
   autocmd FileType c,cpp             setl shiftwidth=4 tabstop=4 commentstring=//\ %s
   autocmd FileType java              setl shiftwidth=2 tabstop=2 commentstring=//\ %s
   autocmd FileType vim               setl shiftwidth=2 tabstop=2
+  autocmd FileType sh,zsh            setl shiftwidth=4 tabstop=4
 augroup end
