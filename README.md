@@ -20,12 +20,15 @@ section with Terminal applications after
 - [Materia](https://github.com/nana-4/materia-theme) - A material gtk theme
 - [Compton](https://github.com/chjj/compton) - A compositor for x11.
 - [Papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme) - Icons
+- [Iosevka](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Iosevka) - Font
 
 ### Productivity and Internet
 
 - [Libreoffice](https://libreoffice.org) - Office suite.
 - [Firefox](https://www.mozilla.org/pt-PT/firefox/) - My primary internet browser.
 - [Mattermost](https://mattermost.com/) - Text Chat.
+- [Todoist](https://todoist.com/downloads?lang=en) - Task manager
+- [Joplin](https://joplinapp.org/) - GUI notes app
 
 ### Utilities
 
@@ -59,6 +62,7 @@ I use ZSH shell:
 - [neovim](https://neovim.io/) with [vim-plug](https://github.com/junegunn/vim-plug) - My primary text editor/
   - All my vim plugins can be found in the "plugins.vim" file
 - [bat](https://github.com/sharkdp/bat) - A cat(1) clone with wings.
+- [Joplin-cli](https://joplinapp.org/) - Terminal notes app for Joplin
 
 ### Utilities
 

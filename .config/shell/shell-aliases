@@ -2,7 +2,6 @@
 # -------
 
 # Common task aliases
-alias q=exit
 alias clr=clear
 alias ls='ls --color=auto --group-directories-first'
 alias ll='ls -alF'
@@ -18,15 +17,21 @@ command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
 # Open file in proper program
 command -v xdg-open >/dev/null && alias open="xdg-open"
 
-# bat aliases (a better cat)
-command -v bat >/dev/null && alias cat="bat -p"
-
 # tmux aliases
 command -v tmux >/dev/null &&
 {
     alias twork="tmux new-session -A -s 'Work'"
     alias ta='tmux attach -t'
     alias tl='tmux ls'
+}
+
+# bat aliases (a better cat)
+command -v bat >/dev/null && alias cat="bat -p"
+
+# git aliases
+command -v git >/dev/null &&
+{
+    alias gbclean="git branch | grep -v '^*' | xargs git branch -D"
 }
 
 # Navigation

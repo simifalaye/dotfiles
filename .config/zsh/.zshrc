@@ -36,7 +36,7 @@ zinit light rupa/z
 # Theme
 zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
 zinit light sindresorhus/pure
-PURE_PROMPT_SYMBOL='➜'
+PURE_PROMPT_SYMBOL='﬌'
 PURE_PROMPT_VICMD_SYMBOL='!'
 
 # Additional Configs

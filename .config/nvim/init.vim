@@ -1,11 +1,14 @@
 " Globals
 " -------
 
-let mapleader      = " "
-let vimhomedir     = has('nvim') ? "~/.config/nvim" : "~/.vim"
-let fzfsourcedir   = !empty($FZF_SOURCE_DIR) ? $FZF_SOURCE_DIR : "~/.fzf"
-let vimplugdir     = vimhomedir . "/plugged"
-let vimautoloaddir = vimhomedir ."/autoload"
+let mapleader        = " "
+let g:vimhomedir     = has('nvim') ? "~/.config/nvim" : "~/.vim"
+let g:fzfsourcedir   = !empty($FZF_SOURCE_DIR) ? $FZF_SOURCE_DIR : "~/.fzf"
+let g:vimplugdir     = g:vimhomedir . "/plugged"
+let g:vimautoloaddir = g:vimhomedir . "/autoload"
+let g:sessiondir     = g:vimhomedir . "/session"
+let g:is_unix        = has('unix')
+let g:is_gui         = has('gui_running')
 
 " Disable
 " -------
@@ -47,7 +50,7 @@ source ~/.config/nvim/colors.vim
 " Autocommands
 " ------------
 
-" Toggle cursorline
+" Toggle cursorline for active window
 augroup CursorLine
     autocmd!
     autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
@@ -56,12 +59,12 @@ augroup END
 " Jump to last known position and center buffer around cursor.
 augroup jumplast
   autocmd!
-  autocmd BufWinEnter ?* call helpers#autocmds#jumplast()
+  autocmd BufWinEnter ?* call helpers#utils#jumplast()
 augroup end
 " Remove trailing whitespace on save
 augroup trailingwhitespace
   autocmd!
-  autocmd BufWritePre * call helpers#autocmds#stripTrailingWhitespace()
+  autocmd BufWritePre * call helpers#utils#stripTrailingWhitespace()
 augroup end
 " File type settings
 augroup filetypesettings

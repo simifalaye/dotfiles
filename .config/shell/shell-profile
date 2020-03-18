@@ -18,7 +18,7 @@ export TERMCMD=st
 if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
     export IS_WSL_DEVICE=true
     # IMPORTANT (for vim copy paste)
-    export DISPLAY=:0
+    export DISPLAY=localhost:0.0
     # For wsl dir colors
     LS_COLORS="ow=01;36;40" && export LS_COLORS
     # Wsl file/folder permissions metadata

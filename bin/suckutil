@@ -9,7 +9,7 @@ function print_help() {
     echo "    reset: clean develop and reset to origin develop"
     echo "    add <patch-file> <branch-name>: checkout a branch and apply a patch"
     echo "    delete <branch-name> : delete a patch branch"
-    echo "    merge: merge all local branches into develop"
+    echo "    merge <exclude>...: merge all (except for 'exclude') local branches into develop"
     echo "    build: reset, merge and build"
 }
 
@@ -73,8 +73,9 @@ function delete() {
 }
 
 function merge() {
+    exclude="${1} develop master"
     for branch in $(git for-each-ref --format='%(refname)' refs/heads/ | cut -d'/' -f3); do
-        if [ "$branch" != "develop" ] && [ "$branch" != "master" ]; then
+        if ! echo "$exclude" | grep -wq "$branch"; then
             echo "Merging: $branch..."
             echo "-------------------"
             git merge $branch -m $branch
@@ -105,7 +106,8 @@ case $1 in
         reset && delete $branch && exit 0
         ;;
     merge)
-        reset && merge && exit 0
+        shift 1
+        reset && merge $@ && exit 0
         ;;
     build)
         reset && merge && sudo make clean install && exit 0

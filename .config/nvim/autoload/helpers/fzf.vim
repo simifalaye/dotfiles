@@ -1,22 +1,24 @@
+" ==============================================================
 " Functions for fzf plugin
+" ==============================================================
 
 ""
 " Fzf call Files or GFiles based on if in git dir
 ""
-function! helpers#fzf#smartFiles(...)
+fun! helpers#fzf#smartFiles(...)
   silent! !git rev-parse --is-inside-work-tree
   if v:shell_error == 0
     return call("fzf#vim#gitfiles", a:000)
   else
     return call("fzf#vim#files", a:000)
   endif
-endfunction
+endfun
 
 ""
 " General fzf configuration from github page
 ""
-function! helpers#fzf#general()
-  let g:fzf_colors = {
+fun! helpers#fzf#general()
+  let g:fzf_colors       = {
         \ 'fg':      ['fg', 'Normal'],
         \ 'bg':      ['bg', 'Normal'],
         \ 'hl':      ['fg', 'Comment'],
@@ -29,16 +31,18 @@ function! helpers#fzf#general()
         \ 'marker':  ['fg', 'Keyword'],
         \ 'spinner': ['fg', 'Label'],
         \ 'header':  ['fg', 'Comment'] }
-  let g:fzf_action = {
+  let g:fzf_action       = {
         \ 'ctrl-t': 'tab split',
         \ 'ctrl-s': 'split',
         \ 'ctrl-v': 'vsplit' }
-endfunction
+  let g:fzf_layout       = { 'down': '~40%' }
+  let g:fzf_buffers_jump = v:true
+endfun
 
 ""
 " Basic setup
 ""
-function! helpers#fzf#setup() abort
+fun! helpers#fzf#setup() abort
   " CMD: SmartFiles
   command! -bang -nargs=* -complete=dir SmartFiles call helpers#fzf#smartFiles(<q-args>)
   " CMD: Find
@@ -60,4 +64,4 @@ function! helpers#fzf#setup() abort
 
   " Basic setup
   call helpers#fzf#general()
-endfunction
+endfun

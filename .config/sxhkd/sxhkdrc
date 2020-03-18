@@ -33,7 +33,7 @@ alt + @space
 # Select password from "pass" (requires "passmenu" script)
 # Or select power menu
 super + {p,P}
-    {~/bin/lpass-dmenu copy,dmenu_power}
+    {lpass_dmenu copy,dmenu_power}
 
 # Environment
 # -----------
@@ -78,8 +78,8 @@ super + g ; {b,f,c}
 
 # Volume controls
 XF86AudioRaiseVolume
-    change_volume inc
+    volumectl inc
 XF86AudioLowerVolume
-    change_volume dec
+    volumectl dec
 XF86AudioMute
-    change_volume mute
+    volumectl mute

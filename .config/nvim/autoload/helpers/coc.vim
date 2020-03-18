@@ -1,29 +1,30 @@
+" ==============================================================
 " Coc.nvim helpers
-" -------------------
+" ==============================================================
 
 ""
 " Check if backspace is hit
 ""
-function! helpers#coc#checkBackspace()
+fun! helpers#coc#checkBackspace()
   let l:column = col('.') - 1
   return !l:column || getline('.')[l:column - 1] =~ '\s'
-endfunction
+endfun
 
 ""
 " Show documentation for coc if not in a vim buffer
 ""
-function! helpers#coc#showDocumentation()
+fun! helpers#coc#showDocumentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
   else
     call CocAction('doHover')
   endif
-endfunction
+endfun
 
 ""
 " Coc mappings
 ""
-function! helpers#coc#mappings()
+fun! helpers#coc#mappings()
   " Use tab for trigger completion with characters ahead and navigate.
   inoremap <silent><expr> <TAB>
         \ pumvisible() ? "\<C-n>" :
@@ -47,4 +48,4 @@ function! helpers#coc#mappings()
   nnoremap <silent> K :call helpers#coc#showDocumentation()<CR>
   " Remap for rename current word
   nmap <leader>rn <Plug>(coc-rename)
-endfunction
+endfun

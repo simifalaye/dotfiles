@@ -6,7 +6,7 @@ nnoremap <localleader>r :so $MYVIMRC<bar>echo ".vimrc reloaded"<CR>
 nnoremap <localleader>i :so $MYVIMRC<bar>PlugInstall<CR>
 nnoremap <localleader>c :so $MYVIMRC<bar>PlugClean<CR>
 " Save and quit
-command! Bclose call functions#bufcloseCloseIt()
+command! Bclose call helpers#utils#bufcloseCloseIt()
 command! BufOnly silent! execute "%bd|e#|bd#"
 command! SudoWrite w !sudo tee > /dev/null %
 noremap <leader>w :update<CR>
@@ -17,65 +17,68 @@ noremap <leader>C :BufOnly<CR>
 
 " Remaps
 " -------
-nnoremap j         gj
-nnoremap k         gk
-nnoremap x         d
-xnoremap x         d
-nnoremap xx        dd
-nnoremap X         D
-vnoremap y         ygv<Esc>
-nnoremap Y         y$
-nnoremap n         nzz
-nnoremap N         Nzz
-nnoremap /         /\v
-vnoremap <         <gv
-vnoremap >         >gv
-inoremap {<CR>     {<CR>}<Esc>O
-inoremap {;        {<CR>};<Esc>O
-nnoremap p         p`[v`]=
-nnoremap <leader>j o<ESC>'[k
-nnoremap <leader>k O<ESC>j
+nnoremap j     gj
+nnoremap k     gk
+nnoremap x     d
+xnoremap x     d
+nnoremap xx    dd
+nnoremap X     D
+vnoremap y     ygv<Esc>
+nnoremap Y     y$
+nnoremap n     nzz
+nnoremap N     Nzz
+nnoremap /     /\v
+vnoremap <     <gv
+vnoremap >     >gv
+inoremap {<CR> {<CR>}<Esc>O
+inoremap {;    {<CR>};<Esc>O
+nnoremap p     p`[v`]=
+nnoremap //    :nohl<CR>
 
 " Editing
 " ---------
-" Find the conflict line of git
-map <leader>gc /\v^[<\|=>]{7}( .*\|$)<CR>
-" Highlight pasted text and remove highlight
-nnoremap <leader>p V`] | nnoremap <leader>/ :nohl<CR>
-" 'multiple-cursor' replacement
+" Replace word forward and backward (dot repeatable)
 nnoremap c* /\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgn
 nnoremap c# ?\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgN
-" Align text
+" Add (count) line above and below
+nnoremap <leader>j o<ESC>'[k | nnoremap <leader>k O<ESC>j
+" Find the conflict line of git
+nnoremap <leader>gc /\v^[<\|=>]{7}( .*\|$)<CR>
+" Align text and underline titles
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
+nmap gu yyp0v$r-
+nmap gU yyp0v$r=
 " Text Object (inner-{line,entire,viewable})
-xnoremap <silent>il :<c-u>normal! g_v^<cr>
-onoremap <silent>il :<c-u>normal! g_v^<cr>
-onoremap <silent>ie :<c-u>normal! ggVG<cr>
-xnoremap <silent>ie :<c-u>normal! ggVG<cr>
-onoremap <silent>iv :<c-u>normal! HVL<cr>
-xnoremap <silent>iv :<c-u>normal! HVL<cr>
+call helpers#utils#makeTextObjs({
+      \   '_' : [
+      \       ['il', '^vg_'],
+      \       ['ie', 'ggVG'],
+      \       ['iv', 'HVL'],
+      \   ]
+      \ })
 
 " Files, Buffers, Splits and Tabs
 " --------------------------------
 " Zoom
-nnoremap <leader>z :call functions#zoom()<CR>
+nnoremap <leader>z :call helpers#utils#zoom()<CR>
 " Navigation
 nnoremap <C-h> <C-w>h | nnoremap <C-l> <C-w>l
 nnoremap <C-k> <C-w>k | nnoremap <C-j> <C-w>j
-nnoremap <Left> :bp<CR> | nnoremap <Right> :bn<CR>
+nnoremap <C-p> :bp<CR> | nnoremap <C-n> :bn<CR>
 " Explorer
-nnoremap <silent><C-n> :Fern . -reveal=%<CR>
+nnoremap <silent><leader>n :Fern . -reveal=% -drawer -width=40 -toggle<CR>
 " Fzf
-nnoremap <silent><C-p> :SmartFiles<CR>
-nnoremap <silent><C-f> :Find<CR>
-nnoremap <silent><C-g> :SwitchSess<CR>
+nnoremap <silent><leader>p :SmartFiles<CR>
+nnoremap <silent><leader>f :Find<CR>
 nnoremap <silent><CR>  :Buffers<CR>
 " Git
 nnoremap <silent> gib :Gblame<CR>
 nnoremap <silent> gid :Gdiff<CR>
 nnoremap <silent> gil :Glog<CR>
 nnoremap <silent> gis :Gstatus<CR>
+" Open URL
+nnoremap <silent> gx :call helpers#utils#open_url()<CR>
 
 " Completion
 " ----------

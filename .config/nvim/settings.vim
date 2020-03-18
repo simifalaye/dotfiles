@@ -7,6 +7,8 @@ filetype on                    " identify file types
 filetype indent on             " indent based on filetype
 filetype plugin on             " enable file-specific plugins
 set expandtab                  " turn tabs into spaces
+set tabstop=4                  " use 4-space tabs when [tab] is pressed
+set shiftwidth=4               " use 4-space tabs when reading files
 set showmatch                  " highlight the bracket match
 set ruler                      " always/don't show the bottom line
 set noshowmode                 " [don't] show mode (INSERT/OVER) in ruler
@@ -32,6 +34,7 @@ set nostartofline              " don't reset cursor to start of line when moving
 set cmdheight=1                " bottom section height
 set selection=old              " no new line when using $
 set conceallevel=2             " Allow concealing of certain syntax
+set backspace=indent,eol,start " make backspace behave in a sane manner
 
 " Files and buffers
 

@@ -19,6 +19,8 @@ set t_Co=256
 set background=dark
 let base16colorspace=256
 colorscheme base16-default-dark
+" highlight conflicts
+match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 
 " Set status line display
 " (https://gist.github.com/ahmedelgabri/b9127dfe36ba86f4496c8c28eb65ef2b)
@@ -34,11 +36,11 @@ exe 'hi SignColumn guifg=#' . g:base16_gui02 . ' guibg=#' . g:base16_gui00
 
 set laststatus=2
 set statusline=
-set statusline+=%2*\ %{functions#statMode(mode())}              " Current mode
-set statusline+=%3*\ %{functions#statGitBranch()}\              " Git Branch name
-set statusline+=%1*\ %4*\ %<%t\ %{functions#statReadOnly()}\ %m " File
-set statusline+=%1*\ %{coc#status()}                            " Coc status
+set statusline+=%2*\ %{helpers#status#mode(mode())}              " Current mode
+set statusline+=%3*\ %{helpers#status#gitBranch()}\              " Git Branch name
+set statusline+=%1*\ %4*\ %<%t\ %{helpers#status#readOnly()}\ %m " File
+set statusline+=%1*\ %{coc#status()}                             " Coc status
 set statusline+=%*
-set statusline+=%1*\ %=                                         " Space
-set statusline+=%1*\ %y\                                        " FileType
-set statusline+=%5*\ %l/%L,\ %c\                                " Rownumber/total (%)
+set statusline+=%1*\ %=                                          " Space
+set statusline+=%1*\ %y\                                         " FileType
+set statusline+=%5*\ %l/%L,\ %c\                                 " Rownumber/total (%)
