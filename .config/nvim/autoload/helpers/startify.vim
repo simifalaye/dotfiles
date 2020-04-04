@@ -1,6 +1,6 @@
-" ==============================================================
+" ===============================
 " Functions for startify plugin
-" ==============================================================
+" ===============================
 
 ""
 " List local commits
@@ -9,7 +9,6 @@ function! helpers#startify#listcommits()
   let git = 'git'
   let commits = systemlist(git . ' log --oneline | head -n5')
   let git = 'G' . git[1:]
-  echo git
   return map(commits, '{"line": matchstr(v:val, "\\s\\zs.*"), "cmd": "'.
         \ git .' show ". matchstr(v:val, "^\\x\\+") }')
 endfunction

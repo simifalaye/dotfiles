@@ -12,8 +12,8 @@ command! SudoWrite w !sudo tee > /dev/null %
 noremap <leader>w :update<CR>
 noremap <leader>q :q<CR>
 noremap <leader>Q :qa<CR>
-noremap <leader>c :Bclose<CR>
-noremap <leader>C :BufOnly<CR>
+noremap <leader>b :Bclose<CR>
+noremap <leader>B :BufOnly<CR>
 
 " Remaps
 " -------
@@ -30,25 +30,18 @@ nnoremap N     Nzz
 nnoremap /     /\v
 vnoremap <     <gv
 vnoremap >     >gv
-inoremap {<CR> {<CR>}<Esc>O
-inoremap {;    {<CR>};<Esc>O
 nnoremap p     p`[v`]=
-nnoremap //    :nohl<CR>
+nnoremap g/    :nohl<CR>
 
 " Editing
 " ---------
 " Replace word forward and backward (dot repeatable)
-nnoremap c* /\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgn
-nnoremap c# ?\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgN
-" Add (count) line above and below
-nnoremap <leader>j o<ESC>'[k | nnoremap <leader>k O<ESC>j
-" Find the conflict line of git
-nnoremap <leader>gc /\v^[<\|=>]{7}( .*\|$)<CR>
+nnoremap cn /\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgn
+nnoremap cN ?\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgN
 " Align text and underline titles
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
-nmap gu yyp0v$r-
-nmap gU yyp0v$r=
+nmap gu yyp0v$r- | nmap gU yyp0v$r=
 " Text Object (inner-{line,entire,viewable})
 call helpers#utils#makeTextObjs({
       \   '_' : [
@@ -57,20 +50,19 @@ call helpers#utils#makeTextObjs({
       \       ['iv', 'HVL'],
       \   ]
       \ })
+" List marks
+command! Marks call Marks()
+nnoremap <silent>_ :call Marks()<cr>
 
 " Files, Buffers, Splits and Tabs
 " --------------------------------
-" Zoom
+" Splits
 nnoremap <leader>z :call helpers#utils#zoom()<CR>
-" Navigation
 nnoremap <C-h> <C-w>h | nnoremap <C-l> <C-w>l
 nnoremap <C-k> <C-w>k | nnoremap <C-j> <C-w>j
-nnoremap <C-p> :bp<CR> | nnoremap <C-n> :bn<CR>
-" Explorer
-nnoremap <silent><leader>n :Fern . -reveal=% -drawer -width=40 -toggle<CR>
 " Fzf
-nnoremap <silent><leader>p :SmartFiles<CR>
-nnoremap <silent><leader>f :Find<CR>
+nnoremap <silent><C-p> :SmartFiles<CR>
+nnoremap <silent><C-f> :Find<CR>
 nnoremap <silent><CR>  :Buffers<CR>
 " Git
 nnoremap <silent> gib :Gblame<CR>

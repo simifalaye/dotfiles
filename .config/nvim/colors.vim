@@ -1,6 +1,6 @@
 " Color support
 " -------------
-" Fixes bckgrd color issues (windows support)
+" Fixes bckgrd color issues (wsl support)
 if &term =~ '256color'
     " Disable Background Color Erase (BCE) so that color schemes
     " work properly when Vim is used inside tmux and GNU screen.
@@ -19,8 +19,6 @@ set t_Co=256
 set background=dark
 let base16colorspace=256
 colorscheme base16-default-dark
-" highlight conflicts
-match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 
 " Set status line display
 " (https://gist.github.com/ahmedelgabri/b9127dfe36ba86f4496c8c28eb65ef2b)

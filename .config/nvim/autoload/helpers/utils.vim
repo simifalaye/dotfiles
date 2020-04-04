@@ -1,6 +1,6 @@
-" ==============================================================
+" =================================
 " Miscellaneous Utility Functions
-" ==============================================================
+" =================================
 
 ""
 " Gets vim-plug from github
@@ -128,5 +128,14 @@ fun! helpers#utils#open_url() abort " {{{1
           \ (g:is_unix ? ' 2> /dev/null &' : '')
     if !g:is_gui | redraw! | endif
   endif
-
 endfun
+
+" Better marks
+function! Marks()
+  marks abcdefghijklmnopqrstuvwxyz.
+  echo 'Jump to mark: '
+  let mark=nr2char(getchar())
+  redraw
+  execute 'normal! `'.mark
+endfunction
+

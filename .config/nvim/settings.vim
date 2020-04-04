@@ -56,15 +56,18 @@ set splitbelow     " Fix splits
 set splitright     " Fix splits
 set fillchars=""   " Fix splits
 set cursorline     " Add cursorline on current line
+set shortmess+=c   " Avoid 'hit enter' messages
+set updatetime=300 " Default is 4000, lower it for better performance
+set signcolumn=no  " Don't like the extra space
 
 " History
 
 set history=1000                    " Remember more commands
 if has('persistent_undo')
-    set undofile                    " Persistent undo
-    set undodir=~/.cache/vim/undo   " Set undo directory
-    set undolevels=1000             " Max number of changes
-    set undoreload=10000            " Max lines to save for undo on a buffer reload
+  set undofile                      " Persistent undo
+  set undodir=~/.cache/vim/undo     " Set undo directory
+  set undolevels=1000               " Max number of changes
+  set undoreload=10000              " Max lines to save for undo on a buffer reload
 endif
 if has('unnamedplus')
   set clipboard=unnamed,unnamedplus " set clipboard to use

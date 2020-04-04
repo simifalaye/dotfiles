@@ -1,36 +1,33 @@
 " Plugins
-" -------
-
+" =========
 " load plug vim if not installed yet
 call helpers#utils#getVimPlug(g:vimautoloaddir)
 call plug#begin(g:vimplugdir)
 
 " Text manipulation
-" -----------------
+" -------------------
+Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
-
 " Integration Utilities
-" ---------------------
+" -----------------------
 Plug 'mhinz/vim-startify'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
-
+Plug 'tpope/vim-unimpaired'
 " Files / Buffers
-" ---------------
+" -----------------
 Plug 'junegunn/fzf', {'dir': g:fzfsourcedir,'do': './install --all --xdg'}
 Plug 'junegunn/fzf.vim'
-Plug 'lambdalisue/fern.vim', { 'on': ['Fern'] }
-
 " UI
-" ---
-Plug 'chriskempson/base16-vim'
-Plug 'Yggdroot/indentLine'
-
+" ----
+Plug 'chriskempson/base16-vim' | Plug 'Yggdroot/indentLine'
 " Code completion / Languages
-" ---------------------------
-Plug 'kergoth/vim-bitbake'
+" -----------------------------
+Plug 'derekwyatt/vim-fswitch' | Plug 'vim-scripts/DoxygenToolkit.vim'
+  map <F5> :FSHere<CR>
+Plug 'kergoth/vim-bitbake' | Plug 'wgwoods/vim-systemd-syntax'
 Plug 'plasticboy/vim-markdown'
   let g:vim_markdown_folding_disabled     = 1
   let g:vim_markdown_auto_insert_bullets  = 0
@@ -41,18 +38,14 @@ Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
   let g:UltiSnipsExpandTrigger       = "<c-j>"
   let g:UltiSnipsJumpForwardTrigger  = "<c-j>"
   let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
-  let g:UltiSnipsListSnippets        = "<c-l>"
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-  set shortmess+=c
-  set signcolumn=no
-  " Default is 4000, lower it for better performance
-  set updatetime=300
   " Highlight the symbol and its references when holding the cursor.
   autocmd CursorHold * silent call CocActionAsync('highlight')
   let g:coc_global_extensions = [
+        \ 'coc-explorer',
         \ 'coc-json',
-        \ 'coc-lua',
         \ 'coc-snippets',
+        \ 'coc-word',
         \]
 call plug#end()
 

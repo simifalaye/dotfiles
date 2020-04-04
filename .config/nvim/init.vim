@@ -69,10 +69,10 @@ augroup end
 " File type settings
 augroup filetypesettings
   autocmd!
-  autocmd FileType markdown          let b:indentLine_enabled = 0
-  autocmd Filetype gitcommit,mail,md setl spell        tw=72
-  autocmd FileType c,cpp             setl shiftwidth=4 tabstop=4 commentstring=//\ %s
-  autocmd FileType java              setl shiftwidth=2 tabstop=2 commentstring=//\ %s
-  autocmd FileType vim               setl shiftwidth=2 tabstop=2
-  autocmd FileType sh,zsh            setl shiftwidth=4 tabstop=4
+  autocmd FileType markdown           let b:indentLine_enabled = 0
+  autocmd Filetype gitcommit,markdown setl spell        tw=72
+  autocmd FileType c,cpp              setl shiftwidth=4 tabstop=4 commentstring=//\ %s
+  autocmd FileType java               setl shiftwidth=2 tabstop=2 commentstring=//\ %s
+  autocmd FileType vim                setl shiftwidth=2 tabstop=2
+  autocmd FileType sh,zsh             setl shiftwidth=4 tabstop=4
 augroup end
