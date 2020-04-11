@@ -20,6 +20,7 @@ Plug 'tpope/vim-unimpaired'
 " -----------------
 Plug 'junegunn/fzf', {'dir': g:fzfsourcedir,'do': './install --all --xdg'}
 Plug 'junegunn/fzf.vim'
+Plug 'lambdalisue/fern.vim'
 " UI
 " ----
 Plug 'chriskempson/base16-vim' | Plug 'Yggdroot/indentLine'
@@ -42,7 +43,6 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
   " Highlight the symbol and its references when holding the cursor.
   autocmd CursorHold * silent call CocActionAsync('highlight')
   let g:coc_global_extensions = [
-        \ 'coc-explorer',
         \ 'coc-json',
         \ 'coc-snippets',
         \ 'coc-word',

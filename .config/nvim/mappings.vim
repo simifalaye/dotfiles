@@ -56,6 +56,8 @@ nnoremap <silent>_ :call Marks()<cr>
 
 " Files, Buffers, Splits and Tabs
 " --------------------------------
+" Explorer
+nnoremap <silent><leader>e :Fern . -reveal=% -drawer -width=40 -toggle<CR>
 " Splits
 nnoremap <leader>z :call helpers#utils#zoom()<CR>
 nnoremap <C-h> <C-w>h | nnoremap <C-l> <C-w>l

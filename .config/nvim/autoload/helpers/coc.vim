@@ -48,6 +48,4 @@ fun! helpers#coc#mappings()
   nnoremap <silent> K :call helpers#coc#showDocumentation()<CR>
   " Remap for rename current word
   nmap <leader>rn <Plug>(coc-rename)
-  " Explorer
-  nmap <leader>e :CocCommand explorer<CR>
 endfun
