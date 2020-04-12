@@ -130,7 +130,7 @@ fun! helpers#utils#open_url() abort " {{{1
   endif
 endfun
 
-" Better marks
+" List and select marks
 function! Marks()
   marks abcdefghijklmnopqrstuvwxyz.
   echo 'Jump to mark: '

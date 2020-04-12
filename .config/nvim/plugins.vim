@@ -12,9 +12,11 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 " Integration Utilities
 " -----------------------
+Plug 'christoomey/vim-tmux-navigator'
 Plug 'mhinz/vim-startify'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-unimpaired'
 " Files / Buffers
 " -----------------
@@ -24,6 +26,7 @@ Plug 'lambdalisue/fern.vim'
 " UI
 " ----
 Plug 'chriskempson/base16-vim' | Plug 'Yggdroot/indentLine'
+  let g:indentLine_fileTypeExclude = ['startify', 'markdown']
 " Code completion / Languages
 " -----------------------------
 Plug 'derekwyatt/vim-fswitch' | Plug 'vim-scripts/DoxygenToolkit.vim'
@@ -47,8 +50,8 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
         \ 'coc-snippets',
         \ 'coc-word',
         \]
-call plug#end()
 
+call plug#end()
 " Call setup functions
 call helpers#fzf#setup()
 call helpers#startify#setup()

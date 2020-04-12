@@ -27,7 +27,7 @@ let g:loaded_getscriptPlugin   = v:true
 let g:loaded_logipat           = v:true
 let g:loaded_tutor_mode_plugin = v:true
 
-" Disable copy for cut actions
+" Disable copy when changing, deleting and pasting
 nnoremap c "_c
 xnoremap c "_c
 nnoremap cc "_S
@@ -53,8 +53,8 @@ source ~/.config/nvim/colors.vim
 " Toggle cursorline for active window
 augroup CursorLine
     autocmd!
-    autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-    autocmd WinLeave * setlocal nocursorline
+    autocmd VimEnter,WinEnter,BufWinEnter * setl cursorline
+    autocmd WinLeave * setl nocursorline
 augroup END
 " Jump to last known position and center buffer around cursor.
 augroup jumplast
