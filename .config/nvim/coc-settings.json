@@ -1,0 +1,23 @@
+{
+    "codeLens.enable": true,
+    "diagnostic.enable": true,
+    "diagnostic.enableSign": false,
+    "diagnostic.maxWindowHeight": 20,
+    "explorer.quitOnOpen": true,
+    "explorer.previewAction.onHover": false,
+    "suggest.enablePreview": true,
+    "suggest.detailField": "abbr",
+    "suggest.maxCompleteItemCount": 30,
+    "suggest.minTriggerInputLength": 2,
+    "languageserver": {
+        "clangd": {
+            "command": "clangd",
+            "args": [
+                "--query-driver=/home/**/arm-*g++",
+                "--header-insertion=iwyu"
+            ],
+            "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".git/", ".hg/"],
+            "filetypes": ["c", "cpp", "objc", "objcpp"]
+        }
+    }
+}
