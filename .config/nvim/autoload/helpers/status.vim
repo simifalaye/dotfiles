@@ -10,19 +10,28 @@
 " @return {string} mode string
 ""
 fun! helpers#status#mode(mode)
-  let l:cur_mode = 'x'
-  if a:mode == 'n'
-    let l:cur_mode = 'n'
-  elseif a:mode == 'i'
-    let l:cur_mode = 'i'
-  elseif a:mode ==? 'c'
-    let l:cur_mode = 'c'
-  elseif a:mode ==? 'r'
-    let l:cur_mode = 'r'
-  else
-    let l:cur_mode = 'v'
-  endif
-  return toupper(l:cur_mode) . ' '
+  let l:currentmode={
+        \ 'n'  : 'N ',
+        \ 'no' : 'NO',
+        \ 'v'  : 'V ',
+        \ 'V'  : 'V ',
+        \ ''  : 'V ',
+        \ '' : 'V ',
+        \ 's'  : 'S ',
+        \ 'S'  : 'S ',
+        \ '' : 'S ',
+        \ 'i'  : 'I ',
+        \ 'R'  : 'R ',
+        \ 'Rv' : 'V ',
+        \ 'c'  : 'C ',
+        \ 'cv' : 'V EX ',
+        \ 'ce' : 'E ',
+        \ 'r'  : 'P ',
+        \ 'rm' : 'M ',
+        \ 'r?' : 'C ',
+        \ '!'  : 'S ',
+        \ 't'  : 'T '}
+  return l:currentmode[a:mode]
 endfun
 
 ""

@@ -12,18 +12,22 @@ if (has("termguicolors"))
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
+set t_Co=256
 
 " Set theme
 " ---------
-set t_Co=256
 set background=dark
 let base16colorspace=256
 colorscheme base16-default-dark
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
 
 " Set status line display
-" (https://gist.github.com/ahmedelgabri/b9127dfe36ba86f4496c8c28eb65ef2b)
+" -------------------------
+" IMPORTANT: Variables require a base16 colorscheme
 
-" Variables require a base16 colorscheme
 exe 'hi User1 guifg=#' . g:base16_gui04 . ' guibg=#' . g:base16_gui00
 exe 'hi User2 guifg=#' . g:base16_gui01 . ' guibg=#' . g:base16_gui09
 exe 'hi User3 guifg=#' . g:base16_gui01 . ' guibg=#' . g:base16_gui0A
@@ -31,7 +35,6 @@ exe 'hi User4 guifg=#' . g:base16_gui03 . ' guibg=#' . g:base16_gui01
 exe 'hi User5 guifg=#' . g:base16_gui01 . ' guibg=#' . g:base16_gui03
 exe 'hi LineNr guifg=#' . g:base16_gui02 . ' guibg=#' . g:base16_gui00
 exe 'hi SignColumn guifg=#' . g:base16_gui02 . ' guibg=#' . g:base16_gui00
-
 set laststatus=2
 set statusline=
 set statusline+=%2*\ %{helpers#status#mode(mode())}              " Current mode

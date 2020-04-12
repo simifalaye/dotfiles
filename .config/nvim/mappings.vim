@@ -42,7 +42,7 @@ nnoremap cN ?\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgN
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 nmap gu yyp0v$r- | nmap gU yyp0v$r=
-" Text Object (inner-{line,entire,viewable})
+" Text Objects (inner-{line,entire,viewable})
 call helpers#utils#makeTextObjs({
       \   '_' : [
       \       ['il', '^vg_'],
