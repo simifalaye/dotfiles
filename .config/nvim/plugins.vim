@@ -6,7 +6,7 @@ call plug#begin(g:vimplugdir)
 
 " Text manipulation
 " -------------------
-Plug 'junegunn/vim-easy-align'
+Plug 'junegunn/vim-easy-align', {'on': '<plug>(LiveEasyAlign)'}
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'vim-scripts/ReplaceWithRegister'

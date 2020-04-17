@@ -20,7 +20,7 @@ nnoremap j         gj
 nnoremap k         gk
 vnoremap y         ygv<Esc>
 nnoremap Y         y$
-nnoremap Q         @q
+nnoremap Q         gqap
 nnoremap n         nzz
 nnoremap N         Nzz
 nnoremap /         ms/\v
