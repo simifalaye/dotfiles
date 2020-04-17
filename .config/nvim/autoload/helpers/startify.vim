@@ -17,7 +17,6 @@ endfunction
 " Basic setup
 ""
 fun! helpers#startify#setup() abort
-  " let g:startify_change_to_dir       = v:true
   let g:startify_change_to_vcs_root  = v:true
   let g:startify_enable_special      = v:false
   let g:startify_files_number        = 5
@@ -43,5 +42,4 @@ fun! helpers#startify#setup() abort
         \   { 'up': [ 'Update Plugins', ':PlugUpdate' ] },
         \   { 'ug': [ 'Upgrade Plugin Manager', ':PlugUpgrade' ] },
         \ ]
-  nmap <leader>st :Startify<cr>
 endfun

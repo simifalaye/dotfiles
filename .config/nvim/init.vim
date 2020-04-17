@@ -27,18 +27,6 @@ let g:loaded_getscriptPlugin   = v:true
 let g:loaded_logipat           = v:true
 let g:loaded_tutor_mode_plugin = v:true
 
-" Disable copy when changing, deleting and pasting
-nnoremap c "_c
-xnoremap c "_c
-nnoremap cc "_S
-nnoremap C "_C
-xnoremap C "_C
-nnoremap d "_d
-xnoremap d "_d
-nnoremap dd "_dd
-nnoremap D "_D
-xnoremap p "_dP
-
 " Source config files
 " -------------------
 

@@ -20,6 +20,7 @@ command -v xdg-open >/dev/null && alias open="xdg-open"
 # tmux aliases
 command -v tmux >/dev/null &&
 {
+    alias tmux='tmux -2'
     alias twork="tmux new-session -A -s 'Work'"
     alias ta='tmux attach -t'
     alias tl='tmux ls'

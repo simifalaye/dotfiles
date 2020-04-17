@@ -6,7 +6,8 @@
 </div>
 My dotfile configuration for a linux system, managed by Yadm
 
-## Graphical Applications
+Graphical Applications
+----------------------
 
 In this section will be listed all the Graphical Applications. A separate
 section with Terminal applications after
@@ -39,7 +40,8 @@ section with Terminal applications after
 
 ---
 
-## Terminal Applications
+Terminal Applications
+---------------------
 
 A big part of my Development life is spent on the Terminal, so having a good
 set of tools there is essential.
@@ -53,7 +55,9 @@ I use ZSH shell:
 
 ### File Navigation and Search
 
-- [junegunn/fzf](https://github.com/junegunn/fzf) -  A command-line fuzzy finder
+- [fd](https://github.com/sharkdp/fd) - A simple and fast alternative to
+'find'
+- [fzf](https://github.com/junegunn/fzf) -  A command-line fuzzy finder
 - [ripgrep](https://github.com/BurntSushi/ripgrep) - A faster grep
 - [vifm](https://github.com/vifm/vifm) - A Terminal file manager
 

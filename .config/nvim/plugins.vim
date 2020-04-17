@@ -6,23 +6,25 @@ call plug#begin(g:vimplugdir)
 
 " Text manipulation
 " -------------------
-Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
+Plug 'vim-scripts/ReplaceWithRegister'
 " Integration Utilities
 " -----------------------
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'mhinz/vim-startify'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-unimpaired'
 " Files / Buffers
 " -----------------
 Plug 'junegunn/fzf', {'dir': g:fzfsourcedir,'do': './install --all --xdg'}
 Plug 'junegunn/fzf.vim'
-Plug 'lambdalisue/fern.vim'
+Plug 'justinmk/vim-dirvish'
+  let g:dirvish_mode = ':sort ,^.*[\/],'
+  autocmd FileType dirvish  nmap <silent><buffer> h <Plug>(dirvish_up)
+  autocmd FileType dirvish  nmap <silent><buffer> l <CR>
 " UI
 " ----
 Plug 'chriskempson/base16-vim' | Plug 'Yggdroot/indentLine'
@@ -33,9 +35,9 @@ Plug 'derekwyatt/vim-fswitch' | Plug 'vim-scripts/DoxygenToolkit.vim'
   map <F5> :FSHere<CR>
 Plug 'kergoth/vim-bitbake' | Plug 'wgwoods/vim-systemd-syntax'
 Plug 'plasticboy/vim-markdown'
-  let g:vim_markdown_folding_disabled     = 1
-  let g:vim_markdown_auto_insert_bullets  = 0
-  let g:vim_markdown_new_list_item_indent = 0
+  let g:vim_markdown_folding_disabled     = v:true
+  let g:vim_markdown_auto_insert_bullets  = v:false
+  let g:vim_markdown_new_list_item_indent = v:false
 Plug 'sheerun/vim-polyglot'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
   let g:UltiSnipsSnippetsDir         = g:vimhomedir . '/UltiSnips'
@@ -48,6 +50,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
   let g:coc_global_extensions = [
         \ 'coc-json',
         \ 'coc-snippets',
+        \ 'coc-sh',
         \ 'coc-word',
         \]
 

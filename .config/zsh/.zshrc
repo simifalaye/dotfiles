@@ -36,8 +36,7 @@ zinit light rupa/z
 # Theme
 zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
 zinit light sindresorhus/pure
-PURE_PROMPT_SYMBOL='﬌'
-PURE_PROMPT_VICMD_SYMBOL='!'
+
 
 # Additional Configs
 # ------------------
@@ -56,9 +55,9 @@ _load_repo chriskempson/base16-shell $HOME/.config/base16-shell
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && {
     # Load fzf
     source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
-    # Use rg for default search
-    _is_callable "rg" && {
-        export FZF_DEFAULT_COMMAND='rg --files --hidden'
+    # Use fd for default search
+    _is_callable "fd" && {
+        export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
         export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
     }
 }

@@ -68,7 +68,7 @@ compilation_db.bbclass
 
 # Directories #
 #####################
-*build/
+build*/
 oe-workdir
 oe-logs
 *.egg-info/
