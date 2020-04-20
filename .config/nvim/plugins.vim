@@ -6,7 +6,7 @@ call plug#begin(g:vimplugdir)
 
 " Text manipulation
 " -------------------
-Plug 'junegunn/vim-easy-align', {'on': '<plug>(LiveEasyAlign)'}
+Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'vim-scripts/ReplaceWithRegister'
@@ -39,21 +39,22 @@ Plug 'plasticboy/vim-markdown'
   let g:vim_markdown_auto_insert_bullets  = v:false
   let g:vim_markdown_new_list_item_indent = v:false
 Plug 'sheerun/vim-polyglot'
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-  let g:UltiSnipsSnippetsDir         = g:vimhomedir . '/UltiSnips'
-  let g:UltiSnipsExpandTrigger       = "<c-j>"
-  let g:UltiSnipsJumpForwardTrigger  = "<c-j>"
-  let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
+Plug 'honza/vim-snippets'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
   " Highlight the symbol and its references when holding the cursor.
   autocmd CursorHold * silent call CocActionAsync('highlight')
+  let g:coc_filetype_map = { 'blade': 'html' }
   let g:coc_global_extensions = [
+        \ 'coc-css',
+        \ 'coc-emmet',
         \ 'coc-json',
+        \ 'coc-html',
+        \ 'coc-phpls',
         \ 'coc-snippets',
         \ 'coc-sh',
+        \ 'coc-vetur',
         \ 'coc-word',
         \]
-
 call plug#end()
 " Call setup functions
 call helpers#fzf#setup()

@@ -31,6 +31,8 @@ nnoremap p         p`[v`]=
 nnoremap g/        :nohl<CR>
 nnoremap gv        `[v`]
 nnoremap <leader>l <C-^>
+nnoremap <C-e>     3<C-e>
+nnoremap <C-y>     3<C-y>
 
 " Editing
 " ---------
@@ -50,7 +52,7 @@ call helpers#utils#makeTextObjs({
 " Files, Buffers, Splits and Tabs
 " --------------------------------
 " Explorer
-nnoremap <silent><leader>n :Dirvish<CR>
+nnoremap <silent><leader>e :Dirvish<CR>
 nnoremap <silent><leader>f :Dirvish %:h<CR>
 " Splits & Tabs
 nnoremap <leader>z :call helpers#utils#zoom()<CR>
@@ -65,7 +67,9 @@ nnoremap <silent> gid :Gdiff<CR>
 nnoremap <silent> gil :Glog<CR>
 nnoremap <silent> gis :Gstatus<CR>
 " Open URL
-nnoremap <silent> gx :call helpers#utils#open_url()<CR>
+nnoremap <silent>gx :call helpers#utils#open_url()<CR>
+" Doxygen toolkit
+nnoremap <silent><leader>dx :Dox<CR>
 
 " Completion
 " ------------

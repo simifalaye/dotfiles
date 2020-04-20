@@ -1,5 +1,5 @@
 " Color support
-" -------------
+" ---------------
 " Fixes bckgrd color issues (wsl support)
 if &term =~ '256color'
   " Disable Background Color Erase (BCE) so that color schemes
@@ -15,7 +15,7 @@ if (has("termguicolors"))
 endif
 
 " Set theme
-" ---------
+" -----------
 set background=dark
 let base16colorspace=256
 colorscheme base16-default-dark

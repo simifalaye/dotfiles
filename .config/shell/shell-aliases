@@ -1,5 +1,7 @@
 # Aliases
 # -------
+# Source local definitions
+test -r $SHELL_CONF_HOME/shell-aliases.local && . $SHELL_CONF_HOME/shell-aliases.local
 
 # Common task aliases
 alias clr=clear

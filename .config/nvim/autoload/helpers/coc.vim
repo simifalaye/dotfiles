@@ -6,8 +6,8 @@
 " Check if backspace is hit
 ""
 fun! helpers#coc#checkBackspace()
-  let l:column = col('.') - 1
-  return !l:column || getline('.')[l:column - 1] =~ '\s'
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
 endfun
 
 ""
@@ -25,13 +25,14 @@ endfun
 " Coc mappings
 ""
 fun! helpers#coc#mappings()
-  " Use tab for trigger completion with characters ahead and navigate.
+  " Use tab to confirm completion of anything and for snippet jumping
   inoremap <silent><expr> <TAB>
-        \ pumvisible() ? "\<C-n>" :
+        \ pumvisible() ? coc#_select_confirm() :
+        \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
         \ helpers#coc#checkBackspace() ? "\<TAB>" :
         \ coc#refresh()
-  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-  inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+  let g:coc_snippet_next = '<tab>'
+  let g:coc_snippet_prev = '<s-tab>'
   " Use `[g` and `]g` to navigate diagnostics
   nmap <silent> [g <Plug>(coc-diagnostic-prev)
   nmap <silent> ]g <Plug>(coc-diagnostic-next)

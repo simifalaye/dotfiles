@@ -1,14 +1,22 @@
 {
     "codeLens.enable": true,
+
     "diagnostic.enable": true,
     "diagnostic.enableSign": false,
     "diagnostic.maxWindowHeight": 20,
-    "explorer.quitOnOpen": true,
-    "explorer.previewAction.onHover": false,
+
     "suggest.enablePreview": true,
     "suggest.detailField": "abbr",
     "suggest.maxCompleteItemCount": 30,
-    "suggest.minTriggerInputLength": 2,
+    "suggest.noselect": false,
+
+    "emmet.includeLanguages": { "vue": "html" },
+    "emmet.showAbbreviationSuggestions" : true,
+
+    "snippets.ultisnips.directories": [ "UltiSnips", "plugged/vim-snippets/UltiSnips" ],
+
+    "vetur.validation.template": false,
+
     "languageserver": {
         "clangd": {
             "command": "clangd",

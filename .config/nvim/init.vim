@@ -9,6 +9,7 @@ let g:vimautoloaddir = g:vimhomedir . "/autoload"
 let g:sessiondir     = g:vimhomedir . "/session"
 let g:is_unix        = has('unix')
 let g:is_gui         = has('gui_running')
+let g:is_wsl         = !empty($IS_WSL_DEVICE) ? $IS_WSL_DEVICE : "false"
 
 " Disable
 " -------
@@ -43,7 +44,7 @@ augroup CursorLine
     autocmd!
     autocmd VimEnter,WinEnter,BufWinEnter * setl cursorline
     autocmd WinLeave * setl nocursorline
-augroup END
+augroup end
 " Jump to last known position and center buffer around cursor.
 augroup jumplast
   autocmd!
