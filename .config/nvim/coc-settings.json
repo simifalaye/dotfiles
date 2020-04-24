@@ -8,7 +8,6 @@
     "suggest.enablePreview": true,
     "suggest.detailField": "abbr",
     "suggest.maxCompleteItemCount": 30,
-    "suggest.noselect": false,
 
     "emmet.includeLanguages": { "vue": "html" },
     "emmet.showAbbreviationSuggestions" : true,

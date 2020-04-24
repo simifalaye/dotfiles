@@ -22,17 +22,45 @@ fun! helpers#coc#showDocumentation()
 endfun
 
 ""
+" Specify the coc plugins to install
+""
+fun! helpers#coc#plugins()
+  let l:global_exts = [
+        \ 'coc-json',
+        \ 'coc-snippets',
+        \ 'coc-sh',
+        \ 'coc-word',
+        \]
+  let l:web_exts = [
+        \ 'coc-css',
+        \ 'coc-emmet',
+        \ 'coc-html',
+        \ 'coc-phpls',
+        \ 'coc-vetur',
+        \]
+
+  if g:is_wsl
+    let g:coc_global_extensions = l:global_exts + l:web_exts
+  else
+    let g:coc_global_extensions = l:global_exts
+  endif
+endfun
+
+""
 " Coc mappings
 ""
 fun! helpers#coc#mappings()
-  " Use tab to confirm completion of anything and for snippet jumping
+  " Use tab to cycle through completion items and <CR> to accept
   inoremap <silent><expr> <TAB>
-        \ pumvisible() ? coc#_select_confirm() :
-        \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+        \ pumvisible() ? "\<C-n>" :
         \ helpers#coc#checkBackspace() ? "\<TAB>" :
         \ coc#refresh()
-  let g:coc_snippet_next = '<tab>'
-  let g:coc_snippet_prev = '<s-tab>'
+  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+  if exists('*complete_info')
+      inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+  else
+      inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+  endif
   " Use `[g` and `]g` to navigate diagnostics
   nmap <silent> [g <Plug>(coc-diagnostic-prev)
   nmap <silent> ]g <Plug>(coc-diagnostic-next)

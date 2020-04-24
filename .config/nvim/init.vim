@@ -9,7 +9,7 @@ let g:vimautoloaddir = g:vimhomedir . "/autoload"
 let g:sessiondir     = g:vimhomedir . "/session"
 let g:is_unix        = has('unix')
 let g:is_gui         = has('gui_running')
-let g:is_wsl         = !empty($IS_WSL_DEVICE) ? $IS_WSL_DEVICE : "false"
+let g:is_wsl         = helpers#utils#isWSL()
 
 " Disable
 " -------

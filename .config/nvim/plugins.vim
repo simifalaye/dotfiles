@@ -21,10 +21,13 @@ Plug 'tpope/vim-unimpaired'
 " -----------------
 Plug 'junegunn/fzf', {'dir': g:fzfsourcedir,'do': './install --all --xdg'}
 Plug 'junegunn/fzf.vim'
-Plug 'justinmk/vim-dirvish'
-  let g:dirvish_mode = ':sort ,^.*[\/],'
-  autocmd FileType dirvish  nmap <silent><buffer> h <Plug>(dirvish_up)
-  autocmd FileType dirvish  nmap <silent><buffer> l <CR>
+Plug 'mhinz/vim-sayonara', { 'on': 'Sayonara' }
+Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
+  autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+  let g:NERDTreeShowHidden = 1
+  let g:NERDTreeMinimalUI = 1
+  let g:NERDTreeIgnore = []
+  let g:NERDTreeStatusline = ''
 " UI
 " ----
 Plug 'chriskempson/base16-vim' | Plug 'Yggdroot/indentLine'
@@ -43,19 +46,9 @@ Plug 'honza/vim-snippets'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
   " Highlight the symbol and its references when holding the cursor.
   autocmd CursorHold * silent call CocActionAsync('highlight')
-  let g:coc_filetype_map = { 'blade': 'html' }
-  let g:coc_global_extensions = [
-        \ 'coc-css',
-        \ 'coc-emmet',
-        \ 'coc-json',
-        \ 'coc-html',
-        \ 'coc-phpls',
-        \ 'coc-snippets',
-        \ 'coc-sh',
-        \ 'coc-vetur',
-        \ 'coc-word',
-        \]
 call plug#end()
+
 " Call setup functions
+call helpers#coc#plugins()
 call helpers#fzf#setup()
 call helpers#startify#setup()

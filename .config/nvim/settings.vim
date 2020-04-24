@@ -6,6 +6,7 @@
 filetype on                    " identify file types
 filetype indent on             " indent based on filetype
 filetype plugin on             " enable file-specific plugins
+set shell=$SHELL
 set expandtab                  " turn tabs into spaces
 set tabstop=4                  " use 4-space tabs when [tab] is pressed
 set shiftwidth=4               " use 4-space tabs when reading files
@@ -70,7 +71,7 @@ if has('persistent_undo')
   set undoreload=10000              " Max lines to save for undo on a buffer reload
 endif
 if has('unnamedplus')
-  set clipboard=unnamed,unnamedplus " set clipboard to use
+  set clipboard=unnamedplus " set clipboard to use
 else
   set clipboard=unnamed
 endif

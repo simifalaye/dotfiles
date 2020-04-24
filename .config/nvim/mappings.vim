@@ -1,15 +1,15 @@
 " General Mappings & Commands
 " -----------------------------
-command! Bclose call helpers#utils#bufcloseCloseIt()
 command! BufOnly silent! execute "%bd|e#|bd#"
 " Config mappings
 nnoremap <localleader>r :so $MYVIMRC<bar>echo ".vimrc reloaded"<CR>
 nnoremap <localleader>i :so $MYVIMRC<bar>PlugInstall<CR>
 nnoremap <localleader>c :so $MYVIMRC<bar>PlugClean<CR>
 " Save and quit
-noremap <leader>w :update<CR>
-noremap <leader>q :Bclose<CR>
-noremap <leader>Q :BufOnly<CR>
+nnoremap <leader>w  :update<CR>
+nnoremap <leader>bo :BufOnly<CR>
+nnoremap <leader>q  :Sayonara<CR>
+nnoremap Q          :Sayonara!<CR>
 
 " Remaps
 " -------
@@ -20,7 +20,6 @@ nnoremap j         gj
 nnoremap k         gk
 vnoremap y         ygv<Esc>
 nnoremap Y         y$
-nnoremap Q         gqap
 nnoremap n         nzz
 nnoremap N         Nzz
 nnoremap /         ms/\v
@@ -33,6 +32,8 @@ nnoremap gv        `[v`]
 nnoremap <leader>l <C-^>
 nnoremap <C-e>     3<C-e>
 nnoremap <C-y>     3<C-y>
+inoremap {<CR>     {<CR>}<Esc>O
+inoremap {;        {<CR>};<Esc>O
 
 " Editing
 " ---------
@@ -52,14 +53,14 @@ call helpers#utils#makeTextObjs({
 " Files, Buffers, Splits and Tabs
 " --------------------------------
 " Explorer
-nnoremap <silent><leader>e :Dirvish<CR>
-nnoremap <silent><leader>f :Dirvish %:h<CR>
+nnoremap <silent> <leader>n :NERDTreeToggle<CR>
+nnoremap <silent> <leader>f :NERDTreeFind<CR>
 " Splits & Tabs
 nnoremap <leader>z :call helpers#utils#zoom()<CR>
 " Fzf
 nnoremap <silent><C-p> :SmartFiles<CR>
 nnoremap <silent><C-f> :Find<CR>
-nnoremap <silent><CR>  :Buffers<CR>
+nnoremap <silent>,     :Buffers<CR>
 nnoremap <silent>_     :Marks<cr>
 " Git
 nnoremap <silent> gib :Gblame<CR>
