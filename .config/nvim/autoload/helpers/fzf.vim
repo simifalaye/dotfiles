@@ -3,18 +3,6 @@
 " ==========================
 
 ""
-" Fzf call Files or GFiles based on if in git dir
-""
-fun! helpers#fzf#smartFiles(...)
-  silent! !git rev-parse --is-inside-work-tree
-  if v:shell_error == 0
-    return call("fzf#vim#gitfiles", a:000)
-  else
-    return call("fzf#vim#files", a:000)
-  endif
-endfun
-
-""
 " Put list into quickfix
 "
 " @param {string} lines: lines to put
@@ -59,8 +47,6 @@ endfun
 fun! helpers#fzf#setup() abort
   " Basic setup
   call helpers#fzf#general()
-  " CMD: SmartFiles
-  command! -bang -nargs=* -complete=dir SmartFiles call helpers#fzf#smartFiles(<q-args>)
   " CMD: Find
   if executable('rg')
     let s:grep_cmd = 'rg --column --line-number --no-heading

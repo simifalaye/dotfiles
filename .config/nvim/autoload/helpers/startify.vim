@@ -33,8 +33,8 @@ fun! helpers#startify#setup() abort
   " Custom startup list, only show MRU from current directory/project
   let g:startify_lists = [
         \  { 'type': 'dir',       'header': [ 'Files '. getcwd() ] },
-        \  { 'type': function('helpers#startify#listcommits'), 'header': [ 'Recent Commits' ] },
         \  { 'type': 'sessions',  'header': [ 'Sessions' ]       },
+        \  { 'type': function('helpers#startify#listcommits'), 'header': [ 'Recent Commits' ] },
         \  { 'type': 'bookmarks', 'header': [ 'Bookmarks' ]      },
         \  { 'type': 'commands',  'header': [ 'Commands' ]       },
         \ ]
