@@ -39,12 +39,6 @@ source ~/.config/nvim/colors.vim
 " Autocommands
 " ------------
 
-" Toggle cursorline for active window
-augroup CursorLine
-    autocmd!
-    autocmd VimEnter,WinEnter,BufWinEnter * setl cursorline
-    autocmd WinLeave * setl nocursorline
-augroup end
 " Jump to last known position and center buffer around cursor.
 augroup jumplast
   autocmd!

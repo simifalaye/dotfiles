@@ -23,14 +23,22 @@ Plug 'junegunn/fzf', {'dir': g:fzfsourcedir,'do': './install --all --xdg'}
 Plug 'junegunn/fzf.vim'
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
   autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-  let g:NERDTreeShowHidden = 1
-  let g:NERDTreeMinimalUI = 1
-  let g:NERDTreeIgnore = []
+  let g:NERDTreeShowHidden = v:true
+  let g:NERDTreeMinimalUI  = v:true
+  let g:NERDTreeIgnore     = []
   let g:NERDTreeStatusline = ''
 " UI
 " ----
-Plug 'chriskempson/base16-vim' | Plug 'Yggdroot/indentLine'
+Plug 'chriskempson/base16-vim'
+Plug 'Yggdroot/indentLine'
   let g:indentLine_fileTypeExclude = ['startify', 'markdown']
+Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+  let g:airline#extensions#whitespace#enabled  = v:false
+  let g:airline#extensions#hunks#non_zero_only = v:true
+  let g:airline_theme                          = 'tomorrow'
+  let g:airline_section_z                      = "%p%% %l:%c"
+  let g:airline_symbols                        = {}
+  let g:airline_symbols.branch                 = ''
 " Code completion / Languages
 " -----------------------------
 Plug 'derekwyatt/vim-fswitch' | Plug 'vim-scripts/DoxygenToolkit.vim'
@@ -43,8 +51,6 @@ Plug 'plasticboy/vim-markdown'
 Plug 'sheerun/vim-polyglot'
 Plug 'honza/vim-snippets'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-  " Highlight the symbol and its references when holding the cursor.
-  autocmd CursorHold * silent call CocActionAsync('highlight')
 call plug#end()
 
 " Call setup functions

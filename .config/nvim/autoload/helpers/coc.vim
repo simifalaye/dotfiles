@@ -28,16 +28,16 @@ fun! helpers#coc#plugins()
   let l:global_exts = [
         \ 'coc-json',
         \ 'coc-lua',
+        \ 'coc-pairs',
         \ 'coc-snippets',
         \ 'coc-sh',
         \ 'coc-word',
         \]
   let l:web_exts = [
         \ 'coc-css',
+        \ 'coc-elixir',
         \ 'coc-emmet',
         \ 'coc-html',
-        \ 'coc-phpls',
-        \ 'coc-vetur',
         \]
 
   if g:is_wsl
@@ -71,11 +71,13 @@ fun! helpers#coc#mappings()
   nmap <silent> gi <Plug>(coc-implementation)
   nmap <silent> gr <Plug>(coc-references)
   " CocList mappings
-  nnoremap <silent> <leader>cd  :CocList diagnostics<cr>
-  nnoremap <silent> <leader>co  :CocList outline<cr>
-  nnoremap <silent> <leader>cl  :<C-u>CocListResume<CR>
+  nnoremap <silent> <leader>d  :CocList diagnostics<cr>
+  nnoremap <silent> <leader>o  :CocList outline<cr>
+  nnoremap <silent> <leader>l  :<C-u>CocListResume<CR>
   " Use K to show documentation in preview window
   nnoremap <silent> K :call helpers#coc#showDocumentation()<CR>
   " Remap for rename current word
   nmap <leader>rn <Plug>(coc-rename)
+  " Highlight the symbol and its references when holding the cursor.
+  autocmd CursorHold * silent call CocActionAsync('highlight')
 endfun

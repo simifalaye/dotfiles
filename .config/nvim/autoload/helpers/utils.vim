@@ -119,39 +119,3 @@ fun! helpers#utils#makeTextObjs(to) abort
     endfor
   augroup END
 endfun
-
-""
-" Open the current URL
-" - If line begins with "Plug" open the github page
-" of the plugin.
-""
-fun! helpers#utils#open_url() abort " {{{1
-  let cl = getline('.')
-  let url = escape(matchstr(cl, '[a-z]*:\/\/\/\?[^ >,;()]*'), '#%')
-  if cl =~# 'Plug'
-    let pn = cl[match(cl, "'", 0, 1) + 1 :
-          \ match(cl, "'", 0, 2) - 1]
-    let url = printf('https://github.com/%s', pn)
-  endif
-  if !empty(url)
-    let url = substitute(url, "'", '', 'g')
-    let wmctrl = executable('wmctrl') && v:windowid isnot# 0 ?
-          \ ' && wmctrl -ia ' . v:windowid : ''
-    exe 'silent :!' . (g:is_unix ?
-          \   'x-www-browser ' . shellescape(url) :
-          \   ' start "' . shellescape(url)) .
-          \ wmctrl .
-          \ (g:is_unix ? ' 2> /dev/null &' : '')
-    if !g:is_gui | redraw! | endif
-  endif
-endfun
-
-" List and select marks
-function! Marks()
-  marks abcdefghijklmnopqrstuvwxyz.
-  echo 'Jump to mark: '
-  let mark=nr2char(getchar())
-  redraw
-  execute 'normal! `'.mark
-endfunction
-
