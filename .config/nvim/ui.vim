@@ -18,11 +18,7 @@ endif
 " -----------
 set background=dark
 let base16colorspace=256
-colorscheme base16-default-dark
-if filereadable(expand("~/.vimrc_background"))
-  let base16colorspace=256
-  source ~/.vimrc_background
-endif
+colorscheme base16-gruvbox-dark-hard
 exe 'hi LineNr guifg=#' . g:base16_gui02 . ' guibg=#' . g:base16_gui00
 exe 'hi SignColumn guifg=#' . g:base16_gui02 . ' guibg=#' . g:base16_gui00
 

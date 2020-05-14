@@ -64,11 +64,6 @@ abbr -a ....  'cd ../../..'
 # Shell programs
 # ================
 
-# Base16 Shell if status --is-interactive
-if status --is-interactive
-    set BASE16_SHELL "$HOME/.config/base16-shell/"
-    source "$BASE16_SHELL/profile_helper.fish"
-end
 # Fzf
 if test -e $HOME/.config/.fzf/shell/key-bindings.fish
     source $HOME/.config/.fzf/shell/key-bindings.fish
@@ -76,6 +71,12 @@ end
 # Autojump
 if test -f /usr/share/autojump/autojump.fish;
     source /usr/share/autojump/autojump.fish;
+end
+# Fisher
+if not functions -q fisher
+    set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
+    curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
+    fish -c fisher
 end
 
 # Fish Functions
