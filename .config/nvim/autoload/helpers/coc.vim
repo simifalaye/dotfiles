@@ -28,7 +28,6 @@ fun! helpers#coc#plugins()
   let l:global_exts = [
         \ 'coc-json',
         \ 'coc-lua',
-        \ 'coc-pairs',
         \ 'coc-snippets',
         \ 'coc-sh',
         \ 'coc-word',

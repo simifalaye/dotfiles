@@ -21,7 +21,8 @@ Plug 'tpope/vim-unimpaired'
 " -----------------
 Plug 'junegunn/fzf', {'dir': g:fzfsourcedir,'do': './install --all --xdg'}
 Plug 'junegunn/fzf.vim'
-Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
+Plug 'itchyny/lightline.vim' | Plug 'daviesjamie/vim-base16-lightline'
+Plug 'preservim/nerdtree'
   autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
   let g:NERDTreeShowHidden = v:true
   let g:NERDTreeMinimalUI  = v:true
@@ -32,13 +33,6 @@ Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
 Plug 'chriskempson/base16-vim'
 Plug 'Yggdroot/indentLine'
   let g:indentLine_fileTypeExclude = ['startify', 'markdown']
-Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
-  let g:airline#extensions#whitespace#enabled  = v:false
-  let g:airline#extensions#hunks#non_zero_only = v:true
-  let g:airline_theme                          = 'tomorrow'
-  let g:airline_section_z                      = "%p%% %l:%c"
-  let g:airline_symbols                        = {}
-  let g:airline_symbols.branch                 = ''
 " Code completion / Languages
 " -----------------------------
 Plug 'derekwyatt/vim-fswitch' | Plug 'vim-scripts/DoxygenToolkit.vim'

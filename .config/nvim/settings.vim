@@ -6,7 +6,7 @@
 filetype on                    " identify file types
 filetype indent on             " indent based on filetype
 filetype plugin on             " enable file-specific plugins
-set shell=$SHELL
+set shell=/bin/bash            " set the shell to use
 set expandtab                  " turn tabs into spaces
 set tabstop=4                  " use 4-space tabs when [tab] is pressed
 set shiftwidth=4               " use 4-space tabs when reading files
@@ -56,7 +56,7 @@ set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
 set splitbelow     " Fix splits
 set splitright     " Fix splits
 set fillchars=""   " Fix splits
-set cursorline     " Add cursorline on current line
+" set cursorline     " Add cursorline on current line
 set shortmess+=c   " Avoid 'hit enter' messages
 set updatetime=300 " Default is 4000, lower it for better performance
 set signcolumn=no  " Don't like the extra space

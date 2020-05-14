@@ -15,6 +15,7 @@ nnoremap <leader>q  :Bclose<CR>
 " -------
 inoremap jk               <Esc>
 nnoremap ;                :
+nnoremap Q                @q
 nnoremap j                gj
 nnoremap k                gk
 vnoremap y                ygv<Esc>
@@ -28,6 +29,8 @@ vnoremap >                >gv
 nnoremap p                p`[v`]=
 nnoremap g/               :nohl<CR>
 nnoremap gv               `[v`]
+inoremap {<CR>            {<CR>}<Esc>O
+inoremap {;               {<CR>};<Esc>O
 nnoremap <leader><leader> <c-^>
 
 " Editing
@@ -48,6 +51,8 @@ call helpers#utils#makeTextObjs({
 nmap s  <Plug>ReplaceWithRegisterOperator
 nmap ss <Plug>ReplaceWithRegisterLine
 xmap s  <Plug>ReplaceWithRegisterVisual
+" Make executable
+nnoremap <C-x> :! chmod +x %<CR>
 
 " Files, Buffers, Splits and Tabs
 " --------------------------------
