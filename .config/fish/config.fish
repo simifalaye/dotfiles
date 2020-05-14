@@ -6,19 +6,20 @@ set -U fish_user_paths /usr/local/sbin /usr/local/bin /usr/bin /bin
 # See https://github.com/fish-shell/fish-shell/issues/772
 set FISH_CLIPBOARD_CMD "cat"
 
-
 # Abbreviations
 # ===============
 
+# Run common commands with default options
+alias ls='ls --color=auto --group-directories-first'
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}"
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
 # Common task abbreviations
 abbr -a clr    clear
-abbr -a ls     'ls --color=auto --group-directories-first'
-abbr -a ll     'ls -alF'
-abbr -a la     'ls -A'
-abbr -a l      'ls -CF'
-abbr -a grep   "grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}"
-abbr -a fgrep  'fgrep --color=auto'
-abbr -a egrep  'egrep --color=auto'
 abbr -a o      'xdg-open'
 abbr -a reload 'source ~/.config/fish/config.fish'
 abbr -a run    'bash -c \''
@@ -92,30 +93,39 @@ set __fish_git_prompt_showstashstate ''
 set __fish_git_prompt_showupstream 'none'
 set -g fish_prompt_pwd_dir_length 3
 function fish_prompt
+    # Save status of last cmd
+    set -l last_status $status
+    # Date time
     set_color brblack
     echo -n "["(date "+%H:%M")"] "
-    set_color blue
+    # Hostname
+    if not test $last_status -eq 0
+        set_color $fish_color_error
+    else
+        set_color blue
+    end
     echo -n (hostname)
+    # Current dir
     if [ $PWD != $HOME ]
         set_color brblack
         echo -n ':'
         set_color yellow
         echo -n (basename $PWD)
     end
+    # Git
     set_color green
     printf '%s ' (__fish_git_prompt)
-    set_color red
-    echo -n '| '
-    set_color normal
-end
-function fish_right_prompt -d "Write out the right prompt"
+    # Jobs
     set numjobs (jobs -p | wc -l)
     set_color red
-    if [ $numjobs -eq 1 ]
-        echo -n "$numjobs job"
-    else if [ $numjobs -ge 2 ]
-        echo -n "$numjobs jobs"
+    if [ $numjobs -gt 0 ]
+        echo -n "*$numjobs "
     end
+    # Prompt
+    set_color red
+    echo -n '| '
+    # End
+    set_color normal
 end
 
 function fish_user_key_bindings
