@@ -61,22 +61,22 @@ fun! helpers#coc#mappings()
   else
       inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
   endif
-  " Use `[g` and `]g` to navigate diagnostics
-  nmap <silent> [g <Plug>(coc-diagnostic-prev)
-  nmap <silent> ]g <Plug>(coc-diagnostic-next)
+  " Use `[d` and `]d` to navigate diagnostics
+  nmap <silent> [d <Plug>(coc-diagnostic-prev)
+  nmap <silent> ]d <Plug>(coc-diagnostic-next)
   " Remap keys for gotos
   nmap <silent> gd <Plug>(coc-definition)
   nmap <silent> gy <Plug>(coc-type-definition)
   nmap <silent> gi <Plug>(coc-implementation)
   nmap <silent> gr <Plug>(coc-references)
   " CocList mappings
-  nnoremap <silent> <leader>d  :CocList diagnostics<cr>
-  nnoremap <silent> <leader>o  :CocList outline<cr>
-  nnoremap <silent> <leader>l  :<C-u>CocListResume<CR>
+  nnoremap <silent> <leader>cd  :CocList diagnostics<cr>
+  nnoremap <silent> <leader>co  :CocList outline<cr>
+  nnoremap <silent> <leader>cl  :<C-u>CocListResume<CR>
   " Use K to show documentation in preview window
   nnoremap <silent> K :call helpers#coc#showDocumentation()<CR>
   " Remap for rename current word
-  nmap <leader>rn <Plug>(coc-rename)
+  nmap <leader>cr <Plug>(coc-rename)
   " Highlight the symbol and its references when holding the cursor.
   autocmd CursorHold * silent call CocActionAsync('highlight')
 endfun

@@ -38,7 +38,8 @@ source ~/.config/nvim/ui.vim
 
 " Autocommands
 " ------------
-
+" Leave paste mode when leaving insert mode
+autocmd InsertLeave * set nopaste
 " Jump to last known position and center buffer around cursor.
 augroup jumplast
   autocmd!

@@ -35,6 +35,7 @@ nnoremap <leader><leader> <c-^>
 
 " Editing
 " ---------
+call helpers#coc#mappings()
 " Align text and underline titles
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
@@ -47,18 +48,11 @@ call helpers#utils#makeTextObjs({
       \       ['iv', 'HVL'],
       \   ]
       \ })
-" ReplaceWithRegister
-nmap s  <Plug>ReplaceWithRegisterOperator
-nmap ss <Plug>ReplaceWithRegisterLine
-xmap s  <Plug>ReplaceWithRegisterVisual
-" Make executable
-nnoremap <C-x> :! chmod +x %<CR>
 
 " Files, Buffers, Splits and Tabs
 " --------------------------------
 " Explorer
-nnoremap <silent> <leader>n :NERDTreeToggle<CR>
-nnoremap <silent> <leader>f :NERDTreeFind<CR>
+nnoremap <leader>; :Fern . -stay<CR>
 " Fzf
 nnoremap <silent><C-p> :Files<CR>
 nnoremap <silent><C-g> :GitFiles<CR>
@@ -66,13 +60,9 @@ nnoremap <silent><C-f> :Find<CR>
 nnoremap <silent>,     :Buffers<CR>
 nnoremap <silent>_     :Marks<cr>
 " Git
-nnoremap <silent> gib :Gblame<CR>
 nnoremap <silent> gid :Gdiff<CR>
-nnoremap <silent> gil :Glog<CR>
 nnoremap <silent> gis :Gstatus<CR>
-" Doxygen toolkit
-nnoremap <silent><leader>dx :Dox<CR>
-
-" Completion
-" ------------
-call helpers#coc#mappings()
+" Make executable
+nnoremap <leader>x :! chmod +x %<CR>
+" Open new file adjacent to current file
+nnoremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>

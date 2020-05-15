@@ -7,35 +7,31 @@ call plug#begin(g:vimplugdir)
 " Text manipulation
 " -------------------
 Plug 'junegunn/vim-easy-align'
+Plug 'justinmk/vim-sneak'
+  let g:sneak#s_next = 1
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'vim-scripts/ReplaceWithRegister'
 " Integration Utilities
 " -----------------------
+Plug 'airblade/vim-rooter'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'mhinz/vim-startify'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-unimpaired'
 " Files / Buffers
 " -----------------
 Plug 'junegunn/fzf', {'dir': g:fzfsourcedir,'do': './install --all --xdg'}
 Plug 'junegunn/fzf.vim'
-Plug 'itchyny/lightline.vim' | Plug 'daviesjamie/vim-base16-lightline'
-Plug 'preservim/nerdtree'
-  autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-  let g:NERDTreeShowHidden = v:true
-  let g:NERDTreeMinimalUI  = v:true
-  let g:NERDTreeIgnore     = []
-  let g:NERDTreeStatusline = ''
+Plug 'lambdalisue/fern.vim'
+  let g:fern#default_hidden = v:true
 " UI
 " ----
 Plug 'chriskempson/base16-vim'
-Plug 'Yggdroot/indentLine'
-  let g:indentLine_fileTypeExclude = ['startify', 'markdown']
+Plug 'itchyny/lightline.vim' | Plug 'daviesjamie/vim-base16-lightline'
 " Code completion / Languages
 " -----------------------------
-Plug 'derekwyatt/vim-fswitch' | Plug 'vim-scripts/DoxygenToolkit.vim'
+Plug 'derekwyatt/vim-fswitch'
   map <F5> :FSHere<CR>
 Plug 'kergoth/vim-bitbake' | Plug 'wgwoods/vim-systemd-syntax'
 Plug 'plasticboy/vim-markdown'
