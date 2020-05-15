@@ -46,7 +46,6 @@ setenv VISUAL $EDITOR
 
 test -d "$HOME/bin" && setenv PATH "$HOME/bin:$PATH"
 test -d "$HOME/.local/bin" && setenv PATH "$HOME/.local/bin:$PATH"
-test -d "$HOME/.config/.fzf/bin" && setenv PATH "$HOME/.config/.fzf/bin:$PATH"
 
 # Pager and flow
 # ================

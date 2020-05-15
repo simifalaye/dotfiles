@@ -1,6 +1,7 @@
 # Genral Config
 # ===============
-source ~/.config/fish/env.fish
+# test -r $HOME/.shell-env && source $HOME/.shell-env
+source $HOME/.config/fish/env.fish
 set -U fish_user_paths /usr/local/sbin /usr/local/bin /usr/bin /bin
 # Fish should not add things to clipboard when killing
 # See https://github.com/fish-shell/fish-shell/issues/772
@@ -65,8 +66,9 @@ abbr -a ....  'cd ../../..'
 # ================
 
 # Fzf
-if test -e $HOME/.config/.fzf/shell/key-bindings.fish
-    source $HOME/.config/.fzf/shell/key-bindings.fish
+test -d "$XDG_CONFIG_HOME/.fzf/bin" && setenv PATH "$XDG_CONFIG_HOME/.fzf/bin:$PATH"
+if test -e $XDG_CONFIG_HOME/.fzf/shell/key-bindings.fish
+    source $XDG_CONFIG_HOME/.fzf/shell/key-bindings.fish
 end
 # Autojump
 if test -f /usr/share/autojump/autojump.fish;

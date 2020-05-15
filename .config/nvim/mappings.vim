@@ -55,10 +55,9 @@ call helpers#utils#makeTextObjs({
 nnoremap <leader>; :Fern . -stay<CR>
 " Fzf
 nnoremap <silent><C-p> :Files<CR>
-nnoremap <silent><C-g> :GitFiles<CR>
 nnoremap <silent><C-f> :Find<CR>
 nnoremap <silent>,     :Buffers<CR>
-nnoremap <silent>_     :Marks<cr>
+nnoremap <silent>_     :Marks<CR>
 " Git
 nnoremap <silent> gid :Gdiff<CR>
 nnoremap <silent> gis :Gstatus<CR>

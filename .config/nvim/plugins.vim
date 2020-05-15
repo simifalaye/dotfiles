@@ -15,7 +15,6 @@ Plug 'vim-scripts/ReplaceWithRegister'
 " Integration Utilities
 " -----------------------
 Plug 'airblade/vim-rooter'
-Plug 'christoomey/vim-tmux-navigator'
 Plug 'mhinz/vim-startify'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'

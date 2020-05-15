@@ -15,21 +15,21 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-# Source global definitions
-test -r $SHELL_CONF_HOME/shell-aliases && . $SHELL_CONF_HOME/shell-aliases
-test -r $SHELL_CONF_HOME/shell-functions && . $SHELL_CONF_HOME/shell-functions
-
-# don't put duplicate lines or lines starting with space in the history.
-# See bash(1) for more options
-HISTCONTROL=ignoredups:ignorespace
+# don't put duplicate lines in the history. See bash(1) for more options
+# ... or force ignoredups and ignorespace
+HISTCONTROL=ignoreboth
 export HISTIGNORE="&:ls:[bf]g:pwd:exit:cd .."
 
 # append to the history file, don't overwrite it
 shopt -s histappend
+PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
+
+# Store multiline commands as one line.
+shopt -s cmdhist
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
+HISTSIZE=10000
+HISTFILESIZE=20000
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -68,25 +68,12 @@ else
 fi
 unset color_prompt force_color_prompt
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
-
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
-if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
-fi
+test -f /usr/share/bash-completion/bash_completion && . /usr/share/bash-completion/bash_completion
+test -f /etc/bash_completion && . /etc/bash_completion
+test -r ~/.bashrc.local && . ~/.bashrc.local
 
 # Shell Programs
 # --------------
@@ -94,3 +81,8 @@ fi
 # Fzf
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.bash ] &&
     source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.bash
+# Base16 Shell
+BASE16_SHELL="$HOME/.config/base16-shell/"
+[ -n "$PS1" ] && \
+    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
+    eval "$("$BASE16_SHELL/profile_helper.sh")"
