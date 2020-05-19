@@ -15,6 +15,7 @@ nnoremap <leader>q  :Bclose<CR>
 " -------
 inoremap jk               <Esc>
 nnoremap ;                :
+nnoremap :                ;
 nnoremap Q                @q
 nnoremap j                gj
 nnoremap k                gk
@@ -53,6 +54,7 @@ call helpers#utils#makeTextObjs({
 " --------------------------------
 " Explorer
 nnoremap <leader>; :Fern . -stay<CR>
+nnoremap <leader>sh :FSHere<CR>
 " Fzf
 nnoremap <silent><C-p> :Files<CR>
 nnoremap <silent><C-f> :Find<CR>

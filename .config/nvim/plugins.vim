@@ -31,7 +31,6 @@ Plug 'itchyny/lightline.vim' | Plug 'daviesjamie/vim-base16-lightline'
 " Code completion / Languages
 " -----------------------------
 Plug 'derekwyatt/vim-fswitch'
-  map <F5> :FSHere<CR>
 Plug 'kergoth/vim-bitbake' | Plug 'wgwoods/vim-systemd-syntax'
 Plug 'plasticboy/vim-markdown'
   let g:vim_markdown_folding_disabled     = v:true
