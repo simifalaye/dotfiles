@@ -14,7 +14,7 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
 # Editor
-command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
+command -v nvim >/dev/null && alias e="nvim" vimdiff="nvim -d"
 
 # Open file in proper program
 command -v xdg-open >/dev/null && alias open="xdg-open"

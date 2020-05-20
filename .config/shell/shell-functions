@@ -50,7 +50,7 @@ function _load_repo
 mkcd() { mkdir "$1" && cd "$1"; };
 
 # Command: Push dotfiles to github
-function dotfiles()
+function dots()
 {
     message="Latest file updates"
     [ -z "$1" ] || message=${1}
