@@ -2,13 +2,8 @@
 test -r $SHELL_CONF_HOME/shell-aliases && . $SHELL_CONF_HOME/shell-aliases
 test -r $SHELL_CONF_HOME/shell-functions && . $SHELL_CONF_HOME/shell-functions
 
-# Load additional config
-_load $ZDOTDIR/config.zsh
-_load $ZDOTDIR/prompt.zsh
-
 # Plugins: Zinit
 # ----------------
-
 # Setup env
 typeset -A ZINIT
 ZINIT_HOME=$XDG_CACHE_HOME/zsh/zinit
@@ -36,9 +31,14 @@ zinit ice wait lucid; zinit light changyuheng/fz
 # Fancy ctrl-z
 zinit ice wait"0b" lucid; zinit load mdumitru/fancy-ctrl-z
 
+# Config
+# --------
+_load $ZDOTDIR/config.zsh
+_load $ZDOTDIR/keybinds.zsh
+_load $ZDOTDIR/prompt.zsh
+
 # Shell Programs
 # ----------------
-
 # Colors: Base16 Shell
 _load_repo chriskempson/base16-shell $HOME/.config/base16-shell
 [ -n "$PS1" ] && eval "$("$HOME/.config/base16-shell/profile_helper.sh")"

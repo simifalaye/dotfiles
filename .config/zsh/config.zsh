@@ -42,16 +42,3 @@ setopt MULTIOS              # Write to multiple descriptors.
 setopt EXTENDED_GLOB        # Use extended globbing syntax.
 unsetopt GLOB_DOTS
 unsetopt AUTO_NAME_DIRS     # Don't add variable-stored paths to ~ list.
-
-# Keybinds
-# ----------
-
-# Vi mode
-bindkey -v
-bindkey -M viins 'jk' vi-cmd-mode
-bindkey -M viins ' ' magic-space
-# Fix backspace
-bindkey "^?" backward-delete-char
-# Bash bindings
-bindkey "^W" backward-kill-word
-bindkey "^U" backward-kill-line
