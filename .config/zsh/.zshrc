@@ -21,7 +21,9 @@ zinit wait lucid for \
     atload"!_zsh_autosuggest_start" \
         zsh-users/zsh-autosuggestions \
     atload"bindkey '^[OA' history-substring-search-up; \
-           bindkey '^[OB' history-substring-search-down" \
+           bindkey '^[OB' history-substring-search-down; \
+           bindkey '^[[A' history-substring-search-up; \
+           bindkey '^[[B' history-substring-search-down" \
         zsh-users/zsh-history-substring-search \
     blockf \
         zsh-users/zsh-completions
