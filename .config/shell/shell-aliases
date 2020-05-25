@@ -38,7 +38,6 @@ command -v git >/dev/null &&
 }
 
 # Navigation
-alias home="cd ~"
 alias dev='cd ~/dev'
 alias dl='cd ~/Downloads'
 alias docs='cd ~/Documents'
@@ -48,6 +47,7 @@ alias vids='cd ~/Videos'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
+test -d /mnt/c/ && alias cdw='cd /mnt/c'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert

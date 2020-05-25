@@ -32,15 +32,16 @@ fun! helpers#coc#plugins()
         \ 'coc-sh',
         \ 'coc-word',
         \]
-  let l:web_exts = [
+  let l:home_pc_exts = [
         \ 'coc-css',
         \ 'coc-elixir',
         \ 'coc-emmet',
         \ 'coc-html',
+        \ 'coc-rls',
         \]
 
   if g:is_wsl
-    let g:coc_global_extensions = l:global_exts + l:web_exts
+    let g:coc_global_extensions = l:global_exts + l:home_pc_exts
   else
     let g:coc_global_extensions = l:global_exts
   endif

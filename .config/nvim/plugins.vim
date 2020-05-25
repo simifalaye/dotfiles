@@ -22,8 +22,8 @@ Plug 'tpope/vim-repeat'
 " -----------------
 Plug 'junegunn/fzf', {'dir': g:fzfsourcedir,'do': './install --all --xdg'}
 Plug 'junegunn/fzf.vim'
-Plug 'lambdalisue/fern.vim'
-  let g:fern#default_hidden = v:true
+Plug 'preservim/nerdtree'
+  let NERDTreeShowHidden=1
 " UI
 " ----
 Plug 'chriskempson/base16-vim'

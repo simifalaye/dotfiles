@@ -58,12 +58,6 @@ function dots()
     command yadm push
 }
 
-# Command: ls when changing dirs
-function cd()
-{
-    builtin cd "$1" && ls
-}
-
 # Command: open config files in specified dir from ~/.config
 function conf()
 {

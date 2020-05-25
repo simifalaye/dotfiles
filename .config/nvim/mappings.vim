@@ -53,8 +53,9 @@ call helpers#utils#makeTextObjs({
 " Files, Buffers, Splits and Tabs
 " --------------------------------
 " Explorer
-nnoremap <leader>; :Fern . -stay<CR>
-nnoremap <leader>sh :FSHere<CR>
+nnoremap <leader>; :NERDTreeToggle<CR>
+nnoremap <leader>: :NERDTreeFind<CR>
+nnoremap <leader>s :FSHere<CR>
 " Fzf
 nnoremap <silent><C-p> :Files<CR>
 nnoremap <silent><C-f> :Find<CR>
