@@ -61,11 +61,11 @@ prompt_init() {
   # if atleast one job, print #jobs or print fish
   fish='%(1j.%F{red}%j.%F{green}⋊>)%f '
   # prompt variables
-  timen="%F{brblack}[$(date "+%H:%M")]%f "
+  timenow="%F{8}[$(date "+%H:%M")]%f "
   host='%(?.%F{blue}.%F{red})%m%f'
   dir='%F{white}:%f%F{yellow}%1d%f '
 
-  PROMPT=$'${fish}${timen}${host}${dir}${vcs_info_msg_0_}$(prompt_git_dirty)${PROMPT_SYMBOL:-$ }'
+  PROMPT=$'${fish}${timenow}${host}${dir}${vcs_info_msg_0_}$(prompt_git_dirty)${PROMPT_SYMBOL:-$ }'
 }
 
 prompt_init "$@"
