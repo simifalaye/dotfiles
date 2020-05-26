@@ -52,10 +52,13 @@ call helpers#utils#makeTextObjs({
 
 " Files, Buffers, Splits and Tabs
 " --------------------------------
-" Explorer
+" Explorer & navigation
 nnoremap <leader>; :NERDTreeToggle<CR>
 nnoremap <leader>: :NERDTreeFind<CR>
 nnoremap <leader>s :FSHere<CR>
+nnoremap <leader>h <C-w>h | nnoremap <leader>l <C-w>l
+nnoremap <leader>k <C-w>k | nnoremap <leader>j <C-w>j
+nnoremap <leader>- <C-w>s | nnoremap <leader>\ <C-w>v
 " Fzf
 nnoremap <silent><C-p> :Files<CR>
 nnoremap <silent><C-f> :Find<CR>
