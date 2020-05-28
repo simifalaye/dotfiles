@@ -45,25 +45,6 @@ fun helpers#utils#zoom()
 endfun
 
 ""
-" Don't close window, when deleting a buffer
-""
-fun! helpers#utils#bufcloseCloseIt()
-  let l:currentBufNum = bufnr("%")
-  let l:alternateBufNum = bufnr("#")
-  if buflisted(l:alternateBufNum)
-    buffer #
-  else
-    bnext
-  endif
-  if bufnr("%") == l:currentBufNum
-    new
-  endif
-  if buflisted(l:currentBufNum)
-    execute("bdelete! ".l:currentBufNum)
-  endif
-endfun
-
-""
 " Jump to last known position and center buffer around cursor.
 ""
 fun! helpers#utils#jumplast() abort
@@ -83,39 +64,4 @@ fun! helpers#utils#stripTrailingWhitespace() abort
     return
   endif
   %s/\s\+$//e
-endfun
-
-""
-" Make custom text objects
-"
-" @param {dict} to: dictionary of mappings and their functions
-"   key{string}: file types, comma separated ex. 'cpp,c' (_ is all files)
-"   value{dict[list]}:
-"     key{string}: mapping
-"     value{string}: text object function (ex: 'ggVG')
-""
-fun! helpers#utils#makeTextObjs(to) abort
-  let to = a:to
-
-  " For all filetypes
-  for [k, m] in to._
-    execute 'onoremap <silent> ' . k . ' :normal! ' . m . '<CR>'
-    execute 'xnoremap <silent> ' . k . ' :<C-u>normal! ' . m . '<CR>'
-  endfor
-  call remove(to, '_')
-
-  " For specific types
-  augroup MyTextObjects
-    autocmd!
-    for ft in keys(to)
-      for [k, m] in to[ft]
-        execute 'autocmd FileType ' . ft .
-              \ ' onoremap <buffer> <silent> ' . k .
-              \ ' :normal! ' . m . '<CR>'
-        execute 'autocmd FileType ' . ft .
-              \ ' xnoremap <buffer> <silent> ' . k .
-              \ ' :<C-u>normal! ' . m . '<CR>'
-      endfor
-    endfor
-  augroup END
 endfun
