@@ -10,7 +10,7 @@ let g:vimautoloaddir = g:vimhomedir . "/autoload"
 let g:sessiondir     = g:vimhomedir . "/session"
 let g:is_unix        = has('unix')
 let g:is_gui         = has('gui_running')
-let g:is_wsl         = helpers#utils#isWSL()
+let g:is_wsl         = !empty($IS_WSL_DEVICE) ? 1 : 0
 
 " }}}
 " Settings {{{
@@ -55,6 +55,7 @@ set conceallevel=2             " Allow concealing of certain syntax
 set backspace=indent,eol,start " make backspace behave in a sane manner
 
 " Files and buffers
+" -------------------
 
 set hidden        " Allow buffers to remain hidden when not in use
 set autoread      " Reload files changed outside vim
@@ -64,6 +65,7 @@ set nowritebackup " Turn write backup off
 set undofile      " Turn on undo file
 
 " User Interface
+" ----------------
 
 set number         " Display line numbers
 set relativenumber " Disply line numbers relative to current line
@@ -78,6 +80,7 @@ set updatetime=300 " Default is 4000, lower it for better performance
 set signcolumn=no  " Don't like the extra space
 
 " History
+" ---------
 
 set history=1000                    " Remember more commands
 if has('persistent_undo')
@@ -93,6 +96,7 @@ else
 endif
 
 " Vim-only overrides
+" --------------------
 
 if !has("nvim")
   set laststatus=2
@@ -104,6 +108,12 @@ endif
 " }}}
 " Plugins {{{
 
+" Disable unused built-in plugins.
+let g:loaded_gzip              = v:true
+let g:loaded_netrwPlugin       = v:true
+let g:loaded_2html_plugin      = v:true
+let g:loaded_tutor_mode_plugin = v:true
+
 " download vim-plug if not installed yet
 call helpers#utils#getVimPlug(g:vimautoloaddir)
 call plug#begin(g:vimplugdir)
@@ -114,21 +124,25 @@ Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'vim-scripts/ReplaceWithRegister'
+
 " Integration Utilities
 " -----------------------
 Plug 'mhinz/vim-startify'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
+
 " Files / Buffers
 " -----------------
 Plug 'junegunn/fzf', {'dir': g:fzfsourcedir,'do': './install --all --xdg'}
 Plug 'junegunn/fzf.vim'
-Plug 'preservim/nerdtree'
+Plug 'preservim/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
   let NERDTreeShowHidden=1
+
 " UI
 " ----
 Plug 'chriskempson/base16-vim'
-Plug 'itchyny/lightline.vim' | Plug 'daviesjamie/vim-base16-lightline'
+Plug 'itchyny/lightline.vim'
+
 " Code completion / Languages
 " -----------------------------
 Plug 'derekwyatt/vim-fswitch'
@@ -146,18 +160,15 @@ call helpers#coc#plugins()
 call helpers#fzf#setup()
 call helpers#startify#setup()
 
-" Disable unused built-in plugins.
-let g:loaded_gzip              = v:true
-let g:loaded_netrwPlugin       = v:true
-let g:loaded_2html_plugin      = v:true
-let g:loaded_tutor_mode_plugin = v:true
 " }}}
 " Mappings & Commands {{{
 
+" Delete all buffer but current
 command! BufOnly silent! execute "%bd|e#|bd#"
+" :W sudo saves the file (useful for handling the permission-denied error)
+command! W! execute 'w !sudo tee % > /dev/null' <bar> edit!
 " Vim config
 nnoremap <localleader>r :so $MYVIMRC<bar>echo "vimrc reloaded"<CR>
-nnoremap <localleader>e :edit $MYVIMRC<CR>
 " Save, close & quit
 nnoremap <leader>w  :update<CR>
 nnoremap <leader>q  :q<CR>
@@ -252,33 +263,24 @@ exe 'hi SignColumn guifg=#' . g:base16_gui02 . ' guibg=#' . g:base16_gui00
 
 " Statusline
 " ------------
-" Use auocmd to force lightline update.
-autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
-function! LightlineFilename()
-  return expand('%:t') !=# '' ? @% : '[No Name]'
-endfunction
-function! LightlineFugitive()
-  if exists('*FugitiveHead')
-    let branch = FugitiveHead()
-    return branch !=# '' ? ''.branch : ''
-  endif
-  return ''
-endfunction
-
 let g:lightline = {
-      \ 'colorscheme': 'base16',
+      \ 'colorscheme': 'jellybeans',
       \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'fugitive', 'filename', 'readonly', 'modified', 'cocstatus'] ]
+      \   'left': [ ['mode', 'paste'],
+      \             ['fugitive', 'readonly', 'filename', 'modified', 'cocstatus'] ],
       \ },
-      \ 'component_function': {
-      \   'filename': 'LightlineFilename',
-      \   'cocstatus': 'coc#status',
-      \   'fugitive': 'LightlineFugitive'
+      \ 'component': {
+      \   'fugitive': '%{exists("*FugitiveHead")&&""!=FugitiveHead()?" ".FugitiveHead():""}',
+      \   'cocstatus': '%{coc#status()}'
       \ },
       \ 'separator': { 'left': '', 'right': '' },
-      \ 'subseparator': { 'left': '|', 'right': '|' }
+      \ 'subseparator': { 'left': '', 'right': '' }
       \ }
+" Remove the background color from the statusline and tabline
+let s:palette = g:lightline#colorscheme#{g:lightline.colorscheme}#palette
+let s:palette.normal.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
+let s:palette.inactive.middle = s:palette.normal.middle
+let s:palette.tabline.middle = s:palette.normal.middle
 
 " }}}}
 " Autocommands {{{

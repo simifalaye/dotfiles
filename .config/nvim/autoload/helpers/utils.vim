@@ -16,22 +16,6 @@ fun! helpers#utils#getVimPlug(dir)
 endfun
 
 ""
-" Checks if using windows subsystem for linux
-"
-" @return {bool} true if is WSL
-""
-fun! helpers#utils#isWSL()
-  let uname = substitute(system('uname'),'\n','','')
-  if uname == 'Linux'
-    let lines = readfile("/proc/version")
-    if lines[0] =~ "Microsoft"
-      return 1
-    endif
-  endif
-  return 0
-endfun
-
-""
 " Zoom into a pane, making it full screen (in a tab) Triggering the plugin
 " again from the zoomed in tab brings it back to its original pane location
 ""

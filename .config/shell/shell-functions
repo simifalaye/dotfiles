@@ -58,17 +58,6 @@ function dots()
     command yadm push
 }
 
-# Command: open config files in specified dir from ~/.config
-function conf()
-{
-    prog=$1
-    if [[ ! -z "$prog" ]]; then
-        command $EDITOR `find $HOME/.config/$prog -maxdepth 1 -type f`
-    else
-        cd $HOME/.config && ls
-    fi
-}
-
 # Command: Reload the current shell
 function reloadshell()
 {
