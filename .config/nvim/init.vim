@@ -165,8 +165,6 @@ call helpers#startify#setup()
 
 " Delete all buffer but current
 command! BufOnly silent! execute "%bd|e#|bd#"
-" :W sudo saves the file (useful for handling the permission-denied error)
-command! W! execute 'w !sudo tee % > /dev/null' <bar> edit!
 " Vim config
 nnoremap <localleader>r :so $MYVIMRC<bar>echo "vimrc reloaded"<CR>
 " Save, close & quit
@@ -257,7 +255,10 @@ endif
 " -----------
 set background=dark
 let base16colorspace=256
-colorscheme base16-gruvbox-dark-hard
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
 exe 'hi LineNr guifg=#' . g:base16_gui02 . ' guibg=#' . g:base16_gui00
 exe 'hi SignColumn guifg=#' . g:base16_gui02 . ' guibg=#' . g:base16_gui00
 
