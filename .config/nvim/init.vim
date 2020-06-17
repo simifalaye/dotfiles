@@ -168,9 +168,10 @@ command! BufOnly silent! execute "%bd|e#|bd#"
 " Vim config
 nnoremap <localleader>r :so $MYVIMRC<bar>echo "vimrc reloaded"<CR>
 " Save, close & quit
-nnoremap <leader>w  :update<CR>
-nnoremap <leader>q  :q<CR>
+nnoremap <leader>w :update<CR>
+nnoremap <leader>q :q<CR>
 nnoremap <leader>d :bprevious<bar>bdelete #<CR>
+nnoremap <C-q>     :confirm qall<CR>
 
 " Remaps
 " -------
@@ -258,16 +259,17 @@ exe 'hi SignColumn guifg=#' . g:base16_gui02 . ' guibg=#' . g:base16_gui00
 let g:lightline = {
       \ 'colorscheme': 'jellybeans',
       \ 'active': {
-      \   'left': [ ['mode', 'paste'],
-      \             ['fugitive', 'readonly', 'filename', 'modified', 'cocstatus'] ],
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
       \ },
-      \ 'component': {
-      \   'fugitive': '%{exists("*FugitiveHead")&&""!=FugitiveHead()?" ".FugitiveHead():""}',
-      \   'cocstatus': '%{coc#status()}'
+      \ 'component_function': {
+      \   'filename': 'LightlineFilename',
+      \   'cocstatus': 'coc#status'
       \ },
-      \ 'separator': { 'left': '', 'right': '' },
-      \ 'subseparator': { 'left': '', 'right': '' }
       \ }
+function! LightlineFilename()
+  return expand('%:t') !=# '' ? @% : '[No Name]'
+endfunction
 
 " }}}}
 " Autocommands {{{
