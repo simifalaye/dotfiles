@@ -146,7 +146,7 @@ Plug 'itchyny/lightline.vim'
 " Code completion / Languages
 " -----------------------------
 Plug 'derekwyatt/vim-fswitch'
-Plug 'kergoth/vim-bitbake' | Plug 'wgwoods/vim-systemd-syntax'
+Plug 'kergoth/vim-bitbake'
 Plug 'sheerun/vim-polyglot'
     let g:vim_markdown_folding_disabled     = v:true
     let g:vim_markdown_auto_insert_bullets  = v:false
@@ -170,15 +170,11 @@ nnoremap <localleader>r :so $MYVIMRC<bar>echo "vimrc reloaded"<CR>
 " Save, close & quit
 nnoremap <leader>w  :update<CR>
 nnoremap <leader>q  :q<CR>
-nnoremap <leader>Q  :qa<CR>
-nnoremap <silent><localleader>d :bprevious<bar>bdelete #<CR>
-nnoremap <silent><localleader>x :windo lclose<bar>cclose<CR>
+nnoremap <leader>d :bprevious<bar>bdelete #<CR>
 
 " Remaps
 " -------
 inoremap jk <Esc>
-nnoremap ;  :
-nnoremap :  ;
 nnoremap Q  @q
 nnoremap j  gj
 nnoremap k  gk
@@ -191,9 +187,6 @@ nnoremap ?  ms?\v
 vnoremap <  <gv
 vnoremap >  >gv
 nnoremap p  p`[v`]=
-nnoremap c  "_c
-nnoremap C  "_C
-nnoremap cc "_cc
 
 " Editing
 " ---------
@@ -205,25 +198,23 @@ nmap gu yyp0v$r- | nmap gU yyp0v$r=
 " Toggle highlight & select pasted text
 nnoremap <leader>/ :nohl<CR>
 nnoremap <leader>v `[v`]
-" Auto close & switch to last buffer
-inoremap {<CR>            {<CR>}<Esc>O
-inoremap {;               {<CR>};<Esc>O
+" Switch to last buffer
 nnoremap <leader><leader> <c-^>
 
 " Files, Buffers, Splits and Tabs
 " --------------------------------
 " Explorer & navigation
-nnoremap <leader>; :NERDTreeToggle<CR>
-nnoremap <leader>: :NERDTreeFind<CR>
+nnoremap <leader>n :NERDTreeToggle<CR>
+nnoremap <leader>f :NERDTreeFind<CR>
 nnoremap <leader>s :FSHere<CR>
 nnoremap <C-h> <C-w>h | nnoremap <C-l> <C-w>l
 nnoremap <C-k> <C-w>k | nnoremap <C-j> <C-w>j
-nnoremap <leader>- <C-w>s | nnoremap <leader>\ <C-w>v
+nnoremap <leader>- <C-w>s | nnoremap <leader>\| <C-w>v
 " Fzf
-nnoremap <silent><C-p> :Files<CR>
-nnoremap <silent><C-f> :Find<CR>
-nnoremap <silent>,     :Buffers<CR>
-nnoremap <silent>_     :Marks<CR>
+nnoremap <silent><C-p>     :Files<CR>
+nnoremap <silent><C-f>     :Find<CR>
+nnoremap <silent>_         :Marks<CR>
+nnoremap <silent><leader>; :Buffers<CR>
 " Git
 nnoremap <silent> gid :Gdiff<CR>
 nnoremap <silent> gis :Gstatus<CR>
@@ -277,11 +268,6 @@ let g:lightline = {
       \ 'separator': { 'left': '', 'right': '' },
       \ 'subseparator': { 'left': '', 'right': '' }
       \ }
-" Remove the background color from the statusline and tabline
-let s:palette = g:lightline#colorscheme#{g:lightline.colorscheme}#palette
-let s:palette.normal.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
-let s:palette.inactive.middle = s:palette.normal.middle
-let s:palette.tabline.middle = s:palette.normal.middle
 
 " }}}}
 " Autocommands {{{
