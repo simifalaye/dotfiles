@@ -75,3 +75,4 @@ oe-logs
 htmlcov/
 .vscode/
 .clangd/
+.ccls/

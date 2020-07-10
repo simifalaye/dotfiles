@@ -69,11 +69,9 @@ fun! helpers#coc#mappings()
   nmap <silent> gd <Plug>(coc-definition)
   nmap <silent> gy <Plug>(coc-type-definition)
   nmap <silent> gi <Plug>(coc-implementation)
-  nmap <silent> gr <Plug>(coc-references)
+  nmap <silent> gf <Plug>(coc-references)
   " CocList mappings
-  nnoremap <silent> <leader>cd  :CocList diagnostics<cr>
-  nnoremap <silent> <leader>co  :CocList outline<cr>
-  nnoremap <silent> <leader>cl  :<C-u>CocListResume<CR>
+  nnoremap <silent> gl  :<C-u>CocListResume<CR>
   " Use K to show documentation in preview window
   nnoremap <silent> K :call helpers#coc#showDocumentation()<CR>
   " Remap for rename current word

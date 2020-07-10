@@ -17,14 +17,19 @@
     "vetur.validation.template": false,
 
     "languageserver": {
-        "clangd": {
-            "command": "clangd",
-            "args": [
-                "--query-driver=/home/**/arm-*g++",
-                "--header-insertion=iwyu"
-            ],
-            "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".git/", ".hg/"],
-            "filetypes": ["c", "cpp", "objc", "objcpp"]
+        "ccls": {
+            "command": "ccls",
+            "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
+            "trace.server": "verbose",
+            "rootPatterns": [".ccls-root", ".ccls", "compile_commands.json"],
+            "initializationOptions": {
+                "cache": {
+                    "directory": ".ccls-cache"
+                },
+                "client": {
+                    "snippetSupport": true
+                }
+            }
         }
     }
 }
