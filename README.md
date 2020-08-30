@@ -71,8 +71,6 @@ I use ZSH shell:
 ### Utilities
 
 - [tig](https://github.com/jonas/tig) - Text-mode interface for git
-- [pet](https://github.com/knqyf263/pet) - Simple command\-line snippet manager, written in Go
-- [lastpass-cli](https://github.com/lastpass/lastpass-cli) - password manager
 - [htop](https://hisham.hm/htop/) - An interactive text-mode process viewer for Unix systems.
 - [trash-cli](https://github.com/sindresorhus/trash-cli) - Move files and folders to the trash.
 - [tmux](https://github.com/tmux/tmux) - Terminal multiplexer.
@@ -80,3 +78,4 @@ I use ZSH shell:
 - [scrot](https://github.com/dreamer/scrot) - Screenshot utility
 - [zathura](https://pwmt.org) - A pdf reader
 - [sxiv](https://github.com/muennich/sxiv) - Simple x image viewer
+- [how2](https://github.com/santinic/how2) - StackOverflow from the terminal

@@ -59,7 +59,7 @@ prompt_init() {
   zstyle ':vcs_info:git*' formats '%F{green}(%b)%f '
   zstyle ':vcs_info:git*' actionformats ' %b (%a)'
   # if atleast one job, print #jobs or print fish
-  fish='%(1j.%F{red}%j.%F{green}⋊>)%f '
+  fish='%(1j.%F{208} ✱.%F{green}⋊>)%f '
   # prompt variables
   timenow="%F{8}[$(date "+%H:%M")]%f "
   host='%(?.%F{blue}.%F{red})%m%f'

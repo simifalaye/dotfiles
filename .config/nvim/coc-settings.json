@@ -19,12 +19,12 @@
     "languageserver": {
         "ccls": {
             "command": "ccls",
-            "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
-            "trace.server": "verbose",
+            "args": ["--log-file=/tmp/ccls.log", "-v=1"],
+            "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp"],
             "rootPatterns": [".ccls-root", ".ccls", "compile_commands.json"],
             "initializationOptions": {
                 "cache": {
-                    "directory": ".ccls-cache"
+                    "directory": "/tmp/ccls"
                 },
                 "client": {
                     "snippetSupport": true

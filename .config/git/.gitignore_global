@@ -56,7 +56,6 @@ Thumbs.db
 .project
 tags
 compile_commands.json
-compilation_db.bbclass
 
 # Temp files #
 #####################
@@ -75,4 +74,4 @@ oe-logs
 htmlcov/
 .vscode/
 .clangd/
-.ccls/
+.ccls*/
