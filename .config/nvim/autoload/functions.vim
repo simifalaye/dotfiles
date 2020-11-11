@@ -1,13 +1,21 @@
 " =================================
-" Miscellaneous Utility Functions
+" Miscellaneous Functions
 " =================================
+
+""
+" Check if backspace is hit
+""
+fun! functions#checkBackspace()
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfun
 
 ""
 " Gets vim-plug from github
 "
 " @param {string} dir: directory to put vim-plug in
 ""
-fun! helpers#utils#getVimPlug(dir)
+fun! functions#getVimPlug(dir)
   if empty(glob(a:dir . '/plug.vim')) && executable('curl')
     execute 'silent !curl -fLo ' . a:dir . '/plug.vim --create-dirs ' .
           \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
@@ -19,7 +27,7 @@ endfun
 " Zoom into a pane, making it full screen (in a tab) Triggering the plugin
 " again from the zoomed in tab brings it back to its original pane location
 ""
-fun helpers#utils#zoom()
+fun functions#zoom()
   if winnr('$') > 1
     tab split
   elseif len(filter(map(range(tabpagenr('$')), 'tabpagebuflist(v:val + 1)'),
@@ -31,7 +39,7 @@ endfun
 ""
 " Jump to last known position and center buffer around cursor.
 ""
-fun! helpers#utils#jumplast() abort
+fun! functions#jumplast() abort
   if empty(&buftype) && index(['diff', 'gitcommit'], &filetype, 0, v:true) == -1
     if line("'\"") >= 1 && line("'\"") <= line('$')
       execute 'normal! g`"zz'
@@ -42,10 +50,40 @@ endfun
 ""
 " Remove trailing whitespace
 ""
-fun! helpers#utils#stripTrailingWhitespace() abort
+fun! functions#stripTrailingWhitespace() abort
   " Don't strip on these filetypes
   if &ft =~ 'ruby\|javascript\|perl\|gitsendemail\|markdown'
     return
   endif
   %s/\s\+$//e
+endfun
+
+""
+" Don't close window, when deleting a buffer
+""
+fun! functions#bufcloseCloseIt()
+  let l:currentBufNum = bufnr("%")
+  let l:alternateBufNum = bufnr("#")
+  if buflisted(l:alternateBufNum)
+    buffer #
+  else
+    bnext
+  endif
+  if bufnr("%") == l:currentBufNum
+    new
+  endif
+  if buflisted(l:currentBufNum)
+    execute("bdelete! ".l:currentBufNum)
+  endif
+endfun
+
+""
+" Put list into quickfix
+"
+" @param {string} lines: lines to put
+""
+fun! functions#build_quickfix_list(lines)
+  call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+  copen
+  cc
 endfun

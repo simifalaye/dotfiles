@@ -1,35 +1,23 @@
 {
     "codeLens.enable": true,
 
+    "clangd.arguments": [
+        "--background-index",
+        "--suggest-missing-includes",
+        "--header-insertion", "iwyu",
+        "--log", "verbose",
+        "--query-driver", "/home/**/arm-vcm-linux-*"
+    ],
+
     "diagnostic.enable": true,
     "diagnostic.enableSign": false,
     "diagnostic.maxWindowHeight": 20,
+
+    "explorer.previewAction.onHover": false,
 
     "suggest.enablePreview": true,
     "suggest.detailField": "abbr",
     "suggest.maxCompleteItemCount": 30,
 
-    "emmet.includeLanguages": { "vue": "html" },
-    "emmet.showAbbreviationSuggestions" : true,
-
-    "snippets.ultisnips.directories": [ "UltiSnips", "plugged/vim-snippets/UltiSnips" ],
-
-    "vetur.validation.template": false,
-
-    "languageserver": {
-        "ccls": {
-            "command": "ccls",
-            "args": ["--log-file=/tmp/ccls.log", "-v=1"],
-            "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp"],
-            "rootPatterns": [".ccls-root", ".ccls", "compile_commands.json"],
-            "initializationOptions": {
-                "cache": {
-                    "directory": "/tmp/ccls"
-                },
-                "client": {
-                    "snippetSupport": true
-                }
-            }
-        }
-    }
+    "snippets.ultisnips.directories": [ "UltiSnips", "plugged/vim-snippets/UltiSnips" ]
 }
