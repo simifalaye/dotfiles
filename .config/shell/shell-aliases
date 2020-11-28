@@ -15,27 +15,6 @@ alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}"
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
-# Open file in proper program
-command -v xdg-open >/dev/null && alias open="xdg-open"
-
-# tmux aliases
-command -v tmux >/dev/null &&
-{
-    alias tmux='tmux -2'
-    alias ts='tmux new-session -A -s'
-    alias ta='tmux attach -t'
-    alias tl='tmux ls'
-}
-
-# bat aliases (a better cat)
-command -v bat >/dev/null && alias cat="bat -p"
-
-# git aliases
-command -v git >/dev/null &&
-{
-    alias gbclean="git branch | grep -v '^*' | xargs git branch -D"
-}
-
 # Navigation
 alias dev='cd ~/dev'
 alias dl='cd ~/Downloads'
@@ -47,6 +26,28 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 test -d /mnt/c/ && alias cdw='cd /mnt/c/Users/'
+
+# Open file in proper program
+command -v xdg-open >/dev/null && alias open="xdg-open"
+# tmux aliases
+command -v tmux >/dev/null &&
+{
+    alias tmux='tmux -2'
+    alias ts='tmux new-session -A -s'
+    alias ta='tmux attach -t'
+    alias tl='tmux ls'
+}
+# bat aliases (a better cat)
+command -v batcat >/dev/null && alias cat="batcat -p"
+# git aliases
+command -v git >/dev/null &&
+{
+    alias gbclean="git branch | grep -v '^*' | xargs git branch -D"
+}
+# howdoi
+command -v howdoi >/dev/null && alias hdi="howdoi -c -n 5"
+# exa
+command -v exa >/dev/null && alias e="exa"
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert

@@ -36,11 +36,15 @@ zinit ice wait"0b" lucid; zinit load mdumitru/fancy-ctrl-z
 # Config
 # --------
 _load $ZDOTDIR/config.zsh
-_load $ZDOTDIR/keybinds.zsh
+# _load $ZDOTDIR/keybinds.zsh
 _load $ZDOTDIR/prompt.zsh
 
 # Shell Programs
 # ----------------
+# Prompt: Starship
+_is_callable "starship" || { curl -fsSL https://starship.rs/install.sh | bash }
+eval "$(starship init zsh)"
+
 # Colors: Base16 Shell
 _load_repo chriskempson/base16-shell $HOME/.config/base16-shell
 [ -n "$PS1" ] && eval "$("$HOME/.config/base16-shell/profile_helper.sh")"

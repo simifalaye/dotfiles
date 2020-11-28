@@ -87,3 +87,14 @@ fun! functions#build_quickfix_list(lines)
   copen
   cc
 endfun
+
+""
+" Show documentation for coc if not in a vim buffer
+""
+fun! functions#cocShowDocumentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfun

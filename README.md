@@ -1,9 +1,13 @@
-<div align="center">
-<h3>Dotfiles</h3>
-<img src="https://github.com/simifalaye/dotfiles/raw/master/.config/meta/ubuntu_system.png">
+<h1 align="center">Dotfiles</h1>
+<p align="center">My dotfiles managed by Yadm</p>
+<p align="center">
+  <img src="https://img.shields.io/badge/OS-ubuntu_20.04-orange.svg" />
+  <img src="https://img.shields.io/badge/Editor-vim-brightgreen.svg" />
+  <img src="https://img.shields.io/badge/Shell-zsh-yellow.svg" />
+  <br><br>
+  <img src="https://i.imgur.com/pVGr7tX.png">
+</p>
 
-`Ubuntu Gnome` / `Dwm base16`
-</div>
 My dotfile configuration for a linux system, managed by Yadm
 
 Graphical Applications
@@ -43,8 +47,8 @@ section with Terminal applications after
 Terminal Applications
 ---------------------
 
-A big part of my Development life is spent on the Terminal, so having a good
-set of tools there is essential.
+Most of my time is spent on the Terminal, so having a good set of tools
+there is essential.
 
 ### Shell configuration
 
@@ -71,11 +75,13 @@ I use ZSH shell:
 ### Utilities
 
 - [tig](https://github.com/jonas/tig) - Text-mode interface for git
-- [htop](https://hisham.hm/htop/) - An interactive text-mode process viewer for Unix systems.
-- [trash-cli](https://github.com/sindresorhus/trash-cli) - Move files and folders to the trash.
+- [trash-cli](https://github.com/andreafrancia/trash-cli) - Move files and folders to the trash.
 - [tmux](https://github.com/tmux/tmux) - Terminal multiplexer.
 - [yadm](https://github.com/TheLocehiliosan/yadm) - Dotfiles Manager.
 - [scrot](https://github.com/dreamer/scrot) - Screenshot utility
 - [zathura](https://pwmt.org) - A pdf reader
 - [sxiv](https://github.com/muennich/sxiv) - Simple x image viewer
-- [how2](https://github.com/santinic/how2) - StackOverflow from the terminal
+- [howdoi](https://github.com/gleitz/howdoi) - Instant coding answers from the terminal
+- [calc](https://packages.ubuntu.com/focal/calc) - Terminal calculator
+- [exa](https://github.com/ogham/exa) - A modern ls
+- [bottom](https://github.com/ClementTsang/bottom) - Top but better

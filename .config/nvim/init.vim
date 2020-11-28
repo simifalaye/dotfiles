@@ -8,7 +8,6 @@ let g:fzfsourcedir   = !empty($FZF_SOURCE_DIR) ? $FZF_SOURCE_DIR : "~/.fzf"
 let g:vimplugdir     = g:vimhomedir . "/plugged"
 let g:vimautoloaddir = g:vimhomedir . "/autoload"
 let g:sessiondir     = g:vimhomedir . "/session"
-let g:is_gui         = has('gui_running')
 let g:is_wsl         = !empty($IS_WSL_DEVICE) ? 1 : 0
 
 " }}}
@@ -77,19 +76,20 @@ set fillchars=""   " Fix splits
 set shortmess+=c   " Avoid 'hit enter' messages
 set updatetime=300 " Default is 4000, lower it for better performance
 set signcolumn=no  " Don't like the extra space
+set pastetoggle=<F2>
 
 " History
 " ---------
 
-set history=1000                    " Remember more commands
+set history=1000                " Remember more commands
 if has('persistent_undo')
-  set undofile                      " Persistent undo
-  set undodir=~/.cache/vim/undo     " Set undo directory
-  set undolevels=1000               " Max number of changes
-  set undoreload=10000              " Max lines to save for undo on a buffer reload
+  set undofile                  " Persistent undo
+  set undodir=~/.cache/vim/undo " Set undo directory
+  set undolevels=1000           " Max number of changes
+  set undoreload=10000          " Max lines to save for undo on a buffer reload
 endif
 if has('unnamedplus')
-  set clipboard=unnamedplus " set clipboard to use
+  set clipboard=unnamedplus     " set clipboard to use
 else
   set clipboard=unnamed
 endif
@@ -106,7 +106,6 @@ let g:loaded_tutor_mode_plugin = v:true
 " download vim-plug if not installed yet
 call functions#getVimPlug(g:vimautoloaddir)
 call plug#begin(g:vimplugdir)
-Plug 'AndrewRadev/splitjoin.vim'
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'honza/vim-snippets'
@@ -114,97 +113,89 @@ Plug 'itchyny/lightline.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/fzf', {'dir': g:fzfsourcedir,'do': './install --all --xdg'}
 Plug 'junegunn/fzf.vim'
-Plug 'machakann/vim-sandwich'
+  let g:fzf_colors         = {
+        \ 'fg':      ['fg', 'Normal'],
+        \ 'bg':      ['bg', 'Normal'],
+        \ 'hl':      ['fg', 'Comment'],
+        \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+        \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+        \ 'hl+':     ['fg', 'Statement'],
+        \ 'info':    ['fg', 'PreProc'],
+        \ 'prompt':  ['fg', 'Conditional'],
+        \ 'pointer': ['fg', 'Exception'],
+        \ 'marker':  ['fg', 'Keyword'],
+        \ 'spinner': ['fg', 'Label'],
+        \ 'header':  ['fg', 'Comment'] }
+  let g:fzf_action         = {
+        \ 'ctrl-q': function('functions#build_quickfix_list'),
+        \ 'ctrl-t': 'tab split',
+        \ 'ctrl-s': 'split',
+        \ 'ctrl-v': 'vsplit' }
+  let g:fzf_layout         = { 'down': '~40%' }
+  let g:fzf_buffers_jump   = v:true
+  let g:fzf_preview_window = ''
+  let g:fzf_history_dir    = '~/.local/share/fzf-history'
+  " CMD => Find
+  if executable('rg')
+    let s:grep_cmd = 'rg --column --line-number --no-heading
+          \ --fixed-strings
+          \ --ignore-case
+          \ --hidden
+          \ --follow
+          \ --glob "!.git/*"
+          \ --color "always" '
+    command! -bang -nargs=* Find
+          \ call fzf#vim#grep(s:grep_cmd . shellescape(<q-args>) . '| tr -d "\017"', 1, <bang>0)
+  endif
 Plug 'mhinz/vim-startify'
+  let g:startify_change_to_vcs_root  = v:true
+  let g:startify_enable_special      = v:false
+  let g:startify_files_number        = 5
+  let g:startify_relative_path       = v:true
+  let g:startify_update_oldfiles     = v:true
+  let g:startify_session_autoload    = v:true
+  let g:startify_session_dir         = g:sessiondir
+  let g:startify_session_persistence = v:true
+  let g:startify_bookmarks           = [
+        \ {'n': '~/.config/nvim/init.vim'},
+        \ {'z': '~/.config/zsh/.zshrc'},
+        \ {'p': '~/.config/shell/shell-profile'}
+        \ ]
+  let g:startify_lists = [
+        \  { 'type': 'dir',       'header': [ 'Files '. getcwd() ] },
+        \  { 'type': 'sessions',  'header': [ 'Sessions' ]       },
+        \  { 'type': 'bookmarks', 'header': [ 'Bookmarks' ]      },
+        \  { 'type': 'commands',  'header': [ 'Commands' ]       },
+        \ ]
+  let g:startify_commands = [
+        \   { 'up': [ 'Update Plugins', ':PlugUpdate' ] },
+        \   { 'ug': [ 'Upgrade Plugin Manager', ':PlugUpgrade' ] },
+        \ ]
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  let g:coc_global_extensions = [
+        \ 'coc-clangd',
+        \ 'coc-explorer',
+        \ 'coc-json',
+        \ 'coc-lua',
+        \ 'coc-rls',
+        \ 'coc-snippets',
+        \ 'coc-sh',
+        \ 'coc-word',
+        \]
 Plug 'rstacruz/vim-closer'
 Plug 'sheerun/vim-polyglot'
+  let g:vim_markdown_folding_disabled     = v:true
+  let g:vim_markdown_auto_insert_bullets  = v:false
+  let g:vim_markdown_new_list_item_indent = v:false
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dispatch', {'on': [ 'Make', 'Dispatch', 'Start', 'Focus' ]}
 Plug 'tpope/vim-fugitive', {'on': [ 'Gstatus', 'Gblame', 'Gdiff' ]}
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
 Plug 'vim-scripts/doxygentoolkit.vim', {'for': ['cpp', 'c']}
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'wellle/targets.vim'
 call plug#end()
-
-" CoC:
-let g:coc_global_extensions = [
-      \ 'coc-clangd',
-      \ 'coc-explorer',
-      \ 'coc-json',
-      \ 'coc-lua',
-      \ 'coc-rls',
-      \ 'coc-snippets',
-      \ 'coc-sh',
-      \ 'coc-word',
-      \]
-
-" Startify:
-let g:startify_change_to_vcs_root  = v:true
-let g:startify_enable_special      = v:false
-let g:startify_files_number        = 5
-let g:startify_relative_path       = v:true
-let g:startify_update_oldfiles     = v:true
-let g:startify_session_autoload    = v:true
-let g:startify_session_dir         = g:sessiondir
-let g:startify_session_persistence = v:true
-let g:startify_bookmarks           = [
-      \ {'n': '~/.config/nvim/init.vim'},
-      \ {'z': '~/.config/zsh/.zshrc'},
-      \ {'p': '~/.config/shell/shell-profile'}
-      \ ]
-" Custom startup list, only show MRU from current directory/project
-let g:startify_lists = [
-      \  { 'type': 'dir',       'header': [ 'Files '. getcwd() ] },
-      \  { 'type': 'sessions',  'header': [ 'Sessions' ]       },
-      \  { 'type': 'bookmarks', 'header': [ 'Bookmarks' ]      },
-      \  { 'type': 'commands',  'header': [ 'Commands' ]       },
-      \ ]
-let g:startify_commands = [
-      \   { 'up': [ 'Update Plugins', ':PlugUpdate' ] },
-      \   { 'ug': [ 'Upgrade Plugin Manager', ':PlugUpgrade' ] },
-      \ ]
-
-" Fzf:
-let g:fzf_colors         = {
-      \ 'fg':      ['fg', 'Normal'],
-      \ 'bg':      ['bg', 'Normal'],
-      \ 'hl':      ['fg', 'Comment'],
-      \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-      \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-      \ 'hl+':     ['fg', 'Statement'],
-      \ 'info':    ['fg', 'PreProc'],
-      \ 'prompt':  ['fg', 'Conditional'],
-      \ 'pointer': ['fg', 'Exception'],
-      \ 'marker':  ['fg', 'Keyword'],
-      \ 'spinner': ['fg', 'Label'],
-      \ 'header':  ['fg', 'Comment'] }
-let g:fzf_action         = {
-      \ 'ctrl-q': function('functions#build_quickfix_list'),
-      \ 'ctrl-t': 'tab split',
-      \ 'ctrl-s': 'split',
-      \ 'ctrl-v': 'vsplit' }
-let g:fzf_layout         = { 'down': '~40%' }
-let g:fzf_buffers_jump   = v:true
-let g:fzf_preview_window = ''
-let g:fzf_history_dir    = '~/.local/share/fzf-history'
-" CMD => Find
-if executable('rg')
-  let s:grep_cmd = 'rg --column --line-number --no-heading
-        \ --fixed-strings
-        \ --ignore-case
-        \ --hidden
-        \ --follow
-        \ --glob "!.git/*"
-        \ --color "always" '
-  command! -bang -nargs=* Find
-        \ call fzf#vim#grep(s:grep_cmd . shellescape(<q-args>) . '| tr -d "\017"', 1, <bang>0)
-endif
-
-" Markdown:
-let g:vim_markdown_folding_disabled     = v:true
-let g:vim_markdown_auto_insert_bullets  = v:false
-let g:vim_markdown_new_list_item_indent = v:false
 
 " }}}
 " Mappings & Commands {{{
@@ -235,7 +226,7 @@ nnoremap p  p`[v`]=
 
 " Toggle highlight & select pasted text
 nnoremap <leader>/ :nohl<CR>
-nnoremap <leader>v `[v`]
+nnoremap <leader>p `[v`]
 
 " Switch to last buffer
 nnoremap <leader><leader> <c-^>
@@ -273,7 +264,7 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 " Use K to show documentation in preview window
-nnoremap <silent> K :call call CocAction('doHover')<CR>
+nnoremap <silent> K :call functions#cocShowDocumentation()<CR>
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 " Remap for rename current word
@@ -294,7 +285,7 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 " Fzf:
-nnoremap <silent><C-e> :Files<CR>
+nnoremap <silent><C-p> :Files<CR>
 nnoremap <silent><C-f> :Find<CR>
 nnoremap <silent>_     :Marks<CR>
 nnoremap <silent>,     :Buffers<CR>
@@ -304,9 +295,9 @@ nnoremap <silent> gid :Gdiff<CR>
 nnoremap <silent> gis :Gstatus<CR>
 
 " ReplaceWithRegister:
-nmap gp <Plug>ReplaceWithRegisterOperator
+nmap gp  <Plug>ReplaceWithRegisterOperator
 nmap gpp <Plug>ReplaceWithRegisterLine
-xmap gp <Plug>ReplaceWithRegisterVisual
+xmap gp  <Plug>ReplaceWithRegisterVisual
 
 " }}}
 " UI {{{
@@ -373,7 +364,6 @@ augroup end
 " File type settings
 augroup filetypesettings
   autocmd!
-  autocmd FileType markdown           let b:indentLine_enabled = 0
   autocmd Filetype gitcommit,markdown setl spell        tw=72
   autocmd FileType c,cpp              setl shiftwidth=4 tabstop=4 commentstring=//\ %s
   autocmd FileType java               setl shiftwidth=2 tabstop=2 commentstring=//\ %s
