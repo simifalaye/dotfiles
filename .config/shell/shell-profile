@@ -20,6 +20,8 @@ export TERMCMD=st
 if grep -q "microsoft" /proc/version &>/dev/null; then
     # Required: Enables copy/paste (need to specify ip of wsl 2 VM)
     export DISPLAY="$(/sbin/ip route | awk '/default/ { print $3 }'):0"
+    export LIBGL_ALWAYS_INDIRECT=1
+    echo $(wslpath $USERPROFILE) > /tmp/WSLUSER
 elif grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
     export IS_WSL_DEVICE=true
     LS_COLORS="ow=01;36;40" && export LS_COLORS

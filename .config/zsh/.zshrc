@@ -36,8 +36,8 @@ zinit ice wait"0b" lucid; zinit load mdumitru/fancy-ctrl-z
 # Config
 # --------
 _load $ZDOTDIR/config.zsh
-# _load $ZDOTDIR/keybinds.zsh
-_load $ZDOTDIR/prompt.zsh
+_load $ZDOTDIR/keybinds.zsh
+# _load $ZDOTDIR/prompt.zsh
 
 # Shell Programs
 # ----------------
@@ -59,3 +59,11 @@ _load_repo chriskempson/base16-shell $HOME/.config/base16-shell
         export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
     }
 }
+
+# Auto-expand aliases on 'Space'
+function expand-alias() {
+    zle _expand_alias
+    zle self-insert
+}
+zle -N expand-alias
+bindkey -M main ' ' expand-alias

@@ -5,50 +5,55 @@
 # Source local definitions
 test -r $SHELL_CONF_HOME/shell-aliases.local && . $SHELL_CONF_HOME/shell-aliases.local
 
-# Common task aliases
-alias clr=clear
-alias ls='ls --color=auto --group-directories-first'
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-alias grep="grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}"
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
-
 # Navigation
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
 alias dev='cd ~/dev'
 alias dl='cd ~/Downloads'
 alias docs='cd ~/Documents'
 alias works='cd ~/Workspaces'
 alias pics='cd ~/Pictures'
-alias vids='cd ~/Videos'
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-test -d /mnt/c/ && alias cdw='cd /mnt/c/Users/'
+[ -f /tmp/WSLUSER ] && alias winuser="cd \"$(cat /tmp/WSLUSER)\""
 
-# Open file in proper program
-command -v xdg-open >/dev/null && alias open="xdg-open"
-# tmux aliases
-command -v tmux >/dev/null &&
-{
-    alias tmux='tmux -2'
-    alias ts='tmux new-session -A -s'
-    alias ta='tmux attach -t'
-    alias tl='tmux ls'
+# Built-in
+alias grep='grep --color'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias mkdir='mkdir -p'
+alias clera='clear'
+alias dud='du -d 1 -h'
+alias duf='du -sh *'
+alias -g H='| head'
+alias -g T='| tail'
+alias -g G='| grep'
+alias -g L="| less"
+alias -g NE="2> /dev/null"
+alias -g NUL="> /dev/null 2>&1"
+
+# Application aliases
+command -v "z" >/dev/null && alias j="z"
+command -v "xdg"-open >/dev/null && alias open="xdg-open"
+command -v "batcat" >/dev/null && alias cat="batcat -p"
+command -v "howdoi" >/dev/null && alias hdi="howdoi -c -n 5"
+command -v "tmux" >/dev/null && {
+    alias tmux="tmux -2"
+    alias ts="tmux new-session -A -s"
+    alias ta="tmux attach -t"
+    alias tl="tmux ls"
 }
-# bat aliases (a better cat)
-command -v batcat >/dev/null && alias cat="batcat -p"
-# git aliases
-command -v git >/dev/null &&
-{
+command -v "git" >/dev/null && {
     alias gbclean="git branch | grep -v '^*' | xargs git branch -D"
 }
-# howdoi
-command -v howdoi >/dev/null && alias hdi="howdoi -c -n 5"
-# exa
-command -v exa >/dev/null && alias e="exa"
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+command -v "nvim" >/dev/null && {
+    alias vim="nvim"
+    v(){ git ls-files | fzf -m --preview "cat {}" | xargs nvim; }
+}
+command -v "exa" >/dev/null && {
+    l(){ exa --group-directories-first -F $@; }
+    alias ll='l -l'
+    alias la='ll -a'
+    alias lb='ll -b'
+    alias lt='la --sort size'
+    alias lr='l -R --sort date'
+}
