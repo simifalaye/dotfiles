@@ -1,6 +1,5 @@
 # Source global definitions
 test -r $SHELL_CONF_HOME/shell-aliases && . $SHELL_CONF_HOME/shell-aliases
-test -r $SHELL_CONF_HOME/shell-functions && . $SHELL_CONF_HOME/shell-functions
 
 # Plugins: Zinit
 # ----------------
@@ -37,33 +36,27 @@ zinit ice wait"0b" lucid; zinit load mdumitru/fancy-ctrl-z
 # --------
 _load $ZDOTDIR/config.zsh
 _load $ZDOTDIR/keybinds.zsh
-# _load $ZDOTDIR/prompt.zsh
+_load $ZDOTDIR/prompt.zsh
 
 # Shell Programs
 # ----------------
-# Prompt: Starship
-_is_callable "starship" || { curl -fsSL https://starship.rs/install.sh | bash }
-eval "$(starship init zsh)"
-
 # Colors: Base16 Shell
 _load_repo chriskempson/base16-shell $HOME/.config/base16-shell
 [ -n "$PS1" ] && eval "$("$HOME/.config/base16-shell/profile_helper.sh")"
 
 # Fzf
-[ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && {
-    # Load fzf
-    source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
-    # Use fd for default search
-    _is_callable "fd" && {
+[ -f ${XDG_CONFIG_HOME:-$HOME}/fzf/fzf.zsh ]&& {
+    source ${XDG_CONFIG_HOME}/fzf/fzf.zsh
+    _is_callable "fd" && { # Use fd-find instead of built in
         export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
         export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
     }
 }
 
-# Auto-expand aliases on 'Space'
-function expand-alias() {
-    zle _expand_alias
-    zle self-insert
-}
-zle -N expand-alias
-bindkey -M main ' ' expand-alias
+# Pipe helpers
+alias -g H='| head'
+alias -g T='| tail'
+alias -g G='| grep'
+alias -g L="| less"
+alias -g NE="2> /dev/null"
+alias -g NUL="> /dev/null 2>&1"

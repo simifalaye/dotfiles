@@ -43,3 +43,11 @@ bindkey -rM viins '^X'
 bindkey -M viins '^X,' _history-complete-newer \
     '^X/' _history-complete-older \
     '^X`' _bash_complete-word
+
+# Auto-expand aliases on 'Space'
+function expand-alias() {
+    zle _expand_alias
+    zle self-insert
+}
+zle -N expand-alias
+bindkey -M main ' ' expand-alias

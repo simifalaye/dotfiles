@@ -1,25 +1,25 @@
 [color]
-	ui = true
-	status = auto
-	branch = auto
-	diff = auto
+    ui = true
+    status = auto
+    branch = auto
+    diff = auto
 [merge]
-	tool = kdiff3
+    tool = kdiff3
 [push]
-	default = upstream
+    default = upstream
 [alias]
-	br = branch -vv
+    br = branch -vv
     c = commit
-	st = status -uno
+    st = status -sb -uno --ignore-submodules=untracked
     last = log -1 HEAD
-	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit
+    lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit
     tagsort = for-each-ref --sort=taggerdate --format '%(refname) %(taggerdate)' refs/tags
 [core]
-	editor = vim
-	excludesfile = ~/.config/git/.gitignore_global
+    editor = vim
+    excludesfile = ~/.config/git/.gitignore_global
 [pull]
-	rebase = true
+    rebase = true
 [commit]
-	template = ~/.config/git/.gitmessage
+    template = ~/.config/git/.gitmessage
 [include]
     path = ~/.config/git/.gitconfig.local

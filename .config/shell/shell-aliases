@@ -2,7 +2,8 @@
 
 # Aliases
 # -------
-# Source local definitions
+# Source functions & local definitions
+test -r $SHELL_CONF_HOME/shell-functions && . $SHELL_CONF_HOME/shell-functions
 test -r $SHELL_CONF_HOME/shell-aliases.local && . $SHELL_CONF_HOME/shell-aliases.local
 
 # Navigation
@@ -21,39 +22,44 @@ alias grep='grep --color'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias mkdir='mkdir -p'
-alias clera='clear'
 alias dud='du -d 1 -h'
 alias duf='du -sh *'
-alias -g H='| head'
-alias -g T='| tail'
-alias -g G='| grep'
-alias -g L="| less"
-alias -g NE="2> /dev/null"
-alias -g NUL="> /dev/null 2>&1"
+alias chmox='chmod +x'
+alias c='clear && pwd'
 
 # Application aliases
-command -v "z" >/dev/null && alias j="z"
-command -v "xdg"-open >/dev/null && alias open="xdg-open"
-command -v "batcat" >/dev/null && alias cat="batcat -p"
-command -v "howdoi" >/dev/null && alias hdi="howdoi -c -n 5"
-command -v "tmux" >/dev/null && {
+_is_callable xdg-open >/dev/null && alias open="xdg-open"
+_is_callable batcat >/dev/null && alias cat="batcat -p"
+_is_callable howdoi >/dev/null && alias hdi="howdoi -c -n 5"
+_is_callable tmux >/dev/null && {
     alias tmux="tmux -2"
     alias ts="tmux new-session -A -s"
     alias ta="tmux attach -t"
     alias tl="tmux ls"
 }
-command -v "git" >/dev/null && {
-    alias gbclean="git branch | grep -v '^*' | xargs git branch -D"
+_is_callable git >/dev/null && {
+    alias g='git status -sb'
+    alias gs='git status'
+    alias gbc="git branch | grep -v '^*' | xargs git branch -D"
+    alias gc='git commit'
+    alias gca='git commit --amend'
+    alias gau='git add -u'
 }
-command -v "nvim" >/dev/null && {
+_is_callable nvim >/dev/null && {
     alias vim="nvim"
-    v(){ git ls-files | fzf -m --preview "cat {}" | xargs nvim; }
+    v() {
+        [[ $(pwd) -ef $HOME ]] && cmd="yadm" || cmd="git"
+        $cmd ls-files | fzf -m --preview "cat {}" | xargs nvim;
+    }
 }
-command -v "exa" >/dev/null && {
+_is_callable exa >/dev/null && {
     l(){ exa --group-directories-first -F $@; }
     alias ll='l -l'
     alias la='ll -a'
-    alias lb='ll -b'
-    alias lt='la --sort size'
-    alias lr='l -R --sort date'
+    alias lt='ll -b --sort size'
+} || {
+    l(){ ls --color --group-directories-first -F $@; }
+    alias ll='l -l'
+    alias la='l -lAh'
+    alias lt='l -lth'
 }

@@ -16,8 +16,8 @@
 [ -z "$PS1" ] && return
 
 # Source global definitions
-test -r ~/.shell-aliases && . ~/.shell-aliases
-test -r ~/.shell-env && . ~/.shell-env
+test -r $SHELL_CONF_HOME/shell-profile && . $SHELL_CONF_HOME/shell-profile
+test -r $SHELL_CONF_HOME/shell-aliases && . $SHELL_CONF_HOME/shell-aliases
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace

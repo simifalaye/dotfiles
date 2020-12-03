@@ -4,7 +4,6 @@
 
 let mapleader        = " "
 let g:vimhomedir     = has('nvim') ? "~/.config/nvim" : "~/.vim"
-let g:fzfsourcedir   = !empty($FZF_SOURCE_DIR) ? $FZF_SOURCE_DIR : "~/.fzf"
 let g:vimplugdir     = g:vimhomedir . "/plugged"
 let g:vimautoloaddir = g:vimhomedir . "/autoload"
 let g:sessiondir     = g:vimhomedir . "/session"
@@ -106,12 +105,15 @@ let g:loaded_tutor_mode_plugin = v:true
 " download vim-plug if not installed yet
 call functions#getVimPlug(g:vimautoloaddir)
 call plug#begin(g:vimplugdir)
+Plug 'airblade/vim-rooter'
+  let g:rooter_silent_chdir = 1
+  let g:rooter_patterns     = ['oe-workdir/', 'src/', '.git/']
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'honza/vim-snippets'
 Plug 'itchyny/lightline.vim'
 Plug 'junegunn/vim-easy-align'
-Plug 'junegunn/fzf', {'dir': g:fzfsourcedir,'do': './install --all --xdg'}
+Plug 'junegunn/fzf', {'do': './install --all --xdg'}
 Plug 'junegunn/fzf.vim'
   let g:fzf_colors         = {
         \ 'fg':      ['fg', 'Normal'],
@@ -148,12 +150,10 @@ Plug 'junegunn/fzf.vim'
           \ call fzf#vim#grep(s:grep_cmd . shellescape(<q-args>) . '| tr -d "\017"', 1, <bang>0)
   endif
 Plug 'mhinz/vim-startify'
-  let g:startify_change_to_vcs_root  = v:true
+  let g:startify_change_to_dir       = v:false
   let g:startify_enable_special      = v:false
-  let g:startify_files_number        = 5
   let g:startify_relative_path       = v:true
   let g:startify_update_oldfiles     = v:true
-  let g:startify_session_autoload    = v:true
   let g:startify_session_dir         = g:sessiondir
   let g:startify_session_persistence = v:true
   let g:startify_bookmarks           = [
@@ -188,7 +188,8 @@ Plug 'sheerun/vim-polyglot'
   let g:vim_markdown_auto_insert_bullets  = v:false
   let g:vim_markdown_new_list_item_indent = v:false
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-dispatch', {'on': [ 'Make', 'Dispatch', 'Start', 'Focus' ]}
+Plug 'tpope/vim-dispatch', {'on': [ 'Make', 'Dispatch', 'Start' ]}
+  let g:dispatch_no_maps = 1
 Plug 'tpope/vim-fugitive', {'on': [ 'Gstatus', 'Gblame', 'Gdiff' ]}
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
@@ -205,13 +206,12 @@ nnoremap <localleader>r :so $MYVIMRC<bar>echo "vimrc reloaded"<CR>
 
 " Save, close & quit
 nnoremap <leader>w :update<CR>
-nnoremap <leader>q :q<CR>
 nnoremap <leader>d :call functions#bufcloseCloseIt()<CR>
+nnoremap <silent>q :q<CR>
 nnoremap <C-q>     :confirm qall<CR>
 
 " Remaps
 inoremap jk <Esc>
-nnoremap Q  @q
 nnoremap j  gj
 nnoremap k  gk
 vnoremap y  ygv<Esc>
@@ -223,6 +223,13 @@ nnoremap ?  ms?\v
 vnoremap <  <gv
 vnoremap >  >gv
 nnoremap p  p`[v`]=
+nmap     x  <Plug>ReplaceWithRegisterOperator
+nmap     xx <Plug>ReplaceWithRegisterLine
+xmap     x  <Plug>ReplaceWithRegisterVisual
+
+" Macros
+nnoremap <leader>q q
+nnoremap Q         @q
 
 " Toggle highlight & select pasted text
 nnoremap <leader>/ :nohl<CR>
@@ -234,13 +241,13 @@ nnoremap <leader><leader> <c-^>
 " Split & open quick fix
 nnoremap <leader>- <C-w>s
 nnoremap <leader>\| <C-w>v
-nnoremap <leader>i :copen<CR>
+nnoremap <leader>o :copen<CR>
 
 " Make executable
 nnoremap <leader>x :! chmod +x %<CR>
 
 " Open new file adjacent to current file
-nnoremap <leader>o :e <C-R>=expand("%:p:h") . "/" <CR>
+nnoremap <leader>i :e <C-R>=expand("%:p:h") . "/" <CR>
 
 " Zoom
 nnoremap <leader>z :call functions#zoom()<CR>
@@ -256,7 +263,7 @@ inoremap <silent><expr> <TAB>
             \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 " Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
@@ -280,6 +287,11 @@ nmap <silent><leader>e :CocCommand explorer --sources file+<CR>
 " coc-snippets => expand snippet
 imap <C-l> <Plug>(coc-snippets-expand)
 
+" Dispatch:
+nnoremap <localleader>c :Dispatch! **oe-workdir/**temp/run.do_compile<CR>
+nnoremap <localleader>T :Dispatch! **oe-workdir/**temp/run.do_test<CR>
+nnoremap <localleader>t :Dispatch  **oe-workdir/**temp/run.do_test<CR>
+
 " EasyAlign:
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
@@ -293,11 +305,6 @@ nnoremap <silent>,     :Buffers<CR>
 " Git:
 nnoremap <silent> gid :Gdiff<CR>
 nnoremap <silent> gis :Gstatus<CR>
-
-" ReplaceWithRegister:
-nmap gp  <Plug>ReplaceWithRegisterOperator
-nmap gpp <Plug>ReplaceWithRegisterLine
-xmap gp  <Plug>ReplaceWithRegisterVisual
 
 " }}}
 " UI {{{

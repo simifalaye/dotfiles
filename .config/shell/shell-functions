@@ -14,7 +14,7 @@ function _is_callable
 
 function _is_wsl
 {
-    if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
+    if grep -qE "microsoft" /proc/version &> /dev/null ; then
         return 0
     fi
     return 1
@@ -52,7 +52,7 @@ function _load_repo
 mkcd() { mkdir "$1" && cd "$1"; };
 
 # Command: Push dotfiles to github
-function dots()
+dots()
 {
     message="Latest file updates"
     [ -z "$1" ] || message=${1}
@@ -61,7 +61,7 @@ function dots()
 }
 
 # Command: Reload the current shell
-function reloadshell()
+reload()
 {
     currentshell=$(ps -fp $$)
     if [[ $currentshell =~ "zsh" ]]; then
