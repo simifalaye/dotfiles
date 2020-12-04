@@ -87,11 +87,6 @@ if has('persistent_undo')
   set undolevels=1000           " Max number of changes
   set undoreload=10000          " Max lines to save for undo on a buffer reload
 endif
-if has('unnamedplus')
-  set clipboard=unnamedplus     " set clipboard to use
-else
-  set clipboard=unnamed
-endif
 
 " }}}
 " Plugins {{{
@@ -197,21 +192,15 @@ Plug 'vim-scripts/doxygentoolkit.vim', {'for': ['cpp', 'c']}
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'wellle/targets.vim'
 call plug#end()
+" Osc52 support for vim
+exec "source " . g:vimautoloaddir . "/osc52.vim"
 
 " }}}
 " Mappings & Commands {{{
 
-" Vim config
-nnoremap <localleader>r :so $MYVIMRC<bar>echo "vimrc reloaded"<CR>
-
-" Save, close & quit
-nnoremap <leader>w :update<CR>
-nnoremap <leader>d :call functions#bufcloseCloseIt()<CR>
-nnoremap <silent>q :q<CR>
-nnoremap <C-q>     :confirm qall<CR>
-
 " Remaps
 inoremap jk <Esc>
+nnoremap Q  @q
 nnoremap j  gj
 nnoremap k  gk
 vnoremap y  ygv<Esc>
@@ -227,9 +216,17 @@ nmap     x  <Plug>ReplaceWithRegisterOperator
 nmap     xx <Plug>ReplaceWithRegisterLine
 xmap     x  <Plug>ReplaceWithRegisterVisual
 
-" Macros
-nnoremap <leader>q q
-nnoremap Q         @q
+" Vim config
+nnoremap <localleader>r :so $MYVIMRC<bar>echo "vimrc reloaded"<CR>
+
+" Save, close & quit
+nnoremap <leader>w :update<CR>
+nnoremap <leader>d :call functions#bufcloseCloseIt()<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <C-q>     :confirm qall<CR>
+
+" Copy to system cliboard using osc52
+vmap <C-c> y:call SendViaOSC52(getreg('"'))<cr>
 
 " Toggle highlight & select pasted text
 nnoremap <leader>/ :nohl<CR>
