@@ -177,6 +177,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
         \ 'coc-sh',
         \ 'coc-word',
         \]
+Plug 'ojroques/vim-oscyank'
 Plug 'rstacruz/vim-closer'
 Plug 'sheerun/vim-polyglot'
   let g:vim_markdown_folding_disabled     = v:true
@@ -192,8 +193,6 @@ Plug 'vim-scripts/doxygentoolkit.vim', {'for': ['cpp', 'c']}
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'wellle/targets.vim'
 call plug#end()
-" Osc52 support for vim
-exec "source " . g:vimautoloaddir . "/osc52.vim"
 
 " }}}
 " Mappings & Commands {{{
@@ -224,9 +223,6 @@ nnoremap <leader>w :update<CR>
 nnoremap <leader>d :call functions#bufcloseCloseIt()<CR>
 nnoremap <leader>q :q<CR>
 nnoremap <C-q>     :confirm qall<CR>
-
-" Copy to system cliboard using osc52
-vmap <C-c> y:call SendViaOSC52(getreg('"'))<cr>
 
 " Toggle highlight & select pasted text
 nnoremap <leader>/ :nohl<CR>
@@ -302,6 +298,9 @@ nnoremap <silent>,     :Buffers<CR>
 " Git:
 nnoremap <silent> gid :Gdiff<CR>
 nnoremap <silent> gis :Gstatus<CR>
+
+" Osc52:
+vnoremap <C-c> :OSCYank<CR>
 
 " }}}
 " UI {{{
