@@ -55,10 +55,11 @@ alias conf='cd ~/.config'
 [ -f /tmp/WSLUSER ] && alias winuser="cd \"$(cat /tmp/WSLUSER)\""
 
 # Built-in
-alias l='ls --color --group-directories-first -F'
-alias ll='l -l'
-alias la='l -lAh'
-alias lt='l -lth'
+alias lsa='/usr/bin/ls --color --group-directories-first -F'
+alias ls='lsa'
+alias ll='ls -l'
+alias la='ls -lAh'
+alias lt='ls -lth'
 alias grep='grep --color'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
@@ -95,8 +96,8 @@ _is_callable "nvim" && {
     }
 }
 _is_callable "exa" && {
-    alias l="exa --group-directories-first -F"
-    alias ll="l -l"
+    alias ls="exa --group-directories-first -F"
+    alias ll="ls -l"
     alias la="ll -a"
     alias lt="ll -b --sort size"
 }
@@ -154,9 +155,9 @@ reload()
 {
     currentshell=$(ps -fp $$)
     if [[ $currentshell =~ "zsh" ]]; then
-        source $ZDOTDIR/.zshrc && echo "Zsh reloaded." || echo "Reload Failed."
+        source $ZDOTDIR/.zshrc && echo "Zsh reloaded."
     elif [[ $currentshell =~ "bash" ]]; then
-        source $HOME/.bashrc && echo "Bash reloaded." || echo "Reload Failed."
+        source $HOME/.bashrc && echo "Bash reloaded."
     else
         echo "Don't know how to reload current shell."
     fi
