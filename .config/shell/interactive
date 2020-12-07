@@ -55,7 +55,7 @@ alias conf='cd ~/.config'
 [ -f /tmp/WSLUSER ] && alias winuser="cd \"$(cat /tmp/WSLUSER)\""
 
 # Built-in
-alias lsa='/usr/bin/ls --color --group-directories-first -F'
+alias lsa='command ls --color --group-directories-first -F'
 alias ls='lsa'
 alias ll='ls -l'
 alias la='ls -lAh'
