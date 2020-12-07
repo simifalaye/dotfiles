@@ -1,0 +1,29 @@
+# vim: filetype=gitconfig
+#
+# Delta integration for git.
+# https://github.com/dandavison/delta
+#
+
+[core]
+  pager = delta
+
+[interactive]
+  diffFilter = delta --color-only
+
+[delta]
+  features = truecolor
+  syntax-theme = base16
+  max-line-length = 4096
+  tabs = 2
+
+[delta "truecolor"]
+  zero-style = syntax
+  plus-style = syntax "#004200"
+  plus-non-emph-style = syntax "#004200"
+  plus-emph-style = normal "#007000"
+  plus-empty-line-marker-style = syntax "#004200"
+  minus-style = normal "#420000"
+  minus-non-emph-style = normal "#420000"
+  minus-emph-style = normal "#700000"
+  minus-empty-line-marker-style = normal "#420000"
+  whitespace-error-style = reverse brightyellow

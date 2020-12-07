@@ -1,3 +1,9 @@
-# .zlogout is executed by zsh(1) on interactive log out
+# vim: filetype=zsh
 
-test -r $SHELL_CONF_HOME/shell-logout && source $SHELL_CONF_HOME/shell-logout
+# Description
+# ===========
+# This file is sourced by `zsh` login shells on logout.
+# It is read before /etc/zsh/zlogout.
+
+# Load shell common
+source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/logout"

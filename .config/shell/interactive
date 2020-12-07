@@ -1,0 +1,185 @@
+# vim: filetype=sh
+
+# Helpers
+# ---------
+
+function _is_interactive { [[ $- == *i* || -n $EMACS ]]; }
+function _is_callable
+{
+    for cmd in "$@"; do
+        command -v "$cmd" >/dev/null || return 1
+    done
+}
+function _is_wsl
+{
+    if grep -qE "microsoft" /proc/version &> /dev/null ; then
+        return 0
+    fi
+    return 1
+}
+function _load
+{
+    test -r $1 && source $1 || echo "Failed to source $1"
+}
+function _load_all
+{
+    for src in "$@"; do
+        _load $src
+    done
+}
+function _load_repo
+{
+    local target=$1
+    local dest=$2
+    local src=$3
+    if [ ! -d $dest ]; then
+        url=https://github.com/$target
+        mkdir -p $dest
+        git clone "$url" "$dest" || >&2 echo "Failed to load repo $url"
+    fi
+    [ -z "$src" ] || _load $dest/$src
+}
+
+# Aliases
+# ---------
+
+# Navigation
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias dev='cd ~/dev'
+alias dl='cd ~/Downloads'
+alias docs='cd ~/Documents'
+alias pics='cd ~/Pictures'
+alias conf='cd ~/.config'
+[ -f /tmp/WSLUSER ] && alias winuser="cd \"$(cat /tmp/WSLUSER)\""
+
+# Built-in
+alias l='ls --color --group-directories-first -F'
+alias ll='l -l'
+alias la='l -lAh'
+alias lt='l -lth'
+alias grep='grep --color'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias dud='du -d 1 -h'
+alias duf='du -sh *'
+alias chmox='chmod +x'
+alias mkdir='mkdir -p'
+
+# Application Config
+# --------------------
+
+_is_callable "wget" && {
+    mkdir -p ${XDG_CONFIG_HOME}/wget
+    alias wget="wget --hsts-file ${XDG_CONFIG_HOME}/wget/wget-hsts"
+}
+_is_callable "xdg-open" && alias open="xdg-open"
+_is_callable "batcat" && alias cat="batcat -p"
+_is_callable "howdoi" && alias hdi="howdoi -c -n 5"
+_is_callable "tmux" && {
+    alias tmux="tmux -2 -f '$TMUX_CONFIG'"
+    alias ts="tmux new-session -As"
+    alias ta="tmux attach -t"
+    alias tl="tmux ls"
+}
+_is_callable "git" && {
+    alias g='git'
+    alias gbc="git branch | grep -v '^*' | xargs git branch -D"
+}
+_is_callable "nvim" && {
+    alias vim="nvim"
+    v() {
+        [[ $(pwd) -ef $HOME ]] && cmd="yadm" || cmd="git"
+        $cmd ls-files | fzf -m --preview "cat {}" | xargs nvim;
+    }
+}
+_is_callable "exa" && {
+    alias l="exa --group-directories-first -F"
+    alias ll="l -l"
+    alias la="ll -a"
+    alias lt="ll -b --sort size"
+}
+_is_callable "nnn" && {
+    export NNN_OPTS="aErx"
+    export NNN_TRASH=1
+    export NNN_BMS='c:~/.config;s:~/dev;d:~/Documents;l:~/.local'
+    export NNN_PLUG="c:fzcd;f:fzopen;e:suedit;l:-_git log -p*;o:finder;u:getplugs;"
+    n () {
+        # Block nesting of nnn in subshells
+        if [ -n $NNNLVL ] && [ "${NNNLVL:-0}" -ge 1 ]; then
+            echo "nnn is already running"
+            return
+        fi
+
+        # The default behaviour is to cd on quit (nnn checks if NNN_TMPFILE is set)
+        # To cd on quit only on ^G, remove the "export" as in:
+        #     NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+        # NOTE: NNN_TMPFILE is fixed, should not be modified
+        export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+
+        # Unmask ^Q (, ^V etc.) (if required, see `stty -a`) to Quit nnn
+        # stty start undef
+        # stty stop undef
+        # stty lwrap undef
+        # stty lnext undef
+
+        nnn "$@"
+
+        if [ -f "$NNN_TMPFILE" ]; then
+            . "$NNN_TMPFILE"
+            rm -f "$NNN_TMPFILE" > /dev/null
+        fi
+    }
+    alias N='sudo -E nnn -dH'
+}
+
+# Functions
+# -----------
+
+# Command: Fast clear screen
+c() { clear && pwd; };
+# Command: mkdir and cd into it
+mkcd() { mkdir -p "$1" && cd "$1"; };
+# Command: Push dotfiles to github
+dots()
+{
+    message="Latest file updates"
+    [ -z "$1" ] || message=${1}
+    command yadm commit -a -m "$message"
+    command yadm push
+}
+# Command: Reload the current shell
+reload()
+{
+    currentshell=$(ps -fp $$)
+    if [[ $currentshell =~ "zsh" ]]; then
+        source $ZDOTDIR/.zshrc && echo "Zsh reloaded." || echo "Reload Failed."
+    elif [[ $currentshell =~ "bash" ]]; then
+        source $HOME/.bashrc && echo "Bash reloaded." || echo "Reload Failed."
+    else
+        echo "Don't know how to reload current shell."
+    fi
+}
+# Command: Back up a file. Usage "backupthis <filename>"
+backupthis() {
+    cp -riv $1 ${1}-$(date +%Y%m%d%H%M).backup;
+}
+# Command: Colourise man pages
+man() {
+    env \
+        LESS_TERMCAP_mb=$(tput bold; tput setaf 6) \
+        LESS_TERMCAP_md=$(tput bold; tput setaf 6) \
+        LESS_TERMCAP_me=$(tput sgr0) \
+        LESS_TERMCAP_se=$(tput rmso; tput sgr0) \
+        LESS_TERMCAP_ue=$(tput rmul; tput sgr0) \
+        LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 4) \
+        LESS_TERMCAP_mr=$(tput rev) \
+        LESS_TERMCAP_mh=$(tput dim) \
+        LESS_TERMCAP_ZN=$(tput ssubm) \
+        LESS_TERMCAP_ZV=$(tput rsubm) \
+        LESS_TERMCAP_ZO=$(tput ssupm) \
+        LESS_TERMCAP_ZW=$(tput rsupm) \
+        man "$@"
+}
+

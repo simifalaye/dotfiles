@@ -1,0 +1,32 @@
+[user]
+    name = Simi Falaye
+    email = simifalaye1@gmail.com
+
+[core]
+    editor = nvim
+    pager = less -FR
+    excludesfile = ~/.config/git/ignore.global
+
+[commit]
+    template = ~/.config/git/message
+    verbose = true
+
+[merge]
+    tool = kdiff3
+
+[push]
+    default = upstream
+
+[pull]
+    rebase = true
+
+[color]
+    ui = true
+    status = auto
+    branch = auto
+    diff = auto
+
+[include]
+    path = alias
+    path = delta
+    path = config.local

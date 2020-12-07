@@ -58,14 +58,14 @@ prompt_init() {
   zstyle ':vcs_info:*' max-exports 2
   zstyle ':vcs_info:git*' formats '%F{green}(%b)%f '
   zstyle ':vcs_info:git*' actionformats ' %b (%a)'
-  # if atleast one job, print #jobs or print fish
-  fish='%(1j.%F{208} ✱.%F{green}⋊>)%f '
+  # if atleast one job, print #jobs or nothing
+  job='%(1j.%F{208}%j* .)%f'
   # prompt variables
   timenow="%F{8}[$(date "+%H:%M")]%f "
   host='%(?.%F{blue}.%F{red})%m%f'
   dir='%F{white}:%f%F{yellow}%1d%f '
 
-  PROMPT=$'${fish}${timenow}${host}${dir}${vcs_info_msg_0_}$(prompt_git_dirty)${PROMPT_SYMBOL:-$ }'
+  PROMPT=$'${job}${timenow}${host}${dir}${vcs_info_msg_0_}$(prompt_git_dirty)${PROMPT_SYMBOL:-$ }'
 }
 
 prompt_init "$@"

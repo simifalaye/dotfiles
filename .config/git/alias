@@ -1,0 +1,61 @@
+# vim: filetype=gitconfig
+#
+# Alias configuration for git.
+#
+
+# Named aliases
+[alias]
+    # Edit last commit message
+    reword = commit --amend
+    # Amend but don't edit message
+    commend = commit --amend --no-edit
+    # Show last commit
+    last = log -1 HEAD
+    # Unstage changes from the index.
+    unstage = reset HEAD --
+    # Pull rebase
+    up = pull --rebase
+
+# Short aliases
+[alias]
+    # Branch (b)
+    b   = branch
+    ba  = branch --all
+    bl  = branch --all --verbose
+    bc  = checkout -b
+    brs = reset --soft
+    brh = reset --hard
+
+    # Commit (c)
+    c  = commit
+    cm = commit --message
+    co = checkout
+
+    # Add (a)
+    a  = add
+    aa = add --all
+    au = add --update
+
+    # Status (s)
+    s  = status
+    ss = status -sb
+
+    # Log (l)
+    l  = log
+    ls = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit
+
+    # Diff (d)
+    d = diff
+
+    # Stash (w)
+    w  = stash
+    wl = stash list
+    wa = stash pop
+    wx = stash drop
+
+    # Rebase (r)
+    r  = rebase
+    ri = rebase --interactive
+    ra = rebase --abort
+    rc = rebase --continue
+    rs = rebase --skip

@@ -1,28 +1,23 @@
+# vim: filetype=bash
+
 # Description
 # ===========
-# At startup, depending on the case:
-# - run as a login shell (or with the option --login), it executes profile (or
-# bash_profile instead if it exists (only user-specific version));
-# - run as an interactive, non-login shell, it executes bashrc (the system-wide
-# version is called bash.bashrc).
-# (see: http://www.solipsys.co.uk/new/BashInitialisationFiles.html)
-#
-# At exit, it executes ~/.bash_logout (the system-wide version is called
-# bash.bash_logout).
-# Note the funny (read: insane) non-login condition for executing bashrc: it is
-# often worked around by having the profile execute bashrc anyway.
+# This file is sourced by `bash` non-login interactive shells.
+# It is read after /etc/bash.bashrc.
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-# Source global definitions
-test -r $SHELL_CONF_HOME/shell-profile && . $SHELL_CONF_HOME/shell-profile
-test -r $SHELL_CONF_HOME/shell-aliases && . $SHELL_CONF_HOME/shell-aliases
+# Load shell common
+source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/env"
+source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/interactive"
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
 HISTCONTROL=ignoreboth
+HISTFILE_DIR="$XDG_CACHE_HOME/bash" && command mkdir -p $HISTFILE_DIR
 export HISTIGNORE="&:ls:[bf]g:pwd:exit:cd .."
+export HISTFILE="$HISTFILE_DIR/.bash_history"
 
 # append to the history file, don't overwrite it
 shopt -s histappend

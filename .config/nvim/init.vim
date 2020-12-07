@@ -198,7 +198,6 @@ call plug#end()
 " Mappings & Commands {{{
 
 " Remaps
-inoremap jk <Esc>
 nnoremap Q  @q
 nnoremap j  gj
 nnoremap k  gk

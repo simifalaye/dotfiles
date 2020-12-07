@@ -1,0 +1,9 @@
+# vim: filetype=bash
+
+# Description
+# ===========
+# This file is sourced by `bash` non-interactive shells.
+# It is the only startup file read in such cases.
+
+# Load shell common
+source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/env"

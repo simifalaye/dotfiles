@@ -1,0 +1,38 @@
+# vim: filetype=sh
+
+# XDG base directory
+# --------------------
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_BIN_HOME="$HOME/.local/bin"
+export XDG_LIB_HOME="$HOME/.local/lib"
+
+# Shell
+# -------
+export SHELL=/bin/zsh
+export SHELL_CONF_HOME=~/.config/shell
+export TERMCMD=st
+
+# Lang
+# ------
+USER_LANGUAGE="en_US.UTF-8"
+export LC_ALL=${USER_LANGUAGE}
+export LANG=${USER_LANGUAGE}
+export LANGUAGE=${USER_LANGUAGE}
+
+# Editor
+# --------
+export EDITOR='nvim'
+export GIT_EDITOR="$EDITOR"
+export USE_EDITOR="$EDITOR"
+export VISUAL=$EDITOR
+
+# Pager and flow
+# --------------
+export PAGER=less
+export LESS='-iFMRSX -x4'
+# make less more friendly for non-text input files, see lesspipe(1)
+test -x /usr/bin/lesspipe && eval "$(SHELL=/bin/sh lesspipe)"
+# disable flow control (ctrl + s,q)
+stty -ixon
