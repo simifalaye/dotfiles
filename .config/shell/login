@@ -43,6 +43,9 @@ if grep -q "microsoft" /proc/version &>/dev/null; then
     export DISPLAY="$(/sbin/ip route | awk '/default/ { print $3 }'):0"
     export LIBGL_ALWAYS_INDIRECT=1
     [ -n "$USERPROFILE" ] && echo $(wslpath "$USERPROFILE") > /tmp/WSLUSER
+    # pam_env
+    export XDG_RUNTIME_DIR=/tmp/runtimedir
+    export RUNLEVEL=3
 elif grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
     export IS_WSL_DEVICE=true
     LS_COLORS="ow=01;36;40" && export LS_COLORS
@@ -50,4 +53,7 @@ elif grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
     export DISPLAY=localhost:0
     # Wsl file/folder permissions metadata
     umask 022
+    # pam_env
+    export XDG_RUNTIME_DIR=/tmp/runtimedir
+    export RUNLEVEL=3
 fi

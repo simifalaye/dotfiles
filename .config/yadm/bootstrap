@@ -1,0 +1,110 @@
+#!/bin/bash
+#
+# Bootsrap program for dotfiles repo
+#
+
+APT_PKGS=(
+    atool
+    bat
+    calc
+    fd
+    neovim
+    nnn
+    ripgrep
+    rsync
+    tig
+    tmux
+)
+APT_GRH_PKG=(scrot sxiv zathura)
+MANUAL_PKGS=(bottom delta exa joplin)
+PIP_PKGS=(howdoi pynvim trash-cli)
+NPM_PKGS=(neovim)
+
+# Functions
+# -----------
+
+function _is_callable {
+    for cmd in "$@"; do
+        command -v "$cmd" >/dev/null || return 1
+    done
+}
+function _is_graphical { ls /usr/share/xsessions/ >/dev/null 2>&1; }
+function _install_pkgs {
+    mgr="${1}"
+    pkgs="${2}"
+
+    echo "======================================================================"
+    echo "The following optional ($mgr) packages can be automatically installed:"
+    echo "$pkgs"
+    read -p "Do you wish to proceed? " -n 1 -r
+    # echo    # (optional) move to a new line
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        case "$mgr" in
+            apt)
+                sudo apt-get install -y "$pkgs"
+                ;;
+            pip)
+                sudo pip3 install "$pkgs"
+                ;;
+            npm)
+                sudo npm install -g "$pkgs"
+                ;;
+            *)
+                echo "Unknown package manager: $mgr"
+                ;;
+        esac
+    fi
+    echo ""
+}
+
+install_pkg_managers()
+{
+    sudo apt update
+    if ! _is_callable "pip3"; then
+        sudo apt install -y python3-pip
+    fi
+    if ! _is_callable "npm"; then
+        sudo apt install -y nodejs npm
+    fi
+}
+
+install_pkgs()
+{
+    # Convert arrays to newline delimited strings
+    oIFS=$IFS
+    IFS=$'\n'
+    pip_pkgs="${PIP_PKGS[*]}"
+    npm_pkgs="${NPM_PKGS[*]}"
+    IFS=oIFS
+
+    # Get missing packages
+    apt_pkgs=$(dpkg -C "${APT_PKGS[@]}" 2>&1 | awk -F\' '{print $2}')
+    pip_pkgs=$(pip3 freeze | grep -Fwoi "$pip_pkgs" | uniq | grep -Fwiv -f - <(echo "$pip_pkgs"))
+    npm_pkgs=$(sudo npm -g list | grep -Fwoi "$npm_pkgs" | uniq | grep -Fwiv -f - <(echo "$npm_pkgs"))
+    _is_graphical && grh_pkgs=$(dpkg -C ${APT_PKGS[@]} 2>&1 | awk -F\' '{print $2}') || grh_pkgs=""
+
+    # Install packages
+    [ -n "$apt_pkgs" ] && _install_pkgs "apt" "${apt_pkgs}"
+    [ -n "$grh_pkgs" ] && _install_pkgs "apt" "${grh_pkgs}"
+    [ -n "$pip_pkgs" ] && _install_pkgs "pip" "${pip_pkgs}"
+    [ -n "$npm_pkgs" ] && _install_pkgs "npm" "${npm_pkgs}"
+}
+
+# Change the default login shell for the current user.
+change_login_shell()
+{
+    [[ $(cat /etc/passwd | grep $USER) == *:/bin/zsh ]] && return
+
+    echo -e "\nChanging the login shell to /bin/zsh"
+    chsh $USER --shell=/bin/zsh
+}
+
+# ======
+# MAIN
+# ======
+
+install_pkg_managers
+install_pkgs
+change_login_shell
+
+exit 0
