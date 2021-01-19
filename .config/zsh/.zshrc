@@ -152,11 +152,10 @@ _load_repo chriskempson/base16-shell $HOME/.config/base16-shell
 [ -n "$PS1" ] && eval "$("$HOME/.config/base16-shell/profile_helper.sh")"
 
 # Fzf
-[ -f ${XDG_CONFIG_HOME:-$HOME}/fzf/fzf.zsh ] && {
-    source ${XDG_CONFIG_HOME}/fzf/fzf.zsh
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && {
+    source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
     _is_callable "fdfind" && { # Use fd-find instead of built in
         export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --follow --exclude .git'
         export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
     }
 }
-

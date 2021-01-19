@@ -13,8 +13,11 @@
     last = log -1 HEAD
     # Unstage changes from the index.
     unstage = reset HEAD --
-    # Pull rebase
+    # Pull rebase & submodule update
     up = pull --rebase
+    ups = !git pull --rebase && git submodule update
+    # Interative rebase
+    rdev = rebase -i develop
 
 # Short aliases
 [alias]
@@ -37,8 +40,8 @@
     au = add --update
 
     # Status (s)
-    s  = status
-    ss = status -sb
+    s  = status -sb
+    ss = status
 
     # Log (l)
     l  = log

@@ -31,7 +31,7 @@ export VISUAL=$EDITOR
 # Pager and flow
 # --------------
 export PAGER=less
-export LESS='-iFMRSX -x4'
+export LESS='-QRSMi -#.25 --no-histdups'
 # make less more friendly for non-text input files, see lesspipe(1)
 test -x /usr/bin/lesspipe && eval "$(SHELL=/bin/sh lesspipe)"
 # disable flow control (ctrl + s,q)

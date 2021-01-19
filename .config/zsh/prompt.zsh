@@ -61,7 +61,7 @@ prompt_init() {
   # if atleast one job, print #jobs or nothing
   job='%(1j.%F{208}%j* .)%f'
   # prompt variables
-  timenow="%F{8}[$(date "+%H:%M")]%f "
+  timenow="%F{8}[%D{%T}]%f "
   host='%(?.%F{blue}.%F{red})%m%f'
   dir='%F{white}:%f%F{yellow}%1d%f '
 

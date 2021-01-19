@@ -5,3 +5,9 @@
 if [ "$SHLVL" = 1 ]; then
     [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q
 fi
+
+# empty trash if longer than 30 days
+
+if (( $+commands[trash] )); then
+    trash-empty 30
+fi

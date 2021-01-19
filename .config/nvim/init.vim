@@ -7,7 +7,6 @@ let g:vimhomedir     = has('nvim') ? "~/.config/nvim" : "~/.vim"
 let g:vimplugdir     = g:vimhomedir . "/plugged"
 let g:vimautoloaddir = g:vimhomedir . "/autoload"
 let g:sessiondir     = g:vimhomedir . "/session"
-let g:is_wsl         = !empty($IS_WSL_DEVICE) ? 1 : 0
 
 " }}}
 " Settings {{{
@@ -102,7 +101,7 @@ call functions#getVimPlug(g:vimautoloaddir)
 call plug#begin(g:vimplugdir)
 Plug 'airblade/vim-rooter'
   let g:rooter_silent_chdir = 1
-  let g:rooter_patterns     = ['oe-workdir/', 'src/', '.git/']
+  let g:rooter_patterns     = ['oe-workdir/', '.git/']
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'honza/vim-snippets'
@@ -132,7 +131,6 @@ Plug 'junegunn/fzf.vim'
   let g:fzf_buffers_jump   = v:true
   let g:fzf_preview_window = ''
   let g:fzf_history_dir    = '~/.local/share/fzf-history'
-  " CMD => Find
   if executable('rg')
     let s:grep_cmd = 'rg --column --line-number --no-heading
           \ --fixed-strings
@@ -154,7 +152,7 @@ Plug 'mhinz/vim-startify'
   let g:startify_bookmarks           = [
         \ {'n': '~/.config/nvim/init.vim'},
         \ {'z': '~/.config/zsh/.zshrc'},
-        \ {'p': '~/.config/shell/shell-profile'}
+        \ {'s': '~/.config/shell/interactive'}
         \ ]
   let g:startify_lists = [
         \  { 'type': 'dir',       'header': [ 'Files '. getcwd() ] },
@@ -166,6 +164,7 @@ Plug 'mhinz/vim-startify'
         \   { 'up': [ 'Update Plugins', ':PlugUpdate' ] },
         \   { 'ug': [ 'Upgrade Plugin Manager', ':PlugUpgrade' ] },
         \ ]
+Plug 'kergoth/vim-bitbake'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
   let g:coc_global_extensions = [
         \ 'coc-clangd',
@@ -178,7 +177,6 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
         \ 'coc-word',
         \]
 Plug 'ojroques/vim-oscyank'
-Plug 'rstacruz/vim-closer'
 Plug 'sheerun/vim-polyglot'
   let g:vim_markdown_folding_disabled     = v:true
   let g:vim_markdown_auto_insert_bullets  = v:false
@@ -192,6 +190,8 @@ Plug 'tpope/vim-surround'
 Plug 'vim-scripts/doxygentoolkit.vim', {'for': ['cpp', 'c']}
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'wellle/targets.vim'
+Plug 'Yggdroot/indentLine'
+  let g:indentLine_fileTypeExclude = ['md', 'git']
 call plug#end()
 
 " }}}
@@ -213,6 +213,8 @@ nnoremap p  p`[v`]=
 nmap     x  <Plug>ReplaceWithRegisterOperator
 nmap     xx <Plug>ReplaceWithRegisterLine
 xmap     x  <Plug>ReplaceWithRegisterVisual
+xmap     ga <Plug>(EasyAlign)
+nmap     ga <Plug>(EasyAlign)
 
 " Vim config
 nnoremap <localleader>r :so $MYVIMRC<bar>echo "vimrc reloaded"<CR>
@@ -280,13 +282,10 @@ nmap <silent><leader>e :CocCommand explorer --sources file+<CR>
 imap <C-l> <Plug>(coc-snippets-expand)
 
 " Dispatch:
-nnoremap <localleader>c :Dispatch! **oe-workdir/**temp/run.do_compile<CR>
-nnoremap <localleader>T :Dispatch! **oe-workdir/**temp/run.do_test<CR>
-nnoremap <localleader>t :Dispatch  **oe-workdir/**temp/run.do_test<CR>
-
-" EasyAlign:
-xmap ga <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
+nnoremap <localleader>dc :Dispatch! **oe-workdir/**temp/run.do_compile<CR>
+nnoremap <localleader>dT :Dispatch! **oe-workdir/**temp/run.do_test<CR>
+nnoremap <localleader>dt :Dispatch  **oe-workdir/**temp/run.do_test<CR>
+nnoremap <localleader>do :Copen<CR>
 
 " Fzf:
 nnoremap <silent><C-p> :Files<CR>

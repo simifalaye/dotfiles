@@ -3,32 +3,26 @@
 # Helpers
 # ---------
 
-function _is_interactive { [[ $- == *i* || -n $EMACS ]]; }
-function _is_callable
-{
+function _is_callable {
     for cmd in "$@"; do
         command -v "$cmd" >/dev/null || return 1
     done
 }
-function _is_wsl
-{
+function _is_wsl {
     if grep -qE "microsoft" /proc/version &> /dev/null ; then
         return 0
     fi
     return 1
 }
-function _load
-{
+function _load {
     test -r $1 && source $1 || echo "Failed to source $1"
 }
-function _load_all
-{
+function _load_all {
     for src in "$@"; do
         _load $src
     done
 }
-function _load_repo
-{
+function _load_repo {
     local target=$1
     local dest=$2
     local src=$3
@@ -73,6 +67,7 @@ alias mkdir='mkdir -p'
 
 _is_callable "wget" && {
     mkdir -p ${XDG_CONFIG_HOME}/wget
+    [ -f "${XDG_CONFIG_HOME}/wget/config" ] || touch ${XDG_CONFIG_HOME}/wget/config
     alias wget="wget --hsts-file ${XDG_CONFIG_HOME}/wget/wget-hsts"
 }
 _is_callable "xdg-open" && alias open="xdg-open"
@@ -90,7 +85,8 @@ _is_callable "git" && {
 }
 _is_callable "nvim" && {
     alias vim="nvim"
-    v() {
+    alias e="vim"
+    eg() {
         [[ $(pwd) -ef $HOME ]] && cmd="yadm" || cmd="git"
         $cmd ls-files | fzf -m --preview "cat {}" | xargs nvim;
     }
@@ -102,11 +98,13 @@ _is_callable "exa" && {
     alias lt="ll -b --sort size"
 }
 _is_callable "nnn" && {
-    export NNN_OPTS="aErx"
+    export NNN_OPTS="acCeErx"
     export NNN_TRASH=1
     export NNN_BMS='c:~/.config;s:~/dev;d:~/Documents;l:~/.local'
-    export NNN_PLUG="c:fzcd;f:fzopen;e:suedit;l:-_git log -p*;o:finder;u:getplugs;"
-    n () {
+    export NNN_PLUG="c:fzcd;f:fzopen;e:suedit;u:getplugs;"
+    export NNN_OPENER="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/plugins/nuke"
+    n ()
+    {
         # Block nesting of nnn in subshells
         if [ -n $NNNLVL ] && [ "${NNNLVL:-0}" -ge 1 ]; then
             echo "nnn is already running"
@@ -128,11 +126,40 @@ _is_callable "nnn" && {
         nnn "$@"
 
         if [ -f "$NNN_TMPFILE" ]; then
-            . "$NNN_TMPFILE"
-            rm -f "$NNN_TMPFILE" > /dev/null
+                . "$NNN_TMPFILE"
+                rm -f "$NNN_TMPFILE" > /dev/null
         fi
     }
     alias N='sudo -E nnn -dH'
+}
+_is_callable "trash" && {
+    # Command: Prompt trash file
+    function rm {
+        local bye
+        print -n 'delete permanently? [y/N] ' && read -sq bye; print
+        if [[ $bye == 'y' ]]; then
+            command rm -rv $@
+        else
+            trash $@
+        fi
+    }
+    # Command: Restore trashed file
+    function mr {
+        (
+            [[ $1 ]] && { cd "$1" || return }
+            trash-restore 2>/dev/null
+        )
+    }
+    alias rml='trash-list'
+}
+_is_callable "yadm" && {
+    # Command: Push dotfiles to github
+    function dots {
+        message="Latest file updates"
+        [ -z "$1" ] || message=${1}
+        command yadm commit -a -m "$message"
+        command yadm push
+    }
 }
 
 # Functions
@@ -142,14 +169,6 @@ _is_callable "nnn" && {
 c() { clear && pwd; };
 # Command: mkdir and cd into it
 mkcd() { mkdir -p "$1" && cd "$1"; };
-# Command: Push dotfiles to github
-dots()
-{
-    message="Latest file updates"
-    [ -z "$1" ] || message=${1}
-    command yadm commit -a -m "$message"
-    command yadm push
-}
 # Command: Reload the current shell
 reload()
 {
