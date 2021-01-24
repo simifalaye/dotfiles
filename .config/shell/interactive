@@ -165,8 +165,6 @@ _is_callable "yadm" && {
 # Functions
 # -----------
 
-# Command: Fast clear screen
-c() { clear && pwd; };
 # Command: mkdir and cd into it
 mkcd() { mkdir -p "$1" && cd "$1"; };
 # Command: Reload the current shell

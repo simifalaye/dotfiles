@@ -74,7 +74,7 @@ set fillchars=""   " Fix splits
 set shortmess+=c   " Avoid 'hit enter' messages
 set updatetime=300 " Default is 4000, lower it for better performance
 set signcolumn=no  " Don't like the extra space
-set pastetoggle=<F2>
+set clipboard=unnamedplus
 
 " History
 " ---------
@@ -150,9 +150,9 @@ Plug 'mhinz/vim-startify'
   let g:startify_session_dir         = g:sessiondir
   let g:startify_session_persistence = v:true
   let g:startify_bookmarks           = [
-        \ {'n': '~/.config/nvim/init.vim'},
-        \ {'z': '~/.config/zsh/.zshrc'},
-        \ {'s': '~/.config/shell/interactive'}
+        \ {'s': '~/.config/shell/interactive'},
+        \ {'v': '~/.config/nvim/init.vim'},
+        \ {'z': '~/.config/zsh/.zshrc'}
         \ ]
   let g:startify_lists = [
         \  { 'type': 'dir',       'header': [ 'Files '. getcwd() ] },
@@ -173,10 +173,11 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
         \ 'coc-lua',
         \ 'coc-rls',
         \ 'coc-snippets',
-        \ 'coc-sh',
         \ 'coc-word',
         \]
+Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'ojroques/vim-oscyank'
+  autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '+' | OSCYankReg + | endif
 Plug 'sheerun/vim-polyglot'
   let g:vim_markdown_folding_disabled     = v:true
   let g:vim_markdown_auto_insert_bullets  = v:false
