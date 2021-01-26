@@ -10,13 +10,12 @@ APT_PKGS=(
     bat
     calc
     fd-find
-    neovim
     ripgrep
     rsync
     tig
     tmux
 )
-APT_GRH_PKG=( scrot sxiv zathura )
+APT_GRH_PKGS=( scrot sxiv zathura )
 PIP_PKGS=( howdoi pynvim trash-cli )
 NPM_PKGS=( neovim )
 
@@ -35,6 +34,10 @@ function __install_delta {
 }
 MANUAL_PKGS[exa]='exa;https://github.com/ogham/exa'
 MANUAL_PKGS[joplin]='joplin;https://joplinapp.org/terminal/'
+MANUAL_PKGS[neovim]='https://github.com/neovim/neovim'
+function __install_neovim {
+    sudo snap install --beta nvim --classic && return 0 || return 1
+}
 MANUAL_PKGS[nnn]='nnn;https://github.com/jarun/nnn'
 function __install_nnn {
     tmp=~/nnn.amd64.deb
@@ -113,7 +116,7 @@ install_pkgs()
     apt_pkgs=( $(dpkg -C "${APT_PKGS[@]}" 2>&1 | awk -F\' '{print $2}') )
     pip_pkgs=( $(pip3 freeze | grep -Fwoi "$pip_pkgs" | uniq | grep -Fwiv -f - <(echo "$pip_pkgs")) )
     npm_pkgs=( $(sudo npm -g list | grep -Fwoi "$npm_pkgs" | uniq | grep -Fwiv -f - <(echo "$npm_pkgs")) )
-    _is_graphical && grh_pkgs=( $(dpkg -C "${APT_GRH_PKG[@]}" 2>&1 | awk -F \' '{print $2}') ) || grh_pkgs=""
+    _is_graphical && grh_pkgs=( $(dpkg -C "${APT_GRH_PKGS[@]}" 2>&1 | awk -F \' '{print $2}') ) || grh_pkgs=""
 
     # Install packages
     [ -n "$apt_pkgs" ] && _install_pkgs "apt" "${apt_pkgs[@]}"

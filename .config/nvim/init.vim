@@ -74,7 +74,7 @@ set fillchars=""   " Fix splits
 set shortmess+=c   " Avoid 'hit enter' messages
 set updatetime=300 " Default is 4000, lower it for better performance
 set signcolumn=no  " Don't like the extra space
-set clipboard=unnamedplus
+set pastetoggle=<leader>v
 
 " History
 " ---------
@@ -99,9 +99,6 @@ let g:loaded_tutor_mode_plugin = v:true
 " download vim-plug if not installed yet
 call functions#getVimPlug(g:vimautoloaddir)
 call plug#begin(g:vimplugdir)
-Plug 'airblade/vim-rooter'
-  let g:rooter_silent_chdir = 1
-  let g:rooter_patterns     = ['oe-workdir/', '.git/']
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'honza/vim-snippets'
@@ -140,7 +137,8 @@ Plug 'junegunn/fzf.vim'
           \ --glob "!.git/*"
           \ --color "always" '
     command! -bang -nargs=* Find
-          \ call fzf#vim#grep(s:grep_cmd . shellescape(<q-args>) . '| tr -d "\017"', 1, <bang>0)
+          \ call fzf#vim#grep(s:grep_cmd .
+          \ shellescape(<q-args>) . '| tr -d "\017"', 1, <bang>0)
   endif
 Plug 'mhinz/vim-startify'
   let g:startify_change_to_dir       = v:false
@@ -175,9 +173,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
         \ 'coc-snippets',
         \ 'coc-word',
         \]
-Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'ojroques/vim-oscyank'
-  autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '+' | OSCYankReg + | endif
 Plug 'sheerun/vim-polyglot'
   let g:vim_markdown_folding_disabled     = v:true
   let g:vim_markdown_auto_insert_bullets  = v:false
@@ -191,15 +187,12 @@ Plug 'tpope/vim-surround'
 Plug 'vim-scripts/doxygentoolkit.vim', {'for': ['cpp', 'c']}
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'wellle/targets.vim'
-Plug 'Yggdroot/indentLine'
-  let g:indentLine_fileTypeExclude = ['md', 'git']
 call plug#end()
 
 " }}}
 " Mappings & Commands {{{
 
 " Remaps
-nnoremap Q  @q
 nnoremap j  gj
 nnoremap k  gk
 vnoremap y  ygv<Esc>
@@ -219,12 +212,14 @@ nmap     ga <Plug>(EasyAlign)
 
 " Vim config
 nnoremap <localleader>r :so $MYVIMRC<bar>echo "vimrc reloaded"<CR>
+nnoremap <localleader>i :so $MYVIMRC<bar>:PlugInstall<CR>
+nnoremap <localleader>c :so $MYVIMRC<bar>:PlugClean<CR>
+nnoremap <localleader>u :so $MYVIMRC<bar>:PlugUpdate<CR>
 
 " Save, close & quit
 nnoremap <leader>w :update<CR>
-nnoremap <leader>d :call functions#bufcloseCloseIt()<CR>
 nnoremap <leader>q :q<CR>
-nnoremap <C-q>     :confirm qall<CR>
+nnoremap Q :call functions#bufcloseCloseIt()<CR>
 
 " Toggle highlight & select pasted text
 nnoremap <leader>/ :nohl<CR>
@@ -257,9 +252,9 @@ inoremap <silent><expr> <TAB>
             \ functions#checkBackspace() ? "\<TAB>" :
             \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+" Use `[d` and `]d` to navigate diagnostics
+nmap <silent> [d <Plug>(coc-diagnostic-prev)
+nmap <silent> ]d <Plug>(coc-diagnostic-next)
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
@@ -283,10 +278,11 @@ nmap <silent><leader>e :CocCommand explorer --sources file+<CR>
 imap <C-l> <Plug>(coc-snippets-expand)
 
 " Dispatch:
-nnoremap <localleader>dc :Dispatch! **oe-workdir/**temp/run.do_compile<CR>
-nnoremap <localleader>dT :Dispatch! **oe-workdir/**temp/run.do_test<CR>
-nnoremap <localleader>dt :Dispatch  **oe-workdir/**temp/run.do_test<CR>
-nnoremap <localleader>do :Copen<CR>
+nnoremap <leader>dc :call functions#yoctoDispatch(v:false)<CR>
+nnoremap <leader>dC :call functions#yoctoDispatch(v:true)<CR>
+nnoremap <leader>dt :call functions#yoctoDispatch(v:false, v:true)<CR>
+nnoremap <leader>dT :call functions#yoctoDispatch(v:true, v:true)<CR>
+nnoremap <leader>do :Copen<CR>
 
 " Fzf:
 nnoremap <silent><C-p> :Files<CR>
