@@ -74,7 +74,8 @@ set fillchars=""   " Fix splits
 set shortmess+=c   " Avoid 'hit enter' messages
 set updatetime=300 " Default is 4000, lower it for better performance
 set signcolumn=no  " Don't like the extra space
-set pastetoggle=<leader>v
+set sel=inclusive  " Include last character in visual selection
+set pastetoggle=<C-o>
 
 " History
 " ---------
@@ -92,7 +93,10 @@ endif
 
 " Disable unused built-in plugins.
 let g:loaded_gzip              = v:true
+let g:loaded_netrw             = v:true
 let g:loaded_netrwPlugin       = v:true
+let g:loaded_netrwSettings     = v:true
+let g:loaded_netrwFileHandlers = v:true
 let g:loaded_2html_plugin      = v:true
 let g:loaded_tutor_mode_plugin = v:true
 
@@ -193,6 +197,8 @@ call plug#end()
 " Mappings & Commands {{{
 
 " Remaps
+nnoremap ;  :
+nnoremap :  ;
 nnoremap j  gj
 nnoremap k  gk
 vnoremap y  ygv<Esc>
@@ -215,11 +221,11 @@ nnoremap <localleader>r :so $MYVIMRC<bar>echo "vimrc reloaded"<CR>
 nnoremap <localleader>i :so $MYVIMRC<bar>:PlugInstall<CR>
 nnoremap <localleader>c :so $MYVIMRC<bar>:PlugClean<CR>
 nnoremap <localleader>u :so $MYVIMRC<bar>:PlugUpdate<CR>
+nnoremap <localleader>U :so $MYVIMRC<bar>:PlugUpgrade<CR>
 
 " Save, close & quit
 nnoremap <leader>w :update<CR>
-nnoremap <leader>q :q<CR>
-nnoremap Q :call functions#bufcloseCloseIt()<CR>
+nnoremap <leader>q :call functions#bufcloseCloseIt()<CR>
 
 " Toggle highlight & select pasted text
 nnoremap <leader>/ :nohl<CR>
@@ -245,6 +251,12 @@ nnoremap <leader>z :call functions#zoom()<CR>
 " Underline text
 nmap gu yyp0v$r- | nmap gU yyp0v$r=
 
+" Move 1 more lines up or down in normal and visual selection modes.
+nnoremap <M-u> :m .-2<CR>==
+nnoremap <M-d> :m .+1<CR>==
+vnoremap <M-u> :m '<-2<CR>gv=gv
+vnoremap <M-d> :m '>+1<CR>gv=gv
+
 " CoC:
 " Use tab to cycle through completion items and <CR> to accept
 inoremap <silent><expr> <TAB>
@@ -260,7 +272,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-" Use K to show documentation in preview window
+" Show documentation in preview window
 nnoremap <silent> K :call functions#cocShowDocumentation()<CR>
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
@@ -348,25 +360,24 @@ endfunction
 " Autocommands {{{
 
 " Leave paste mode when leaving insert mode
-autocmd InsertLeave * set nopaste
+au InsertLeave * set nopaste
 " Jump to last known position and center buffer around cursor.
 augroup jumplast
-  autocmd!
-  autocmd BufWinEnter ?* call functions#jumplast()
+  au!
+  au BufWinEnter ?* call functions#jumplast()
 augroup end
 " Remove trailing whitespace on save
 augroup trailingwhitespace
-  autocmd!
-  autocmd BufWritePre * call functions#stripTrailingWhitespace()
+  au!
+  au BufWritePre * call functions#stripTrailingWhitespace()
 augroup end
 " File type settings
 augroup filetypesettings
-  autocmd!
-  autocmd Filetype gitcommit,markdown setl spell        tw=72
-  autocmd FileType c,cpp              setl shiftwidth=4 tabstop=4 commentstring=//\ %s
-  autocmd FileType java               setl shiftwidth=2 tabstop=2 commentstring=//\ %s
-  autocmd FileType vim                setl shiftwidth=2 tabstop=2
-  autocmd FileType sh,zsh             setl shiftwidth=4 tabstop=4
+  au!
+  au Filetype gitcommit,markdown setl spell        tw=72
+  au FileType c,cpp              setl shiftwidth=4 tabstop=4 commentstring=//\ %s
+  au FileType java               setl shiftwidth=2 tabstop=2 commentstring=//\ %s
+  au FileType vim                setl shiftwidth=2 tabstop=2
+  au FileType sh,zsh             setl shiftwidth=4 tabstop=4
 augroup end
-
 " }}}
