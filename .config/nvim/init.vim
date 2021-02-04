@@ -5,8 +5,8 @@
 let mapleader        = " "
 let g:vimhomedir     = has('nvim') ? "~/.config/nvim" : "~/.vim"
 let g:vimplugdir     = g:vimhomedir . "/plugged"
+let g:vimplugconfdir = g:vimhomedir . "/rcplugins"
 let g:vimautoloaddir = g:vimhomedir . "/autoload"
-let g:sessiondir     = g:vimhomedir . "/session"
 
 " }}}
 " Settings {{{
@@ -75,7 +75,8 @@ set shortmess+=c   " Avoid 'hit enter' messages
 set updatetime=300 " Default is 4000, lower it for better performance
 set signcolumn=no  " Don't like the extra space
 set sel=inclusive  " Include last character in visual selection
-set pastetoggle=<C-o>
+set foldlevel=20   " Expand folds by default
+set pastetoggle=<C-b>
 
 " History
 " ---------
@@ -89,6 +90,89 @@ if has('persistent_undo')
 endif
 
 " }}}
+" Functions {{{
+
+""
+" Gets vim-plug from github
+"
+" @param {string} dir: directory to put vim-plug in
+""
+fun! s:getVimPlug(dir)
+  if empty(glob(a:dir . '/plug.vim')) && executable('curl')
+    execute 'silent !curl -fLo ' . a:dir . '/plug.vim --create-dirs ' .
+          \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  endif
+endfun
+
+""
+" Sources the files in given directory
+" @param {string} dir: directory of files
+""
+fun! s:sourceConfigFilesIn(dir)
+  let dir_glob = a:dir . '/*'
+  for config_file in split(glob(dir_glob), '\n')
+    if filereadable(config_file)
+      execute 'source' config_file
+    endif
+  endfor
+endfun
+
+""
+" Zoom into a pane, making it full screen (in a tab) Triggering the plugin
+" again from the zoomed in tab brings it back to its original pane location
+""
+fun s:zoom()
+  if winnr('$') > 1
+    tab split
+  elseif len(filter(map(range(tabpagenr('$')), 'tabpagebuflist(v:val + 1)'),
+        \ 'index(v:val, ' . bufnr('') . ') >= 0')) > 1
+    tabclose
+  endif
+endfun
+
+""
+" Jump to last known position and center buffer around cursor.
+""
+fun! s:jumplast() abort
+  if empty(&buftype) && index(['diff', 'gitcommit'], &filetype, 0, v:true) == -1
+    if line("'\"") >= 1 && line("'\"") <= line('$')
+      execute 'normal! g`"zz'
+    endif
+  endif
+endfun
+
+""
+" Remove trailing whitespace
+""
+fun! s:stripTrailingWhitespace() abort
+  " Don't strip on these filetypes
+  if &ft =~ 'ruby\|javascript\|perl\|gitsendemail\|markdown'
+    return
+  endif
+  %s/\s\+$//e
+endfun
+
+""
+" Don't close window, when deleting a buffer
+""
+fun! s:bufcloseCloseIt()
+  let l:currentBufNum = bufnr("%")
+  let l:alternateBufNum = bufnr("#")
+  if buflisted(l:alternateBufNum)
+    buffer #
+  else
+    bnext
+  endif
+  if bufnr("%") == l:currentBufNum
+    new
+  endif
+  if buflisted(l:currentBufNum)
+    execute("bdelete! ".l:currentBufNum)
+  endif
+endfun
+
+" }}}
 " Plugins {{{
 
 " Disable unused built-in plugins.
@@ -100,107 +184,21 @@ let g:loaded_netrwFileHandlers = v:true
 let g:loaded_2html_plugin      = v:true
 let g:loaded_tutor_mode_plugin = v:true
 
-" download vim-plug if not installed yet
-call functions#getVimPlug(g:vimautoloaddir)
+" Download vim-plug if not installed yet
+call s:getVimPlug(g:vimautoloaddir)
+
+" Load plugins
 call plug#begin(g:vimplugdir)
-Plug 'chriskempson/base16-vim'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'honza/vim-snippets'
-Plug 'itchyny/lightline.vim'
-Plug 'junegunn/vim-easy-align'
-Plug 'junegunn/fzf', {'do': './install --all --xdg'}
-Plug 'junegunn/fzf.vim'
-  let g:fzf_colors         = {
-        \ 'fg':      ['fg', 'Normal'],
-        \ 'bg':      ['bg', 'Normal'],
-        \ 'hl':      ['fg', 'Comment'],
-        \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-        \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-        \ 'hl+':     ['fg', 'Statement'],
-        \ 'info':    ['fg', 'PreProc'],
-        \ 'prompt':  ['fg', 'Conditional'],
-        \ 'pointer': ['fg', 'Exception'],
-        \ 'marker':  ['fg', 'Keyword'],
-        \ 'spinner': ['fg', 'Label'],
-        \ 'header':  ['fg', 'Comment'] }
-  let g:fzf_action         = {
-        \ 'ctrl-q': function('functions#build_quickfix_list'),
-        \ 'ctrl-t': 'tab split',
-        \ 'ctrl-s': 'split',
-        \ 'ctrl-v': 'vsplit' }
-  let g:fzf_layout         = { 'down': '~40%' }
-  let g:fzf_buffers_jump   = v:true
-  let g:fzf_preview_window = ''
-  let g:fzf_history_dir    = '~/.local/share/fzf-history'
-  if executable('rg')
-    let s:grep_cmd = 'rg --column --line-number --no-heading
-          \ --fixed-strings
-          \ --ignore-case
-          \ --hidden
-          \ --follow
-          \ --glob "!.git/*"
-          \ --color "always" '
-    command! -bang -nargs=* Find
-          \ call fzf#vim#grep(s:grep_cmd .
-          \ shellescape(<q-args>) . '| tr -d "\017"', 1, <bang>0)
-  endif
-Plug 'mhinz/vim-startify'
-  let g:startify_change_to_dir       = v:false
-  let g:startify_enable_special      = v:false
-  let g:startify_relative_path       = v:true
-  let g:startify_update_oldfiles     = v:true
-  let g:startify_session_dir         = g:sessiondir
-  let g:startify_session_persistence = v:true
-  let g:startify_bookmarks           = [
-        \ {'s': '~/.config/shell/interactive'},
-        \ {'v': '~/.config/nvim/init.vim'},
-        \ {'z': '~/.config/zsh/.zshrc'}
-        \ ]
-  let g:startify_lists = [
-        \  { 'type': 'dir',       'header': [ 'Files '. getcwd() ] },
-        \  { 'type': 'sessions',  'header': [ 'Sessions' ]       },
-        \  { 'type': 'bookmarks', 'header': [ 'Bookmarks' ]      },
-        \  { 'type': 'commands',  'header': [ 'Commands' ]       },
-        \ ]
-  let g:startify_commands = [
-        \   { 'up': [ 'Update Plugins', ':PlugUpdate' ] },
-        \   { 'ug': [ 'Upgrade Plugin Manager', ':PlugUpgrade' ] },
-        \ ]
-Plug 'kergoth/vim-bitbake'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-  let g:coc_global_extensions = [
-        \ 'coc-clangd',
-        \ 'coc-explorer',
-        \ 'coc-json',
-        \ 'coc-lua',
-        \ 'coc-rls',
-        \ 'coc-snippets',
-        \ 'coc-word',
-        \]
-Plug 'ojroques/vim-oscyank'
-Plug 'sheerun/vim-polyglot'
-  let g:vim_markdown_folding_disabled     = v:true
-  let g:vim_markdown_auto_insert_bullets  = v:false
-  let g:vim_markdown_new_list_item_indent = v:false
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-dispatch', {'on': [ 'Make', 'Dispatch', 'Start' ]}
-  let g:dispatch_no_maps = 1
-Plug 'tpope/vim-fugitive', {'on': [ 'Gstatus', 'Gblame', 'Gdiff' ]}
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-surround'
-Plug 'vim-scripts/doxygentoolkit.vim', {'for': ['cpp', 'c']}
-Plug 'vim-scripts/ReplaceWithRegister'
-Plug 'wellle/targets.vim'
+call s:sourceConfigFilesIn(g:vimplugconfdir)
 call plug#end()
 
 " }}}
 " Mappings & Commands {{{
 
 " Remaps
-nnoremap ;  :
-nnoremap :  ;
 nnoremap j  gj
 nnoremap k  gk
+nnoremap Q  @q
 vnoremap y  ygv<Esc>
 nnoremap Y  y$
 nnoremap n  nzz
@@ -210,13 +208,8 @@ nnoremap ?  ms?\v
 vnoremap <  <gv
 vnoremap >  >gv
 nnoremap p  p`[v`]=
-nmap     x  <Plug>ReplaceWithRegisterOperator
-nmap     xx <Plug>ReplaceWithRegisterLine
-xmap     x  <Plug>ReplaceWithRegisterVisual
-xmap     ga <Plug>(EasyAlign)
-nmap     ga <Plug>(EasyAlign)
 
-" Vim config
+" Vim Plug
 nnoremap <localleader>r :so $MYVIMRC<bar>echo "vimrc reloaded"<CR>
 nnoremap <localleader>i :so $MYVIMRC<bar>:PlugInstall<CR>
 nnoremap <localleader>c :so $MYVIMRC<bar>:PlugClean<CR>
@@ -224,8 +217,9 @@ nnoremap <localleader>u :so $MYVIMRC<bar>:PlugUpdate<CR>
 nnoremap <localleader>U :so $MYVIMRC<bar>:PlugUpgrade<CR>
 
 " Save, close & quit
-nnoremap <leader>w :update<CR>
-nnoremap <leader>q :call functions#bufcloseCloseIt()<CR>
+nnoremap <leader>s :update<CR>
+nnoremap <leader>d :call s:bufcloseCloseIt()<CR>
+nnoremap <leader>q :q <CR>
 
 " Toggle highlight & select pasted text
 nnoremap <leader>/ :nohl<CR>
@@ -243,10 +237,10 @@ nnoremap <leader>o :copen<CR>
 nnoremap <leader>x :! chmod +x %<CR>
 
 " Open new file adjacent to current file
-nnoremap <leader>i :e <C-R>=expand("%:p:h") . "/" <CR>
+nnoremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 
 " Zoom
-nnoremap <leader>z :call functions#zoom()<CR>
+nnoremap <leader>z :call s:zoom()<CR>
 
 " Underline text
 nmap gu yyp0v$r- | nmap gU yyp0v$r=
@@ -257,69 +251,16 @@ nnoremap <M-d> :m .+1<CR>==
 vnoremap <M-u> :m '<-2<CR>gv=gv
 vnoremap <M-d> :m '>+1<CR>gv=gv
 
-" CoC:
-" Use tab to cycle through completion items and <CR> to accept
-inoremap <silent><expr> <TAB>
-            \ pumvisible() ? "\<C-n>" :
-            \ functions#checkBackspace() ? "\<TAB>" :
-            \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-" Use `[d` and `]d` to navigate diagnostics
-nmap <silent> [d <Plug>(coc-diagnostic-prev)
-nmap <silent> ]d <Plug>(coc-diagnostic-next)
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-" Show documentation in preview window
-nnoremap <silent> K :call functions#cocShowDocumentation()<CR>
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
-" CocList mappings
-nnoremap <silent><leader>cd :<C-u>CocList diagnostics<CR>
-nnoremap <silent><leader>co :<C-u>CocList outline<CR>
-nnoremap <silent><leader>cr :<C-u>CocListResume<CR>
-" coc-clangd
-nmap <silent><leader>s :CocCommand clangd.switchSourceHeader<CR>
-" coc-explorer
-nmap <silent><leader>e :CocCommand explorer --sources file+<CR>
-" coc-snippets => expand snippet
-imap <C-l> <Plug>(coc-snippets-expand)
-
-" Dispatch:
-nnoremap <leader>dc :call functions#yoctoDispatch(v:false)<CR>
-nnoremap <leader>dC :call functions#yoctoDispatch(v:true)<CR>
-nnoremap <leader>dt :call functions#yoctoDispatch(v:false, v:true)<CR>
-nnoremap <leader>dT :call functions#yoctoDispatch(v:true, v:true)<CR>
-nnoremap <leader>do :Copen<CR>
-
-" Fzf:
-nnoremap <silent><C-p> :Files<CR>
-nnoremap <silent><C-f> :Find<CR>
-nnoremap <silent>_     :Marks<CR>
-nnoremap <silent>,     :Buffers<CR>
-
-" Git:
-nnoremap <silent> gid :Gdiff<CR>
-nnoremap <silent> gis :Gstatus<CR>
-
-" Osc52:
-vnoremap <C-c> :OSCYank<CR>
-
 " }}}
 " UI {{{
 
-" Color support
-" ---------------
 " Fixes bckgrd color issues (wsl support)
 if &term =~ '256color'
   " Disable Background Color Erase (BCE) so that color schemes
   " work properly when Vim is used inside tmux and GNU screen.
   set t_ut=
 endif
+
 " Enable true color support
 set t_Co=256
 if (has("termguicolors"))
@@ -328,33 +269,14 @@ if (has("termguicolors"))
   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 
-" Set theme
-" -----------
+" Set Theme
 set background=dark
-let base16colorspace=256
 if filereadable(expand("~/.vimrc_background"))
   let base16colorspace=256
   source ~/.vimrc_background
+  exe 'hi LineNr guifg=#' . g:base16_gui02 . ' guibg=#' . g:base16_gui00
+  exe 'hi SignColumn guifg=#' . g:base16_gui02 . ' guibg=#' . g:base16_gui00
 endif
-exe 'hi LineNr guifg=#' . g:base16_gui02 . ' guibg=#' . g:base16_gui00
-exe 'hi SignColumn guifg=#' . g:base16_gui02 . ' guibg=#' . g:base16_gui00
-
-" Statusline
-" ------------
-let g:lightline = {
-      \ 'colorscheme': 'jellybeans',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'filename': 'LightlineFilename',
-      \   'cocstatus': 'coc#status'
-      \ },
-      \ }
-function! LightlineFilename()
-  return expand('%:t') !=# '' ? @% : '[No Name]'
-endfunction
 
 " }}}}
 " Autocommands {{{
@@ -364,12 +286,12 @@ au InsertLeave * set nopaste
 " Jump to last known position and center buffer around cursor.
 augroup jumplast
   au!
-  au BufWinEnter ?* call functions#jumplast()
+  au BufWinEnter ?* call s:jumplast()
 augroup end
 " Remove trailing whitespace on save
 augroup trailingwhitespace
   au!
-  au BufWritePre * call functions#stripTrailingWhitespace()
+  au BufWritePre * call s:stripTrailingWhitespace()
 augroup end
 " File type settings
 augroup filetypesettings

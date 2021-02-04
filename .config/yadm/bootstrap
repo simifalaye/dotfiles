@@ -10,6 +10,7 @@ APT_PKGS=(
     bat
     calc
     fd-find
+    neovim
     ripgrep
     rsync
     tig
@@ -24,6 +25,9 @@ NPM_PKGS=( neovim )
 declare -A MANUAL_PKGS
 MANUAL_PKGS[bottom]='btm;https://github.com/ClementTsang/bottom'
 MANUAL_PKGS[delta]='delta;https://github.com/dandavison/delta'
+MANUAL_PKGS[exa]='exa;https://github.com/ogham/exa'
+MANUAL_PKGS[nnn]='nnn;https://github.com/jarun/nnn'
+MANUAL_PKGS[ripgrep]='rg;https://github.com/BurntSushi/ripgrep'
 function __install_delta {
     tmp=~/delta.amd64.deb
     wget https://github.com/dandavison/delta/releases/download/0.5.1/git-delta_0.5.1_amd64.deb -O $tmp &&
@@ -32,19 +36,17 @@ function __install_delta {
         return 0
     return 1
 }
-MANUAL_PKGS[exa]='exa;https://github.com/ogham/exa'
-MANUAL_PKGS[joplin]='joplin;https://joplinapp.org/terminal/'
-MANUAL_PKGS[neovim]='https://github.com/neovim/neovim'
-function __install_neovim {
-    sudo snap install --beta nvim --classic && return 0 || return 1
-}
-MANUAL_PKGS[nnn]='nnn;https://github.com/jarun/nnn'
 function __install_nnn {
     tmp=~/nnn.amd64.deb
     wget https://github.com/jarun/nnn/releases/download/v3.5/nnn_3.5-1_ubuntu20.04.amd64.deb -O $tmp &&
         sudo apt install $tmp &&
         rm $tmp &&
         return 0
+    return 1
+}
+function __install_ripgrep {
+    # Workaround to install bat and ripgrep (https://github.com/sharkdp/bat/issues/938)
+    sudo apt install -o Dpkg::Options::="--force-overwrite" bat ripgrep && return 0
     return 1
 }
 
@@ -135,7 +137,7 @@ install_pkgs()
             if type __install_$name &>/dev/null; then
                 prompt_inst $name __install_$name && echo "Installed $name." || echo "Failed to install $name."
             else
-                manlist="$manlist$(echo -e "    \e[1;33m$name:\e[0m \e[1;34m$link\e[0m")"
+                manlist="$manlist$(echo -e "    \e[1;33m$name:\e[0m \e[1;34m$link\e[0m")\n"
             fi
         }
     done

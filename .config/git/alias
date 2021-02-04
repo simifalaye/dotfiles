@@ -6,7 +6,7 @@
 # Named aliases
 [alias]
     # Edit last commit message
-    reword = commit --amend
+    amend = commit --amend
     # Amend but don't edit message
     commend = commit --amend --no-edit
     # Show last commit
@@ -14,10 +14,7 @@
     # Unstage changes from the index.
     unstage = reset HEAD --
     # Pull rebase & submodule update
-    up = pull --rebase
-    ups = !git pull --rebase && git submodule update
-    # Interative rebase
-    rdev = rebase -i develop
+    up = !git pull --rebase && git submodule update
 
 # Short aliases
 [alias]
