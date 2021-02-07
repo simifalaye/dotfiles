@@ -208,6 +208,8 @@ nnoremap ?  ms?\v
 vnoremap <  <gv
 vnoremap >  >gv
 nnoremap p  p`[v`]=
+xnoremap il g_o0
+onoremap il :normal vil<CR>
 
 " Vim Plug
 nnoremap <localleader>r :so $MYVIMRC<bar>echo "vimrc reloaded"<CR>
@@ -218,7 +220,7 @@ nnoremap <localleader>U :so $MYVIMRC<bar>:PlugUpgrade<CR>
 
 " Save, close & quit
 nnoremap <leader>s :update<CR>
-nnoremap <leader>d :call s:bufcloseCloseIt()<CR>
+nnoremap <leader>d :call <SID>bufcloseCloseIt()<CR>
 nnoremap <leader>q :q <CR>
 
 " Toggle highlight & select pasted text
@@ -240,16 +242,14 @@ nnoremap <leader>x :! chmod +x %<CR>
 nnoremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 
 " Zoom
-nnoremap <leader>z :call s:zoom()<CR>
+nnoremap <leader>z :call <SID>zoom()<CR>
 
 " Underline text
 nmap gu yyp0v$r- | nmap gU yyp0v$r=
 
 " Move 1 more lines up or down in normal and visual selection modes.
-nnoremap <M-u> :m .-2<CR>==
-nnoremap <M-d> :m .+1<CR>==
-vnoremap <M-u> :m '<-2<CR>gv=gv
-vnoremap <M-d> :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+vnoremap J :m '>+1<CR>gv=gv
 
 " }}}
 " UI {{{

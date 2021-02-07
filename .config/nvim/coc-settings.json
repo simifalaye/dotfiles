@@ -5,7 +5,6 @@
         "--background-index",
         "--suggest-missing-includes",
         "--header-insertion", "iwyu",
-        "--log", "verbose",
         "--query-driver", "/home/**/arm-vcm-linux-*"
     ],
 

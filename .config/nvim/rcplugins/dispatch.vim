@@ -23,9 +23,9 @@ fun! YoctoDispatch(silent, ...)
   execute 'Dispatch' . l:sil . ' ' . l:build . '/**temp/' . l:bin
 endfun
 
-nnoremap <leader>dc :call YoctoDispatch(v:false)<CR>
-nnoremap <leader>dC :call YoctoDispatch(v:true)<CR>
-nnoremap <leader>dt :call YoctoDispatch(v:false, v:true)<CR>
-nnoremap <leader>dT :call YoctoDispatch(v:true, v:true)<CR>
-nnoremap <leader>do :Copen<CR>
-
+" leader + r (run)
+nnoremap <leader>rc :call YoctoDispatch(v:false)<CR>
+nnoremap <leader>rC :call YoctoDispatch(v:true)<CR>
+nnoremap <leader>rt :call YoctoDispatch(v:false, v:true)<CR>
+nnoremap <leader>rT :call YoctoDispatch(v:true, v:true)<CR>
+nnoremap <leader>ro :Copen<CR>
