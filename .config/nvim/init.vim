@@ -199,7 +199,6 @@ call plug#end()
 nnoremap j  gj
 nnoremap k  gk
 nnoremap Q  @q
-vnoremap y  ygv<Esc>
 nnoremap Y  y$
 nnoremap n  nzz
 nnoremap N  Nzz
@@ -216,12 +215,12 @@ nnoremap <localleader>r :so $MYVIMRC<bar>echo "vimrc reloaded"<CR>
 nnoremap <localleader>i :so $MYVIMRC<bar>:PlugInstall<CR>
 nnoremap <localleader>c :so $MYVIMRC<bar>:PlugClean<CR>
 nnoremap <localleader>u :so $MYVIMRC<bar>:PlugUpdate<CR>
-nnoremap <localleader>U :so $MYVIMRC<bar>:PlugUpgrade<CR>
 
 " Save, close & quit
 nnoremap <leader>s :update<CR>
 nnoremap <leader>d :call <SID>bufcloseCloseIt()<CR>
-nnoremap <leader>q :q <CR>
+nnoremap <leader>q :q<CR>
+nnoremap <leader>Q :confirm qall<CR>
 
 " Toggle highlight & select pasted text
 nnoremap <leader>/ :nohl<CR>
@@ -302,4 +301,11 @@ augroup filetypesettings
   au FileType vim                setl shiftwidth=2 tabstop=2
   au FileType sh,zsh             setl shiftwidth=4 tabstop=4
 augroup end
+" Don't move cursor when yanking
+augroup yank_restore_cursor
+    autocmd!
+    autocmd VimEnter,CursorMoved * let s:cursor = getpos('.')
+    autocmd TextYankPost * if v:event.operator ==? 'y' |
+          \ call setpos('.', s:cursor) | endif
+augroup END
 " }}}

@@ -1,5 +1,4 @@
 " Theme and status line
-
 Plug 'chriskempson/base16-vim'
 Plug 'itchyny/lightline.vim'
   let g:lightline = {
@@ -17,4 +16,3 @@ Plug 'itchyny/lightline.vim'
 function! LightlineFilename()
   return expand('%:t') !=# '' ? @% : '[No Name]'
 endfunction
-

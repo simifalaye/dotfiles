@@ -1,11 +1,14 @@
 " File explorer
-Plug 'preservim/nerdtree' | Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'preservim/nerdtree'
   let NERDTreeShowHidden          = v:true
-  let NERDTreeDirArrowExpandable  = "\u00a0" " make arrows invisible
-  let NERDTreeDirArrowCollapsible = "\u00a0" " make arrows invisible
+  let NERDTreeMinimalUI           = v:true
+  let NERDTreeMinimalMenu         = v:true
+  let NERDTreeAutoDeleteBuffer    = v:true
+  let NERDTreeDirArrowExpandable  = " "
+  let NERDTreeDirArrowCollapsible = " "
 
-nnoremap <leader>f :NERDTreeToggle<CR>
-nnoremap <leader>y :NERDTreeFind<CR>
+nnoremap <C-n> :NERDTreeToggle<CR>
+nnoremap <leader>f :NERDTreeFind<CR>
 
 " Exit Vim if NERDTree is the only window left.
 autocmd BufEnter * if tabpagenr('$') == 1 &&

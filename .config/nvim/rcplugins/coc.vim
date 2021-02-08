@@ -2,12 +2,27 @@
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
   let g:coc_global_extensions = [
         \ 'coc-clangd',
-        \ 'coc-json',
         \ 'coc-lua',
         \ 'coc-rls',
         \ 'coc-snippets',
-        \ 'coc-word',
         \]
+  let g:coc_user_config = {
+    \ 'codeLens.enable': v:true,
+    \ 'clangd.arguments': [
+      \ '--background-index',
+      \ '--suggest-missing-includes',
+      \ '--header-insertion', 'iwyu',
+      \ '--query-driver', '/home/**/arm-vcm-linux-*',
+    \ ],
+    \ 'diagnostic.enable': v:true,
+    \ 'diagnostic.enableSign': v:false,
+    \ 'diagnostic.maxWindowHeight': 20,
+    \ 'explorer.previewAction.onHover': v:false,
+    \ 'suggest.enablePreview': v:true,
+    \ 'suggest.detailField': "abbr",
+    \ 'suggest.maxCompleteItemCount': 30,
+    \ 'snippets.ultisnips.directories': [ 'UltiSnips', 'plugged/vim-snippets/UltiSnips' ],
+  \ }
 
 " Use tab to cycle through completion items and <CR> to accept
 inoremap <silent><expr> <TAB>
@@ -46,10 +61,17 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
 
+" Applying codeAction to the selected region.
+" Example => `<leader>aap` for current paragraph
+xmap <leader>a <Plug>(coc-codeaction-selected)
+nmap <leader>a <Plug>(coc-codeaction-selected)
+
+" Apply AutoFix to problem on the current line.
+nmap <leader>cf  <Plug>(coc-fix-current)
 " CocList mappings
 nnoremap <silent><leader>cd :<C-u>CocList diagnostics<CR>
 nnoremap <silent><leader>co :<C-u>CocList outline<CR>
 nnoremap <silent><leader>cr :<C-u>CocListResume<CR>
 
-" coc-snippets => expand snippet
+" Snippets: expand snippet
 imap <C-l> <Plug>(coc-snippets-expand)
