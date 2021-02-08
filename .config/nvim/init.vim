@@ -229,6 +229,10 @@ nnoremap <leader>p `[v`]
 " Switch to last buffer
 nnoremap <leader><leader> <c-^>
 
+" Jump to start and end of line using the home row keys
+nnoremap H ^
+nnoremap L $
+
 " Split & open quick fix
 nnoremap <leader>- <C-w>s
 nnoremap <leader>\| <C-w>v

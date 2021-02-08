@@ -20,6 +20,7 @@ Plug 'mhinz/vim-startify'
   let g:startify_commands            = [
         \   { 'up': [ 'Update Plugins', ':PlugUpdate' ] },
         \   { 'ug': [ 'Upgrade Plugin Manager', ':PlugUpgrade' ] },
+        \   { 'uc': [ 'Update CoC Plugins', ':CocUpdate' ] },
         \ ]
 
 nnoremap <leader>h :Startify<CR>
