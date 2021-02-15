@@ -5,6 +5,8 @@
 
 # Named aliases
 [alias]
+    # List aliases
+    alias = !git config --get-regexp alias | cut -b 7-
     # Edit last commit message
     amend = commit --amend
     # Amend but don't edit message
@@ -13,6 +15,8 @@
     last = log -1 HEAD
     # Unstage changes from the index.
     unstage = reset HEAD --
+    # Reset branch
+    resetorigin = !git fetch origin && git reset --hard
     # Pull rebase & submodule update
     up = !git pull --rebase && git submodule update
 

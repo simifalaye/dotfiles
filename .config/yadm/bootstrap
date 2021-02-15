@@ -11,6 +11,7 @@ APT_PKGS=(
     calc
     curl
     fd-find
+    htop
     neovim
     ripgrep
     rsync
@@ -19,17 +20,57 @@ APT_PKGS=(
     zsh
 )
 APT_GRH_PKGS=( scrot sxiv zathura )
-PIP_PKGS=( howdoi pynvim trash-cli )
+PIP_PKGS=( pynvim trash-cli )
 NPM_PKGS=( neovim )
 
-# List manual packages to install (involve more than just a pkg manager)
+# List additional packages to install (involve more than just a pkg manager)
 # FORMAT: array [bin;link]
-declare -A MANUAL_PKGS
-MANUAL_PKGS[bottom]='btm;https://github.com/ClementTsang/bottom'
-MANUAL_PKGS[delta]='delta;https://github.com/dandavison/delta'
-MANUAL_PKGS[exa]='exa;https://github.com/ogham/exa'
-MANUAL_PKGS[nnn]='nnn;https://github.com/jarun/nnn'
-MANUAL_PKGS[ripgrep]='rg;https://github.com/BurntSushi/ripgrep'
+declare -A ADD_PKGS
+ADD_PKGS[cheat]='cht.sh;https://github.com/chubin/cheat.sh'
+ADD_PKGS[delta]='delta;https://github.com/dandavison/delta'
+ADD_PKGS[exa]='exa;https://github.com/ogham/exa'
+ADD_PKGS[nnn]='nnn;https://github.com/jarun/nnn'
+ADD_PKGS[ripgrep]='rg;https://github.com/BurntSushi/ripgrep'
+
+# Manual install functions
+# --------------------------
+function __install_cheat {
+    if curl https://cht.sh/:cht.sh | sudo tee /usr/local/bin/cht.sh &&
+        sudo chmod +x /usr/local/bin/cht.sh; then
+        return 0
+    fi
+    return 1
+}
+function __install_delta {
+    tmp=/tmp/delta.amd64.deb
+    wget https://github.com/dandavison/delta/releases/download/0.5.1/git-delta_0.5.1_amd64.deb -O $tmp &&
+        sudo apt install $tmp &&
+        rm $tmp &&
+        return 0
+    return 1
+}
+function __install_exa {
+    tmp=/tmp/exa-linux.zip
+    wget https://github.com/ogham/exa/releases/download/v0.9.0/exa-linux-x86_64-0.9.0.zip -O $tmp &&
+        aunpack $tmp -X $XDG_BIN_HOME &&
+        mv $XDG_BIN_HOME/exa-linux-x86_64 $XDG_BIN_HOME/exa &&
+        rm $tmp &&
+        return 0
+    return 1
+}
+function __install_nnn {
+    tmp=/tmp/nnn.amd64.deb
+    wget https://github.com/jarun/nnn/releases/download/v3.5/nnn_3.5-1_ubuntu20.04.amd64.deb -O $tmp &&
+        sudo apt install $tmp &&
+        rm $tmp &&
+        return 0
+    return 1
+}
+function __install_ripgrep {
+    # Workaround to install bat and ripgrep (https://github.com/sharkdp/bat/issues/938)
+    sudo apt install -o Dpkg::Options::="--force-overwrite" bat ripgrep && return 0
+    return 1
+}
 
 # Functions
 # -----------
@@ -69,51 +110,19 @@ function _install_pkgs {
         esac
     fi
 }
-function __install_delta {
-    tmp=/tmp/delta.amd64.deb
-    wget https://github.com/dandavison/delta/releases/download/0.5.1/git-delta_0.5.1_amd64.deb -O $tmp &&
-        sudo apt install $tmp &&
-        rm $tmp &&
-        return 0
-    return 1
-}
-function __install_exa {
-    tmp=/tmp/exa-linux.zip
-    wget https://github.com/ogham/exa/releases/download/v0.9.0/exa-linux-x86_64-0.9.0.zip -O $tmp &&
-        aunpack $tmp -X $XDG_BIN_HOME &&
-        mv $XDG_BIN_HOME/exa-linux-x86_64 $XDG_BIN_HOME/exa &&
-        rm $tmp &&
-        return 0
-    return 1
-}
-function __install_nnn {
-    tmp=/tmp/nnn.amd64.deb
-    wget https://github.com/jarun/nnn/releases/download/v3.5/nnn_3.5-1_ubuntu20.04.amd64.deb -O $tmp &&
-        sudo apt install $tmp &&
-        rm $tmp &&
-        return 0
-    return 1
-}
-function __install_ripgrep {
-    # Workaround to install bat and ripgrep (https://github.com/sharkdp/bat/issues/938)
-    sudo apt install -o Dpkg::Options::="--force-overwrite" bat ripgrep && return 0
-    return 1
-}
-
-# Runners
-# ---------
-
-prompt_inst()
-{
+function _add_pkg {
     name=${1}
     func=${2}
 
-    echo -e "\e[1;32m ::\e[0m Do you wish to install '$name' automatically? [Y/n] \c"
+    echo -e "\e[1;32m ::\e[0m Do you wish to '$name' automatically? [Y/n] \c"
     read ans; print
     if [[ $ans =~ ^[Yy]$ ]]; then
         $func
     fi
 }
+
+# Runners
+# ---------
 
 install_pkg_managers()
 {
@@ -134,31 +143,26 @@ install_pkgs()
     npm_pkgs=( $(sudo npm -g list | grep -Fwoi "$npm_pkgs" | uniq | grep -Fwiv -f - <(echo "$npm_pkgs")) )
     _is_graphical && grh_pkgs=( $(dpkg -C "${APT_GRH_PKGS[@]}" 2>&1 | awk -F \' '{print $2}') ) || grh_pkgs=""
 
-    # Install packages
+    # Install pkg-mgr packages
     [ -n "$apt_pkgs" ] && _install_pkgs "apt" "${apt_pkgs[@]}"
     [ -n "$grh_pkgs" ] && _install_pkgs "apt" ${grh_pkgs[@]}
     [ -n "$pip_pkgs" ] && _install_pkgs "pip" ${pip_pkgs[@]}
     [ -n "$npm_pkgs" ] && _install_pkgs "npm" ${npm_pkgs[@]}
 
-    # List manual packages for install
-    manlist=""
-    for name in "${!MANUAL_PKGS[@]}"; do
-        IFS=";" read -r -a arr <<< "${MANUAL_PKGS[$name]}"
+    # List additional, manual packages for install
+    for name in "${!ADD_PKGS[@]}"; do
+        IFS=";" read -r -a arr <<< "${ADD_PKGS[$name]}"
         bin=${arr[0]}
         link=${arr[1]}
         _is_callable "$bin" || {
-            # If install method is defined, use it, else list for user to install manually
+            # If install method is defined, use it
             if type __install_$name &>/dev/null; then
-                prompt_inst $name __install_$name && echo "Installed $name." || echo "Failed to install $name."
-            else
-                manlist="$manlist$(echo -e "    \e[1;33m$name:\e[0m \e[1;34m$link\e[0m")\n"
+                _add_pkg $name __install_$name &&
+                    echo "Installed $name (\e[1;34m$link\e[0m)." ||
+                    echo "Failed to install $name."
             fi
         }
     done
-    if [ -n "$manlist" ]; then
-        echo -e "\e[1;32m ::\e[0m The following optional packages can be manually installed:"
-        echo -e "$manlist"
-    fi
 }
 
 # Change the default login shell for the current user.

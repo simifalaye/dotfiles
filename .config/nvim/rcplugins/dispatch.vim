@@ -1,5 +1,5 @@
 " Run sync/asyc tasks
-Plug 'tpope/vim-dispatch', {'on': [ 'Make', 'Dispatch', 'Start' ]}
+Plug 'tpope/vim-dispatch', {'on': [ 'Copen', 'Make', 'Dispatch', 'Start' ]}
   let g:dispatch_no_maps = 1
 
 ""

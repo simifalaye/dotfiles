@@ -17,4 +17,7 @@ Plug 'vimwiki/vimwiki'
 set nocompatible
 filetype plugin on
 syntax on
+" Don't vimwiki builtin markdown syntax
 au FileType vimwiki set syntax=vimwiki.markdown
+" Tab needed for completion
+au filetype vimwiki silent! iunmap <buffer> <Tab>

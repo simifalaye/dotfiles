@@ -189,7 +189,7 @@ call s:getVimPlug(g:vimautoloaddir)
 
 " Load plugins
 call plug#begin(g:vimplugdir)
-call s:sourceConfigFilesIn(g:vimplugconfdir)
+  call s:sourceConfigFilesIn(g:vimplugconfdir)
 call plug#end()
 
 " }}}
@@ -199,6 +199,7 @@ call plug#end()
 nnoremap j  gj
 nnoremap k  gk
 nnoremap Q  @q
+vnoremap y  ygv<Esc>
 nnoremap Y  y$
 nnoremap n  nzz
 nnoremap N  Nzz
@@ -232,6 +233,8 @@ nnoremap <leader><leader> <c-^>
 " Jump to start and end of line using the home row keys
 nnoremap H ^
 nnoremap L $
+vnoremap H ^
+vnoremap L $
 
 " Split & open quick fix
 nnoremap <leader>- <C-w>s
@@ -296,20 +299,4 @@ augroup trailingwhitespace
   au!
   au BufWritePre * call s:stripTrailingWhitespace()
 augroup end
-" File type settings
-augroup filetypesettings
-  au!
-  au Filetype gitcommit,markdown setl spell        tw=72
-  au FileType c,cpp              setl shiftwidth=4 tabstop=4 commentstring=//\ %s
-  au FileType java               setl shiftwidth=2 tabstop=2 commentstring=//\ %s
-  au FileType vim                setl shiftwidth=2 tabstop=2
-  au FileType sh,zsh             setl shiftwidth=4 tabstop=4
-augroup end
-" Don't move cursor when yanking
-augroup yank_restore_cursor
-    autocmd!
-    autocmd VimEnter,CursorMoved * let s:cursor = getpos('.')
-    autocmd TextYankPost * if v:event.operator ==? 'y' |
-          \ call setpos('.', s:cursor) | endif
-augroup END
 " }}}
