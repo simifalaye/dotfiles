@@ -114,7 +114,7 @@ function _add_pkg {
     name=${1}
     func=${2}
 
-    echo -e "\e[1;32m ::\e[0m Do you wish to '$name' automatically? [Y/n] \c"
+    echo -e "\e[1;32m ::\e[0m Do you wish to install '$name' automatically? [Y/n] \c"
     read ans; print
     if [[ $ans =~ ^[Yy]$ ]]; then
         $func
@@ -158,8 +158,8 @@ install_pkgs()
             # If install method is defined, use it
             if type __install_$name &>/dev/null; then
                 _add_pkg $name __install_$name &&
-                    echo "Installed $name (\e[1;34m$link\e[0m)." ||
-                    echo "Failed to install $name."
+                    echo -e "\e[1;32m Installed\e[0m $name (\e[1;34m$link\e[0m)." ||
+                    echo -e "\e[1;31m Failed\e[0m to install $name."
             fi
         }
     done
