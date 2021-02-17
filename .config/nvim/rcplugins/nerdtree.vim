@@ -2,6 +2,8 @@
 Plug 'preservim/nerdtree'
   let NERDTreeShowHidden          = v:true
   let NERDTreeMinimalUI           = v:true
+  let NERDTreeStatusline          = ""
+  let NERDTreeWinPos              = "right"
   let NERDTreeMinimalMenu         = v:true
   let NERDTreeAutoDeleteBuffer    = v:true
   let NERDTreeDirArrowExpandable  = " "

@@ -6,7 +6,6 @@ Plug 'sheerun/vim-polyglot'
 Plug 'kergoth/vim-bitbake'
 Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } }
   let g:doge_mapping = '<Leader>D'
-Plug 'tpope/vim-sleuth'
 
 augroup LangSettings
   au!

@@ -35,7 +35,7 @@ Plug 'junegunn/fzf.vim'
           \ shellescape(<q-args>) . '| tr -d "\017"', 1, <bang>0)
   endif
 
-nnoremap <silent><C-p> :Files<CR>
-nnoremap <silent><C-f> :Find<CR>
-nnoremap <silent>-     :Buffers<CR>
-nnoremap <silent>_     :Marks<CR>
+nnoremap <silent><C-p>     :Files<CR>
+nnoremap <silent><C-f>     :Find<CR>
+nnoremap <silent>_         :Marks<CR>
+nnoremap <silent><leader>; :Buffers<CR>
