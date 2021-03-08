@@ -5,7 +5,7 @@
 let mapleader        = " "
 let g:vimhomedir     = has('nvim') ? "~/.config/nvim" : "~/.vim"
 let g:vimplugdir     = g:vimhomedir . "/plugged"
-let g:vimplugconfdir = g:vimhomedir . "/rcplugins"
+let g:vimplugconfdir = g:vimhomedir . "/conf"
 let g:vimautoloaddir = g:vimhomedir . "/autoload"
 
 " }}}
@@ -16,45 +16,29 @@ let g:vimautoloaddir = g:vimhomedir . "/autoload"
 " Read documentation about each option by executing :h <option>
 " or "K" in normal mode when cursor is over the setting
 
-filetype on                    " identify file types
-filetype indent on             " indent based on filetype
-filetype plugin on             " enable file-specific plugins
-set shell=/bin/bash            " set the shell to use
 set expandtab                  " turn tabs into spaces
 set tabstop=4                  " use 4-space tabs when [tab] is pressed
 set shiftwidth=4               " use 4-space tabs when reading files
+set softtabstop=4              " number of spaces that a <Tab> counts for
 set showmatch                  " highlight the bracket match
-set ruler                      " always/don't show the bottom line
 set noshowmode                 " [don't] show mode (INSERT/OVER) in ruler
-set autoindent                 " auto-indent when going to a new line
 set smartindent                " guess the indent level based on code
-set showcmd                    " show partial cmd in ruler
 set ignorecase                 " ignore case when searching (search in all lower case!)
 set smartcase                  " if upper case is provided in searching, search for it
-set incsearch                  " highlight search terms as you search
-set hlsearch                   " highlight search results
-set backspace=indent,eol,start " for ssh terminals
-set vb t_vb=                   " shush, no beep
 set scrolloff=5                " keep 5 lines of context at end of file when scrolling
 set complete=.,w,b,u,U,t,i,d   " do lots of scanning on tab completion
-set encoding=utf8              " default character encoding
 set timeoutlen=1000            " remove escape delay
 set ttimeoutlen=0              " remove escape delay
-set tags=./tags,./.git/tags;   " set tags file locations for ctags
-set wildmenu                   " enable tab completion in commands
 set wildmode=longest:full,full " settings for how to complete matched strings
 set lazyredraw                 " don't redraw when we don't have to
-set nostartofline              " don't reset cursor to start of line when moving
 set cmdheight=1                " bottom section height
 set selection=old              " no new line when using $
 set conceallevel=2             " Allow concealing of certain syntax
-set backspace=indent,eol,start " make backspace behave in a sane manner
 
 " Files and buffers
 " -------------------
 
 set hidden        " Allow buffers to remain hidden when not in use
-set autoread      " Reload files changed outside vim
 set nobackup      " Turn backup off
 set noswapfile    " Turn swap files off
 set nowritebackup " Turn write backup off
@@ -67,10 +51,9 @@ set number         " Display line numbers
 set relativenumber " Disply line numbers relative to current line
 set mouse=a        " Allow mouse usage
 set list           " Show specific characters
-set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
 set splitbelow     " Fix splits
 set splitright     " Fix splits
-set fillchars=""   " Fix splits
+set noequalalways  " Keep windows the same size
 set shortmess+=c   " Avoid 'hit enter' messages
 set updatetime=300 " Default is 4000, lower it for better performance
 set signcolumn=no  " Don't like the extra space
@@ -81,7 +64,6 @@ set pastetoggle=<C-b>
 " History
 " ---------
 
-set history=1000                " Remember more commands
 if has('persistent_undo')
   set undofile                  " Persistent undo
   set undodir=~/.cache/vim/undo " Set undo directory
@@ -175,15 +157,6 @@ endfun
 " }}}
 " Plugins {{{
 
-" Disable unused built-in plugins.
-let g:loaded_gzip              = v:true
-let g:loaded_netrw             = v:true
-let g:loaded_netrwPlugin       = v:true
-let g:loaded_netrwSettings     = v:true
-let g:loaded_netrwFileHandlers = v:true
-let g:loaded_2html_plugin      = v:true
-let g:loaded_tutor_mode_plugin = v:true
-
 " Download vim-plug if not installed yet
 call s:getVimPlug(g:vimautoloaddir)
 
@@ -230,12 +203,6 @@ nnoremap <leader>p `[v`]
 " Switch to last buffer
 nnoremap <leader><leader> <c-^>
 
-" Jump to start and end of line using the home row keys
-nnoremap H ^
-nnoremap L $
-vnoremap H ^
-vnoremap L $
-
 " Split & open quick fix
 nnoremap <leader>- <C-w>s
 nnoremap <leader>\| <C-w>v
@@ -252,10 +219,6 @@ nnoremap <leader>z :call <SID>zoom()<CR>
 
 " Underline text
 nmap gu yyp0v$r- | nmap gU yyp0v$r=
-
-" Move 1 more lines up or down in normal and visual selection modes.
-vnoremap K :m '<-2<CR>gv=gv
-vnoremap J :m '>+1<CR>gv=gv
 
 " }}}
 " UI {{{
@@ -276,7 +239,6 @@ if (has("termguicolors"))
 endif
 
 " Set Theme
-set background=dark
 if filereadable(expand("~/.vimrc_background"))
   let base16colorspace=256
   source ~/.vimrc_background
