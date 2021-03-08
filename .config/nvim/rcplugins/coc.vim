@@ -6,13 +6,14 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
         \ 'coc-rls',
         \ 'coc-snippets',
         \]
+  " Coc config. Execute ':h coc-configuration' to see all available settings
   let g:coc_user_config = {
     \ 'codeLens.enable': v:true,
     \ 'clangd.arguments': [
       \ '--background-index',
       \ '--suggest-missing-includes',
       \ '--header-insertion', 'iwyu',
-      \ '--query-driver', '/home/**/arm-vcm-linux-*',
+      \ '--query-driver', '/home/**/*-vcm-linux-*',
     \ ],
     \ 'diagnostic.enable': v:true,
     \ 'diagnostic.enableSign': v:false,

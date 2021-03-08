@@ -8,8 +8,8 @@ Plug 'itchyny/lightline.vim'
       \           [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
     \ },
     \ 'component_function': {
-      \ 'filename': 'coc#status',
-      \ 'cocstatus': 'LightlineCocStatus'
+      \ 'filename': 'LightlineFilename',
+      \ 'cocstatus': 'coc#status'
     \ },
 \ }
 

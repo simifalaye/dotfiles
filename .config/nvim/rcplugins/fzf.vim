@@ -1,6 +1,11 @@
 " Vim wrapper for the best/fastest fuzzy finder
 Plug 'junegunn/fzf', {'do': './install --all --xdg'}
 Plug 'junegunn/fzf.vim'
+  function! s:build_quickfix_list(lines)
+    call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+    copen
+    cc
+  endfunction
   let g:fzf_colors         = {
         \ 'fg':      ['fg', 'Normal'],
         \ 'bg':      ['bg', 'Normal'],
@@ -15,6 +20,7 @@ Plug 'junegunn/fzf.vim'
         \ 'spinner': ['fg', 'Label'],
         \ 'header':  ['fg', 'Comment'] }
   let g:fzf_action         = {
+        \ 'ctrl-q': function('s:build_quickfix_list'),
         \ 'ctrl-t': 'tab split',
         \ 'ctrl-s': 'split',
         \ 'ctrl-v': 'vsplit' }
@@ -34,6 +40,7 @@ Plug 'junegunn/fzf.vim'
           \ call fzf#vim#grep(s:grep_cmd .
           \ shellescape(<q-args>) . '| tr -d "\017"', 1, <bang>0)
   endif
+  let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all'
 
 nnoremap <silent><C-p>     :Files<CR>
 nnoremap <silent><C-f>     :Find<CR>
