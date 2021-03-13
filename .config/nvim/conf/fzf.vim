@@ -24,25 +24,11 @@ Plug 'junegunn/fzf.vim'
         \ 'ctrl-t': 'tab split',
         \ 'ctrl-s': 'split',
         \ 'ctrl-v': 'vsplit' }
-  let g:fzf_layout         = { 'down': '~40%' }
   let g:fzf_buffers_jump   = v:true
-  let g:fzf_preview_window = ''
+  let g:fzf_preview_window = ['right:50%', 'ctrl-/']
   let g:fzf_history_dir    = '~/.local/share/fzf-history'
-  if executable('rg')
-    let s:grep_cmd = 'rg --column --line-number --no-heading
-          \ --fixed-strings
-          \ --ignore-case
-          \ --hidden
-          \ --follow
-          \ --glob "!.git/*"
-          \ --color "always" '
-    command! -bang -nargs=* Find
-          \ call fzf#vim#grep(s:grep_cmd .
-          \ shellescape(<q-args>) . '| tr -d "\017"', 1, <bang>0)
-  endif
-  let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all'
 
-nnoremap <silent><C-p>     :Files<CR>
-nnoremap <silent><C-f>     :Find<CR>
-nnoremap <silent>_         :Marks<CR>
-nnoremap <silent><leader>; :Buffers<CR>
+nnoremap <silent><C-p> :Files<CR>
+nnoremap <silent><C-f> :Rg<CR>
+nnoremap <silent>-     :Buffers<CR>
+nnoremap <silent>_     :Marks<CR>
