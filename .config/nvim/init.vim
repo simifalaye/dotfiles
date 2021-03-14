@@ -129,7 +129,7 @@ endfun
 ""
 fun! s:stripTrailingWhitespace() abort
   " Don't strip on these filetypes
-  if &ft =~ 'ruby\|javascript\|perl\|gitsendemail\|markdown'
+  if &ft =~ 'ruby\|javascript\|perl\|markdown\|gitsendemail\|gitcommit'
     return
   endif
   %s/\s\+$//e
@@ -169,6 +169,8 @@ call plug#end()
 " Mappings & Commands {{{
 
 " Remaps
+nnoremap ;  :
+nnoremap :  ;
 nnoremap j  gj
 nnoremap k  gk
 nnoremap Q  @q
@@ -191,10 +193,7 @@ nnoremap <localleader>c :so $MYVIMRC<bar>:PlugClean<CR>
 nnoremap <localleader>u :so $MYVIMRC<bar>:PlugUpdate<CR>
 
 " Save, close & quit
-nnoremap <leader>s :update<CR>
-nnoremap <leader>d :call <SID>bufcloseCloseIt()<CR>
-nnoremap <leader>q :q<CR>
-nnoremap <leader>Q :confirm qall<CR>
+nnoremap <leader>q :call <SID>bufcloseCloseIt()<CR>
 
 " Toggle highlight & select pasted text
 nnoremap <leader>/ :nohl<CR>
