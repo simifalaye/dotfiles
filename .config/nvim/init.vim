@@ -169,6 +169,7 @@ call plug#end()
 " Mappings & Commands {{{
 
 " Remaps
+inoremap jk <Esc>
 nnoremap ;  :
 nnoremap :  ;
 nnoremap j  gj

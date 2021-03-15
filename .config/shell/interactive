@@ -146,7 +146,7 @@ _is_callable "yadm" && {
         command yadm push
     }
 }
-_is_callable "cht.sh" && { alias ch='cht.sh' }
+_is_callable "cht.sh" && { alias ch='cht.sh'; }
 
 # Functions
 # -----------
@@ -188,4 +188,3 @@ man() {
         LESS_TERMCAP_ZW=$(tput rsupm) \
         man "$@"
 }
-

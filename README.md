@@ -19,13 +19,13 @@ section with Terminal applications after
 ### Desktop Environment
 - <s>[Compton](https://github.com/chjj/compton) - A compositor for x11.</s>
 - <s>[Dwm](http://dwm.suckless.org/) - A dynamic window manager</s>
+- <s>[slock](https://tools.suckless.org/slock) - Screen locker</s>
+- <s>[Sxhkd](https://github.com/baskerville/sxhkd) - Simple X hotkey daemon</s>
+- <s>[Materia](https://github.com/nana-4/materia-theme) - A material gtk theme</s>
+- <s>[Papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme) - Icons</s>
 - [Dmenu](http://tools.suckless.org/dmenu/) - dmenu is a dynamic menu for X
     - [Dmenu-Desktop](https://github.com/enkore/j4-dmenu-desktop) - run dmenu for desktop apps
 - [Iosevka](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Iosevka) - Font
-- [slock](https://tools.suckless.org/slock) - Screen locker
-- [Sxhkd](https://github.com/baskerville/sxhkd) - Simple X hotkey daemon
-- [Materia](https://github.com/nana-4/materia-theme) - A material gtk theme
-- [Papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme) - Icons
 
 ### Productivity and Internet
 
@@ -78,7 +78,7 @@ I use ZSH shell:
 - [atool](https://www.nongnu.org/atool/) - Manage various archive types
 - [bottom](https://github.com/ClementTsang/bottom) - Top but better
 - [calc](https://packages.ubuntu.com/focal/calc) - Terminal calculator
-- [howdoi](https://github.com/gleitz/howdoi) - Instant coding answers from the terminal
+- [cheat.sh](https://github.com/chubin/cheat.sh) - Instant coding answers from the terminal
 - [rsync](https://github.com/WayneD/rsync) - Fast copy tool for remote/local files
 - [scrot](https://github.com/dreamer/scrot) - Screen-shot utility
 - [sxiv](https://github.com/muennich/sxiv) - Simple x image viewer
