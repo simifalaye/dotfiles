@@ -5,35 +5,44 @@
 #
 
 # List packages to install
-APT_PKGS=(
-    atool
-    bat
-    calc
-    curl
-    fd-find
-    htop
-    neovim
-    ripgrep
-    rsync
-    tig
-    tmux
-    zsh
-)
-APT_GRH_PKGS=( scrot sxiv zathura )
-PIP_PKGS=( pynvim trash-cli )
-NPM_PKGS=( neovim )
+# FORMAT: array [bin;method;desc;is_gui(true/false)]
+declare -A PKGS
+PKGS[atool]='atool;apt_install atool;A tool to manage file archives of various types;false'
+PKGS[calc]='calc;apt_install calc;A terminal based calculator;false'
+PKGS[cheat]='cht.sh;__install_cheat;A set of community driven cheat sheets for everything;false'
+PKGS[curl]='curl;apt_install curl;A URL file transfer tool;false'
+PKGS[delta]='delta;__install_delta;A better git diff;false'
+PKGS[exa]='exa;__install_exa;A better ls;false'
+PKGS[fd-find]='fdfind;apt_install fd-find;A better find;false'
+PKGS[htop]='htop;apt_install htop;A better "top" system monitor tool;false'
+PKGS[neovim]='nvim;__install_neovim;The best text editor of all time;false'
+PKGS[nnn]='nnn;__install_nnn;A file browser in the terminal;false'
+PKGS[ripgrep & bat]='rg;__install_ripgrep_bat;A better grep;false'
+PKGS[rsync]='rsync;apt_install rsync;A fast, versatile, file-copying tool;false'
+PKGS[scrot]='scrot;apt_install scrot;A light-weight screenshot utility;true'
+PKGS[sxiv]='sxiv;apt_install sxiv;An image viewer in the terminal;true'
+PKGS[tig]='tig;apt_install tig;A git log helper;false'
+PKGS[tmux]='tmux;apt_install tmux;A terminal multiplexer;false'
+PKGS[trash-cli]='trash;pip_install trash-cli;A terminal trash utility;false'
+PKGS[zathura]='zathura;apt_install zathura;A terminal PDF reader;true'
+PKGS[zsh]='zsh;apt_install zsh;The best shell of all time;false'
 
-# List additional packages to install (involve more than just a pkg manager)
-# FORMAT: array [bin;link]
-declare -A ADD_PKGS
-ADD_PKGS[cheat]='cht.sh;https://github.com/chubin/cheat.sh'
-ADD_PKGS[delta]='delta;https://github.com/dandavison/delta'
-ADD_PKGS[exa]='exa;https://github.com/ogham/exa'
-ADD_PKGS[nnn]='nnn;https://github.com/jarun/nnn'
-ADD_PKGS[ripgrep]='rg;https://github.com/BurntSushi/ripgrep'
+# Functions
+# -----------
+# Color codes: reset = 0, black = 30, red = 31, green = 32, yellow = 33,
+#              blue = 34, magenta = 35, cyan = 36, and white = 37
+# Change color: "\e[1;32m", Reset: "\e[0m"
 
-# Manual install functions
-# --------------------------
+function _is_callable {
+    for cmd in "$@"; do
+        command -v "$cmd" >/dev/null || return 1
+    done
+}
+function _is_graphical { ls /usr/share/xsessions/ >/dev/null 2>&1; }
+function apt_install { echo "Installing: ${@}"; sudo apt-get install -y ${@}; }
+function pip_install { echo "Installing: ${@}"; sudo pip3 install ${@}; }
+function npm_install { echo "Installing: ${@}"; sudo npm install -g ${@}; }
+
 function __install_cheat {
     if curl https://cht.sh/:cht.sh | sudo tee /usr/local/bin/cht.sh &&
         sudo chmod +x /usr/local/bin/cht.sh; then
@@ -58,6 +67,10 @@ function __install_exa {
         return 0
     return 1
 }
+function __install_neovim {
+    apt_install neovim && pip_install pynvim && npm_install neovim && return 0
+    return 1
+}
 function __install_nnn {
     tmp=/tmp/nnn.amd64.deb
     wget https://github.com/jarun/nnn/releases/download/v3.5/nnn_3.5-1_ubuntu20.04.amd64.deb -O $tmp &&
@@ -66,59 +79,10 @@ function __install_nnn {
         return 0
     return 1
 }
-function __install_ripgrep {
+function __install_ripgrep_bat {
     # Workaround to install bat and ripgrep (https://github.com/sharkdp/bat/issues/938)
     sudo apt install -o Dpkg::Options::="--force-overwrite" bat ripgrep && return 0
     return 1
-}
-
-# Functions
-# -----------
-# Color codes: reset = 0, black = 30, red = 31, green = 32, yellow = 33,
-#              blue = 34, magenta = 35, cyan = 36, and white = 37
-# Change color: "\e[1;32m", Reset: "\e[0m"
-
-function _is_callable {
-    for cmd in "$@"; do
-        command -v "$cmd" >/dev/null || return 1
-    done
-}
-function _is_graphical { ls /usr/share/xsessions/ >/dev/null 2>&1; }
-function _install_pkgs {
-    mgr=${1}; shift
-    pkgs=("$@")
-
-    echo -e "\e[1;32m ::\e[0m The following $mgr packages can be automatically installed:"
-    echo -e "    \e[1;33m${pkgs[@]}\e[0m"
-    echo -e "  \e[1;36m ::\e[0m Proceed? [Y/n] \c"
-    read ans; print
-
-    if [[ $ans =~ ^[Yy]$ ]]; then
-        case "$mgr" in
-            apt)
-                sudo apt-get install -y ${pkgs[@]}
-                ;;
-            pip)
-                pip3 install ${pkgs[@]}
-                ;;
-            npm)
-                sudo npm install -g ${pkgs[@]}
-                ;;
-            *)
-                echo -e "\e[1;31m ::\e[0m Unknown package manager $mgr" # red
-                ;;
-        esac
-    fi
-}
-function _add_pkg {
-    name=${1}
-    func=${2}
-
-    echo -e "\e[1;32m ::\e[0m Do you wish to install '$name' automatically? [Y/n] \c"
-    read ans; print
-    if [[ $ans =~ ^[Yy]$ ]]; then
-        $func
-    fi
 }
 
 # Runners
@@ -133,35 +97,50 @@ install_pkg_managers()
 
 install_pkgs()
 {
-    # Convert arrays to newline delimited strings
-    pip_pkgs=$(printf '%s\n' "${PIP_PKGS[@]}")
-    npm_pkgs=$(printf '%s\n' "${NPM_PKGS[@]}")
+    apt_pkgs=""
+    pip_pkgs=""
+    npm_pkgs=""
+    declare -A man_pkgs
+    _is_graphical && get_gui=true || get_gui=false
+    for name in "${!PKGS[@]}"; do
+        IFS=";" read -r -a arr <<< "${PKGS[$name]}"
+        bin=${arr[0]}; method=${arr[1]}; desc=${arr[2]}; is_gui=${arr[3]}
+        # Skip installed packages and gui packages if not a gui machine
+        if _is_callable $bin || [[ "$is_gui" = true && "$get_gui" = false ]]; then
+            continue
+        fi
+        # Prompt install and add to list
+        echo -e "\e[1;32m ::\e[0m Do you wish to install '$name' automatically: \e[1;33m$desc\e[0m"
+        echo -e "  \e[1;36m ::\e[0m Proceed? [Y/n] \c"
+        read ans; print
+        if [[ $ans =~ ^[Yy]$ ]]; then
+            case "$method" in
+                apt_install*)
+                    apt_pkgs="$apt_pkgs $name"
+                    ;;
+                pip_install*)
+                    pip_pkgs="$pip_pkgs $name"
+                    ;;
+                npm_install*)
+                    npm_pkgs="$npm_pkgs $name"
+                    ;;
+                *)
+                    man_pkgs[$name]=$method
+                    ;;
+            esac
+        fi
+    done
 
-    # Get missing packages
-    apt_pkgs=( $(dpkg -C "${APT_PKGS[@]}" 2>&1 | awk -F\' '{print $2}') )
-    pip_pkgs=( $(pip3 freeze | grep -Fwoi "$pip_pkgs" | uniq | grep -Fwiv -f - <(echo "$pip_pkgs")) )
-    npm_pkgs=( $(sudo npm -g list | grep -Fwoi "$npm_pkgs" | uniq | grep -Fwiv -f - <(echo "$npm_pkgs")) )
-    _is_graphical && grh_pkgs=( $(dpkg -C "${APT_GRH_PKGS[@]}" 2>&1 | awk -F \' '{print $2}') ) || grh_pkgs=""
-
-    # Install pkg-mgr packages
-    [ -n "$apt_pkgs" ] && _install_pkgs "apt" "${apt_pkgs[@]}"
-    [ -n "$grh_pkgs" ] && _install_pkgs "apt" ${grh_pkgs[@]}
-    [ -n "$pip_pkgs" ] && _install_pkgs "pip" ${pip_pkgs[@]}
-    [ -n "$npm_pkgs" ] && _install_pkgs "npm" ${npm_pkgs[@]}
-
-    # List additional, manual packages for install
-    for name in "${!ADD_PKGS[@]}"; do
-        IFS=";" read -r -a arr <<< "${ADD_PKGS[$name]}"
-        bin=${arr[0]}
-        link=${arr[1]}
-        _is_callable "$bin" || {
-            # If install method is defined, use it
-            if type __install_$name &>/dev/null; then
-                _add_pkg $name __install_$name &&
-                    echo -e "\e[1;32m Installed\e[0m $name (\e[1;34m$link\e[0m)." ||
-                    echo -e "\e[1;31m Failed\e[0m to install $name."
-            fi
-        }
+    # Install pkgs
+    [ -n "$apt_pkgs" ] && apt_install $apt_pkgs
+    [ -n "$pip_pkgs" ] && pip_install $pip_pkgs
+    [ -n "$npm_pkgs" ] && npm_install $npm_pkgs
+    for name in "${!man_pkgs[@]}"; do
+        method=${man_pkgs[$name]}
+        if type $method &>/dev/null; then
+            echo "Installing: $name"
+            $method
+        fi
     done
 }
 
@@ -169,7 +148,6 @@ install_pkgs()
 change_login_shell()
 {
     [[ $(cat /etc/passwd | grep $USER) == *:/bin/zsh ]] && return
-
     echo -e "\e[1;32m ::\e[0m Changing the login shell to /bin/zsh"
     chsh $USER --shell=/bin/zsh
 }
