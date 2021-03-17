@@ -17,30 +17,26 @@ In this section will be listed all the Graphical Applications. A separate
 section with Terminal applications after
 
 ### Desktop Environment
-- <s>[Compton](https://github.com/chjj/compton) - A compositor for x11.</s>
-- <s>[Dwm](http://dwm.suckless.org/) - A dynamic window manager</s>
-- <s>[slock](https://tools.suckless.org/slock) - Screen locker</s>
-- <s>[Sxhkd](https://github.com/baskerville/sxhkd) - Simple X hotkey daemon</s>
-- <s>[Materia](https://github.com/nana-4/materia-theme) - A material gtk theme</s>
-- <s>[Papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme) - Icons</s>
-- [Dmenu](http://tools.suckless.org/dmenu/) - dmenu is a dynamic menu for X
-    - [Dmenu-Desktop](https://github.com/enkore/j4-dmenu-desktop) - run dmenu for desktop apps
+- [AwesomeWM](https://awesomewm.org/) - A dynamic window manager
+  - [Awesome-Gnome](https://github.com/SirJson/awesomewm-gnome) - Awesome + Gnome
+- [Compton](https://github.com/chjj/compton) - A compositor for x11
 - [Iosevka](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Iosevka) - Font
+- [slock](https://tools.suckless.org/slock) - Screen locker
 
 ### Productivity and Internet
 
 - [Firefox](https://www.mozilla.org/pt-PT/firefox/) - My primary internet browser.
-- [Joplin](https://joplinapp.org/) - GUI notes app
 - [Libreoffice](https://libreoffice.org) - Office suite.
 - [Mattermost](https://mattermost.com/) - Text Chat.
 - [Todoist](https://todoist.com/downloads?lang=en) - Task manager
 
 ### Utilities
 
+- [Alacritty](https://github.com/alacritty/alacritty) - A fast and lightweight terminal
 - [Bleachbit](https://www.bleachbit.org/) - System cleaner tool.
 - [Nautilus](https://wiki.gnome.org/action/show/Apps/Files?action=show&redirect=Apps%2FNautilus) - File manager.
+- [Nitrogen](https://wiki.archlinux.org/index.php/nitrogen) - Wall app
 - [Peek](https://github.com/phw/peek) - Simple animated GIF screen recorder with an easy to use interface.
-- [st](https://st.suckless.org/) - A fast and lightweight terminal
 
 ---
 
@@ -69,9 +65,9 @@ I use ZSH shell:
 
 - [bat](https://github.com/sharkdp/bat) - A cat(1) clone with wings.
 - [delta](https://github.com/dandavison/delta) - A syntax-highlighter for git and diff output
-- [Joplin-cli](https://joplinapp.org/) - Terminal notes app for Joplin
+- [vimwiki](https://github.com/vimwiki/vimwiki) - Terminal notes app
 - [neovim](https://neovim.io/) with [vim-plug](https://github.com/junegunn/vim-plug) - My primary text editor/
-  - All my vim plugins can be found in the "plugins.vim" file
+  - All my vim plugins can be found in the "conf" directory of neovim
 
 ### Utilities
 
@@ -87,4 +83,3 @@ I use ZSH shell:
 - [trash-cli](https://github.com/andreafrancia/trash-cli) - Move files and folders to the trash.
 - [yadm](https://github.com/TheLocehiliosan/yadm) - Dotfiles Manager.
 - [zathura](https://pwmt.org) - A pdf reader
-
