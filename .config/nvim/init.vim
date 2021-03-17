@@ -51,6 +51,7 @@ set number         " Display line numbers
 set relativenumber " Disply line numbers relative to current line
 set mouse=a        " Allow mouse usage
 set list           " Show specific characters
+set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
 set splitbelow     " Fix splits
 set splitright     " Fix splits
 set noequalalways  " Keep windows the same size

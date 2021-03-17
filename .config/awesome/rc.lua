@@ -5,17 +5,15 @@ pcall(require, "luarocks.loader")
 -- Standard awesome library
 local gears = require("gears")
 local awful = require("awful")
+local beautiful = require("beautiful") -- Theme handling library
+local menubar = require("menubar") -- Miscellanous awesome library
 require("awful.autofocus")
--- Theme handling library
-local beautiful = require("beautiful")
--- Notification library
-local menubar = require("menubar")
 
 RC = {} -- global namespace, on top before require any modules
 RC.vars = require("main.user-variables")
 modkey = RC.vars.modkey
 
--- Error handling
+-- {{{ Error handling -- }}}
 require("main.error-handling")
 
 -- Variable definitions
@@ -43,13 +41,20 @@ local binding = {
   clientkeys    = require("binding.clientkeys")
 }
 
--- Layouts
+-- {{{ Layouts
+-- Table of layouts to cover with awful.layout.inc, order matters.
+-- a variable needed in main.tags, and statusbar
 RC.layouts = main.layouts()
+awful.layout.layouts = RC.layouts
+-- }}}
 
--- Tags
+-- {{{ Tags
+-- Define a tag table which hold all screen tags.
+-- a variable needed in rules, tasklist, and globalkeys
 RC.tags = main.tags()
+-- }}}
 
--- Menu
+-- {{{ Menu
 local debian = require("debian.menu") -- Load Debian menu entries
 local has_fdo, freedesktop = pcall(require, "freedesktop")
 if has_fdo then
@@ -70,30 +75,39 @@ RC.launcher = awful.widget.launcher(
     { image = beautiful.awesome_icon, menu = RC.mainmenu }
 )
 menubar.utils.terminal = RC.vars.terminal
+-- }}}
 
--- Mouse and Key bindings
+-- {{{ Mouse and Key bindings
 RC.globalkeys = binding.globalkeys()
 RC.globalkeys = binding.bindtotags(RC.globalkeys)
 
 -- Set root
 root.buttons(binding.globalbuttons())
 root.keys(RC.globalkeys)
+-- }}}
 
 -- Keyboard map indicator and switcher
 mykeyboardlayout = awful.widget.keyboardlayout()
 
--- Statusbar: Wibar
+-- {{{ Statusbar: Wibar
 require("deco.statusbar")
+-- }}}
 
--- Rules
+-- {{{ Rules
+-- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = main.rules(
   binding.clientkeys(),
   binding.clientbuttons()
 )
+-- }}}
 
--- Signals
+-- {{{ Signals
 require("main.signals")
+-- }}}
 
--- Autostart Apps
-awful.spawn.with_shell("compton --config ~/.config/compton/compton.conf") -- compositor
-awful.spawn.with_shell("nitrogen --restore") -- wallpaper
+-- Autostart Apps {{{
+-- Compositor
+awful.spawn.with_shell("compton --config ~/.config/compton/compton.conf")
+-- Wallpaper
+awful.spawn.with_shell("nitrogen --restore")
+-- }}}

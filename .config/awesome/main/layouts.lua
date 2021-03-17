@@ -14,7 +14,7 @@ function _M.get ()
     awful.layout.suit.tile.top,
     awful.layout.suit.floating,
     awful.layout.suit.max,
-    awful.layout.suit.max.fullscreen,
+    awful.layout.suit.max.fullscreen
     -- awful.layout.suit.fair,
     -- awful.layout.suit.fair.horizontal,
     -- awful.layout.suit.spiral,
