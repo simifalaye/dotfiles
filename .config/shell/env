@@ -12,7 +12,7 @@ export XDG_LIB_HOME="$HOME/.local/lib"
 # -------
 export SHELL=/bin/zsh
 export SHELL_CONF_HOME=~/.config/shell
-export TERMCMD=st
+export TERMCMD=alacritty
 
 # Lang
 # ------

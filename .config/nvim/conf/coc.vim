@@ -19,6 +19,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
     \ 'diagnostic.enableSign': v:false,
     \ 'diagnostic.maxWindowHeight': 20,
     \ 'explorer.previewAction.onHover': v:false,
+    \ 'Lua.workspace.preloadFileSize': 500,
     \ 'suggest.enablePreview': v:true,
     \ 'suggest.detailField': "abbr",
     \ 'suggest.maxCompleteItemCount': 30,

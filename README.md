@@ -18,10 +18,9 @@ section with Terminal applications after
 
 ### Desktop Environment
 - [AwesomeWM](https://awesomewm.org/) - A dynamic window manager
-  - [Awesome-Gnome](https://github.com/SirJson/awesomewm-gnome) - Awesome + Gnome
 - [Compton](https://github.com/chjj/compton) - A compositor for x11
 - [Iosevka](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Iosevka) - Font
-- [slock](https://tools.suckless.org/slock) - Screen locker
+- [slock](https://tools.suckless.org/slock) - Simple screen locker
 
 ### Productivity and Internet
 
