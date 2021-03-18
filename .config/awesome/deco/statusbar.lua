@@ -11,7 +11,8 @@ local deco = {
   taglist        = require("deco.taglist"),
   tasklist       = require("deco.tasklist"),
   battery_widget = require("deco.widgets.battery"),
-  memory_widget  = require("deco.widgets.memory")
+  memory_widget  = require("deco.widgets.memory"),
+  volume_widget  = require("deco.widgets.volume")
 }
 
 local taglist_buttons  = deco.taglist()
@@ -72,6 +73,8 @@ awful.screen.connect_for_each_screen(function(s)
     s.mytasklist, -- Middle widget
     { -- Right widgets
       layout = wibox.layout.fixed.horizontal,
+      deco.volume_widget(RC.vars.volumectl),
+      spacer,
       deco.memory_widget(),
       spacer,
       deco.battery_widget(),

@@ -6,7 +6,7 @@
 # (including all active monitors). The other one is for the focused window.
 # Note that `scrot` also has an interactive mode that I do not use.
 
-DIR="~/Pictures/Scrots"
+DIR="$HOME/Pictures/scrots/"
 
 function print_help() {
     echo "Usage: $0 <argument>"
@@ -19,6 +19,7 @@ function send_noti() {
     notify-send -i gnome-screenshot "screenshot" "Screenshot has been saved to $DIR."
 }
 
+mkdir -p $DIR
 if [ $# -eq 0 ]; then
     sleep 0.2 && scrot 'scrot-%F_%H%M%S_$wx$h.png' -e 'mv $f '$DIR'' && send_noti
 elif [ $# -eq 1 ]; then

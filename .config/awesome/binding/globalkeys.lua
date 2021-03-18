@@ -9,6 +9,7 @@ require("awful.hotkeys_popup.keys")
 
 local _M = {}
 local modkey = RC.vars.modkey
+local volumectl = RC.vars.volumectl
 
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
@@ -109,13 +110,13 @@ function _M.get()
 
     -- Media keys
     awful.key({ }, "XF86AudioMute", function ()
-      awful.spawn("amixer -D pulse set Master toggle")
+      awful.spawn(volumectl .. " mute")
     end),
     awful.key({ }, "XF86AudioRaiseVolume", function ()
-      awful.spawn("amixer -D pulse sset Master 10%+ unmute")
+      awful.spawn(volumectl .. " inc")
     end),
     awful.key({ }, "XF86AudioLowerVolume", function ()
-      awful.spawn("amixer -D pulse sset Master 10%-")
+      awful.spawn(volumectl .. " dec")
     end),
     awful.key({ }, "XF86MonBrightnessDown", function ()
       awful.spawn("xbacklight -dec 10")

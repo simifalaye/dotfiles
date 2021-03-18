@@ -1,5 +1,6 @@
 local awful = require("awful")
 
+local home = os.getenv("HOME")
 local _M = {
   -- This is used later as the default terminal and editor to run.
   terminal = "alacritty",
@@ -17,7 +18,10 @@ local _M = {
   wallpaper = nil,
 
   -- Lockscreen
-  lockscreen = function() awful.util.spawn("slock") end
+  lockscreen = function() awful.util.spawn("slock") end,
+
+  -- Volume control script
+  volumectl = home .. "/.local/bin/custom/volumectl"
 }
 
 return _M
