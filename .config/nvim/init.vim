@@ -71,6 +71,7 @@ if has('persistent_undo')
   set undolevels=1000           " Max number of changes
   set undoreload=10000          " Max lines to save for undo on a buffer reload
 endif
+set clipboard=unnamedplus       " set clipboard to use
 
 " }}}
 " Functions {{{
@@ -170,9 +171,6 @@ call plug#end()
 " Mappings & Commands {{{
 
 " Remaps
-inoremap jk <Esc>
-nnoremap ;  :
-nnoremap :  ;
 nnoremap j  gj
 nnoremap k  gk
 nnoremap Q  @q
@@ -195,7 +193,10 @@ nnoremap <localleader>c :so $MYVIMRC<bar>:PlugClean<CR>
 nnoremap <localleader>u :so $MYVIMRC<bar>:PlugUpdate<CR>
 
 " Save, close & quit
-nnoremap <leader>q :call <SID>bufcloseCloseIt()<CR>
+nnoremap <leader>d :call <SID>bufcloseCloseIt()<CR>
+nnoremap <leader>s :update<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <C-q>q :confirm qall<CR>
 
 " Toggle highlight & select pasted text
 nnoremap <leader>/ :nohl<CR>

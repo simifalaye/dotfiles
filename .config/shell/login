@@ -39,18 +39,18 @@ path=($XDG_BIN_HOME $XDG_BIN_HOME/custom $CARGO_HOME/bin $path)
 # WSL 2/1 specific settings
 # ---------------------------
 if grep -q "microsoft" /proc/version &>/dev/null; then
-    # Required: Enables copy/paste (need to specify ip of wsl 2 VM)
-    export DISPLAY="$(/sbin/ip route | awk '/default/ { print $3 }'):0"
+    # # Required: Enables copy/paste (need to specify ip of wsl 2 VM)
+    # export DISPLAY="$(/sbin/ip route | awk '/default/ { print $3 }'):0"
     export LIBGL_ALWAYS_INDIRECT=1
     [ -n "$USERPROFILE" ] && echo $(wslpath "$USERPROFILE") > /tmp/WSLUSER
     # pam_env
     export XDG_RUNTIME_DIR=/tmp/runtimedir
     export RUNLEVEL=3
 elif grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
+    # # Required: Enables copy/paste (need to specify ip of wsl 2 VM)
+    # export DISPLAY=localhost:0
     export IS_WSL_DEVICE=true
     LS_COLORS="ow=01;36;40" && export LS_COLORS
-    # Required: Enables copy/paste (need to specify ip of wsl 2 VM)
-    export DISPLAY=localhost:0
     # Wsl file/folder permissions metadata
     umask 022
     # pam_env
