@@ -10,53 +10,29 @@ local modkey = RC.vars.modkey
 function _M.get()
   local clientkeys = gears.table.join(
     -- Moving window focus works between desktops
-    awful.key({ modkey,           }, "j", function (c)
-      awful.client.focus.global_bydirection("down")
-      c:lower()
+    awful.key({ modkey }, "k", function ()
+      awful.client.focus.byidx( 1)
     end,
-    {description = "focus next window up", group = "client"}),
-    awful.key({ modkey,           }, "k", function (c)
-      awful.client.focus.global_bydirection("up")
-      c:lower()
+    {description = "focus next by index", group = "client"}),
+    awful.key({ modkey }, "j", function ()
+      awful.client.focus.byidx(-1)
     end,
-    {description = "focus next window down", group = "client"}),
-    awful.key({ modkey,           }, "l", function (c)
-      awful.client.focus.global_bydirection("right")
-      c:lower()
-    end,
-    {description = "focus next window right", group = "client"}),
-    awful.key({ modkey,           }, "h", function (c)
-      awful.client.focus.global_bydirection("left")
-      c:lower()
-    end,
-    {description = "focus next window left", group = "client"}),
+    {description = "focus prev by index", group = "client"}),
 
     -- Moving windows between positions works between desktops
-    awful.key({ modkey, "Shift"   }, "h", function (c)
-      awful.client.swap.global_bydirection("left")
-      c:raise()
+    awful.key({ modkey, "Shift" }, "k", function ()
+      awful.client.swap.byidx(  1)
     end,
-    {description = "swap with left client", group = "client"}),
-    awful.key({ modkey, "Shift"   }, "l", function (c)
-      awful.client.swap.global_bydirection("right")
-      c:raise()
+    {description = "swap with next client by index", group = "client"}),
+    awful.key({ modkey, "Shift" }, "j", function ()
+      awful.client.swap.byidx( -1)
     end,
-    {description = "swap with right client", group = "client"}),
-    awful.key({ modkey, "Shift"   }, "j", function (c)
-      awful.client.swap.global_bydirection("down")
-      c:raise()
-    end,
-    {description = "swap with down client", group = "client"}),
-    awful.key({ modkey, "Shift"   }, "k", function (c)
-      awful.client.swap.global_bydirection("up")
-      c:raise()
-    end,
-    {description = "swap with up client", group = "client"}),
+    {description = "swap with prev client by index", group = "client"}),
 
     -- General
-    awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
+    awful.key({ modkey }, "u", awful.client.urgent.jumpto,
     {description = "jump to urgent client", group = "client"}),
-    awful.key({ modkey,           }, "Tab", function ()
+    awful.key({ modkey }, "Tab", function ()
       awful.client.focus.history.previous()
       if client.focus then
         client.focus:raise()
@@ -67,8 +43,14 @@ function _M.get()
       c:swap(awful.client.getmaster())
     end,
     {description = "move to master", group = "client"}),
-    awful.key({ modkey,           }, "q", function (c) c:kill()
+    awful.key({ modkey, "Shift" }, "o", function (c)
+      c:move_to_screen()
     end,
+    {description = "move to screen", group = "client"}),
+    awful.key({ modkey, "Shift" }, "c",
+      function (c)
+        c:kill()
+      end,
     {description = "close", group = "client"})
   )
 

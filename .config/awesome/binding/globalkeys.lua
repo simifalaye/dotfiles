@@ -16,15 +16,15 @@ local volumectl = RC.vars.volumectl
 function _M.get()
   local globalkeys = gears.table.join(
     -- Awesome keybinds
-    awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
+    awful.key({ modkey }, "s",      hotkeys_popup.show_help,
     {description="show help", group = "awesome"}),
-    awful.key({ modkey,           }, "w", function ()
+    awful.key({ modkey }, "w", function ()
       RC.mainmenu:toggle()
     end,
     {description = "show main menu", group = "awesome"}),
     awful.key({ modkey, "Shift" }, "r", awesome.restart,
     {description = "reload awesome", group = "awesome"}),
-    awful.key({ modkey, "Shift"   }, "q", awesome.quit,
+    awful.key({ modkey, "Shift" }, "q", awesome.quit,
     {description = "quit awesome", group = "awesome"}),
     awful.key({ modkey }, "x", function ()
       awful.prompt.run {
@@ -39,7 +39,7 @@ function _M.get()
     {description = "Lock screen", group = "awesome"}),
 
     -- Launcher keybinds
-    awful.key({ modkey,           }, "Return", function ()
+    awful.key({ modkey }, "Return", function ()
       awful.spawn(RC.vars.terminal)
     end,
     {description = "open a terminal", group = "launcher"}),
@@ -61,51 +61,51 @@ function _M.get()
       awful.tag.incmwfact(-0.05)
     end,
     {description = "decrease master width factor", group = "layout"}),
-    awful.key({ modkey,           }, "i",     function ()
+    awful.key({ modkey }, "i",     function ()
       awful.tag.incnmaster( 1, nil, true)
     end,
     {description = "increase the number of master clients", group = "layout"}),
-    awful.key({ modkey,           }, "d",     function ()
+    awful.key({ modkey }, "d",     function ()
       awful.tag.incnmaster(-1, nil, true)
     end,
     {description = "decrease the number of master clients", group = "layout"}),
-    awful.key({ modkey,           }, "y", function ()
+    awful.key({ modkey }, "y", function ()
       awful.layout.inc( 1)
     end,
-    {description = "select next", group = "layout"}),
-    awful.key({ modkey, "Shift"   }, "y", function ()
+    {description = "select next layout", group = "layout"}),
+    awful.key({ modkey, "Shift" }, "y", function ()
       awful.layout.inc(-1)
     end,
     {description = "select previous", group = "layout"}),
-    awful.key({ modkey,           }, "t", function ()
+    awful.key({ modkey }, "t", function ()
       awful.layout.set(awful.layout.suit.tile)
     end,
     {description = "select tiled layout", group = "layout"}),
-    awful.key({ modkey,           }, "m", function ()
+    awful.key({ modkey }, "m", function ()
       awful.layout.set(awful.layout.suit.max)
     end,
     {description = "select maximized layout", group = "layout"}),
-    awful.key({ modkey,           }, "f", function ()
+    awful.key({ modkey }, "f", function ()
       awful.layout.set(awful.layout.suit.max.fullscreen)
     end,
     {description = "select fullscreen layout", group = "layout"}),
 
     -- Screen keybinds
-    awful.key({ modkey, "Control" }, "k", function ()
+    awful.key({ modkey }, "o", function ()
       awful.screen.focus_relative( 1)
     end,
     {description = "focus the next screen", group = "screen"}),
-    awful.key({ modkey, "Control" }, "j", function ()
-      awful.screen.focus_relative(-1)
-    end,
-    {description = "focus the previous screen", group = "screen"}),
+    -- awful.key({ modkey, "Control" }, "j", function ()
+    --   awful.screen.focus_relative(-1)
+    -- end,
+    -- {description = "focus the previous screen", group = "screen"}),
 
     -- Tag keybinds
-    awful.key({ modkey,           }, "p",   awful.tag.viewprev,
+    awful.key({ modkey }, "p",   awful.tag.viewprev,
     {description = "view previous", group = "tag"}),
-    awful.key({ modkey,           }, "n",  awful.tag.viewnext,
+    awful.key({ modkey }, "n",  awful.tag.viewnext,
     {description = "view next", group = "tag"}),
-    awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
+    awful.key({ modkey }, "Escape", awful.tag.history.restore,
     {description = "go back", group = "tag"}),
 
     -- Media keys

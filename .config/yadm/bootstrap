@@ -7,6 +7,7 @@
 # List packages to install
 # FORMAT: array [bin;method;desc;is_gui(true/false)]
 declare -A PKGS
+PKGS[arandr]='arandr;apt_install arandr;Xrandr GUI utility for modifying display config'
 PKGS[atool]='atool;apt_install atool;A tool to manage file archives of various types;false'
 PKGS[awesome]='awesome;apt_install awesome;An awesome tiling window manager;true'
 PKGS[calc]='calc;apt_install calc;A terminal based calculator;false'
@@ -20,6 +21,7 @@ PKGS[htop]='htop;apt_install htop;A better "top" system monitor tool;false'
 PKGS[neovim]='nvim;__install_neovim;The best text editor of all time;false'
 PKGS[nitrogen]='nitrogen;apt_install nitrogen;A wallpaper app;true'
 PKGS[nnn]='nnn;__install_nnn;A file browser in the terminal;false'
+PKGS[redshift]='redshift;apt_install redshift-gtk;A blue light filter application;true'
 PKGS[ripgrep & bat]='rg;__install_ripgrep_bat;A better grep;false'
 PKGS[rsync]='rsync;apt_install rsync;A fast, versatile, file-copying tool;false'
 PKGS[scrot]='scrot;apt_install scrot;A light-weight screenshot utility;true'

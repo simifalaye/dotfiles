@@ -7,6 +7,7 @@ local gears = require("gears")
 local awful = require("awful")
 local beautiful = require("beautiful") -- Theme handling library
 local menubar = require("menubar") -- Miscellanous awesome library
+local home = os.getenv("HOME")
 require("awful.autofocus")
 
 RC = {} -- global namespace, on top before require any modules
@@ -106,8 +107,12 @@ require("main.signals")
 -- }}}
 
 -- Autostart Apps {{{
--- Compositor
-awful.spawn.with_shell("compton --config ~/.config/compton/compton.conf")
--- Wallpaper
-awful.spawn.with_shell("nitrogen --restore")
+dofile(home.."/.config/awesome/autostart.lua")
+-- }}}
+
+-- Cleanup garbage {{{
+gears.timer.start_new(10, function()
+  collectgarbage("step", 20000)
+  return true
+end)
 -- }}}
