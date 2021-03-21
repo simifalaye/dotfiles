@@ -71,7 +71,7 @@ if has('persistent_undo')
   set undolevels=1000           " Max number of changes
   set undoreload=10000          " Max lines to save for undo on a buffer reload
 endif
-set clipboard=unnamedplus       " set clipboard to use
+set clipboard=unnamed           " set clipboard to use
 
 " }}}
 " Functions {{{
@@ -227,6 +227,12 @@ nnoremap <Up> 3<C-y>
 nnoremap <Down> 3<C-e>
 nnoremap <Right> gt
 nnoremap <Left>  gT
+
+" Pane navigation
+noremap <C-J> <C-W><C-J>
+noremap <C-K> <C-W><C-K>
+noremap <C-L> <C-W><C-L>
+noremap <C-H> <C-W><C-H>
 
 " }}}
 " UI {{{
