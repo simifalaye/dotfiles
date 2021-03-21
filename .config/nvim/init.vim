@@ -193,7 +193,7 @@ nnoremap <localleader>c :so $MYVIMRC<bar>:PlugClean<CR>
 nnoremap <localleader>u :so $MYVIMRC<bar>:PlugUpdate<CR>
 
 " Save, close & quit
-nnoremap <leader>d :call <SID>bufcloseCloseIt()<CR>
+nnoremap <leader>b :call <SID>bufcloseCloseIt()<CR>
 nnoremap <leader>s :update<CR>
 nnoremap <leader>q :q<CR>
 nnoremap <C-q>q :confirm qall<CR>
@@ -221,6 +221,12 @@ nnoremap <leader>z :call <SID>zoom()<CR>
 
 " Underline text
 nmap gu yyp0v$r- | nmap gU yyp0v$r=
+
+" Nav
+nnoremap <Up> 3<C-y>
+nnoremap <Down> 3<C-e>
+nnoremap <Right> gt
+nnoremap <Left>  gT
 
 " }}}
 " UI {{{
