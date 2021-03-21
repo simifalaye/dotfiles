@@ -106,8 +106,8 @@ awful.rules.rules = main.rules(
 require("main.signals")
 -- }}}
 
--- Autostart Apps {{{
-dofile(home.."/.config/awesome/autostart.lua")
+-- {{{ Autostart
+awful.spawn.once(home.."/.config/awesome/autostart.sh")
 -- }}}
 
 -- Cleanup garbage {{{
