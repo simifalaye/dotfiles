@@ -205,7 +205,7 @@ nnoremap <leader>p `[v`]
 nnoremap <leader><leader> <c-^>
 
 " Split & open quick fix
-nnoremap <leader>_ <C-w>s
+nnoremap <leader>- <C-w>s
 nnoremap <leader>\| <C-w>v
 nnoremap <leader>o :copen<CR>
 
@@ -224,6 +224,10 @@ nmap gu yyp0v$r- | nmap gU yyp0v$r=
 " Add [count] lines above/below cursor
 nnoremap ]<space> o<ESC>'[k
 nnoremap [<space> O<ESC>j
+
+" Scroll the viewport faster
+nnoremap <Down> 3<C-e>
+nnoremap <Up> 3<C-y>
 
 " }}}
 " UI {{{

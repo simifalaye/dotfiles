@@ -8,6 +8,7 @@ Plug 'mhinz/vim-startify'
   let g:startify_session_persistence = v:true
   let g:startify_bookmarks           = [
         \ {'s': '~/.config/shell/interactive'},
+        \ {'t': '~/.config/tmux/tmux.conf'},
         \ {'v': '~/.config/nvim/init.vim'},
         \ {'z': '~/.config/zsh/.zshrc'}
         \ ]
@@ -23,4 +24,4 @@ Plug 'mhinz/vim-startify'
         \   { 'uc': [ 'Update CoC Plugins', ':CocUpdate' ] },
         \ ]
 
-nnoremap <leader>h :Startify<CR>
+nnoremap <leader>s :Startify<CR>
