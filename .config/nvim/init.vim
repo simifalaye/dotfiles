@@ -193,10 +193,9 @@ nnoremap <localleader>c :so $MYVIMRC<bar>:PlugClean<CR>
 nnoremap <localleader>u :so $MYVIMRC<bar>:PlugUpdate<CR>
 
 " Save, close & quit
-nnoremap <leader>b :call <SID>bufcloseCloseIt()<CR>
-nnoremap <leader>s :update<CR>
-nnoremap <leader>q :q<CR>
-nnoremap <C-q>q :confirm qall<CR>
+nnoremap <leader>q :call <SID>bufcloseCloseIt()<CR>
+nnoremap <C-s> :update<CR>
+nnoremap <C-q> :q<CR>
 
 " Toggle highlight & select pasted text
 nnoremap <leader>/ :nohl<CR>
@@ -206,7 +205,7 @@ nnoremap <leader>p `[v`]
 nnoremap <leader><leader> <c-^>
 
 " Split & open quick fix
-nnoremap <leader>- <C-w>s
+nnoremap <leader>_ <C-w>s
 nnoremap <leader>\| <C-w>v
 nnoremap <leader>o :copen<CR>
 
@@ -217,22 +216,14 @@ nnoremap <leader>x :! chmod +x %<CR>
 nnoremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 
 " Zoom
-nnoremap <leader>z :call <SID>zoom()<CR>
+nnoremap <leader>+ :call <SID>zoom()<CR>
 
 " Underline text
 nmap gu yyp0v$r- | nmap gU yyp0v$r=
 
-" Nav
-nnoremap <Up> 3<C-y>
-nnoremap <Down> 3<C-e>
-nnoremap <Right> gt
-nnoremap <Left>  gT
-
-" Pane navigation
-noremap <C-J> <C-W><C-J>
-noremap <C-K> <C-W><C-K>
-noremap <C-L> <C-W><C-L>
-noremap <C-H> <C-W><C-H>
+" Add [count] lines above/below cursor
+nnoremap ]<space> o<ESC>'[k
+nnoremap [<space> O<ESC>j
 
 " }}}
 " UI {{{

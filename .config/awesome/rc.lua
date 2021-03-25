@@ -10,6 +10,9 @@ local menubar = require("menubar") -- Miscellanous awesome library
 local home = os.getenv("HOME")
 require("awful.autofocus")
 
+-- {{{ Autostart }}}
+awful.spawn.once(home.."/.config/awesome/autostart.sh")
+
 RC = {} -- global namespace, on top before require any modules
 RC.vars = require("main.user-variables")
 modkey = RC.vars.modkey
@@ -104,10 +107,6 @@ awful.rules.rules = main.rules(
 
 -- {{{ Signals
 require("main.signals")
--- }}}
-
--- {{{ Autostart
-awful.spawn.once(home.."/.config/awesome/autostart.sh")
 -- }}}
 
 -- Cleanup garbage {{{

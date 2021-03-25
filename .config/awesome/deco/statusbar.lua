@@ -61,27 +61,30 @@ awful.screen.connect_for_each_screen(function(s)
   local spacer = wibox.widget.textbox()
   spacer:set_text(" | ")
 
+  -- Define widgets
+  local left_widgets = {
+    layout = wibox.layout.fixed.horizontal,
+    RC.launcher,
+    s.mytaglist,
+    s.mypromptbox,
+  }
+  local right_widgets = {
+    layout = wibox.layout.fixed.horizontal,
+    deco.volume_widget(RC.vars.volumectl),
+    spacer,
+    deco.memory_widget(),
+    spacer,
+    deco.battery_widget(),
+    spacer,
+    wibox.widget.systray(),
+    mytextclock,
+    s.mylayoutbox,
+  }
   -- Add widgets to the wibox
   s.mywibox:setup {
     layout = wibox.layout.align.horizontal,
-    { -- Left widgets
-      layout = wibox.layout.fixed.horizontal,
-      RC.launcher,
-      s.mytaglist,
-      s.mypromptbox,
-    },
+    left_widgets,
     s.mytasklist, -- Middle widget
-    { -- Right widgets
-      layout = wibox.layout.fixed.horizontal,
-      deco.volume_widget(RC.vars.volumectl),
-      spacer,
-      deco.memory_widget(),
-      spacer,
-      deco.battery_widget(),
-      spacer,
-      wibox.widget.systray(),
-      mytextclock,
-      s.mylayoutbox,
-    },
+    right_widgets,
   }
 end)

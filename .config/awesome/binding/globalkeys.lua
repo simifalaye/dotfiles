@@ -36,7 +36,7 @@ function _M.get()
     end,
     {description = "lua execute prompt", group = "awesome"}),
     awful.key({ modkey }, "Escape", RC.vars.lockscreen,
-    {description = "Lock screen", group = "awesome"}),
+    {description = "lock screen", group = "awesome"}),
 
     -- Launcher keybinds
     awful.key({ modkey }, "Return", function ()
@@ -95,17 +95,13 @@ function _M.get()
       awful.screen.focus_relative( 1)
     end,
     {description = "focus the next screen", group = "screen"}),
-    -- awful.key({ modkey, "Control" }, "j", function ()
-    --   awful.screen.focus_relative(-1)
-    -- end,
-    -- {description = "focus the previous screen", group = "screen"}),
 
     -- Tag keybinds
     awful.key({ modkey }, "p",   awful.tag.viewprev,
     {description = "view previous", group = "tag"}),
     awful.key({ modkey }, "n",  awful.tag.viewnext,
     {description = "view next", group = "tag"}),
-    awful.key({ modkey }, "Escape", awful.tag.history.restore,
+    awful.key({ modkey }, "Tab", awful.tag.history.restore,
     {description = "go back", group = "tag"}),
 
     -- Media keys
