@@ -30,5 +30,5 @@ Plug 'junegunn/fzf.vim'
 
 nnoremap <silent><C-p> :Files<CR>
 nnoremap <silent><C-f> :Rg<CR>
-nnoremap <silent>-     :Buffers<CR>
+nnoremap <silent><CR>  :Buffers<CR>
 nnoremap <silent>_     :Marks<CR>

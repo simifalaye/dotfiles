@@ -38,5 +38,4 @@ _run nitrogen --restore
 # Run auto  blue light filter
 _run redshift -l geoclue2
 # Run compositor
-# _run compton --config ~/.config/compton/compton.conf
-_run xcompmgr -c -n
+_run compton --config ~/.config/compton/compton.conf
