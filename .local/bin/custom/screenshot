@@ -19,6 +19,7 @@ function send_noti() {
     notify-send -i gnome-screenshot "screenshot" "Screenshot has been saved to $DIR."
 }
 
+command -v scrot > /dev/null || { echo "Scrot is not installed."; exit 1; }
 mkdir -p $DIR
 if [ $# -eq 0 ]; then
     sleep 0.2 && scrot 'scrot-%F_%H%M%S_$wx$h.png' -e 'mv $f '$DIR'' && send_noti

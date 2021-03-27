@@ -12,7 +12,7 @@ local deco = {
   tasklist       = require("deco.tasklist"),
   battery_widget = require("deco.widgets.battery"),
   memory_widget  = require("deco.widgets.memory"),
-  volume_widget  = require("deco.widgets.volume")
+  -- volume_widget  = require("deco.widgets.volume")
 }
 
 local taglist_buttons  = deco.taglist()
@@ -70,8 +70,8 @@ awful.screen.connect_for_each_screen(function(s)
   }
   local right_widgets = {
     layout = wibox.layout.fixed.horizontal,
-    deco.volume_widget(RC.vars.volumectl),
-    spacer,
+    -- deco.volume_widget(RC.vars.volumectl),
+    -- spacer,
     deco.memory_widget(),
     spacer,
     deco.battery_widget(),

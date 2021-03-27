@@ -7,8 +7,7 @@
 # List packages to install
 # FORMAT: array [bin;method;desc;is_gui(true/false)]
 declare -A PKGS
-PKGS[arandr]='arandr;apt_install arandr;Xrandr GUI utility for modifying display config'
-PKGS[atool]='atool;apt_install atool;A tool to manage file archives of various types;false'
+PKGS[arandr]='arandr;apt_install arandr;Xrandr GUI utility for modifying display config;false'
 PKGS[awesome]='awesome;apt_install awesome;An awesome tiling window manager;true'
 PKGS[calc]='calc;apt_install calc;A terminal based calculator;false'
 PKGS[cheat]='cht.sh;__install_cheat;A set of community driven cheat sheets for everything;false'
@@ -17,13 +16,15 @@ PKGS[curl]='curl;apt_install curl;A URL file transfer tool;false'
 PKGS[delta]='delta;__install_delta;A better git diff;false'
 PKGS[exa]='exa;__install_exa;A better ls;false'
 PKGS[fd-find]='fdfind;apt_install fd-find;A better find;false'
-PKGS[htop]='htop;apt_install htop;A better "top" system monitor tool;false'
-PKGS[neovim]='nvim;__install_neovim;The best text editor of all time;false'
-PKGS[nitrogen]='nitrogen;apt_install nitrogen;A wallpaper app;true'
-PKGS[nnn]='nnn;__install_nnn;A file browser in the terminal;false'
 PKGS[gnome-auth]='/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1;'
 PKGS[gnome-auth]+='apt_install policykit-1-gnome;Gnome authentication agent;true'
-PKGS[redshift]='redshift;apt_install redshift-gtk;A blue light filter application;true'
+PKGS[htop]='htop;apt_install htop;A better "top" system monitor tool;false'
+PKGS[neovim]='nvim;__install_neovim;The best text editor of all time;false'
+PKGS[netmgr]='nm-applet;apt_install network-manager;A network mgr & applet;true'
+PKGS[nitrogen]='nitrogen;apt_install nitrogen;A wallpaper app;true'
+PKGS[nnn]='nnn;__install_nnn;A file browser in the terminal;false'
+PKGS[pasystray]='pasystray;apt_install pasystray;A pulse audio applet;true'
+PKGS[redshift]='redshift;apt_install redshift-gtk;A blue light filter app;true'
 PKGS[ripgrep & bat]='rg;__install_ripgrep_bat;A better grep;false'
 PKGS[rsync]='rsync;apt_install rsync;A fast, versatile, file-copying tool;false'
 PKGS[scrot]='scrot;apt_install scrot;A light-weight screenshot utility;true'
@@ -96,11 +97,12 @@ function __install_ripgrep_bat {
 # Runners
 # ---------
 
-install_pkg_managers()
+install_core()
 {
     sudo apt update
     _is_callable "pip3" || sudo apt install -y python3 python3-pip
     _is_callable "npm" || sudo apt install -y nodejs npm
+    _is_callable "atool" || sudo apt install -y atool
 }
 
 install_pkgs()
@@ -164,7 +166,7 @@ change_login_shell()
 # MAIN
 # ======
 
-install_pkg_managers
+install_core
 install_pkgs
 change_login_shell
 

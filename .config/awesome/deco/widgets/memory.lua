@@ -29,7 +29,7 @@ watch(
     mem.swp.inuse = mem.swp.t - mem.swp.f
     mem.swp.usep  = math.floor(mem.swp.inuse / mem.swp.t * 100)
 
-    widget:set_text(" " ..
+    widget:set_text("  " ..
       string.format("%.1f", mem.inuse / 1000) .. "/" ..
       string.format("%.1f", mem.total / 1000) .. "GB")
   end,

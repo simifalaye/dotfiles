@@ -37,5 +37,9 @@ _run /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
 _run nitrogen --restore
 # Run auto  blue light filter
 _run redshift -l geoclue2
+# Run network manager applet
+_run nm-applet
+# Run pulse audio applet
+_run pasystray
 # Run compositor
 _run compton --config ~/.config/compton/compton.conf
