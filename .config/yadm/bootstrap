@@ -8,12 +8,13 @@
 # FORMAT: array [bin;method;desc;is_gui(true/false)]
 declare -A PKGS
 PKGS[arandr]='arandr;apt_install arandr;Xrandr GUI utility for modifying display config;false'
-PKGS[awesome]='awesome;apt_install awesome;An awesome tiling window manager;true'
+# PKGS[awesome]='awesome;apt_install awesome;An awesome tiling window manager;true'
 PKGS[calc]='calc;apt_install calc;A terminal based calculator;false'
 PKGS[cheat]='cht.sh;__install_cheat;A set of community driven cheat sheets for everything;false'
 PKGS[compton]='compton;apt_install compton;An X compositor;true'
 PKGS[curl]='curl;apt_install curl;A URL file transfer tool;false'
 PKGS[delta]='delta;__install_delta;A better git diff;false'
+PKGS[dunst]='dunst;apt_install dunst;A notification daemon;true'
 PKGS[exa]='exa;__install_exa;A better ls;false'
 PKGS[fd-find]='fdfind;apt_install fd-find;A better find;false'
 PKGS[gnome-auth]='/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1;'
@@ -26,7 +27,7 @@ PKGS[nnn]='nnn;__install_nnn;A file browser in the terminal;false'
 PKGS[pasystray]='pasystray;apt_install pasystray;A pulse audio applet;true'
 PKGS[redshift]='redshift;apt_install redshift-gtk;A blue light filter app;true'
 PKGS[ripgrep & bat]='rg;__install_ripgrep_bat;A better grep;false'
-PKGS[rsync]='rsync;apt_install rsync;A fast, versatile, file-copying tool;false'
+PKGS[rofi]='rofi;apt_install rofi;A app launcher;true'
 PKGS[scrot]='scrot;apt_install scrot;A light-weight screenshot utility;true'
 PKGS[slock]='scrot;apt_install slock;A light-weight lock screen;true'
 PKGS[sxiv]='sxiv;apt_install sxiv;An image viewer in the terminal;true'
@@ -42,6 +43,9 @@ PKGS[zsh]='zsh;apt_install zsh;The best shell of all time;false'
 #              blue = 34, magenta = 35, cyan = 36, and white = 37
 # Change color: "\e[1;32m", Reset: "\e[0m"
 
+function _has_ppa {
+    grep -q "^deb .*$1" /etc/apt/sources.list /etc/apt/sources.list.d/*
+}
 function _is_callable {
     for cmd in "$@"; do
         command -v "$cmd" >/dev/null || return 1
@@ -99,6 +103,9 @@ function __install_ripgrep_bat {
 
 install_core()
 {
+    # PPAs
+
+    # Core apps
     sudo apt update
     _is_callable "pip3" || sudo apt install -y python3 python3-pip
     _is_callable "npm" || sudo apt install -y nodejs npm

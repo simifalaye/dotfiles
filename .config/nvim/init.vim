@@ -193,9 +193,9 @@ nnoremap <localleader>c :so $MYVIMRC<bar>:PlugClean<CR>
 nnoremap <localleader>u :so $MYVIMRC<bar>:PlugUpdate<CR>
 
 " Save, close & quit
-nnoremap <leader>q :call <SID>bufcloseCloseIt()<CR>
-nnoremap <C-s> :update<CR>
-nnoremap <C-q> :q<CR>
+nnoremap <leader>s :update<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <leader>b :call <SID>bufcloseCloseIt()<CR>
 
 " Toggle highlight & select pasted text
 nnoremap <leader>/ :nohl<CR>
@@ -220,10 +220,6 @@ nnoremap <leader>+ :call <SID>zoom()<CR>
 
 " Underline text
 nmap gu yyp0v$r- | nmap gU yyp0v$r=
-
-" Add [count] lines above/below cursor
-nnoremap ]<space> o<ESC>'[k
-nnoremap [<space> O<ESC>j
 
 " Scroll the viewport faster
 nnoremap <Down> 3<C-e>
