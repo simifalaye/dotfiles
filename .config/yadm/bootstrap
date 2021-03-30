@@ -10,7 +10,6 @@
 #     to see if it's installed instead of checking if bin exists
 declare -A PKGS
 PKGS[arandr]='arandr;apt_install;An Xrandr GUI utility;true'
-# PKGS[awesome]='awesome;apt_install;An awesome tiling window manager;true'
 PKGS[calc]='calc;apt_install;A terminal based calculator;false'
 PKGS[cheat]='cht.sh;__install_cheat;A set of community driven cheat sheets;false'
 PKGS[compton]='compton;apt_install;An X compositor;true'
@@ -22,20 +21,22 @@ PKGS[fd-find]='fdfind;apt_install;A better find;false'
 PKGS[htop]='htop;apt_install;A better "top" system monitor tool;false'
 PKGS[j4-dmenu-desktop]='j4-dmenu-desktop;apt_install;Dmenu for Apps;true'
 PKGS[neovim]='nvim;__install_neovim;The best text editor of all time;false'
-PKGS[network-manager]='nm-applet;apt_install;A network mgr & applet;true'
+# PKGS[network-manager]='nm-applet;apt_install;A network mgr & applet;true'
 PKGS[nitrogen]='nitrogen;apt_install;A wallpaper app;true'
 PKGS[nnn]='nnn;__install_nnn;A file browser in the terminal;false'
 PKGS[pasystray]='pasystray;apt_install;A pulse audio applet;true'
 PKGS[policykit-1-gnome]=';apt_install;Gnome authentication agent;true'
 PKGS[redshift-gtk]='redshift;apt_install;A blue light filter app;true'
 PKGS[ripgrep & bat]='rg;__install_ripgrep_bat;A better grep;false'
-# PKGS[rofi]='rofi;apt_install;A app launcher;true'
 PKGS[scrot]='scrot;apt_install;A light-weight screenshot utility;true'
 PKGS[suckless-tools]='dmenu;apt_install;Suckless tools;true'
 PKGS[sxiv]='sxiv;apt_install;An image viewer in the terminal;true'
 PKGS[tig]='tig;apt_install;A git log helper;false'
+PKGS[trayer]='trayer;apt_install;A system tray;true'
 PKGS[tmux]='tmux;apt_install;A terminal multiplexer;false'
 PKGS[trash-cli]='trash;pip_install;A terminal trash utility;false'
+PKGS[xautolock]='xautolock;apt_install;A auto lock tool;true'
+PKGS[xmonad]='xmonad;__install_xmonad;A tiling window manager;true'
 PKGS[zathura]='zathura;apt_install;A terminal PDF reader;true'
 PKGS[zsh]='zsh;apt_install;The best shell of all time;false'
 
@@ -98,6 +99,9 @@ function __install_ripgrep_bat {
     # Workaround to install bat and ripgrep (https://github.com/sharkdp/bat/issues/938)
     sudo apt install -o Dpkg::Options::="--force-overwrite" bat ripgrep && return 0
     return 1
+}
+function __install_xmonad {
+    apt_install xmonad libghc-xmonad-dev libghc-xmonad-contrib-dev xmobar
 }
 
 # Runners
