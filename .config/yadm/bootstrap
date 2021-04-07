@@ -21,15 +21,17 @@ PKGS[fd-find]='fdfind;apt_install;A better find;false'
 PKGS[htop]='htop;apt_install;A better "top" system monitor tool;false'
 PKGS[j4-dmenu-desktop]='j4-dmenu-desktop;apt_install;Dmenu for Apps;true'
 PKGS[neovim]='nvim;__install_neovim;The best text editor of all time;false'
-# PKGS[network-manager]='nm-applet;apt_install;A network mgr & applet;true'
+PKGS[network-manager]='nm-applet;apt_install;A network mgr & applet;true'
 PKGS[nitrogen]='nitrogen;apt_install;A wallpaper app;true'
 PKGS[nnn]='nnn;__install_nnn;A file browser in the terminal;false'
+PKGS[papirus-icon-theme]=';apt_install;An icon theme;true'
 PKGS[pasystray]='pasystray;apt_install;A pulse audio applet;true'
 PKGS[policykit-1-gnome]=';apt_install;Gnome authentication agent;true'
 PKGS[redshift-gtk]='redshift;apt_install;A blue light filter app;true'
 PKGS[ripgrep & bat]='rg;__install_ripgrep_bat;A better grep;false'
+PKGS[rofi]='rofi;apt_install;A launcher application;true'
 PKGS[scrot]='scrot;apt_install;A light-weight screenshot utility;true'
-PKGS[suckless-tools]='dmenu;apt_install;Suckless tools;true'
+PKGS[suckless-tools]=';apt_install;Suckless tools;true'
 PKGS[sxiv]='sxiv;apt_install;An image viewer in the terminal;true'
 PKGS[tig]='tig;apt_install;A git log helper;false'
 PKGS[trayer]='trayer;apt_install;A system tray;true'
@@ -110,6 +112,7 @@ function __install_xmonad {
 install_core()
 {
     # PPAs
+    _has_ppa "papirus/papirus" || sudo add-apt-repository ppa:papirus/papirus
 
     # Core apps
     sudo apt update

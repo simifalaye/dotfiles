@@ -2,26 +2,26 @@
 
 Config {
    -- appearance
-     font =         "xft:MesloLGS NF:pixelsize=12:antialias=true:hinting=true"
-   , bgColor =      "black"
-   , fgColor =      "grey"
-   , position =     Top
-   , border =       NoBorder
-   , borderColor =  "#646464"
+     font            = "xft:MesloLGS NF:pixelsize=12:antialias=true:hinting=true"
+   , additionalFonts = [ "xft:monospace:pixelsize=15" ]
+   , bgColor         = "black"
+   , fgColor         = "#B8B8B8"
+   , position        = Top
+   , border          = NoBorder
 
    -- layout
-   , sepChar =  "%"   -- delineator between plugin names and straight text
-   , alignSep = "}{"  -- separator between left-right alignment
-   , template = " %StdinReader% }{ %battery% | %memory% | %CYLW% | %date% | \
-                 \             "
+   , sepChar  = "%"  -- delineator between plugin names and straight text
+   , alignSep = "}{" -- separator between left-right alignment
+   , template = "<icon=haskell_20.xpm/> %UnsafeStdinReader% }{ \
+      \ %battery% | %memory% | %CYLW% | %date% | %trayerpad%"
 
    -- general behavior
-   , lowerOnStart =     True    -- send to bottom of window stack on start
-   , hideOnStart =      False   -- start with window unmapped (hidden)
-   , allDesktops =      True    -- show on all desktops
-   , overrideRedirect = True    -- set the Override Redirect flag (Xlib)
-   , pickBroadest =     False   -- choose widest display (multi-monitor)
-   , persistent =       True    -- enable/disable hiding (True = disabled)
+   , lowerOnStart     = True  -- send to bottom of window stack on start
+   , hideOnStart      = False -- start with window unmapped (hidden)
+   , allDesktops      = True  -- show on all desktops
+   , overrideRedirect = True  -- set the Override Redirect flag (Xlib)
+   , pickBroadest     = False -- choose widest display (multi-monitor)
+   , persistent       = True  -- enable/disable hiding (True = disabled)
 
    -- plugins
    --   Numbers can be automatically colored according to their value. xmobar
@@ -41,7 +41,7 @@ Config {
 
         -- weather monitor
         [ Run Weather "CYLW" [ "--template",
-                               "<skyCondition>, <fc=#4196db><tempC></fc>°C"
+                               " <skyCondition>, <fc=#7CAFC2><tempC></fc>°C"
                              ] 36000
 
         -- network activity monitor (dynamic interface resolution)
@@ -54,7 +54,7 @@ Config {
                              ] 10
 
         -- cpu activity monitor
-        , Run MultiCpu       [ "--template" , "Cpu: <total0>%/<total1>%"
+        , Run MultiCpu       [ "--template" , " <total0>%/<total1>%"
                              , "--Low"      , "50"         -- units: %
                              , "--High"     , "85"         -- units: %
                              , "--low"      , "#3ed83e"
@@ -72,36 +72,41 @@ Config {
                              ] 50
 
         -- memory usage monitor
-        , Run Memory         [ "--template" ,"Mem: <usedratio>%"
+        , Run Memory         [ "--template" ," <usedratio>%"
                              , "--Low"      , "20"        -- units: %
                              , "--High"     , "90"        -- units: %
-                             , "--low"      , "#3ed83e"
-                             , "--normal"   , "orange"
-                             , "--high"     , "#ce0000"
+                             , "--low"      , "#A1B56C"
+                             , "--normal"   , "#F7CA88"
+                             , "--high"     , "#AB4642"
                              ] 10
 
         -- battery monitor
-        , Run Battery        [ "--template" , "Batt: <acstatus>"
+        , Run Battery        [ "--template" , " <acstatus>"
                              , "--Low"      , "10"        -- units: %
                              , "--High"     , "80"        -- units: %
-                             , "--low"      , "#ce0000"
-                             , "--normal"   , "orange"
-                             , "--high"     , "#3ed83e"
+                             , "--low"      , "#A1B56C"
+                             , "--normal"   , "#F7CA88"
+                             , "--high"     , "#AB4642"
 
                              , "--" -- battery specific options
                                        -- discharging status
                                        , "-o", "<left>% (<timeleft>)"
                                        -- AC "on" status
-                                       , "-O", "<fc=#dAA520>Charging</fc>"
+                                       , "-O", "<fc=#F7CA88>Charging</fc>"
                                        -- charged status
-                                       , "-i", "<fc=#006000>Charged</fc>"
+                                       , "-i", "<fc=#A1B56C>Charged</fc>"
                              ] 50
-        -- xmonad input
-        , Run StdinReader
-
         -- time and date indicator
         --   (%F = y-m-d date, %a = day of week, %H:%M = h:m time)
-        , Run Date           "<fc=#ABABAB>%F(%a) %H:%M</fc>" "date" 10
+        , Run Date           "<fc=#B8B8B8> %F (%a) %H:%M</fc>" "date" 10
+
+        -- trayer padding
+        , Run Com            "/home/simifa/.config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 10
+
+        -- xmonad input
+        -- , Run StdinReader
+        , Run UnsafeStdinReader
+
         ]
    }
 

@@ -17,5 +17,3 @@ if _check $layout_file; then
 fi
 # Start gnome auth agent
 /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
-# Fix Java apps
-_check wmname && wmname LG3D
