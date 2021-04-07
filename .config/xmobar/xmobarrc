@@ -13,7 +13,7 @@ Config {
    , sepChar  = "%"  -- delineator between plugin names and straight text
    , alignSep = "}{" -- separator between left-right alignment
    , template = "<icon=haskell_20.xpm/> %UnsafeStdinReader% }{ \
-      \ %battery% | %memory% | %CYLW% | %date% | %trayerpad%"
+      \ %battery% | %memory% | %CYLW% | %date% %trayerpad%"
 
    -- general behavior
    , lowerOnStart     = True  -- send to bottom of window stack on start

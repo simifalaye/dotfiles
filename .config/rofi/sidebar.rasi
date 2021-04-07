@@ -1,0 +1,57 @@
+configuration {
+  show-icons: true;
+  drun-display-format: "{name}";
+  location: 3;  // top-right
+  icon-theme: "Papirus";
+}
+
+* {
+  background-color: #E8E8E8;
+  text-color: #000000;
+}
+
+window {
+  fullscreen: false;
+  font: "MesloLGS NF 12";
+  width: 28%;
+  height: 100%;
+}
+
+prompt { enabled: false; }
+
+entry {
+  padding: 5px 0 5px 0;
+  horizontal-align: 0.5;
+  margin: 8% 5% 0% 5%;
+  color: #E8E8E8;
+  background-color: #585858;
+  font: "MesloLGS NF 9";
+  border-radius: 30px;
+  placeholder: "Search";
+}
+
+listview {
+  columns: 3;
+  padding: 1.5%;
+  margin: 5% 0% 5% 0%;
+}
+
+element {
+  padding: 0.4%;
+  margin: 1% 0.3% 1% 0.3%;
+  orientation: vertical;
+}
+
+element selected {
+  text-color: #E8E8E8;
+  background-color: #585858;
+  border-radius: 10px;
+}
+
+element-icon {
+  size: 48;
+}
+
+element-text {
+  horizontal-align: 0.5;
+}

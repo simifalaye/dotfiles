@@ -24,6 +24,7 @@ _run xautolock -time 30 -locker slock -notify 10
 _run redshift -l geoclue2
 # Run compositor
 _run compton --config ~/.config/compton/compton.conf
+# _run xcompmgr -n
 # Run Dunst
 _run dunst -config $HOME/.config/dunst/dunstrc
 # Run Trayer
@@ -36,4 +37,4 @@ _check nitrogen && nitrogen --restore
 # Run pulse audio applet
 _run pasystray
 # Run nm-applet
-# _run nm-applet
+_run nm-applet

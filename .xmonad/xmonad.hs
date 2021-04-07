@@ -21,6 +21,7 @@ import XMonad.Hooks.SetWMName
 import XMonad.Hooks.EwmhDesktops
 
 -- Actions
+import qualified XMonad.Actions.Search as S
 import XMonad.Actions.CopyWindow (kill1, copyToAll, killAllOtherCopies, runOrCopy)
 import XMonad.Actions.WithAll (sinkAll, killAll)
 import XMonad.Actions.CycleWS
@@ -35,10 +36,15 @@ import XMonad.Layout.Tabbed
 
 -- Prompts
 import XMonad.Prompt (defaultXPConfig, XPConfig(..), XPPosition(Top), Direction1D(..))
+import XMonad.Prompt.FuzzyMatch
+import XMonad.Prompt.Man
+import XMonad.Prompt.Shell (shellPrompt)
+import XMonad.Prompt.Ssh
 
 -------------------------------------------------------------------------------
 -- User Config --
 
+myScriptPath  = "~/.xmonad/bin/"
 myFont        = "xft:MesloLGS NF:regular:pixelsize=12"
 myModMask     = mod4Mask    -- Sets modkey to super/windows key
 myTerminal    = "alacritty" -- Sets default terminal
@@ -112,8 +118,7 @@ myKeys =
 
     --- Run
     , ("M-<Return>", spawn (myTerminal))
-    , ("M-p", spawn "rofi -combi-modi \"window,drun\" -show combi")
-    , ("M-S-p", spawn "dmenu_run")
+    , ("M-<Space>", spawn "rofi -show drun")
     , ("M-C-l", spawn "slock")
 
     -- Windows
@@ -131,12 +136,12 @@ myKeys =
     , ("M-S-k", windows W.swapUp)      -- Swap the focused window with the prev window
 
     -- Layouts
-    , ("M-<Space>", sendMessage NextLayout)        -- Switch to next layout
-    , ("M-b",       sendMessage ToggleStruts)      -- Toggles struts
-    , ("M-i",       sendMessage (IncMasterN 1))    -- Increase number of clients in the master pane
-    , ("M-d",       sendMessage (IncMasterN (-1))) -- Decrease number of clients in the master pane
-    , ("M-h",       sendMessage Shrink)            -- Increase master area
-    , ("M-l",       sendMessage Expand)            -- Decrease master area
+    , ("M-S-<Space>", sendMessage NextLayout)        -- Switch to next layout
+    , ("M-b",         sendMessage ToggleStruts)      -- Toggles struts (bar)
+    , ("M-i",         sendMessage (IncMasterN 1))    -- Increase number of master clients
+    , ("M-d",         sendMessage (IncMasterN (-1))) -- Decrease number of master clients
+    , ("M-h",         sendMessage Shrink)            -- Increase master area
+    , ("M-l",         sendMessage Expand)            -- Decrease master area
 
     -- Workspaces
     , ("M-<Tab>", toggleWS)      -- Switch to last WS
@@ -146,26 +151,42 @@ myKeys =
     , ("M-S-.", shiftNextScreen) -- Move window to next monitor
 
     -- Multimedia Keys
-    , ("<XF86MonBrightnessUp>", spawn "bright")
-    , ("<XF86MonBrightnessDown>", spawn "bright -d")
-    , ("<XF86AudioMute>",   spawn "~/.xmonad/bin/volume.sh mute")
-    , ("<XF86AudioLowerVolume>", spawn "~/.xmonad/bin/volume.sh dec")
-    , ("<XF86AudioRaiseVolume>", spawn "~/.xmonad/bin/volume.sh inc")
-    , ("<Print>", spawn "~/.xmonad/bin/screenshot.sh -f")
-    ] where nonNSP          = WSIs (return (\ws -> W.tag ws /= "nsp"))
-            nonEmptyNonNSP  = WSIs (return (\ws -> isJust (W.stack ws) && W.tag ws /= "nsp"))
+    , ("<XF86MonBrightnessUp>", spawn "xbacklight -inc 10")
+    , ("<XF86MonBrightnessDown>", spawn "xbacklight -dec 10")
+    , ("<XF86AudioMute>",   spawn (myScriptPath ++ "volume.sh mute"))
+    , ("<XF86AudioLowerVolume>", spawn (myScriptPath ++ "volume.sh dec"))
+    , ("<XF86AudioRaiseVolume>", spawn (myScriptPath ++ "volume.sh inc"))
+    , ("<Print>", spawn (myScriptPath ++ "screenshot.sh -f"))
+
+    -- Apps
+    -- Graphical apps (M-g + ...)
+    , ("M-g b", spawn "firefox")
+    , ("M-g f", spawn "nautilus")
+    , ("M-x h", spawn (myTerminal ++ " -e htop"))
+    -- Terminal apps (M-x + ...)
+    , ("M-x e", spawn (myTerminal ++ " -e zsh -c nvim"))
+    -- Environment (M-e + ...)
+    , ("M-e c", spawn (myScriptPath ++ "reload_compton.sh"))
+    , ("M-e d", spawn (myScriptPath ++ "reload_dunst.sh"))
+    ]
+    -- Appending some extra xprompts to keybindings list.
+    -- Look at "xprompt settings" section this of config for values for "k".
+    ++ [("M-p " ++ k, f sXPConfig) | (k,f) <- promptList ]
+    -- Appending search engine prompts to keybindings list.
+    -- Look at "search engines" section of this config for values for "k".
+    ++ [("M-s " ++ k, S.promptSearch sXPConfig f) | (k,f) <- searchList ]
+        where nonNSP          = WSIs (return (\ws -> W.tag ws /= "nsp"))
+              nonEmptyNonNSP  = WSIs (return (\ws -> isJust (W.stack ws) && W.tag ws /= "nsp"))
 
 -- Mouse bindings: default actions bound to mouse events
 myMouseBindings :: XConfig Layout -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList
     -- mod-button1 %! Set the window to floating mode and move by dragging
-    [ ((modMask, button1), \w -> focus w >> mouseMoveWindow w
-                                          >> windows W.shiftMaster)
+    [ ((modMask, button1), \w -> focus w >> mouseMoveWindow w >> windows W.shiftMaster)
     -- mod-button2 %! Raise the window to the top of the stack
       , ((modMask, button2), windows . (W.shiftMaster .) . W.focusWindow)
     -- mod-button3 %! Set the window to floating mode and resize by dragging
-      , ((modMask, button3), \w -> focus w >> mouseResizeWindow w
-                                         >> windows W.shiftMaster)
+      , ((modMask, button3), \w -> focus w >> mouseResizeWindow w >> windows W.shiftMaster)
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
 
@@ -215,3 +236,45 @@ myLayout = tiled ||| Mirror tiled  ||| simpleTabbed ||| Full
     delta   = 3/100
 
 myLayoutHook = avoidStruts $ spacing myGaps $ myLayout
+
+------------------------------------------------------------------------
+-- Xprompt Settings --
+
+sXPConfig :: XPConfig
+sXPConfig = def
+    { font = myFont
+    , bgColor             = base00
+    , fgColor             = base07
+    , bgHLight            = base0D
+    , fgHLight            = base00
+    , borderColor         = base00
+    , promptBorderWidth   = 0
+    , position            = Top
+    , height              = 20
+    , historySize         = 256
+    , historyFilter       = id
+    , defaultText         = []
+    , autoComplete        = Nothing
+    , showCompletionOnTab = False
+    , searchPredicate     = fuzzyMatch
+    , alwaysHighlight     = True
+    , maxComplRows        = Just 15 -- set to Just 5 for 5 rows
+    }
+
+-- A list of all of the standard Xmonad prompts and a key press assigned to them.
+-- These are used in conjunction with keybinding I set later in the config.
+promptList :: [(String, XPConfig -> X ())]
+promptList = [ ("m", manPrompt)          -- manpages prompt
+             , ("r", shellPrompt)        -- run an application
+             , ("s", sshPrompt)          -- ssh prompt
+             ]
+-- Search engines to use.
+searchList :: [(String, S.SearchEngine)]
+searchList = [ ("d", S.duckduckgo)
+             , ("g", S.google)
+             , ("i", S.images)
+             , ("t", S.thesaurus)
+             , ("v", S.vocabulary)
+             , ("w", S.wikipedia)
+             , ("y", S.youtube)
+             ]
