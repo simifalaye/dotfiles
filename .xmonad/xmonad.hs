@@ -25,6 +25,7 @@ import qualified XMonad.Actions.Search as S
 import XMonad.Actions.CopyWindow (kill1, copyToAll, killAllOtherCopies, runOrCopy)
 import XMonad.Actions.WithAll (sinkAll, killAll)
 import XMonad.Actions.CycleWS
+import XMonad.Actions.UpdatePointer
 
 -- Layouts modifiers
 import XMonad.Layout.WorkspaceDir
@@ -76,7 +77,10 @@ base0F = "#A16946"
 main = do
     xmproc <- spawnPipe "xmobar -x 0 ~/.config/xmobar/xmobarrc"
     xmonad $ ewmh desktopConfig
-        { manageHook = ( isFullscreen --> doFullFloat ) <+> myManageHook <+> manageHook desktopConfig <+> manageDocks
+        { manageHook = ( isFullscreen --> doFullFloat )
+            <+> myManageHook
+            <+> manageHook desktopConfig
+            <+> manageDocks
         , logHook = dynamicLogWithPP xmobarPP
                         { ppOutput = \x -> hPutStrLn xmproc x
                         , ppCurrent = xmobarColor base0D "" . wrap "[" "]" -- Current workspace in xmobar
@@ -88,6 +92,7 @@ main = do
                         , ppUrgent = xmobarColor base08 "" . wrap "!" "!"  -- Urgent workspace
                         , ppOrder  = \(ws:l:t:ex) -> [ws,l]++ex++[t]
                         }
+                        >> updatePointer (0.5, 0.5) (0, 0) -- Automove pointer
         , modMask            = myModMask
         , terminal           = myTerminal
         , mouseBindings      = myMouseBindings
@@ -104,8 +109,20 @@ main = do
 
 myStartupHook = do
     setWMName "LG3D" -- Fix Java apps
-    spawnOnce "$HOME/.xmonad/bin/env.sh"
-    spawn "$HOME/.xmonad/bin/autostart.sh"
+    spawnOnce "/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1"
+    spawnOnce (myScriptPath ++ "screen_layout.sh")
+    spawnOnce (myScriptPath ++ "start.sh dunst")
+    spawnOnce (myScriptPath ++ "start.sh compton --config ~/.config/compton/compton.conf")
+    spawnOnce (myScriptPath ++ "start.sh redshift -l geoclue2")
+    spawnOnce (myScriptPath ++ "start.sh trayer \
+                \ --edge top --align right --widthtype request \
+                \ --padding 6 --SetDockType true --SetPartialStrut true \
+                \ --expand true --monitor 1 --transparent true --alpha 0 \
+                \ --tint 0x000000 --height 20 --iconspacing 2")
+    spawnOnce (myScriptPath ++ "start.sh pasystray")
+    spawnOnce (myScriptPath ++ "start.sh nm-applet")
+    spawnOnce (myScriptPath ++ "start.sh xautolock -time 30 -locker slock -notify 10")
+    spawnOnce "nitrogen --restore"
 
 -------------------------------------------------------------------------------
 -- Keybinds --
@@ -118,8 +135,8 @@ myKeys =
 
     --- Run
     , ("M-<Return>", spawn (myTerminal))
-    , ("M-<Space>", spawn "rofi -show drun")
-    , ("M-C-l", spawn "slock")
+    , ("M-<Space>",  spawn "rofi -show drun")
+    , ("M-C-l",      spawn "slock")
 
     -- Windows
     , ("M-q",   kill1)         -- Kill the currently focused client
@@ -144,30 +161,32 @@ myKeys =
     , ("M-l",         sendMessage Expand)            -- Decrease master area
 
     -- Workspaces
-    , ("M-<Tab>", toggleWS)      -- Switch to last WS
-    , ("M-,", prevScreen)        -- Switch focus to prev monitor
-    , ("M-.", nextScreen)        -- Switch focus to next monitor
-    , ("M-S-,", shiftPrevScreen) -- Move window to prev monitor
-    , ("M-S-.", shiftNextScreen) -- Move window to next monitor
+    , ("M-<Tab>", toggleWS)        -- Switch to last WS
+    , ("M-,",     prevScreen)      -- Switch focus to prev monitor
+    , ("M-.",     nextScreen)      -- Switch focus to next monitor
+    , ("M-S-,",   shiftPrevScreen) -- Move window to prev monitor
+    , ("M-S-.",   shiftNextScreen) -- Move window to next monitor
 
     -- Multimedia Keys
-    , ("<XF86MonBrightnessUp>", spawn "xbacklight -inc 10")
+    , ("<XF86MonBrightnessUp>",   spawn "xbacklight -inc 10")
     , ("<XF86MonBrightnessDown>", spawn "xbacklight -dec 10")
-    , ("<XF86AudioMute>",   spawn (myScriptPath ++ "volume.sh mute"))
-    , ("<XF86AudioLowerVolume>", spawn (myScriptPath ++ "volume.sh dec"))
-    , ("<XF86AudioRaiseVolume>", spawn (myScriptPath ++ "volume.sh inc"))
-    , ("<Print>", spawn (myScriptPath ++ "screenshot.sh -f"))
+    , ("<XF86AudioMute>",         spawn (myScriptPath ++ "volume.sh mute"))
+    , ("<XF86AudioLowerVolume>",  spawn (myScriptPath ++ "volume.sh dec"))
+    , ("<XF86AudioRaiseVolume>",  spawn (myScriptPath ++ "volume.sh inc"))
+    , ("<Print>",                 spawn (myScriptPath ++ "screenshot.sh -f"))
 
-    -- Apps
     -- Graphical apps (M-g + ...)
     , ("M-g b", spawn "firefox")
     , ("M-g f", spawn "nautilus")
-    , ("M-x h", spawn (myTerminal ++ " -e htop"))
+    , ("M-g w", spawn "nitrogen")
     -- Terminal apps (M-x + ...)
-    , ("M-x e", spawn (myTerminal ++ " -e zsh -c nvim"))
+    , ("M-x h", spawn (myTerminal ++ " -e zsh -i -c htop"))
+    , ("M-x e", spawn (myTerminal ++ " -e zsh -i -c nvim"))
+    , ("M-x n", spawn (myTerminal ++ " -e zsh -i -c n"))
+    , ("M-x c", spawn (myTerminal ++ " -e zsh -i -c calc"))
     -- Environment (M-e + ...)
-    , ("M-e c", spawn (myScriptPath ++ "reload_compton.sh"))
-    , ("M-e d", spawn (myScriptPath ++ "reload_dunst.sh"))
+    , ("M-e c", spawn (myScriptPath ++ "start.sh compton --config ~/.config/compton/compton.conf"))
+    , ("M-e d", spawn (myScriptPath ++ "start.sh dunst"))
     ]
     -- Appending some extra xprompts to keybindings list.
     -- Look at "xprompt settings" section this of config for values for "k".
