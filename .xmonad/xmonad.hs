@@ -54,22 +54,22 @@ myBorderWidth = 3           -- Sets border width for windows
 myGaps        = 2           -- Sets the gap between windows
 
 -- Base16 Colors
-base00 = "#000000"
-base01 = "#282828"
-base02 = "#383838"
-base03 = "#585858"
-base04 = "#B8B8B8"
-base05 = "#D8D8D8"
-base06 = "#E8E8E8"
-base07 = "#F8F8F8"
-base08 = "#AB4642"
-base09 = "#DC9656"
-base0A = "#F7CA88"
-base0B = "#A1B56C"
-base0C = "#86C1B9"
-base0D = "#7CAFC2"
-base0E = "#BA8BAF"
-base0F = "#A16946"
+base00 = "#000000" -- Black
+base01 = "#282828" -- Black 1
+base02 = "#383838" -- Black 2
+base03 = "#585858" -- Bright Black
+base04 = "#B8B8B8" -- Grey
+base05 = "#D8D8D8" -- White
+base06 = "#E8E8E8" -- White 1
+base07 = "#F8F8F8" -- Bright White
+base08 = "#AB4642" -- Red
+base09 = "#DC9656" -- Orange
+base0A = "#F7CA88" -- Yellow/Bright-Yellow
+base0B = "#A1B56C" -- Green/Bright-Green
+base0C = "#86C1B9" -- Cyan/Bright-Cyan
+base0D = "#7CAFC2" -- Blue/Bright-Blue
+base0E = "#BA8BAF" -- Magenta/Bright-Magenta
+base0F = "#A16946" -- Brown
 
 -------------------------------------------------------------------------------
 -- Main --
@@ -83,13 +83,13 @@ main = do
             <+> manageDocks
         , logHook = dynamicLogWithPP xmobarPP
                         { ppOutput = \x -> hPutStrLn xmproc x
-                        , ppCurrent = xmobarColor base0D "" . wrap "[" "]" -- Current workspace in xmobar
-                        , ppVisible = xmobarColor base05 ""                -- Visible but not current workspace
-                        , ppHidden = xmobarColor base0A ""                 -- Hidden workspaces in xmobar
-                        , ppHiddenNoWindows = xmobarColor base03 ""        -- Hidden workspaces (no windows)
-                        , ppTitle = xmobarColor base07 "" . shorten 60     -- Title of active window in xmobar
-                        , ppSep =  "<fc=#666666> | </fc>"                  -- Separators in xmobar
-                        , ppUrgent = xmobarColor base08 "" . wrap "!" "!"  -- Urgent workspace
+                        , ppCurrent = xmobarColor base00 base0D        -- Current workspace in xmobar
+                        , ppVisible = xmobarColor base05 ""            -- Visible but not current workspace
+                        , ppHidden = xmobarColor base05 ""             -- Hidden workspaces in xmobar
+                        , ppHiddenNoWindows = xmobarColor base03 ""    -- Hidden workspaces (no windows)
+                        , ppTitle = xmobarColor base0D "" . shorten 60 -- Title of active window in xmobar
+                        , ppSep =  "<fc=" ++ base04 ++ "> | </fc>"     -- Separators in xmobar
+                        , ppUrgent = xmobarColor base08 ""             -- Urgent workspace
                         , ppOrder  = \(ws:l:t:ex) -> [ws,l]++ex++[t]
                         }
                         >> updatePointer (0.5, 0.5) (0, 0) -- Automove pointer
@@ -109,7 +109,9 @@ main = do
 
 myStartupHook = do
     setWMName "LG3D" -- Fix Java apps
-    spawnOnce "/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1"
+    spawnOnce "xset s 3600 3600" -- Change sleep time to 1 hr
+    spawnOnce "xsetroot -cursor_name left_ptr" -- Change default cursor
+    spawnOnce "gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh" -- For Gnome apps
     spawnOnce (myScriptPath ++ "screen_layout.sh")
     spawnOnce (myScriptPath ++ "start.sh dunst")
     spawnOnce (myScriptPath ++ "start.sh compton --config ~/.config/compton/compton.conf")
@@ -135,7 +137,8 @@ myKeys =
 
     --- Run
     , ("M-<Return>", spawn (myTerminal))
-    , ("M-<Space>",  spawn "rofi -show drun")
+    , ("M-p",        spawn "rofi -show drun")
+    , ("M-S-p",      spawn "~/.config/rofi/bin/power.sh")
     , ("M-C-l",      spawn "slock")
 
     -- Windows
@@ -179,18 +182,18 @@ myKeys =
     , ("M-g b", spawn "firefox")
     , ("M-g f", spawn "nautilus")
     , ("M-g w", spawn "nitrogen")
-    -- Terminal apps (M-x + ...)
-    , ("M-x h", spawn (myTerminal ++ " -e zsh -i -c htop"))
-    , ("M-x e", spawn (myTerminal ++ " -e zsh -i -c nvim"))
-    , ("M-x n", spawn (myTerminal ++ " -e zsh -i -c n"))
-    , ("M-x c", spawn (myTerminal ++ " -e zsh -i -c calc"))
+    -- Terminal apps (M-r + ...)
+    , ("M-r h", spawn (myTerminal ++ " -e zsh -i -c htop"))
+    , ("M-r e", spawn (myTerminal ++ " -e zsh -i -c nvim"))
+    , ("M-r n", spawn (myTerminal ++ " -e zsh -i -c n"))
+    , ("M-r c", spawn (myTerminal ++ " -e zsh -i -c calc"))
     -- Environment (M-e + ...)
     , ("M-e c", spawn (myScriptPath ++ "start.sh compton --config ~/.config/compton/compton.conf"))
     , ("M-e d", spawn (myScriptPath ++ "start.sh dunst"))
     ]
     -- Appending some extra xprompts to keybindings list.
     -- Look at "xprompt settings" section this of config for values for "k".
-    ++ [("M-p " ++ k, f sXPConfig) | (k,f) <- promptList ]
+    ++ [("M-x " ++ k, f sXPConfig) | (k,f) <- promptList ]
     -- Appending search engine prompts to keybindings list.
     -- Look at "search engines" section of this config for values for "k".
     ++ [("M-s " ++ k, S.promptSearch sXPConfig f) | (k,f) <- searchList ]
@@ -219,7 +222,7 @@ xmobarEscape = concatMap doubleLts
 
 myWorkspaces :: [String]
 myWorkspaces = clickable . (map xmobarEscape) $
-    ["1:web", "2:dev", "3:chat", "4:vid", "5:doc", "6:misc", "7:misc", "8:misc", "9:sys"]
+    ["1:Web", "2:Dev", "3:Chat", "4:Vid", "5:Doc", "6:Misc", "7:Misc", "8:Misc", "9:Sys"]
         where
             clickable l =
                 [
@@ -235,8 +238,8 @@ myWorkspaces = clickable . (map xmobarEscape) $
 myManageHook :: Query (Data.Monoid.Endo WindowSet)
 myManageHook = composeAll
      [ className =? "Arandr"  --> doFloat
-     , className =? "Firefox" --> doShift "<action=xdotool key super+1>1:web</action>"
-     , className =? "zoom" --> doShift "<action=xdotool key super+4>4:vid</action>"
+     , className =? "Firefox" --> doShift "<action=xdotool key super+1>1:Web</action>"
+     , className =? "zoom" --> doShift "<action=xdotool key super+4>4:Vid</action>"
      , className =? "trayer"  --> doIgnore
      ]
 
