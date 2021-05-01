@@ -34,7 +34,7 @@ export XAUTHORITY="${XDG_RUNTIME_DIR}/Xauthority"
 # Paths
 # -------
 # Prepend user binaries to PATH to allow overriding system commands.
-path=($XDG_BIN_HOME $XDG_BIN_HOME/custom $CARGO_HOME/bin $path)
+path=($XDG_BIN_HOME $HOME/dev/bin $XDG_BIN_HOME/custom $CARGO_HOME/bin $path)
 
 # WSL 2/1 specific settings
 # ---------------------------

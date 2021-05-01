@@ -19,6 +19,8 @@
     resetorigin = !git fetch origin && git reset --hard
     # Pull rebase & submodule update
     up = !git pull --rebase && git submodule update
+    # Pull review branch
+    rget = review -d
 
 # Short aliases
 [alias]

@@ -1,6 +1,6 @@
 " vim:fdm=marker
 
-" Variables {{{
+" Globals {{{
 
 let mapleader        = " "
 let g:vimhomedir     = has('nvim') ? "~/.config/nvim" : "~/.vim"
@@ -60,7 +60,7 @@ set updatetime=300 " Default is 4000, lower it for better performance
 set signcolumn=no  " Don't like the extra space
 set sel=inclusive  " Include last character in visual selection
 set foldlevel=20   " Expand folds by default
-set pastetoggle=<C-b>
+set pastetoggle=<F2>
 
 " History
 " ---------
@@ -174,6 +174,7 @@ call plug#end()
 nnoremap j  gj
 nnoremap k  gk
 nnoremap Q  @q
+vnoremap Q  :norm @q<cr>
 vnoremap y  ygv<Esc>
 nnoremap Y  y$
 nnoremap n  nzz
@@ -224,6 +225,10 @@ nmap gu yyp0v$r- | nmap gU yyp0v$r=
 " Scroll the viewport faster
 nnoremap <Down> 3<C-e>
 nnoremap <Up> 3<C-y>
+
+" Add [count] lines above and below cursor
+nnoremap ]<space> o<ESC>'[k
+nnoremap [<space> O<ESC>j
 
 " }}}
 " UI {{{
