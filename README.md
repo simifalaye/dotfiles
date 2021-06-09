@@ -17,25 +17,27 @@ In this section will be listed all the Graphical Applications. A separate
 section with Terminal applications after
 
 ### Desktop Environment
-- [AwesomeWM](https://awesomewm.org/) - A dynamic window manager
-- [Compton](https://github.com/chjj/compton) - A compositor for x11
+- [Bspwm](https://github.com/baskerville/bspwm) - A dynamic window manager
+- [Picom](https://github.com/yshui/picom) - A compositor for x11
 - [Iosevka](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Iosevka) - Font
-- [slock](https://tools.suckless.org/slock) - Simple screen locker
+- [Slock](https://tools.suckless.org/slock) - Simple screen locker
+- [Paper](https://github.com/snwh/paper-icon-theme) - Icon theme
+- [Sxhkd](https://github.com/baskerville/sxhkd) - A simple X hotkey daemon
 
 ### Productivity and Internet
 
 - [Firefox](https://www.mozilla.org/pt-PT/firefox/) - My primary internet browser.
 - [Libreoffice](https://libreoffice.org) - Office suite.
 - [Mattermost](https://mattermost.com/) - Text Chat.
-- [Todoist](https://todoist.com/downloads?lang=en) - Task manager
 
 ### Utilities
 
 - [Alacritty](https://github.com/alacritty/alacritty) - A fast and lightweight terminal
-- [Bleachbit](https://www.bleachbit.org/) - System cleaner tool.
 - [Nautilus](https://wiki.gnome.org/action/show/Apps/Files?action=show&redirect=Apps%2FNautilus) - File manager.
-- [Nitrogen](https://wiki.archlinux.org/index.php/nitrogen) - Wall app
+- [Nitrogen](https://wiki.archlinux.org/index.php/nitrogen) - A wallpaper application
 - [Peek](https://github.com/phw/peek) - Simple animated GIF screen recorder with an easy to use interface.
+- [Screenkey](https://gitlab.com/screenkey/screenkey) - A screencast keyboard utility
+- [Xfce Power Manager](https://docs.xfce.org/xfce/xfce4-power-manager/start) - A simple power manager
 
 ---
 
@@ -71,9 +73,9 @@ I use ZSH shell:
 ### Utilities
 
 - [atool](https://www.nongnu.org/atool/) - Manage various archive types
-- [bottom](https://github.com/ClementTsang/bottom) - Top but better
 - [calc](https://packages.ubuntu.com/focal/calc) - Terminal calculator
 - [cheat.sh](https://github.com/chubin/cheat.sh) - Instant coding answers from the terminal
+- [htop](https://htop.dev/) - Top but better
 - [rsync](https://github.com/WayneD/rsync) - Fast copy tool for remote/local files
 - [scrot](https://github.com/dreamer/scrot) - Screen-shot utility
 - [sxiv](https://github.com/muennich/sxiv) - Simple x image viewer

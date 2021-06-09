@@ -1,0 +1,109 @@
+#!/bin/bash
+#
+# Configuration file for the Binary Space Partitioning Window Manager.
+# Requirements:
+#   - xrandr
+
+# Truncate a couple of common commands that are used herein.
+_bc() {
+    bspc config "$@"
+}
+_check() {
+    command -v "$1" > /dev/null
+}
+_run() {
+    _check "$1" && ! pgrep -x "$1" >/dev/null && $@ &
+}
+
+# Visual options
+# ==============
+# See: `man bspc`
+
+_bc border_width 2
+_bc window_gap 5
+_bc split_ratio 0.50
+_bc single_monocle false
+_bc borderless_monocle true
+_bc gapless_monocle false
+_bc paddingless_monocle false
+_bc focus_follows_pointer false
+_bc pointer_follows_monitor true
+_bc pointer_modifier mod4
+_bc pointer_action1 move
+_bc pointer_action2 resize_side
+_bc click_to_focus any
+_bc swallow_first_click false
+_bc initial_polarity first_child
+_bc ignore_ewmh_focus true
+_bc remove_unplugged_monitors true
+_bc remove_disabled_monitors true
+_bc merge_overlapping_monitors true
+
+# monitors and workspaces
+# -------------------------
+
+# Set display layout (if more than one monitor is detected)
+monitor_count=$(xrandr --query | grep " connected" | cut -d" " -f1 | wc -l)
+if [ "$monitor_count" -gt 1 ]; then
+    primary_monitor="DP1"
+    [ -x "$HOME/.screenlayout/multi.sh" ] && $HOME/.screenlayout/multi.sh
+    bspc monitor DP2-2 -d 1
+    bspc monitor "$primary_monitor" -d 2 3 4 5 6 7 8 9
+else
+    primary_monitor="eDP1"
+    [ -x "$HOME/.screenlayout/single.sh" ] && $HOME/.screenlayout/single.sh
+    bspc monitor "$primary_monitor" -d 1 2 3 4 5 6 7 8 9
+fi
+
+# window rules
+# ------------
+bspc rule -r $(bspc rule --list) # clear rules
+bspc rule -a Arandr state=floating
+bspc rule -a Firefox desktop='^2' follow=on
+bspc rule -a Mattermost desktop='^3' follow=on
+bspc rule -a Org.gnome.Nautilus state=floating
+bspc rule -a Peek state=floating
+bspc rule -a Ulauncher border=off
+bspc rule -a Ulauncher state=floating
+
+# colours
+# -------
+_bc normal_border_color "#000000"
+_bc active_border_color "#585858"
+_bc focused_border_color "#7cafc2"
+_bc presel_feedback_color "#ba8baf"
+
+# Autostart
+# =========
+
+# Fix java apps
+wmname "LG3D"
+
+# Set mouse pointer and keyboard settings
+xsetroot -cursor_name left_ptr
+xset r rate 350 40
+
+# Restore background settings
+_check nitrogen && nitrogen --restore
+
+# Launch polybar
+_check polybar && {
+    killall -q polybar
+    while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
+    MONITOR=$primary_monitor polybar --reload main &
+}
+
+# Run core apps
+_run dunst -config $HOME/.config/dunst/dunstrc
+_run sxhkd -c $HOME/.config/sxhkd/sxhkdrc{,_bspc}
+_run picom --config $HOME/.config/picom/picom.conf
+_run /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
+
+# Run supplementary apps
+_run xautolock && xautolock -time 30 -locker slock -notify 10
+_run ulauncher --hide-window --no-window-shadow
+_run xfce4-power-manager
+_run redshift -l geoclue2
+_run nm-applet
+
+notify-send -i ubuntu-logo-icon "Ubuntu" "Bspwm launched successfully"

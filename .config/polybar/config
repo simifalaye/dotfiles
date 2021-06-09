@@ -1,0 +1,149 @@
+[settings]
+screenchange-reload = true
+
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+
+
+[colors]
+background = #222
+foreground = #eee
+altforeground = #666
+linecolor = #343d46
+bordercolor = #333
+accent = #343d46
+alert = #88bf616a
+
+
+[bar/main]
+monitor = ${env:MONITOR:}
+bottom = true
+width = 100%
+height = 24
+background = ${colors.background}
+foreground = ${colors.foreground}
+line-color = ${colors.linecolor}
+line-size = 2
+font-0 = MesloLGS NF:size=10:weight=medium;3
+font-1 = FontAwesome:style=Regular:size=10;3
+fixed-center = true
+modules-left = bspwm
+modules-center = xwindow
+modules-right = power-menu volume memory cpu dateTime
+module-margin-left = 1
+module-margin-right = 1
+border-bottom-size = 2
+border-bottom-color = ${colors.bordercolor}
+tray-position = right
+
+
+[module/bspwm]
+type = internal/bspwm
+pin-workspaces = false
+inline-mode = false
+enable-click = true
+enable-scroll = false
+reverse-scroll = false
+fuzzy-match = true
+ws-icon-0 = 1;
+ws-icon-1 = 2;
+ws-icon-2 = 3;
+ws-icon-3 = 4;
+ws-icon-default = 
+format = <label-state> <label-mode>
+label-mode =
+label-focused = %name%:%icon%
+label-focused-background = ${colors.linecolor}
+label-focused-foreground = ${colors.foreground}
+label-focused-overline = ${colors.linecolor}
+label-focused-underline = ${colors.linecolor}
+label-focused-padding = 3
+label-occupied = %name%:%icon%
+label-occupied-padding = 3
+label-unfocused = %name%:%icon%
+label-unfocused-padding = 3
+label-urgent = %name%:%icon%
+label-urgent-background = #bd2c40
+label-urgent-padding = 3
+label-empty = x
+label-empty-foreground = #444
+label-empty-padding = 3
+
+
+[module/power-menu]
+type = custom/menu
+label-open = 
+label-close = 
+label-separator = |
+label-separator-margin = 1
+format-padding = 2
+menu-0-0 = Signout
+menu-0-0-foreground = ${colors.foreground}
+menu-0-0-exec = bspc quit
+menu-0-1 = Reboot
+menu-0-1-foreground = ${colors.foreground}
+menu-0-1-exec = systemctl reboot
+menu-0-2 = Power off
+menu-0-2-foreground = ${colors.foreground}
+menu-0-2-exec = systemctl poweroff
+menu-0-3 = Lock
+menu-0-3-foreground = ${colors.foreground}
+menu-0-3-exec = slock
+
+
+[module/volume]
+type = internal/alsa
+master-mixer= Master
+format-volume-padding = 0
+format-muted-padding = 0
+format-muted-background = ${colors.alert}
+format-volume =  <label-volume>
+format-muted =  off
+label-volume = %percentage%%
+
+
+[module/wireless-network]
+type = internal/network
+interface = wlp4s0
+interval = 3.0
+label-connected =  %essid%
+label-connected-foreground = ${colors.foreground}
+label-disconnected = disconnected
+label-disconnected-foreground = ${colors.altforeground}
+
+
+[module/memory]
+type = internal/memory
+interval = 2
+label = %percentage_used%%
+format-prefix = "{} "
+format-prefix-foreground = ${colors.altforeground}
+
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+label = %percentage%%
+format-prefix = " "
+format-prefix-foreground = ${colors.altforeground}
+
+
+[module/dateTime]
+type = internal/date
+interval = 5
+label = %date% %time%
+date = %A, %h %d
+date-alt = %Y-%m-%d
+time = %I:%M %p
+time-alt = %H:%M:%S
+format-padding = 1
+format-background = ${colors.accent}
+format-foreground = ${colors.foreground}
+
+
+[module/xwindow]
+type = internal/xwindow
+format = <label>
+label-maxlen = 75

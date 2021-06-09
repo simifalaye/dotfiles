@@ -1,7 +1,7 @@
 configuration {
     font: "MesloLGS NF 10";
     show-icons: true;
-    icon-theme: "Papirus";
+    icon-theme: "Paper";
     drun-display-format: "{name}";
     fullscreen: false;
     threads: 0;
