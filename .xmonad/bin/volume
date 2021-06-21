@@ -1,0 +1,85 @@
+#!/bin/bash
+# Description
+# ===========
+# Modify the volume level and mute status
+# Requirements: pulseaudio (pactl, pacmd, etc)
+#
+# Args: volume.sh <function>
+#   - Functions: inc, dec, mute, vol
+# Outputs: Volume level if "vol" function is selected
+# Side-effect: Modifies volume level
+
+# Globals
+# ---------
+# In(de)crement volume step
+STEP=2
+
+# Functions
+# ----------
+# Get the name of the selected sink:
+get_sink_name() {
+    pacmd stat | awk -F": " '/^Default sink name: /{print $2}'
+}
+# Get the selected sink volume
+get_sink_vol() {
+    name=${1}
+    pacmd list-sinks |
+        awk '/^\s+name: /{indefault = $2 == "<'$name'>"}
+            /^\s+volume: / && indefault {print $5; exit}'
+}
+# Get the selected sink mute status
+is_muted() {
+    name=${1}
+    muted=$(pacmd list-sinks |
+            awk '/^\s+name: /{indefault = $2 == "<'$name'>"}
+            /^\s+muted: / && indefault {print $2; exit}')
+    [ $muted == "yes" ] && return 0 || return 1
+}
+# Set volume of sink
+mute_toggle() {
+    name=${1}
+    pactl set-sink-mute $name toggle
+}
+inc_vol() {
+    name=${1}
+    vol=${2}
+    vol=$(($vol + $STEP))
+    [ $vol -gt 100 ] && vol=100
+
+    is_muted $name && mute_toggle $name
+    pactl set-sink-volume $name $vol%
+}
+dec_vol() {
+    name=${1}
+    vol=${2}
+    vol=$(($vol - $STEP))
+    [ $vol -lt 0 ] && vol=0
+
+    is_muted $name && mute_toggle $name
+    pactl set-sink-volume $name $vol%
+}
+
+# Main
+# ======
+
+name=$(get_sink_name)
+vol="$(get_sink_vol $name | sed 's/[^0-9]*//g')"
+
+# Change the volume or toggle mute
+case $1 in
+    inc)
+        inc_vol $name $vol
+        ;;
+    dec)
+        dec_vol $name $vol
+        ;;
+    mute)
+        mute_toggle $name
+        ;;
+    vol)
+        is_muted $name && echo "Muted" || echo "$vol%"
+        exit 0
+        ;;
+    *)
+        echo "Error: Not a valid volume command" && exit 1
+esac

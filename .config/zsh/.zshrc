@@ -144,8 +144,11 @@ bindkey -M viins '^X,' _history-complete-newer \
 
 # Shell Programs
 # ----------------
-# Prompt
-_load $ZDOTDIR/prompt.zsh
+# Prompt: _load $ZDOTDIR/prompt.zsh
+_is_callable "starship" || {
+    sh -c "$(curl -fsSL https://starship.rs/install.sh)"
+}
+eval "$(starship init zsh)"
 
 # Colors: Base16 Shell
 _load_repo chriskempson/base16-shell $HOME/.config/base16-shell

@@ -1,0 +1,58 @@
+#!/bin/bash
+# Description
+# ===========
+# Run apps on startup
+#
+# Args: None
+# Outputs: None
+# Side-effect: Starts a number of apps
+
+# Functions
+# -----------
+
+_check() {
+    command -v "$1" > /dev/null
+}
+_run() {
+    _check "$1" && ! pgrep -x "$1" >/dev/null && $@ &
+}
+
+# Run
+# -----
+
+# Set display layout
+num_screens=$(xrandr -q | grep -i " connected" | wc -l)
+if [ "$num_screens" -gt 1 ]; then
+    $HOME/.screenlayout/multi.sh
+else
+    $HOME/.screenlayout/single.sh
+fi
+
+# Set screen timeout period (xset s <timeout> <burn-in-period>)
+xset s 600 5
+# Set mouse pointer and keyboard settings
+xsetroot -cursor_name left_ptr # xset r rate 350 40
+# Restore background settings
+_check nitrogen && nitrogen --restore
+# Fix java apps
+wmname "LG3D"
+
+# Run core apps
+_run dunst -config $HOME/.config/dunst/dunstrc
+_run compton --config ~/.config/compton/compton.conf
+_run /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
+
+# Run supplementary apps
+_run redshift -l geoclue2
+_run nm-applet
+_run pasystray
+_run xss-lock -n /usr/libexec/xsecurelock/dimmer -l -- \
+    env XSECURELOCK_SHOW_DATETIME=1 \
+    XSECURELOCK_SAVER=saver_xscreensaver \
+    XSECURELOCK_BLANK_TIMEOUT=300 xsecurelock
+_run trayer --edge bottom --align right --widthtype request \
+    --padding 6 --SetDockType true --SetPartialStrut true \
+    --expand true --monitor 1 --transparent true --alpha 0 \
+    --tint 0x000000 --height 20 --iconspacing 2
+
+notify-send -i ubuntu-logo-icon "Ubuntu" "Autostart successful"

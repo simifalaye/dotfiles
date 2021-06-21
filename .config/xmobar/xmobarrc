@@ -6,14 +6,14 @@ Config {
    , additionalFonts = [ "xft:monospace:pixelsize=15" ]
    , bgColor         = "black"
    , fgColor         = "#B8B8B8"
-   , position        = Top
+   , position        = Bottom
    , border          = NoBorder
 
    -- layout
    , sepChar  = "%"  -- delineator between plugin names and straight text
    , alignSep = "}{" -- separator between left-right alignment
    , template = "<icon=haskell_20.xpm/>%UnsafeStdinReader% }{ \
-      \ %battery% | %memory% | %multicpu% | %date% %trayerpad%"
+      \ %battery% | %memory% | %multicpu% | %date% |%trayerpad%"
 
    -- general behavior
    , lowerOnStart     = True  -- send to bottom of window stack on start

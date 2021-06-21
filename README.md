@@ -17,12 +17,16 @@ In this section will be listed all the Graphical Applications. A separate
 section with Terminal applications after
 
 ### Desktop Environment
-- [Bspwm](https://github.com/baskerville/bspwm) - A dynamic window manager
-- [Picom](https://github.com/yshui/picom) - A compositor for x11
-- [Iosevka](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Iosevka) - Font
-- [Slock](https://tools.suckless.org/slock) - Simple screen locker
-- [Paper](https://github.com/snwh/paper-icon-theme) - Icon theme
-- [Sxhkd](https://github.com/baskerville/sxhkd) - A simple X hotkey daemon
+- [Xmonad](https://xmonad.org/) - A dynamic window manager
+- [Compton](https://github.com/chjj/compton) - A compositor for x11
+- [Dunst](https://github.com/dunst-project/dunst) - A notification daemon
+- [MesloLGS](https://github.com/ryanoasis/nerd-fonts) - Font
+  - *xss-lock* for autolocking
+  - *xscreensaver* for a screen saver
+- [Papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme) - Icon theme
+- [Rofi](https://github.com/davatorium/rofi) - An app launcher
+- [Trayer](https://github.com/sargon/trayer-srg) - System tray app
+- [Xsecurelock](https://github.com/google/xsecurelock) - Simple screen locker
 
 ### Productivity and Internet
 
@@ -33,11 +37,11 @@ section with Terminal applications after
 ### Utilities
 
 - [Alacritty](https://github.com/alacritty/alacritty) - A fast and lightweight terminal
+- [Arandr](https://christian.amsuess.com/tools/arandr/) - An Xrandr GUI utility
 - [Nautilus](https://wiki.gnome.org/action/show/Apps/Files?action=show&redirect=Apps%2FNautilus) - File manager.
 - [Nitrogen](https://wiki.archlinux.org/index.php/nitrogen) - A wallpaper application
 - [Peek](https://github.com/phw/peek) - Simple animated GIF screen recorder with an easy to use interface.
 - [Screenkey](https://gitlab.com/screenkey/screenkey) - A screencast keyboard utility
-- [Xfce Power Manager](https://docs.xfce.org/xfce/xfce4-power-manager/start) - A simple power manager
 
 ---
 

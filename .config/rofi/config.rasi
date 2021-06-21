@@ -1,153 +1,113 @@
+/* Based on:
+ *  - https://github.com/adi1090x/rofi/blob/master/1080p/launchers/misc/launchpad.rasi
+ *  - Rofi version 1.6.1
+ */
+
 configuration {
-    font: "MesloLGS NF 10";
-    show-icons: true;
-    icon-theme: "Paper";
+    font:                "MesloLGS NF 10";
+    show-icons:          true;
+    icon-theme:          "Papirus";
+    display-drun:        "";
     drun-display-format: "{name}";
-    fullscreen: false;
-    threads: 0;
-    scroll-method: 0;
-    disable-history: false;
-    fullscreen: false;
-    modi: "drun,run,ssh";
+    disable-history:     false;
+    fullscreen:          true;
+    hide-scrollbar:      true;
+    sidebar-mode:        false;
+    modi:                "drun,run,ssh";
 }
 
 * {
-    transparent: #00000000;
-    partial-transparent: #00000070;
-    foreground: #F2F2F2EE;
-    background-selected: #F2F2F245;
-    background-active: #F2F2F230;
-    background-white: #F2F2F211;
-    background-black: #00000066;
-    urgent: #E91E6366;
-    urgent-selected: #E91E6377;
+    background:     #000000F5;
+    background-alt: #00000000;
+    background-bar: #f2f2f215;
+    foreground:     #f2f2f2EE;
+    accent:         #ffffff66;
 }
 
 window {
-    transparency: "real";
-    background-color: @partial-transparent;
-    location: center;
-    anchor: center;
-    x-offset: 0px;
-    height: 500px;
-    width: 750px;
-    orientation: vertical;
-    border-radius: 10px;
+    transparency:     "real";
+    background-color: @background;
+    text-color:       @foreground;
+    border:           0px;
+    border-color:     @border;
+    border-radius:    0px;
 }
 
 prompt {
-    enabled: false;
-}
-
-button {
-    action: "ok";
-    str: " ";
-    font: "MesloLGS NF 10";
-    expand: false;
-    text-color: @foreground;
-    background-color: @transparent;
-    vertical-align: 0.7;
-    horizontal-align: 0.5;
+    enabled:          true;
+    padding:          0.30% 0.5% 0% 0%;
+    background-color: @background-alt;
+    text-color:       @foreground;
+    font:             @font;
 }
 
 entry {
-    font: "MesloLGS NF 10";
-    background-color: @transparent;
-    text-color: @foreground;
-    expand: true;
-    vertical-align: 0.5;
-    horizontal-align: 0.5;
-    placeholder: "Type to search";
+    background-color:  @background-alt;
+    text-color:        @foreground;
     placeholder-color: @foreground;
-    blink: true;
-}
-
-case-indicator {
-    background-color: @transparent;
-    text-color: @foreground;
-    vertical-align: 0.5;
-    horizontal-align: 0.5;
-}
-
-entry-wrapper {
-    orientation: horizontal;
-    vertical-align: 0.5;
-    spacing: 4px;
-    background-color: @transparent;
-    children: [ button, entry, case-indicator ];
+    expand:            true;
+    horizontal-align:  0;
+    placeholder:       "Search";
+    padding:           0.10% 0% 0% 0%;
+    blink:             true;
 }
 
 inputbar {
-    background-color: @background-white;
-    text-color: @foreground;
-    expand: false;
-    border-radius: 24px;
-    margin: 0px 225px 0px 225px;
-    padding: 10px 10px 10px 10px;
-    position: north;
-    children: [ entry-wrapper ];
+    children:         [ prompt, entry ];
+    background-color: @background-bar;
+    text-color:       @foreground;
+    expand:           false;
+    border:           0.1%;
+    border-radius:    6px;
+    border-color:     @accent;
+    margin:           0% 30% 0% 30%;
+    padding:          1%;
 }
 
 listview {
-    background-color: @transparent;
-    columns: 2;
-    spacing: 5px;
-    cycle: false;
-    dynamic: true;
-    layout: vertical;
+    background-color: @background-alt;
+    columns:          4;
+    lines:            4;
+    spacing:          2%;
+    cycle:            false;
+    dynamic:          true;
+    layout:           vertical;
 }
 
 mainbox {
-    background-color: @background-black;
-    children: [ inputbar, listview ];
-    spacing: 25px;
-    padding: 40px 25px 25px 25px;
+    background-color: @background-alt;
+    border:           0% 0% 0% 0%;
+    border-radius:    0% 0% 0% 0%;
+    border-color:     @accent;
+    children:         [ inputbar, listview ];
+    spacing:          8%;
+    padding:          10% 8.5% 10% 8.5%;
 }
 
 element {
-    background-color: @transparent;
-    text-color: @foreground;
-    orientation: horizontal;
-    border-radius: 6px;
-    padding: 5px 10px 5px 10px;
+    background-color: @background-alt;
+    text-color:       @foreground;
+    orientation:      vertical;
+    border-radius:    0%;
+    padding:          1% 1% 1% 1%;
 }
 
 element-icon {
-    size: 36px;
-    border: 0;
+    size:   81px;
+    border: 0px;
 }
 
 element-text {
-    expand: true;
-    horizontal-align: 0;
-    vertical-align: 0.5;
-    margin: 0 10px 0 10px;
-}
-
-element normal.urgent,
-element alternate.urgent {
-    background-color: @urgent;
-    text-color: @foreground;
-    border-radius: 9px;
-}
-
-element normal.active,
-element alternate.active {
-    background-color: @background-active;
-    text-color: @foreground;
+    expand:           true;
+    horizontal-align: 0.5;
+    vertical-align:   0.5;
+    margin:           0.5% 0.5% -0.5% 0.5%;
 }
 
 element selected {
-    background-color: @background-selected;
-    text-color: @foreground;
-}
-
-element selected.urgent {
-    background-color: @urgent-selected;
-    text-color: @foreground;
-}
-
-element selected.active {
-    background-color: @background-active;
-    color: @foreground-selected;
+    background-color: @background-bar;
+    text-color:       @foreground;
+    border:           0% 0% 0% 0%;
+    border-radius:    12px;
+    border-color:     @accent;
 }

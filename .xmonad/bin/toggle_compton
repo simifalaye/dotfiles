@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Description
+# ===========
+# Toggles the compton compositor
+# Requirements: compton
+#
+# Args: None
+# Outputs: Error messages
+# Side-effect: Starts or kills a compton process
+
+command -v compton > /dev/null || { echo "Compton is not installed."; exit 1; }
+
+if pgrep -x compton; then
+    notify-send -i ubuntu-logo-icon "Disabling Compton"
+    pkill -x compton
+else
+    notify-send -i ubuntu-logo-icon "Enabling Compton"
+    compton --config "$HOME/.config/compton/compton.conf" &
+fi

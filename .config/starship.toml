@@ -1,0 +1,40 @@
+# ~/.config/starship.toml
+
+# Disable the blank line at the start of the prompt
+add_newline = false
+
+format = """
+$time\
+$username\
+$hostname\
+$shlvl\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$cmd_duration\
+$line_break\
+$jobs\
+$character"""
+
+# Modules
+# ---------
+
+[character]
+success_symbol = "[|](bold green)"
+error_symbol = "[|](bold red)"
+
+[directory]
+home_symbol = ""
+
+[line_break]
+disabled = true
+
+[time]
+disabled = false
+format = '[\[$time\]]($style) '
+time_format = "%T"
+
+[username]
+disabled = false

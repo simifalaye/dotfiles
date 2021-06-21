@@ -10,9 +10,9 @@
 #     to see if it's installed instead of checking if bin exists
 declare -A PKGS
 PKGS[arandr]='arandr;apt_install;An Xrandr GUI utility;true'
-PKGS[bspwm]='bspwm;apt_install;A binary space tiling window manager;true'
 PKGS[calc]='calc;apt_install;A terminal based calculator;false'
 PKGS[cheat]='cht.sh;__install_cheat;A set of community driven cheat sheets;false'
+PKGS[compton]='compton;apt_install;An X compositor;true'
 PKGS[curl]='curl;apt_install;A URL file transfer tool;false'
 PKGS[delta]='delta;__install_delta;A better git diff;false'
 PKGS[dunst]='dunst;apt_install;A notification daemon;true'
@@ -23,25 +23,23 @@ PKGS[neovim]='nvim;__install_neovim;The best text editor of all time;false'
 PKGS[network-manager]='nm-applet;apt_install;A network mgr & applet;true'
 PKGS[nitrogen]='nitrogen;apt_install;A wallpaper app;true'
 PKGS[nnn]='nnn;__install_nnn;A file browser in the terminal;false'
-PKGS[paper-icon-theme]=';apt_install;An icon theme;true'
+PKGS[papirus-icon-theme]=';apt_install;An icon theme;true'
 PKGS[pasystray]='pasystray;apt_install;A pulse audio applet;true'
 PKGS[peek]='peek;apt_install;A screen recording tool;true'
-PKGS[picom]='picom;apt_install;An X compositor;true'
 PKGS[policykit-1-gnome]=';apt_install;Gnome authentication agent;true'
-PKGS[polybar]='polybar;apt_install;A configurable status bar;true'
 PKGS[redshift-gtk]='redshift;apt_install;A blue light filter app;true'
 PKGS[ripgrep & bat]='rg;__install_ripgrep_bat;A better grep;false'
 PKGS[rofi]='rofi;apt_install;A launcher application;true'
 PKGS[scrot]='scrot;apt_install;A light-weight screenshot utility;true'
 PKGS[screenkey]='screenkey;apt_install;A screencast tool;true'
-PKGS[suckless-tools]=';apt_install;Suckless tools;true'
 PKGS[sxiv]='sxiv;apt_install;An image viewer in the terminal;true'
-PKGS[sxhkd]='sxhkd;apt_install;A simple hotkey daemon;true'
 PKGS[tig]='tig;apt_install;A git log helper;false'
+PKGS[trayer]='trayer;apt_install;A system tray;true'
 PKGS[tmux]='tmux;apt_install;A terminal multiplexer;false'
 PKGS[trash-cli]='trash;pip_install;A terminal trash utility;false'
-PKGS[xautolock]='xautolock;apt_install;A auto lock tool;true'
-PKGS[xfce4-power-manager]='xfce4-power-manager;apt_install;A simple power manager;true'
+PKGS[tree]='tree;pip_install;A directory viewer utility;false'
+PKGS[xmonad]='xmonad;__install_xmonad;A tiling window manager;true'
+PKGS[xsecurelock]='xsecurelock;__install_xsecurelock;A secure lock tool;true'
 PKGS[zathura]='zathura;apt_install;A terminal PDF reader;true'
 PKGS[zsh]='zsh;apt_install;The best shell of all time;false'
 
@@ -105,6 +103,10 @@ function __install_ripgrep_bat {
     sudo apt install -o Dpkg::Options::="--force-overwrite" bat ripgrep && return 0
     return 1
 }
+function __install_xmonad { apt_install xmonad libghc-xmonad-dev libghc-xmonad-contrib-dev xmobar; }
+function __install_xsecurelock {
+    apt_install xsecurelock xss-lock xscreensaver xscreensaver-gl-extra xscreensaver-data-extra
+}
 
 # Runners
 # ---------
@@ -114,6 +116,7 @@ install_core()
     # PPAs
     if _is_graphical; then
         _has_ppa "kgilmer/speed-ricer" || sudo add-apt-repository ppa:kgilmer/speed-ricer
+        _has_ppa "cppiber/ppa" || sudo add-apt-repository ppa:cppiber/ppa
     fi
 
     # Core apps
