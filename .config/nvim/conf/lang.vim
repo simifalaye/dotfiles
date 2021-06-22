@@ -5,8 +5,7 @@ Plug 'sheerun/vim-polyglot'
   let g:vim_markdown_new_list_item_indent = v:false
 Plug 'kergoth/vim-bitbake'
 Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } }
-  let g:doge_mapping = '<Leader>D'
-  let g:doge_mapping_comment_jump_forward = '<C-n>'
+  let g:doge_mapping_comment_jump_forward = '<A-n>'
 Plug 'wellle/targets.vim'
 
 augroup LangSettings

@@ -1,4 +1,7 @@
-# ~/.config/starship.toml
+# Description
+# ===========
+# Configure starship prompt
+# See: https://starship.rs/config/
 
 # Disable the blank line at the start of the prompt
 add_newline = false
@@ -21,15 +24,12 @@ $character"""
 # Modules
 # ---------
 
-[character]
-success_symbol = "[|](bold green)"
-error_symbol = "[|](bold red)"
-
 [directory]
 home_symbol = ""
+truncation_length = 4
 
 [line_break]
-disabled = true
+disabled = false
 
 [time]
 disabled = false
@@ -37,4 +37,4 @@ format = '[\[$time\]]($style) '
 time_format = "%T"
 
 [username]
-disabled = false
+disabled = true

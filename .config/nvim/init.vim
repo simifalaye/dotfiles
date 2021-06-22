@@ -170,6 +170,12 @@ call plug#end()
 " }}}
 " Mappings & Commands {{{
 
+" Vim Plug
+nnoremap <localleader>r :so $MYVIMRC<bar>echo "vimrc reloaded"<CR>
+nnoremap <localleader>i :so $MYVIMRC<bar>:PlugInstall<CR>
+nnoremap <localleader>c :so $MYVIMRC<bar>:PlugClean<CR>
+nnoremap <localleader>u :so $MYVIMRC<bar>:PlugUpdate<CR>
+
 " Remaps
 nnoremap j  gj
 nnoremap k  gk
@@ -186,12 +192,6 @@ vnoremap >  >gv
 nnoremap p  p`[v`]=
 xnoremap il g_o0
 onoremap il :normal vil<CR>
-
-" Vim Plug
-nnoremap <localleader>r :so $MYVIMRC<bar>echo "vimrc reloaded"<CR>
-nnoremap <localleader>i :so $MYVIMRC<bar>:PlugInstall<CR>
-nnoremap <localleader>c :so $MYVIMRC<bar>:PlugClean<CR>
-nnoremap <localleader>u :so $MYVIMRC<bar>:PlugUpdate<CR>
 
 " Save, close & quit
 nnoremap <leader>s :update<CR>
