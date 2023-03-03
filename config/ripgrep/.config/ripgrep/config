@@ -1,0 +1,9 @@
+# Ignore case
+--smart-case
+
+# Slightly longer context separator to ease parsing.
+--context-separator=---
+
+# Color settings.
+--colors=path:fg:blue
+--colors=path:style:bold

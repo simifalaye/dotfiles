@@ -1,0 +1,235 @@
+# Main
+# ====
+
+- name: Install core common packages
+  become: true
+  package:
+    name:
+      - atool
+      - bat
+      - bitwise
+      - calc
+      - cloc
+      - elinks
+      - "{{ fd_pkg_name }}"
+      - fzf
+      - htop
+      - jq
+      - nodejs
+      - npm
+      - "{{ python_pkg_name }}"
+      - "{{ pip_pkg_name }}"
+      - ripgrep
+      - rsync
+      - tig
+      - tmux
+      - tree
+      - zsh
+    state: present
+
+- name: Install common pip packages
+  become: true
+  pip:
+    name:
+      - pynvim
+      - trash-cli
+    state: present
+
+- name: Install common global npm packages
+  become: true
+  npm:
+    name: "{{ item }}"
+    global: yes
+    state: present
+  loop:
+    - neovim
+
+- name: Create symbolic link to fd binary if fdfind is used
+  become: true
+  file:
+    src: /usr/bin/fdfind
+    dest: /usr/local/bin/fd
+    state: link
+  when: "'/usr/bin/fdfind' is file and '/usr/local/bin/fd' is not file"
+
+# Cheat
+- command_exists:
+    command: cht.sh
+  register: cheat_cmd
+  ignore_errors: true
+- name: Install cht.sh if not installed
+  become: true
+  become_method: sudo
+  get_url:
+    url: https://cht.sh/:cht.sh
+    dest: /usr/local/bin/cht.sh
+    mode: '0755'
+  register: cht_sh_install_result
+  changed_when: cht_sh_install_result.changed
+  failed_when: false
+  when: not cheat_cmd.exists
+
+# Delta
+- command_exists:
+    command: delta
+  register: delta_cmd
+  ignore_errors: true
+- name: Install git-delta
+  become: true
+  block:
+    - name: Get latest version of git-delta
+      get_latest_github_tag:
+        owner: dandavison
+        repo: delta
+      register: gh_tag
+    - name: Extract delta archive
+      unarchive:
+        src: "https://github.com/dandavison/delta/releases/download/{{ gh_tag.latest }}/delta-{{ gh_tag.latest }}-x86_64-unknown-linux-gnu.tar.gz"
+        dest: "/usr/local/bin"
+        remote_src: yes
+        extra_opts:
+          - "--strip-components=1"
+          - "delta-{{ gh_tag.latest }}-x86_64-unknown-linux-gnu/delta"
+  when: not delta_cmd.exists
+
+# Exa
+- command_exists:
+    command: exa
+  register: exa_cmd
+  ignore_errors: true
+- name: Install exa
+  become: true
+  block:
+    - name: Get latest version of exa
+      get_latest_github_tag:
+        owner: ogham
+        repo: exa
+      register: gh_tag
+    - name: Create exa tmp dir
+      file:
+        path: /tmp/exa
+        state: directory
+    - name: Extract exa archive
+      unarchive:
+        src: "https://github.com/ogham/exa/releases/download/{{ gh_tag.latest }}/exa-linux-x86_64-{{ gh_tag.latest }}.zip"
+        dest: /tmp/exa
+        remote_src: yes
+    - name: Install exa bin
+      copy:
+        src: "/tmp/exa/bin/exa"
+        dest: /usr/local/bin/exa
+        mode: 0755
+    - name: Install exa bash completion
+      copy:
+        src: "/tmp/exa/completions/exa.bash"
+        dest: "{{ bash_completions_dir }}/exa"
+        mode: 0644
+    - name: Install exa zsh completion
+      copy:
+        src: "/tmp/exa/completions/exa.zsh"
+        dest: "{{ zsh_completions_dir }}/_exa"
+        mode: 0644
+    - name: Install exa man page
+      copy:
+        src: "/tmp/exa/man/exa.1"
+        dest: "{{ man_dir }}/exa.1"
+        mode: 0644
+    - name: Remove exa temporary files
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "/tmp/exa"
+  when: not exa_cmd.exists
+
+# Neovim
+- command_exists:
+    command: nvim
+  register: neovim_cmd
+  ignore_errors: true
+- name: Download and install Neovim
+  vars:
+    bin_dir: "~/.local/bin"
+    nvim_bin_path: "{{ bin_dir }}/nvim"
+    nvim_dir_path: "{{ bin_dir }}/nvim-linux64"
+    tmp_tar_path: "/tmp/nvim.tar.gz"
+  block:
+    - name: Create bin dir
+      file:
+        path: ~/.local/bin
+        state: directory
+    - name: Download Neovim release
+      get_url:
+        url: "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
+        dest: "{{ tmp_tar_path }}"
+        mode: "0755"
+    - name: Extract Neovim tar
+      unarchive:
+        src: "{{ tmp_tar_path }}"
+        dest: "{{ bin_dir }}"
+        copy: false
+        mode: '0755'
+    - name: Link Neovim binary
+      file:
+        src: "{{ nvim_dir_path }}/bin/nvim"
+        dest: "{{ nvim_bin_path }}"
+        state: link
+        force: true
+    - name: Remove temporary files
+      file:
+        path: "{{ tmp_tar_path }}"
+        state: absent
+      changed_when: true
+  when: not neovim_cmd.exists
+
+# Zoxide
+- command_exists:
+    command: zoxide
+  register: zoxide_cmd
+  ignore_errors: true
+- name: Install latest release of ajeetdsouza/zoxide
+  become: true
+  block:
+    - name: Get latest version of zoxide
+      get_latest_github_tag:
+        owner: ajeetdsouza
+        repo: zoxide
+      register: gh_tag
+    - name: Create zoxide tmp dir
+      file:
+        path: /tmp/zoxide
+        state: directory
+    - name: Extract zoxide archive
+      unarchive:
+        src: "https://github.com/ajeetdsouza/zoxide/releases/download/{{ gh_tag.latest }}/zoxide-{{ gh_tag.latest | replace('v', '') }}-x86_64-unknown-linux-musl.tar.gz"
+        dest: /tmp/zoxide
+        remote_src: yes
+    - name: Install zoxide bin
+      copy:
+        src: "/tmp/zoxide/zoxide"
+        dest: /usr/local/bin/zoxide
+        mode: 0755
+    - name: Install zoxide bash completion
+      copy:
+        src: "/tmp/zoxide/completions/zoxide.bash"
+        dest: "{{ bash_completions_dir }}/zoxide"
+        mode: 0644
+    - name: Install zoxide zsh completion
+      copy:
+        src: "/tmp/zoxide/completions/_zoxide"
+        dest: "{{ zsh_completions_dir }}/_zoxide"
+        mode: 0644
+    - name: Install zoxide man pages
+      copy:
+        src: "{{ item }}"
+        dest: "{{ man_dir }}"
+        mode: 0644
+      with_fileglob:
+        - "/tmp/zoxide/man/man1/*.1"
+    - name: Remove zoxide temporary files
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "/tmp/zoxide"
+  when: not zoxide_cmd.exists

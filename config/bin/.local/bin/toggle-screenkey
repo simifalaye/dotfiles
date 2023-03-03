@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Description
+# ===========
+# Toggles the screenkey app (for screen casts)
+# Requirements: screenkey
+#
+# Args: None
+# Outputs: Error messages
+# Side-effect: Starts or kills a screenkey process
+
+command -v screenkey > /dev/null || { echo "screenkey is not installed."; exit 1; }
+
+if pgrep -x screenkey; then
+    notify-send -i ubuntu-logo-icon "Disabling screenkey"
+    pkill -x screenkey
+else
+    notify-send -i ubuntu-logo-icon "Enabling screenkey"
+    screenkey -t 1 -s small -p bottom \
+        --no-systray --vis-shift --mods-mode \
+        normal --font 'Monospace Bold' --compr-cnt 5
+fi

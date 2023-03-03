@@ -1,0 +1,18 @@
+# Main
+# ====
+
+- name: Override some variables based on distribution
+  include_vars: "{{ item }}"
+  with_fileglob:
+    - "../vars/{{ ansible_distribution }}.yml"
+    - "../vars/{{ ansible_distribution }}-{{ ansible_distribution_major_version | int}}.yml"
+  when: item is file
+
+- name: Get desktop environment
+  shell: echo $XDG_CURRENT_DESKTOP
+  register: desktop_env
+
+# Includes
+- include_tasks: common.yml
+- include_tasks: common-gui.yml
+  when: desktop_env.stdout is defined and desktop_env.stdout != ""

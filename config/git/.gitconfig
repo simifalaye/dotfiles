@@ -1,0 +1,68 @@
+[user]
+    # Override using the config.local file for work PCs
+    name = Simi Falaye
+    email = "simifalaye1@gmail.com"
+
+[core]
+    editor = nvim
+    pager = less -FR
+    excludesfile = ~/.config/git/ignore.global
+
+[commit]
+    template = ~/.config/git/message
+    verbose = true
+
+[diff]
+    # Use better, descriptive initials (c, i, w) instead of a/b
+    mnemonicPrefix = true
+    # When using `--word-diff`, assume `--word-diff-regex=.`
+    wordRegex = .
+    # Color moved lines in diffs
+    colorMoved = zebra
+    # Allow indentation changes to be marked as moved lines
+    colorMovedWS = allow-indentation-change
+    # External diff and merge tool
+    tool = vimdiff
+[difftool]
+    # Do not prompt before each invocation
+    prompt = false
+[difftool "vimdiff"]
+    # Use vim/nvim
+    path = nvim
+
+[merge]
+    # Disable fast-forward merges as default merge strategy
+    # Force explicit call of `git merge --ff`
+    ff = false
+    # Enable 3-way merges
+    conflictStyle = diff3
+    # External merge tool
+    tool = vimdiff
+[mergetool]
+    # Do not prompt before each invocation
+    prompt = false
+[mergetool "vimdiff"]
+    # Use vim/nvim
+    path = nvim
+
+[fetch]
+  # Remove any remote-tracking references that no longer exist before
+  prune = true
+
+[push]
+    default = upstream
+
+[pull]
+    # Include local merge commits in the rebase
+    rebase = merges
+
+[color]
+    ui = true
+    status = auto
+    branch = auto
+    diff = auto
+
+[include]
+    path = ~/.config/git/alias
+    path = ~/.config/git/config.local
+    path = ~/.config/git/delta

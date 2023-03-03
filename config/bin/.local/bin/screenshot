@@ -1,0 +1,42 @@
+#!/bin/bash
+# Description
+# ===========
+# A screenshot utility
+# Requirements: scrot, notify-send
+#
+# Args: scrot <function>
+#   - Functions:
+#       -f: Fullscreen
+#       -s: Select an area
+#       -w: Select a window
+# Outputs: None
+# Side-effect: Takes a screenshot
+
+DIR="$HOME/Pictures/screenshots/"
+
+function print_help() {
+    echo "Usage: $0 <argument>"
+    echo "-f: Fullscreen"
+    echo "-s: Select an Area"
+    echo "-w: Select a Window"
+}
+
+function send_noti() {
+    notify-send -i gnome-screenshot "screenshot" "Screenshot has been saved to $DIR."
+}
+
+command -v scrot > /dev/null || { echo "Scrot is not installed."; exit 1; }
+mkdir -p $DIR
+if [ $# -eq 0 ]; then
+    sleep 0.2 && scrot 'scrot-%F_%H%M%S_$wx$h.png' -e 'mv $f '$DIR'' && send_noti
+elif [ $# -eq 1 ]; then
+    case $1 in
+        "-h") print_help;;
+        "-f") sleep 0.2 && scrot 'full-%F_%H%M%S_$wx$h.png' -e 'mv $f '$DIR'' && send_noti;;
+        "-s") sleep 0.2 && scrot -sz 'select-%F_%H%M%S_$wx$h.png' -e 'mv $f '$DIR'' && send_noti;;
+        "-w") sleep 0.2 && scrot -u 'window-%F_%H%M%S_$wx$h.png' -e 'mv $f '$DIR'' && send_noti;;
+        *) print_help;;
+    esac
+else
+    print_help
+fi

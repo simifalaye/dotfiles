@@ -1,0 +1,13 @@
+# General
+# =======
+
+bash_completions_dir: /etc/bash_completion.d
+zsh_completions_dir: /usr/local/share/zsh/site-functions
+man_dir: /usr/local/share/man/man1
+
+# Packages
+# ========
+
+python_pkg_name: python3
+pip_pkg_name: python3-pip
+fd_pkg_name: fd

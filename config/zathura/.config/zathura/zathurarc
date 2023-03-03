@@ -1,0 +1,24 @@
+# Main settings
+set statusbar-h-padding     0
+set statusbar-v-padding     0
+set page-padding            1
+set window-title-basename   "true"
+set window-title-home-tilde "true"
+set show-hidden             "true"
+set smooth-scroll           "true"
+set selection-clipboard     "clipboard"
+set incremental-search      "true"
+set guioptions              ""
+
+# Status bar
+set font                    "monospace 10"
+set statusbar-basename      "true"
+set statusbar-home-tilde    "true"
+
+# Additional Key bindings
+map p print
+map K zoom in
+map J zoom out
+# Use r to toggle recolor (default: on)
+unmap [normal] r
+map   [normal] r recolor

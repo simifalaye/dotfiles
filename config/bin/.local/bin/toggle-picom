@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Description
+# ===========
+# Toggles the picom compositor
+# Requirements: picom
+#
+# Args: None
+# Outputs: Error messages
+# Side-effect: Starts or kills a picom process
+
+command -v picom > /dev/null || { echo "Picom is not installed."; exit 1; }
+
+if pgrep -x picom; then
+    notify-send -i ubuntu-logo-icon "Disabling picom"
+    pkill -x picom
+else
+    notify-send -i ubuntu-logo-icon "Enabling picom"
+    picom --config "$HOME/.config/picom/picom.conf" &
+fi

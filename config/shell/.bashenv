@@ -1,0 +1,8 @@
+# shellcheck disable=SC2148
+# vim: filetype=bash
+#
+# This file is sourced by `bash` non-interactive shells.
+# It is the only startup file read in such cases.
+#
+
+[ -r "${HOME}/.config/shell/bash/env.bash" ] && . "${HOME}/.config/shell/bash/env.bash"

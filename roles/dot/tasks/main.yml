@@ -1,0 +1,68 @@
+- name: Set ~/.stowrc contents
+  copy:
+    dest: "{{ ansible_env.HOME }}/.stowrc"
+    content: |
+      --no-folding
+      --dir={{ playbook_dir }}/config
+      --target={{ ansible_env.HOME }}
+
+- name: Clean up home
+  vars:
+    remove_list:
+      - "{{ ansible_env.HOME }}/.lesshst"
+      - "{{ ansible_env.HOME }}/.lesskey"
+      - "{{ ansible_env.HOME }}/.tmux.conf"
+      - "{{ ansible_env.HOME }}/.viminfo"
+      - "{{ ansible_env.HOME }}/.tig_history"
+      - "{{ ansible_env.HOME }}/.calc_history"
+      - "{{ ansible_env.HOME }}/.npmrc"
+    backup_list:
+      - "{{ ansible_env.HOME }}/.gitignore"
+      - "{{ ansible_env.HOME }}/.npmrc"
+      - "{{ ansible_env.HOME }}/.ripgreprc"
+      - "{{ ansible_env.HOME }}/.config/git/config"
+      - "{{ ansible_env.HOME }}/.bashrc"
+      - "{{ ansible_env.HOME }}/.zshrc"
+      - "{{ ansible_env.HOME }}/.profile"
+  block:
+    - name: Remove unwanted dotfiles
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop: "{{ remove_list }}"
+    - name: Get the file stat of each file to backup
+      stat:
+        path: "{{ item }}"
+      loop: "{{ backup_list }}"
+      register: file_stat
+    - name: Backup duplicate dotfiles
+      command: mv "{{ item.item }}" "{{ item.item }}.bak"
+      with_items: "{{ file_stat.results }}"
+      when: item.stat.exists and item.stat.isreg
+      no_log: true
+
+- name: Build directories list
+  find:
+    paths: [config]
+    recurse: no
+    file_type: directory
+  register: files
+
+- name: Deploy dotfiles!
+  with_items: '{{ files.files }}'
+  shell: |
+    PKG={{ item.path | replace("config/", "") }}
+    stow ${PKG}
+  args:
+    chdir: config
+    executable: /bin/bash
+  loop_control:
+    label: |-
+      {% if output.stderr|length > 1 %}
+      {{ item.path }}
+      {{ output.stderr }}
+      {%- else %}
+      {{ item.path }}
+      {%- endif %}
+  register: output
+  changed_when: '"LINK" in output.stderr'

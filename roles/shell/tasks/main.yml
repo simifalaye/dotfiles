@@ -1,0 +1,25 @@
+# Checks
+# ======
+
+- name: Check if zsh is installed
+  shell: "which zsh"
+  register: zsh_path
+  ignore_errors: true
+
+# Main
+# ====
+
+- name: Set default shell to zsh if not set or not using the latest zsh
+  become: true
+  shell: chsh -s "$(which zsh)" "{{ ansible_env.USER }}"
+  when:
+    - zsh_path.stdout != ""
+    - ansible_user_shell != zsh_path.stdout
+
+- name: Set ansible config file
+  copy:
+    dest: "{{ ansible_env.HOME }}/.ansible.cfg"
+    content: |
+      [defaults]
+      inventory = {{ playbook_dir }}/hosts
+      ask_become_pass = True
