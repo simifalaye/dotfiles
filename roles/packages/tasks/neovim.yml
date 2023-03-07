@@ -1,0 +1,47 @@
+#-
+#  Checks
+#-
+
+- command_exists:
+    command: nvim
+  register: neovim_cmd
+  ignore_errors: true
+
+#-
+#  Main
+#-
+
+- name: Download and install Neovim
+  vars:
+    bin_dir: "~/.local/bin"
+    nvim_bin_path: "{{ bin_dir }}/nvim"
+    nvim_dir_path: "{{ bin_dir }}/nvim-linux64"
+    tmp_tar_path: "/tmp/nvim.tar.gz"
+  block:
+    - name: Create bin dir
+      file:
+        path: ~/.local/bin
+        state: directory
+    - name: Download Neovim release
+      get_url:
+        url: "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
+        dest: "{{ tmp_tar_path }}"
+        mode: "0755"
+    - name: Extract Neovim tar
+      unarchive:
+        src: "{{ tmp_tar_path }}"
+        dest: "{{ bin_dir }}"
+        copy: false
+        mode: '0755'
+    - name: Link Neovim binary
+      file:
+        src: "{{ nvim_dir_path }}/bin/nvim"
+        dest: "{{ nvim_bin_path }}"
+        state: link
+        force: true
+    - name: Remove temporary files
+      file:
+        path: "{{ tmp_tar_path }}"
+        state: absent
+      changed_when: true
+  when: not neovim_cmd.exists

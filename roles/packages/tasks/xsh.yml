@@ -1,0 +1,31 @@
+#-
+#  Main
+#-
+
+- name: Install sgleizes/xsh
+  vars:
+    - xsh_dir: ~/.config/xsh
+    - xsh_src: "{{ xsh_dir }}/xsh.sh"
+  block:
+  - name: Get latest version of xsh
+    get_latest_github_tag:
+      owner: sgleizes
+      repo: xsh
+    register: gh_tag
+  - name: Create xsh dir
+    file:
+      path: "{{ xsh_dir }}"
+      state: directory
+  - name: Unzip sgleizes/xsh
+    unarchive:
+      src: "https://github.com/sgleizes/xsh/archive/refs/tags/{{ gh_tag.latest }}.tar.gz"
+      dest: "{{ xsh_dir }}"
+      remote_src: true
+      extra_opts:
+        - "--strip-components=1"
+  - name: Bootstrap all shells
+    shell: |
+      . {{ xsh_src }}
+      xsh bootstrap --shells posix:bash:zsh
+    ignore_errors: true
+  when: "xsh_src is not file"

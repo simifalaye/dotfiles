@@ -65,6 +65,7 @@
 
     # Index (i)
     ia  = add
+    iaa = add --all
     iap = add --patch
     iu  = add --update
     id  = diff --cached

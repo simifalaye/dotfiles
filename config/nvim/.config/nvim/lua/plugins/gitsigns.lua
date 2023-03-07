@@ -8,11 +8,7 @@ return {
       local gs = require("gitsigns")
 
       -- Setup plugin
-      gs.setup({
-        yadm = {
-          enable = true,
-        },
-      })
+      gs.setup({})
 
       -- Setup keybinds
       local m = require("utils.map")

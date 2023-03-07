@@ -1,0 +1,57 @@
+#-
+#  Checks
+#-
+
+- command_exists:
+    command: exa
+  register: exa_cmd
+  ignore_errors: true
+
+#-
+#  Main
+#-
+
+- name: Install exa
+  become: true
+  block:
+    - name: Get latest version of exa
+      get_latest_github_tag:
+        owner: ogham
+        repo: exa
+      register: gh_tag
+    - name: Create exa tmp dir
+      file:
+        path: /tmp/exa
+        state: directory
+    - name: Extract exa archive
+      unarchive:
+        src: "https://github.com/ogham/exa/releases/download/{{ gh_tag.latest }}/exa-linux-x86_64-{{ gh_tag.latest }}.zip"
+        dest: /tmp/exa
+        remote_src: yes
+    - name: Install exa bin
+      copy:
+        src: "/tmp/exa/bin/exa"
+        dest: /usr/local/bin/exa
+        mode: 0755
+    - name: Install exa bash completion
+      copy:
+        src: "/tmp/exa/completions/exa.bash"
+        dest: "{{ bash_completions_dir }}/exa"
+        mode: 0644
+    - name: Install exa zsh completion
+      copy:
+        src: "/tmp/exa/completions/exa.zsh"
+        dest: "{{ zsh_completions_dir }}/_exa"
+        mode: 0644
+    - name: Install exa man page
+      copy:
+        src: "/tmp/exa/man/exa.1"
+        dest: "{{ man_dir }}/exa.1"
+        mode: 0644
+    - name: Remove exa temporary files
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "/tmp/exa"
+  when: not exa_cmd.exists

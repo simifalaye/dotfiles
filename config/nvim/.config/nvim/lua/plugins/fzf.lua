@@ -41,7 +41,7 @@ return {
       m.nnoremap("<leader>fq", fzf.quickfix, "Quickfix")
       m.nnoremap("<leader>fs", function()
         fzf.live_grep({
-          rg_opts = "--no-ignore --column --line-number --no-heading --color=always --smart-case --max-columns=512",
+          rg_opts = "--no-ignore --column --line-number --no-heading --color=always --smart-case --max-columns=4096",
         })
       end, "Search (all)")
       -- git
@@ -79,41 +79,6 @@ return {
       m.nnoremap("<leader>fng", function()
         fzf.live_grep(n_opts)
       end, "Search")
-      -- yadm
-      local yadm_git_dir = "$HOME/.local/share/yadm/repo.git"
-      local yadm_cmd =
-        string.format("yadm -C $HOME --yadm-repo %s", yadm_git_dir)
-      local yadm_git_opts = {
-        show_cwd_header = false,
-        git_dir = yadm_git_dir,
-      }
-      local yadm_grep_opts = {
-        prompt = "YadmGrep❯ ",
-        cwd = "$HOME",
-        cmd = ("%s grep --line-number --column --color=always"):format(
-          yadm_cmd
-        ),
-        rg_glob = false, -- this isn't `rg`
-      }
-      m.group("<leader>fy", "+yadm")
-      m.nnoremap("<leader>fyb", function()
-        fzf.git_branches(yadm_git_opts)
-      end, "Branches")
-      m.nnoremap("<leader>fyc", function()
-        fzf.git_commits(yadm_git_opts)
-      end, "Commits")
-      m.nnoremap("<leader>fyC", function()
-        fzf.git_bcommits(yadm_git_opts)
-      end, "Commits (buf)")
-      m.nnoremap("<leader>fyf", function()
-        fzf.git_files(yadm_git_opts)
-      end, "Files")
-      m.nnoremap("<leader>fyg", function()
-        fzf.live_grep(yadm_grep_opts)
-      end, "Grep")
-      m.nnoremap("<leader>fys", function()
-        fzf.git_status(yadm_git_opts)
-      end, "Status")
     end,
   },
 }

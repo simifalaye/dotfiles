@@ -11,19 +11,20 @@
     remove_list:
       - "{{ ansible_env.HOME }}/.lesshst"
       - "{{ ansible_env.HOME }}/.lesskey"
-      - "{{ ansible_env.HOME }}/.tmux.conf"
       - "{{ ansible_env.HOME }}/.viminfo"
       - "{{ ansible_env.HOME }}/.tig_history"
       - "{{ ansible_env.HOME }}/.calc_history"
-      - "{{ ansible_env.HOME }}/.npmrc"
+      - "{{ ansible_env.HOME }}/.zcompdump"
     backup_list:
       - "{{ ansible_env.HOME }}/.gitignore"
       - "{{ ansible_env.HOME }}/.npmrc"
       - "{{ ansible_env.HOME }}/.ripgreprc"
       - "{{ ansible_env.HOME }}/.config/git/config"
+      - "{{ ansible_env.HOME }}/.bash_logout"
       - "{{ ansible_env.HOME }}/.bashrc"
       - "{{ ansible_env.HOME }}/.zshrc"
       - "{{ ansible_env.HOME }}/.profile"
+      - "{{ ansible_env.HOME }}/.tmux.conf"
   block:
     - name: Remove unwanted dotfiles
       file:
@@ -52,7 +53,7 @@
   with_items: '{{ files.files }}'
   shell: |
     PKG={{ item.path | replace("config/", "") }}
-    stow ${PKG}
+    stow -R ${PKG}
   args:
     chdir: config
     executable: /bin/bash

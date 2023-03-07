@@ -1,5 +1,9 @@
 #!/bin/sh
 
+#-
+#  Main
+#-
+
 # Install required apps
 OS="$(uname)"
 case $OS in
