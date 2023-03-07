@@ -14,12 +14,12 @@ xsh module core
 
 # Load application modules that have no requirements
 xsh module base16 interactive
-xsh module browser interactive:env
+xsh module browser interactive:login
 xsh module cheat interactive
-xsh module editor interactive:env
+xsh module editor interactive:login
 xsh module exa interactive
 xsh module fzf interactive
-xsh module pager interactive:env
+xsh module pager interactive:login
 xsh module ripgrep interactive
 xsh module tmux interactive
 xsh module trash interactive:logout

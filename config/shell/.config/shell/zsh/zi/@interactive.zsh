@@ -2,7 +2,7 @@
 
 # Paths for the zi installation.
 typeset -gAH ZI
-ZI[HOME_DIR]=${ZDATADIR}/zinit
+ZI[HOME_DIR]=${ZDATADIR}/zi
 ZI[BIN_DIR]="$ZI[HOME_DIR]/bin"
 ZI[ZCOMPDUMP_PATH]="${ZCACHEDIR}/zcompdump"
 
@@ -10,7 +10,7 @@ ZI[ZCOMPDUMP_PATH]="${ZCACHEDIR}/zcompdump"
 ZPFX="$ZI[HOME_DIR]/prefix"
 ZI[MAN_DIR]="$ZI[HOME_DIR]/man"
 
-# Load repo and source zinit
+# Load repo and source zi
 load_repo z-shell/zi "$ZI[BIN_DIR]"
 source $ZI[BIN_DIR]/zi.zsh || return 1
 
