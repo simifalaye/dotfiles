@@ -20,11 +20,11 @@ xsh module prompt interactive
 
 # Load application modules that have no requirements
 xsh module -s bash base16 interactive
-xsh module -s bash browser interactive:login
+xsh module -s bash browser interactive:env
 xsh module -s bash cheat interactive
-xsh module -s bash editor interactive:login
+xsh module -s bash editor interactive:env
 xsh module -s bash exa interactive
-xsh module -s bash pager interactive:login
+xsh module -s bash pager interactive:env
 xsh module -s bash ripgrep interactive
 xsh module -s bash tmux interactive
 xsh module -s bash trash interactive:logout

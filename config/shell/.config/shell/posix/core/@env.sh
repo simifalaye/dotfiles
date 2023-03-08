@@ -91,3 +91,10 @@ export XDG_BIN_HOME="${HOME}/.local/bin" && mkdir -p "${XDG_BIN_HOME}"
 export XDG_LIB_HOME="${HOME}/.local/lib" && mkdir -p "${XDG_LIB_HOME}"
 export XDG_DATA_HOME="${HOME}/.local/share" && mkdir -p "${XDG_DATA_HOME}"
 export XDG_STATE_HOME="${HOME}/.local/state" && mkdir -p "${XDG_STATE_HOME}"
+
+#-
+#  Paths
+#-
+
+# Prepend user binaries to PATH to allow overriding system commands.
+path_prepend "${XDG_BIN_HOME}" PATH
