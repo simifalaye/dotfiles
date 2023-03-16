@@ -21,7 +21,6 @@ return {
         ignore_install = { "perl" },
         highlight = {
           enable = true,
-          -- disable = { "markdown" },
           additional_vim_regex_highlighting = { "markdown" },
         },
         textobjects = {
@@ -58,19 +57,6 @@ return {
               ["[["] = "@class.outer",
             },
           },
-        },
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = "<enter>", -- init incremental selection
-            node_incremental = "<enter>", -- increment to the upper parent node
-            node_decremental = "<backspace>", -- decrement to the previous child node
-          },
-        },
-        rainbow = {
-          enable = true,
-          extended_mode = true,
-          max_file_lines = nil,
         },
         autotag = {
           enable = true,

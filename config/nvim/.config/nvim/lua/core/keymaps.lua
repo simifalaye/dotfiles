@@ -36,10 +36,6 @@ m.nnoremap("n", "nzzzv")
 m.nnoremap("N", "Nzzzv")
 m.nnoremap("p", "p`[v`]=", "Paste & format")
 m.nnoremap("Q", "@q", "Run q macro")
-m.nnoremap("<C-h>", "<C-w>h", "Focus window left")
-m.nnoremap("<C-j>", "<C-w>j", "Focus window down")
-m.nnoremap("<C-k>", "<C-w>k", "Focus window up")
-m.nnoremap("<C-l>", "<C-w>l", "Focus window right")
 m.nmap(
   "c.",
   [[:%s/\<<C-r><C-w>\>//g<Left><Left>]],

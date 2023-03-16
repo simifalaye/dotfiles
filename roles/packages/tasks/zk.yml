@@ -1,0 +1,27 @@
+#-
+#  Checks
+#-
+
+- command_exists:
+    command: zk
+  register: zk_cmd
+  ignore_errors: true
+
+#-
+#  Main
+#-
+
+- name: Install latest release of mickael-menu/zk
+  become: true
+  block:
+    - name: Get latest version of zk
+      get_latest_github_tag:
+        owner: mickael-menu
+        repo: zk
+      register: gh_tag
+    - name: Extract zk archive
+      unarchive:
+        src: "https://github.com/mickael-menu/zk/releases/download/{{ gh_tag.latest }}/zk-{{ gh_tag.latest }}-linux-amd64.tar.gz"
+        dest: "/usr/local/bin"
+        remote_src: yes
+  when: not zk_cmd.exists

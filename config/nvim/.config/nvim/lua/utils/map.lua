@@ -73,13 +73,21 @@ M.cnoremap = make_mapper("c", { noremap = true, silent = false })
 --- Register a which-key group name
 ---@param prefix string
 ---@param name string
-M.group = function(prefix, name)
+---@param mode string|table|nil
+M.group = function(prefix, name, mode)
   if not prefix or not name then
     return
   end
   local wk = _G.prequire("which-key")
   if wk then
-    wk.register({ [prefix] = { name = name } })
+    if type(mode) == "nil" then
+      mode = {"n"}
+    elseif type(mode) == "string" then
+      mode = {mode}
+    end
+    for _, v in pairs(mode) do
+      wk.register({ [prefix] = { name = name, mode = v } })
+    end
     log.debug("Key Group {%s, %s}", prefix, name)
   end
 end

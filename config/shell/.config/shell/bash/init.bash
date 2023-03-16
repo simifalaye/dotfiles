@@ -24,4 +24,5 @@ xsh module ripgrep interactive
 xsh module tmux interactive
 xsh module trash interactive:logout
 xsh module wsl login
+xsh module zk interactive
 xsh module zoxide interactive:login

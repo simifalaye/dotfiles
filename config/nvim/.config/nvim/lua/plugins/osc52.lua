@@ -5,6 +5,9 @@ return {
       { "gy", mode = { "n", "x" } },
     },
     config = function()
+      require("osc52").setup({
+        silent = false
+      })
       local m = require("utils.map")
       m.nnoremap("gy", require("osc52").copy_operator, "System yank", { expr = true })
       m.nmap("gyy", "gy_", "System yank line")

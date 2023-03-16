@@ -14,14 +14,16 @@ end
 
 --- Get color strings (fg and bg) of a highlight group
 ---@param hlgroup string name of group
----@param base table?
----@return table
+---@param base string?
+---@return table|string|nil
 M.get_hl_group = function(hlgroup, base)
-  return vim.tbl_deep_extend(
-    "force",
-    base or {},
-    { fg = hl_prop(hlgroup, "foreground"), bg = hl_prop(hlgroup, "background") }
-  )
+  if base == "fg" then
+    return hl_prop(hlgroup, "foreground")
+  elseif base == "bg" then
+    return hl_prop(hlgroup, "background")
+  else
+    return { fg = hl_prop(hlgroup, "foreground"), bg = hl_prop(hlgroup, "background") }
+  end
 end
 
 --- Set the values of multiple highlights (fg and bg)

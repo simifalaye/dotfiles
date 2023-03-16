@@ -53,6 +53,7 @@ o.splitright = true -- Open new split to the right
 o.wrap = false
 o.showbreak = [[↪ ]] -- Options include -> '…', '↳ ', '→','↪ '
 o.termguicolors = true
+o.conceallevel = 2
 
 -- Backups
 o.backup = false
