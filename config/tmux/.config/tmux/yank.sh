@@ -1,10 +1,33 @@
 #!/bin/bash
-# Yank with osc52
+# Automatically detect clipboard provider and use it or fallback to osc52
 
 set -eu
 
+is_app_installed() {
+  type "$1" &>/dev/null
+}
+
 # get data either form stdin or from file
 buf=$(cat "$@")
+
+# Resolve copy backend: pbcopy (OSX), reattach-to-user-namespace (OSX), xclip/xsel (Linux)
+copy_backend=""
+if is_app_installed pbcopy; then
+  copy_backend="pbcopy"
+elif is_app_installed reattach-to-user-namespace; then
+  copy_backend="reattach-to-user-namespace pbcopy"
+elif [ -n "${DISPLAY-}" ] && is_app_installed xsel; then
+  copy_backend="xsel -i --clipboard"
+elif [ -n "${DISPLAY-}" ] && is_app_installed xclip; then
+  copy_backend="xclip -i -f -selection primary | xclip -i -selection clipboard"
+fi
+
+# if copy backend is resolved, copy and exit
+if [ -n "$copy_backend" ]; then
+  # shellcheck disable=SC2059
+  printf "$buf" | eval "$copy_backend"
+  exit;
+fi
 
 # Copy via OSC 52 ANSI escape sequence to controlling terminal
 buflen=$( printf %s "$buf" | wc -c )
