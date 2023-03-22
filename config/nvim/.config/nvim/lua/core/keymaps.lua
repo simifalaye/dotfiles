@@ -71,11 +71,11 @@ m.nnoremap(
   "Select last changed text",
   { expr = true }
 )
-m.nnoremap("gl", ":OpenLink<CR>", "Open link in browser")
+m.nnoremap("gx", ":OpenLink<CR>", "Open link in browser")
 
 -- Toggle windows
 m.nnoremap("<F3>", ":ToggleList c<CR>", "Toggle Quickfix")
-m.nnoremap("<F4>", ":ToggleList c<CR>", "Toggle Quickfix")
+m.nnoremap("<F4>", ":ToggleList l<CR>", "Toggle Loclist")
 
 -- Leader
 m.nnoremap("<leader><leader>", "<C-^>", "Last buffer")

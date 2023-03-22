@@ -5,6 +5,7 @@ return {
     config = function()
       local windline = require("windline")
       local b_components = require("windline.components.basic")
+      ---@diagnostic disable-next-line: undefined-field
       local state = _G.WindLine.state
 
       local lsp_comps = require("windline.components.lsp")

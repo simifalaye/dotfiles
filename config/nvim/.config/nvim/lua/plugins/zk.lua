@@ -41,6 +41,12 @@ return {
         silent = false,
       },
       {
+        "<leader>nr",
+        "<cmd>ZkNew { title = vim.fn.input('Title: '), dir = 'reference' }<CR>",
+        desc = "New Ref Note",
+        silent = false,
+      },
+      {
         "<leader>nt",
         "<leader>zt",
         "<cmd>ZkTags<CR>",

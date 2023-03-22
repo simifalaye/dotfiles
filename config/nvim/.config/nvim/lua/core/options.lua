@@ -2,6 +2,10 @@
 local o = vim.opt
 local g = vim.g
 
+-- Map leader
+g.mapleader = " "
+g.maplocalleader = "\\"
+
 -- Misc
 o.clipboard = ""
 o.encoding = "utf-8"
