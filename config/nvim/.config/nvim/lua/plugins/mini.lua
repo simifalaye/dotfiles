@@ -87,4 +87,15 @@ return {
       require("mini.bracketed").setup()
     end
   },
+  {
+    "echasnovski/mini.align",
+    version = "*",
+    keys = {
+      { "ga", mode = { "n", "x" } },
+      { "gA", mode = { "n", "x" } },
+    },
+    config = function ()
+      require("mini.align").setup({})
+    end
+  },
 }

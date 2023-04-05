@@ -181,3 +181,9 @@ m.cnoremap(
   "Insert file path",
   { silent = false }
 )
+
+-- Abbreviations
+-- -------------
+
+vim.cmd('iab <expr> dts strftime("%F %b %T")')
+
