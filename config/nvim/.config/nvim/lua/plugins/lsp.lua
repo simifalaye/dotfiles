@@ -189,33 +189,33 @@ return {
         ensure_installed = { "stylua", "shellcheck" },
         automatic_installation = true,
         automatic_setup = true,
-      })
-      mason_null_ls.setup_handlers({
-        function(name, methods) -- default handler
-          require("mason-null-ls.automatic_setup")(name, methods)
-        end,
-        stylua = function(_, _)
-          null_ls.register(null_ls.builtins.formatting.stylua.with({
-            extra_args = function(params)
-              if
-                _G.file_exists(_G.join_paths(params.root, "stylua.toml"))
-                or _G.file_exists(_G.join_paths(params.root, ".stylua.toml"))
-              then
-                return {}
-              end
-              return {
-                "--column-width",
-                "80",
-                "--indent-width",
-                "2",
-                "--indent-type",
-                "Spaces",
-                "--quote-style",
-                "AutoPreferDouble",
-              }
-            end,
-          }))
-        end,
+        handlers = {
+          function(name, methods) -- default handler
+            require("mason-null-ls.automatic_setup")(name, methods)
+          end,
+          stylua = function(_, _)
+            null_ls.register(null_ls.builtins.formatting.stylua.with({
+              extra_args = function(params)
+                if
+                  _G.file_exists(_G.join_paths(params.root, "stylua.toml"))
+                  or _G.file_exists(_G.join_paths(params.root, ".stylua.toml"))
+                then
+                  return {}
+                end
+                return {
+                  "--column-width",
+                  "80",
+                  "--indent-width",
+                  "2",
+                  "--indent-type",
+                  "Spaces",
+                  "--quote-style",
+                  "AutoPreferDouble",
+                }
+              end,
+            }))
+          end,
+        },
       })
       null_ls.setup()
     end,
