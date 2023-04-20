@@ -9,6 +9,9 @@
 # Main
 # ====
 
+# Includes
+- include_tasks: xsh.yml
+
 - name: Set default shell to zsh if not set or not using the latest zsh
   become: true
   shell: chsh -s "$(which zsh)" "{{ ansible_env.USER }}"

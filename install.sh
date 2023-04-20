@@ -25,10 +25,10 @@ case $OS in
             # Debian/Ubuntu/Linux Mint
             if grep -q -E '(debian|ubuntu|linuxmint)' /etc/os-release; then
                 echo "Detected Debian/Ubuntu/Linux Mint"
+                sudo add-apt-repository --yes --update ppa:ansible/ansible
                 sudo apt-get update
                 sudo apt-get install -y curl git stow software-properties-common
-                sudo add-apt-repository --yes --update ppa:ansible/ansible
-                sudo apt-get install ansible
+                sudo apt-get install -y ansible
                 sudo ansible-galaxy collection install community.general
                 # CentOS/RHEL/Fedora
             elif grep -q -E '(centos|rhel|fedora)' /etc/os-release; then

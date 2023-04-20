@@ -6,7 +6,7 @@ _G.is_wsl = (function()
   local uname = vim.fn.substitute(vim.fn.system("uname"), "\n", "", "")
   if uname == "Linux" then
     local s = string.match(vim.fn.readfile("/proc/version")[1], "microsoft")
-    if string.match(s, "microsoft") then
+    if s ~= nil and string.match(s, "microsoft") then
       return true
     end
     return false
