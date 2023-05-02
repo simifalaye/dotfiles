@@ -186,7 +186,7 @@ return {
       -- Setup null-ls with mason
       local mason_null_ls = require("mason-null-ls")
       mason_null_ls.setup({
-        ensure_installed = { "stylua", "shellcheck" },
+        ensure_installed = { "stylua", "shellcheck", "cpplint" },
         automatic_installation = true,
         automatic_setup = true,
         handlers = {
