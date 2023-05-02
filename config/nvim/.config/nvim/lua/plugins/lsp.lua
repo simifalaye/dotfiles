@@ -47,66 +47,21 @@ local autocmds = function(client, _)
     })
   end
   if client and client.server_capabilities.document_highlight then
-    local au_doc_hi = vim.api.nvim_create_augroup("LspDocumentHighlight", {})
-    vim.api.nvim_create_autocmd("CursorHold", {
-      group = au_doc_hi,
-      desc = "Highlight references on cursor hold",
-      pattern = "<buffer>",
-      callback = vim.lsp.buf.document_highlight,
+    require("utils.command").augroup("lsp_documenthighlight", {
+      {
+        desc = "Highlight references on cursor hold",
+        event = "CursorHold",
+        pattern = "<buffer>",
+        callback = vim.lsp.buf.document_highlight,
+      },
+      {
+        desc = "Clear reference highlights on cursor move",
+        event = "CursorMoved",
+        pattern = "<buffer>",
+        callback = vim.lsp.buf.clear_references,
+      },
     })
-    vim.api.nvim_create_autocmd("CursorMoved", {
-      group = au_doc_hi,
-      desc = "Clear reference highlights on cursor move",
-      pattern = "<buffer>",
-      callback = vim.lsp.buf.clear_references,
-    })
   end
-end
-
-local diagnostics = function()
-  local signs = {
-    { name = "DiagnosticSignError", text = "" },
-    { name = "DiagnosticSignWarn", text = "" },
-    { name = "DiagnosticSignHint", text = "" },
-    { name = "DiagnosticSignInfo", text = "" },
-  }
-
-  -- Define signs
-  for _, sign in ipairs(signs) do
-    vim.fn.sign_define(
-      sign.name,
-      { texthl = sign.name, text = sign.text, numhl = "" }
-    )
-  end
-  -- Configure diagnostics
-  vim.diagnostic.config({
-    virtual_text = true,
-    signs = { active = signs },
-    update_in_insert = true,
-    underline = true,
-    severity_sort = true,
-    float = {
-      focusable = false,
-      style = "minimal",
-      border = "rounded",
-      source = "always",
-      header = "",
-      prefix = "",
-    },
-  })
-  vim.lsp.handlers["textDocument/hover"] =
-    vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
-  vim.lsp.handlers["textDocument/signatureHelp"] =
-    vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
-end
-
-local capabilities = function()
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
-  local cmp_lsp = _G.prequire("cmp_nvim_lsp")
-  if cmp_lsp then
-    capabilities = cmp_lsp.default_capabilities(capabilities)
-  end
-  return capabilities
 end
 
 return {
@@ -116,40 +71,44 @@ return {
       "nvim-lua/plenary.nvim",
       "folke/neodev.nvim",
       "jose-elias-alvarez/null-ls.nvim",
-      "williamboman/mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
-      "jayp0521/mason-null-ls.nvim",
+      {
+        "williamboman/mason.nvim",
+        build = ":MasonUpdate",
+        dependencies = {
+          "williamboman/mason-lspconfig.nvim",
+          "jayp0521/mason-null-ls.nvim",
+        },
+      },
     },
     event = "BufReadPre",
     config = function()
       local lspconfig = require("lspconfig")
       local null_ls = require("null-ls")
 
-      -- Define on attach handler
-      local on_attach = function(client, bufnr)
-        autocmds(client, bufnr)
-        keymaps(client, bufnr)
-      end
-
       -- Default server options
       local default_opts = {
-        on_attach = on_attach,
-        capabilities = capabilities(),
+        on_attach = function(client, bufnr)
+          autocmds(client, bufnr)
+          keymaps(client, bufnr)
+        end,
+        capabilities = (function()
+          local capabilities = vim.lsp.protocol.make_client_capabilities()
+          local cmp_lsp = _G.prequire("cmp_nvim_lsp")
+          if cmp_lsp then
+            capabilities = cmp_lsp.default_capabilities(capabilities)
+          end
+          return capabilities
+        end)(),
         flags = {
           debounce_text_changes = 150,
         },
       }
 
-      -- Configure diagnostics
-      diagnostics()
-
-      -- Setup neodev (first)
+      -- Setup neodev (NOTE: Must come before any lspconfig setup)
       require("neodev").setup({})
-
-      -- Setup mason
+      -- Setup mason (NOTE: Must come before mason-lspconfig)
       require("mason").setup({})
-
-      -- Setup lspconfig with mason
+      -- Setup mason-lspconfig (NOTE: Sets up lspconfig)
       local mason_lspconfig = require("mason-lspconfig")
       mason_lspconfig.setup({
         ensure_installed = { "lua_ls", "bashls" },
@@ -159,7 +118,7 @@ return {
         function(name) -- default handler
           lspconfig[name].setup(default_opts)
         end,
-        clangd = function()
+        ["clangd"] = function()
           local opts = {
             cmd = {
               "clangd",
@@ -172,18 +131,19 @@ return {
           opts = vim.tbl_deep_extend("force", default_opts, opts)
           lspconfig["clangd"].setup(opts)
         end,
-        yamlls = function()
-          local opts = {
-            yaml = {
-              schemaStore = { enable = true },
-            },
-          }
-          opts = vim.tbl_deep_extend("force", default_opts, opts)
-          lspconfig["yamlls"].setup(opts)
+        ["lua_ls"] = function()
+          lspconfig["lua_ls"].setup({
+            settings = {
+              Lua = {
+                workspace = {
+                  checkThirdParty = false, -- fixes popup issue
+                }
+              }
+            }
+          })
         end,
       })
-
-      -- Setup null-ls with mason
+      -- Setup mason-null-ls (NOTE: Sets up null-ls)
       local mason_null_ls = require("mason-null-ls")
       mason_null_ls.setup({
         ensure_installed = { "stylua", "shellcheck", "cpplint" },
@@ -217,7 +177,6 @@ return {
           end,
         },
       })
-      null_ls.setup()
     end,
   },
   {

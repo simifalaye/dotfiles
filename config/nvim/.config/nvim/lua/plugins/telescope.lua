@@ -64,9 +64,6 @@ return {
     local actions = require("telescope.actions")
     telescope.setup({
       defaults = {
-        prompt_prefix = "> ",
-        selection_caret = "  ",
-        entry_prefix = "  ",
         initial_mode = "insert",
         path_display = { "truncate" },
         sorting_strategy = "ascending",
@@ -107,6 +104,9 @@ return {
         },
         buffers = {
           initial_mode = "normal",
+          sort_mru = true,
+          ignore_current_buffer = true,
+          previewer = false,
           mappings = {
             i = {
               ["<C-d>"] = actions.delete_buffer,

@@ -127,33 +127,54 @@ end, {
   nargs = "?", -- {buffer_number?}
 })
 
-api.nvim_create_user_command("OpenLink", function()
+api.nvim_create_user_command("OpenLink", function(opt)
   local open = function(path)
-    local open_cmd = "xdg-open"
-    if _G.is_wsl then
-      open_cmd = "/mnt/c/Windows/explorer.exe"
+    local cmd
+    if
+      _G.is_wsl
+      or (vim.fn.has("win32") == 1 and vim.fn.executable("explorer") == 1)
+    then
+      cmd = { "explorer.exe" }
+    elseif vim.fn.has("unix") == 1 and vim.fn.executable("xdg-open") == 1 then
+      cmd = { "xdg-open" }
+    elseif
+      (vim.fn.has("mac") == 1 or vim.fn.has("unix") == 1)
+      and vim.fn.executable("open") == 1
+    then
+      cmd = { "open" }
     end
-    fn.jobstart({ open_cmd, path }, { detach = true })
-    vim.notify(string.format("Opening %s", path))
+    if not cmd then
+      vim.notify(
+        "Available system opening tool not found!",
+        vim.log.levels.ERROR
+      )
+    end
+    vim.fn.jobstart(vim.fn.extend(cmd, { path }), { detach = true })
   end
 
-  local file = fn.expand("<cfile>")
-  if not file or fn.isdirectory(file) > 0 then
-    return vim.cmd.edit(file)
+  local path = (opt.args and opt.args ~= "") and opt.args
+    or fn.expand("<cfile>")
+  if not path then
+    return
   end
 
-  if file:match("http[s]?://") then
-    return open(file)
+  if
+    fn.isdirectory(path) > 0 -- directory
+    or fn.filereadable(path) > 0 -- file
+    or path:match("http[s]?://") -- link
+  then
+    return open(path)
   end
 
   -- consider anything that looks like string/string a github link
   local plugin_url_regex = "[%a%d%-%.%_]*%/[%a%d%-%.%_]*"
-  local link = string.match(file, plugin_url_regex)
+  local link = string.match(path, plugin_url_regex)
   if link then
     return open(string.format("https://www.github.com/%s", link))
   end
 end, {
   desc = "Open link under cursor",
+  nargs = "?", -- {path?}
 })
 
 api.nvim_create_user_command("SetMinLogLevel", function(opt)

@@ -13,56 +13,73 @@ return {
       { "_", "<cmd>Neotree reveal<CR>", desc = "Open file in explorer" },
     },
     init = function()
-      -- Start neo-tree when a directory is given or no arguments
-      vim.cmd([[autocmd StdinReadPre * let s:std_in=1]])
-      vim.cmd(
-        [[autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists('s:std_in') |
-        \ execute 'Neotree position=current' argv()[0] | wincmd p | enew | execute 'cd '.argv()[0] | endif]]
-      )
-      vim.cmd(
-        [[autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | execute 'Neotree position=current' | endif]]
-      )
-    end,
-    config = function()
-      local tree = require("neo-tree")
-
-      -- Remove legacy commands
       vim.g.neo_tree_remove_legacy_commands = true
-      -- Setup plugin
-      tree.setup({
-        close_if_last_window = true,
-        popup_border_style = "rounded",
-        enable_diagnostics = false,
-        follow_current_file = false,
-        window = {
-          width = 25,
-          mappings = {
-            ["l"] = "open",
-            ["h"] = "close_node",
-            ["<space>"] = "noop",
-          },
+      require("utils.command").augroup("neotree_start", {
+        {
+          desc = "Start neo-tree when no commands are provided",
+          event = "VimEnter",
+          pattern = "*",
+          command = function()
+            local should_skip = false
+            if
+              vim.fn.argc() > 0
+              or vim.fn.line2byte(vim.fn.line("$")) ~= -1
+              or not vim.o.modifiable
+            then
+              should_skip = true
+            else
+              for _, arg in pairs(vim.v.argv) do
+                if
+                  arg == "-b"
+                  or arg == "-c"
+                  or vim.startswith(arg, "+")
+                  or arg == "-S"
+                then
+                  should_skip = true
+                  break
+                end
+              end
+            end
+            if not should_skip then
+              vim.cmd("Neotree position=current")
+            end
+          end,
         },
-        filesystem = {
-          filtered_items = {
-            visible = false,
-            hide_dotfiles = false,
-            hide_gitignored = false,
-            hide_by_name = {
-              ".DS_Store",
-              "thumbs.db",
-              "node_modules",
-              "__pycache__",
-            },
-          },
-          follow_current_file = false,
-          use_libuv_file_watcher = true,
+        {
+          desc = "Start neo-tree when a directory is given",
+          event = "VimEnter",
+          pattern = "*",
+          command = function()
+            if
+              vim.fn.argc() == 1
+              and vim.fn.isdirectory(vim.fn.argv()[1]) == 1
+              and vim.fn.exists("s:std_in") ~= 1
+            then
+              vim.cmd("Neotree position=current " .. vim.fn.argv()[1])
+            end
+          end,
         },
       })
-
-      local nlog = _G.prequire("neo-tree.log")
-      if nlog then
-        nlog.new({ level = "warn" }, true)
-      end
     end,
+    opts = {
+      auto_clean_after_session_restore = true,
+      close_if_last_window = true,
+      popup_border_style = "rounded",
+      enable_diagnostics = false,
+      follow_current_file = false,
+      window = {
+        width = 30,
+        mappings = {
+          ["<space>"] = false, -- used by which-key
+          ["l"] = "open",
+          ["h"] = "close_node",
+          ["o"] = "open",
+        },
+      },
+      filesystem = {
+        follow_current_file = false,
+        use_libuv_file_watcher = true,
+      },
+    },
   },
 }
