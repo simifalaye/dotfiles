@@ -35,7 +35,6 @@ o.wildmenu = true
 o.cmdheight = 0
 o.cursorline = true
 o.laststatus = 3 -- global statusline
-o.lazyredraw = true
 o.list = true
 o.listchars = {
   tab = "»·",
@@ -57,7 +56,7 @@ o.splitright = true -- Open new split to the right
 o.wrap = false
 o.showbreak = [[↪ ]] -- Options include -> '…', '↳ ', '→','↪ '
 o.termguicolors = true
-o.conceallevel = 2
+o.conceallevel = 3 -- Hide * markup for bold/italic
 
 -- Backups
 o.backup = false
@@ -73,10 +72,8 @@ o.completeopt = { "menu", "menuone", "noselect" }
 o.shortmess = o.shortmess + { c = true, I = true }
 
 -- Perfomance
-o.redrawtime = 1500
-o.timeoutlen = 250
-o.ttimeoutlen = 10
-o.updatetime = 250
+o.timeoutlen = 300
+o.updatetime = 200
 
 -- Filetype
 g.do_filetype_lua = 1 -- use filetype.lua when possible

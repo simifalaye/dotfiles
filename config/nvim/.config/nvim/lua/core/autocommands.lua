@@ -61,7 +61,7 @@ command.augroup("WindowBehaviours", {
     desc = "Auto-resize splits",
     event = { "VimResized" },
     pattern = { "*" },
-    command = "wincmd =",
+    command = "tabdo wincmd =",
   },
   {
     desc = "Highlight window when focused",

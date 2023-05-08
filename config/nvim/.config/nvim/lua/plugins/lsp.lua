@@ -170,7 +170,7 @@ return {
           lspconfig["clangd"].setup(opts)
         end,
         ["lua_ls"] = function()
-          lspconfig["lua_ls"].setup({
+          local opts = vim.tbl_deep_extend("force", default_opts, {
             settings = {
               Lua = {
                 workspace = {
@@ -179,6 +179,7 @@ return {
               }
             }
           })
+          lspconfig["lua_ls"].setup(opts)
         end,
       })
       -- Setup mason-null-ls (NOTE: Sets up null-ls)

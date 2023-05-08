@@ -8,11 +8,10 @@ return {
       { "g>", mode = { "n", "v" } },
       { "g<", mode = { "n", "v" } },
     },
-    opts = function()
-      local commentstring =
-        _G.prequire("ts_context_commentstring.integrations.comment_nvim")
-      return commentstring and { pre_hook = commentstring.create_pre_hook() }
-        or {}
+    opts = function(_, opts)
+      local commentstring = _G.prequire("ts_context_commentstring.integrations.comment_nvim")
+      opts.commentstring = commentstring and { pre_hook = commentstring.create_pre_hook() } or {}
+      return opts
     end,
   },
 }

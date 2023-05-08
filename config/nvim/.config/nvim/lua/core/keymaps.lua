@@ -19,7 +19,7 @@ m.noremap(
 
 -- Save
 m.noremap(
-  { "n", "i", "x" },
+  { "n", "i", "x", "s" },
   "<C-s>",
   "<Esc><cmd>silent! update | redraw<CR>",
   "Save buffer"

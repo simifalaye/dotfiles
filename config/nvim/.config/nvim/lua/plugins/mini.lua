@@ -5,7 +5,7 @@ return {
     event = "BufRead",
     config = function()
       local indentscope = require("mini.indentscope")
-      require("mini.indentscope").setup({
+      indentscope.setup({
         draw = {
           delay = 0,
           animation = indentscope.gen_animation.none(),
@@ -38,45 +38,19 @@ return {
       { "sF", desc = "Surround find left" },
       { "sh", desc = "Surround highlight" },
     },
-    config = function()
-      require("mini.surround").setup({
-        mappings = {
-          update_n_lines = "",
-        },
-        -- Number of lines within which surrounding is searched
-        n_lines = 62,
-        -- How to search for surrounding (first inside current line, then inside
-        -- neighborhood). One of 'cover', 'cover_or_next', 'cover_or_prev',
-        -- 'cover_or_nearest'. For more details, see `:h MiniSurround.config`.
-        search_method = "cover_or_next",
-      })
-    end,
-  },
-  {
-    "echasnovski/mini.move",
-    version = "*",
-    keys = {
-      { "<C-left>", mode = { "n", "x" } },
-      { "<C-right>", mode = { "n", "x" } },
-      { "<C-down>", mode = { "n", "x" } },
-      { "<C-up>", mode = { "n", "x" } },
+    opts = {
+      mappings = {
+        update_n_lines = "",
+      },
+      -- Number of lines within which surrounding is searched
+      n_lines = 62,
+      -- How to search for surrounding (first inside current line, then inside
+      -- neighborhood). One of 'cover', 'cover_or_next', 'cover_or_prev',
+      -- 'cover_or_nearest'. For more details, see `:h MiniSurround.config`.
+      search_method = "cover_or_next",
     },
-    config = function()
-      require("mini.move").setup({
-        mappings = {
-          -- Move visual selection in Visual mode. Defaults are Alt (Meta) + hjkl.
-          left = "<C-left>",
-          right = "<C-right>",
-          down = "<C-down>",
-          up = "<C-up>",
-
-          -- Move current line in Normal mode
-          line_left = "<C-left>",
-          line_right = "<C-right>",
-          line_down = "<C-down>",
-          line_up = "<C-up>",
-        },
-      })
+    config = function(_, opts)
+      require("mini.surround").setup(opts)
     end,
   },
   {
@@ -88,14 +62,11 @@ return {
     end
   },
   {
-    "echasnovski/mini.align",
-    version = "*",
-    keys = {
-      { "ga", mode = { "n", "x" } },
-      { "gA", mode = { "n", "x" } },
-    },
+    'echasnovski/mini.pairs',
+    event = "InsertEnter",
+    version = '*',
     config = function ()
-      require("mini.align").setup({})
-    end
+      require("mini.pairs").setup({})
+    end,
   },
 }

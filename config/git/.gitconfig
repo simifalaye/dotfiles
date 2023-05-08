@@ -45,22 +45,60 @@
     # Use vim/nvim
     path = nvim
 
+[grep]
+  # Show line numbers.
+  lineNumber = true
+  # Use extended regexp by default.
+  patternType = extended
+
+[format]
+  # Use a custom pretty format, defined below.
+  pretty = default
+
+[pretty]
+  # Custom default pretty format.
+  # NOTE: In order for delta to recognize the commit section, it _must_ start with `commit `.
+  default = "\
+%C(bold)commit%C(reset)  %C(yellow)%H%C(auto)%d%C(reset)%n\
+%C(bold)Author:%C(reset) %C(blue)%an <%ae>%C(reset)%n\
+%C(bold)Date:%C(reset)   %C(177)%ai (%ar)%C(reset)%n\
+%w(0,4,4)%+s%n%+b%n%+N%-(trailers)%n"
+  # Custom oneline pretty format.
+  brief = "%C(yellow)%h %C(9)%G? %C(blue)%<(15,mtrunc)%an %C(177)%<(12,trunc)%cr %C(reset)%s%C(auto)%d%C(reset)"
+
+[log]
+  # Show only partial commit object names.
+  abbrevCommit = true
+  # Continue listing the history of a file beyond renames (works only for a single file).
+  follow = true
+
+[status]
+  # Use the short format by default.
+  short = true
+
+[stash]
+  # Show the diffstat and patch of the stash entry by default.
+  showPatch = true
+
+[tag]
+  # Sort tags as version numbers in descending order whenever applicable.
+  sort = -version:refname
+
 [fetch]
-  # Remove any remote-tracking references that no longer exist before
+  # Before fetching, remove any remote-tracking references that no longer exist on the remote.
   prune = true
 
-[push]
-    default = upstream
-
 [pull]
-    # Include local merge commits in the rebase
-    rebase = merges
+  # Include local merge commits in the rebase. See 'REBASING MERGES' in git-rebase(1).
+  rebase = merges
 
-[color]
-    ui = true
-    status = auto
-    branch = auto
-    diff = auto
+[rebase]
+  # Use abbreviated command names for interactive rebases (faster to edit).
+  abbreviateCommands = true
+
+[push]
+  # When pushing, also push tags whose commits are now reachable upstream
+  followTags = true
 
 [include]
     path = ~/.config/git/alias

@@ -10,9 +10,9 @@ return {
   cmd = "Telescope",
   keys = function()
     return {
-      { "<C-b>", "<cmd>Telescope buffers<CR>", desc = "Find Buffer" },
       { "<C-f>", "<cmd>Telescope live_grep<CR>", desc = "Find Text" },
       { "<C-p>", "<cmd>Telescope find_files<CR>", desc = "Find Files" },
+      { "<C-space>", "<cmd>Telescope buffers<CR>", desc = "Find Buffer" },
       { "<leader>.", "<cmd>Telescope resume<CR>", desc = "Find Resume" },
       { "<leader>,", "<cmd>Telescope builtin<CR>", desc = "Find Builtin" },
       { "<leader>'", "<cmd>Telescope oldfiles<CR>", desc = "Find Recent" },
@@ -103,9 +103,7 @@ return {
           hidden = true,
         },
         buffers = {
-          initial_mode = "normal",
-          sort_mru = true,
-          ignore_current_buffer = true,
+          sort_lastused = true,
           previewer = false,
           mappings = {
             i = {
