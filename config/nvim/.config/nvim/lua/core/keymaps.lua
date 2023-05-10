@@ -78,7 +78,6 @@ m.nnoremap("<F3>", ":ToggleList c<CR>", "Toggle Quickfix")
 m.nnoremap("<F4>", ":ToggleList l<CR>", "Toggle Loclist")
 
 -- Leader
-m.nnoremap("<leader><leader>", "<C-^>", "Last buffer")
 m.nnoremap("<leader>!", ":! chmod +x %<CR>", "Make file executable")
 m.group("<leader>p", "+plugin")
 m.nnoremap("<leader>pp", ":Lazy<CR>", "Open")

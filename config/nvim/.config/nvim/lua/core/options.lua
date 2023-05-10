@@ -33,7 +33,6 @@ o.wildmenu = true
 
 -- Ui
 o.cmdheight = 0
-o.cursorline = true
 o.laststatus = 3 -- global statusline
 o.list = true
 o.listchars = {

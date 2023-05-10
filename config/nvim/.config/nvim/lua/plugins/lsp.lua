@@ -75,8 +75,8 @@ local diagnostics = function()
   -- Define signs
   for _, sign in ipairs(signs) do
     vim.fn.sign_define(
-    sign.name,
-    { texthl = sign.name, text = sign.text, numhl = "" }
+      sign.name,
+      { texthl = sign.name, text = sign.text, numhl = "" }
     )
   end
   -- Configure diagnostics
@@ -115,6 +115,7 @@ return {
           "williamboman/mason-lspconfig.nvim",
           "jayp0521/mason-null-ls.nvim",
         },
+        config = true,
       },
     },
     event = "BufReadPre",
@@ -195,9 +196,8 @@ return {
           stylua = function(_, _)
             null_ls.register(null_ls.builtins.formatting.stylua.with({
               extra_args = function(params)
-                if
-                  _G.file_exists(_G.join_paths(params.root, "stylua.toml"))
-                  or _G.file_exists(_G.join_paths(params.root, ".stylua.toml"))
+                if _G.file_exists(_G.join_paths(params.root, "stylua.toml"))
+                    or _G.file_exists(_G.join_paths(params.root, ".stylua.toml"))
                 then
                   return {}
                 end

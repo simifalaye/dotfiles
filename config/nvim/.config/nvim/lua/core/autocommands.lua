@@ -1,8 +1,9 @@
 local api = vim.api
 local cmd = vim.cmd
+local timer = vim.loop.new_timer()
 local command = require("utils.command")
 
-command.augroup("Utilities", {
+command.augroup("user_file_utilities", {
   {
     desc = "Remove trailing whitespace on save",
     event = "BufWritePre",
@@ -42,21 +43,7 @@ command.augroup("Utilities", {
   },
 })
 
-command.augroup("WindowBehaviours", {
-  {
-    desc = "Jump to quickfix window when opened",
-    event = { "QuickFixCmdPost" },
-    pattern = { "[^l]*" },
-    command = "cwindow",
-    nested = true,
-  },
-  {
-    desc = "Jump to loclist window when opened",
-    event = { "QuickFixCmdPost" },
-    pattern = { "l*" },
-    command = "lwindow",
-    nested = true,
-  },
+command.augroup("user_window_behaviours", {
   {
     desc = "Auto-resize splits",
     event = { "VimResized" },
@@ -64,26 +51,39 @@ command.augroup("WindowBehaviours", {
     command = "tabdo wincmd =",
   },
   {
-    desc = "Highlight window when focused",
-    event = { "BufEnter", "WinEnter", "InsertLeave" },
-    pattern = "*",
+    desc = "Show cursorline when focused",
+    event = { "WinEnter" },
     command = function()
-      vim.opt.relativenumber = true
-      vim.opt.cursorline = true
+      vim.wo.cursorline = true
     end,
   },
   {
-    desc = "Un-highlight window when un-focused",
-    event = { "BufLeave", "WinLeave", "InsertEnter" },
-    pattern = "*",
+    desc = "Hide cursorline when un-focused",
+    event = { "WinLeave" },
     command = function()
-      vim.opt.relativenumber = false
-      vim.opt.cursorline = false
+      vim.wo.cursorline = false
     end,
   },
+  {
+    desc = "Show cursorline when cursor is not moved for some time",
+    event = { "CursorMoved", "CursorMovedI" },
+    set = function ()
+      vim.wo.cursorline = true
+    end,
+    command = function()
+      if not timer then
+        return
+      end
+      vim.wo.cursorlineopt = "number"
+      timer:start(
+        1000, -- default timeout
+        0, vim.schedule_wrap(function() vim.wo.cursorlineopt = "both" end)
+      )
+    end,
+  }
 })
 
-command.augroup("YankText", {
+command.augroup("user_yank_text", {
   {
     desc = "Save cursor position whenever it moves",
     event = { "VimEnter", "CursorMoved" },

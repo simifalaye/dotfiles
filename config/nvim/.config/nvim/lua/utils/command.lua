@@ -11,6 +11,7 @@ local function validate_autocmd(name, cmd)
     "group",
     "once",
     "nested",
+    "set",
   }
   local incorrect = _G.fold(function(accum, _, key)
     if not vim.tbl_contains(keys, key) then
@@ -40,6 +41,9 @@ M.augroup = function(name, commands)
   local id = vim.api.nvim_create_augroup(name, { clear = true })
   for _, autocmd in ipairs(commands) do
     validate_autocmd(name, autocmd)
+    if autocmd.set and type(autocmd.set) == "function" then
+      autocmd.set()
+    end
     local is_callback = type(autocmd.command) == "function"
     vim.api.nvim_create_autocmd(autocmd.event, {
       group = name,

@@ -67,9 +67,7 @@ return {
             node_decremental = "<bs>",
           },
         },
-        autotag = {
-          enable = true,
-        },
+        autotag = { enable = true },
       })
 
       -- Enable treesitter folding

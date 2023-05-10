@@ -14,7 +14,7 @@ return {
     },
     init = function()
       vim.g.neo_tree_remove_legacy_commands = true
-      require("utils.command").augroup("neotree_start", {
+      require("utils.command").augroup("user_neotree_start", {
         {
           desc = "Start neo-tree when no commands are provided",
           event = "VimEnter",
