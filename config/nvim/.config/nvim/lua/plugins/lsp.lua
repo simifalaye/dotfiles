@@ -1,7 +1,6 @@
 local keymaps = function(client, bufnr)
   local m = require("utils.map")
   local o = { buffer = bufnr }
-  local ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
 
   m.nnoremap("[d", vim.diagnostic.goto_prev, "Goto prev diag (LSP)", o)
   m.nnoremap("]d", vim.diagnostic.goto_next, "Goto next diag (LSP)", o)
@@ -13,24 +12,20 @@ local keymaps = function(client, bufnr)
   m.nnoremap("gr", vim.lsp.buf.references, "Goto ref (LSP)", o)
   m.nnoremap("K", vim.lsp.buf.hover, "Hover (LSP)", o)
 
-  m.group("<leader>l", "+lsp", { "n", "v" })
   m.noremap(
     { "n", "x" },
-    "<leader>la",
+    "<localleader>a",
     vim.lsp.buf.code_action,
     "Code action",
     o
   )
-  m.nnoremap("<leader>ld", vim.diagnostic.open_float, "Diagnostics", o)
+  m.nnoremap("<localleader>d", vim.diagnostic.open_float, "Diagnostic line (LSP)", o)
   if client.server_capabilities.documentFormattingProvider then
-    m.nnoremap("<leader>lf", vim.lsp.buf.format, "Format", o)
+    m.nnoremap("<localleader>f", vim.lsp.buf.format, "Format (LSP)", o)
   end
-  m.nnoremap("<leader>lr", vim.lsp.buf.rename, "Rename", o)
-  if ft == "c" or ft == "cpp" then
-    m.nnoremap("<leader>ls", "<cmd>ClangdSwitchSourceHeader<CR>", "Goto alt", o)
-  end
+  m.nnoremap("<localleader>r", vim.lsp.buf.rename, "Rename (LSP)", o)
   if client.server_capabilities.type_definition then
-    m.nnoremap("<leader>lt", vim.lsp.buf.type_definition, "Goto type", o)
+    m.nnoremap("<localleader>t", vim.lsp.buf.type_definition, "Goto type (LSP)", o)
   end
 end
 
@@ -163,8 +158,8 @@ return {
               "clangd",
               "--background-index",
               "--suggest-missing-includes",
-              "--header-insertion",
-              "iwyu",
+              "--header-insertion=iwyu",
+              "--offset-encoding=utf-16",
             },
           }
           opts = vim.tbl_deep_extend("force", default_opts, opts)

@@ -10,54 +10,40 @@ return {
   cmd = "Telescope",
   keys = function()
     return {
-      { "<C-f>", "<cmd>Telescope live_grep<CR>", desc = "Find Text" },
-      { "<C-p>", "<cmd>Telescope find_files<CR>", desc = "Find Files" },
-      { "<C-space>", "<cmd>Telescope buffers<CR>", desc = "Find Buffer" },
-      { "<leader>.", "<cmd>Telescope resume<CR>", desc = "Find Resume" },
-      { "<leader>,", "<cmd>Telescope builtin<CR>", desc = "Find Builtin" },
-      { "<leader>'", "<cmd>Telescope oldfiles<CR>", desc = "Find Recent" },
-      { "<leader>;", "<cmd>Telescope help_tags<CR>", desc = "Find Help" },
+      -- Leader
+      { "<leader>,", "<cmd>Telescope builtin<CR>", desc = "Picker Builtin" },
+      { "<leader>.", "<cmd>Telescope resume<CR>", desc = "Resume picker" },
+      { "<leader>:", "<cmd>Telescope command_history<CR>", desc = "Cmd Hist", },
+      { "<leader>;", "<cmd>Telescope oldfiles<CR>", desc = "Recent Files" },
+      { "<leader>/", "<cmd>Telescope live_grep<CR>", desc = "Global Search" },
+      { "<leader>b", "<cmd>Telescope buffers<CR>", desc = "Buffers" },
+      { "<leader>f", "<cmd>Telescope find_files<CR>", desc = "Files" },
+      { "<leader>F", "<cmd>Telescope git_files<CR>", desc = "Git Files" },
+      -- Search
+      { "<leader>s'", "<cmd>Telescope marks<CR>", desc = "Marks" },
+      { '<leader>s"', "<cmd>Telescope registers<CR>", desc = "Registers" },
+      { "<leader>sc", "<cmd>Telescope commands<CR>", desc = "Commands" },
+      { "<leader>sd", "<cmd>Telescope diagnostics<CR>", desc = "Diagnostics (LSP)" },
       {
-        "<leader>:",
-        "<cmd>Telescope command_history<CR>",
-        desc = "Find Hist (cmd)",
-      },
-      {
-        "<leader>/",
-        "<cmd>Telescope search_history<CR>",
-        desc = "Find Hist (search)",
-      },
-      { "<leader>f'", "<cmd>Telescope marks<CR>", desc = "Marks" },
-      { '<leader>f"', "<cmd>Telescope registers<CR>", desc = "Registers" },
-      { "<leader>fc", "<cmd>Telescope commands<CR>", desc = "Commands" },
-      {
-        "<leader>ff",
+        "<leader>sf",
         "<cmd>Telescope find_files no_ignore=true<CR>",
         desc = "Files (All)",
       },
-      { "<leader>fg", "<cmd>Telescope grep_string<CR>", desc = "Grep Word" },
-      { "<leader>fk", "<cmd>Telescope keymaps<CR>", desc = "Keymaps" },
-      { "<leader>fm", "<cmd>Telescope man_pages<CR>", desc = "Man Pages" },
-      -- Git
-      { "<leader>fgb", "<cmd>Telescope git_branches<CR>", desc = "Branches" },
-      { "<leader>fgc", "<cmd>Telescope git_commits<CR>", desc = "Commits" },
-      { "<leader>fgC", "<cmd>Telescope git_bcommits<CR>", desc = "BCommits" },
-      { "<leader>fgf", "<cmd>Telescope git_files<CR>", desc = "Files" },
-      { "<leader>fgs", "<cmd>Telescope git_status<CR>", desc = "Status" },
-      -- Lsp
-      { "<leader>fld", "<cmd>Telescope diagnostics<CR>", desc = "Diagnostics" },
+      { "<leader>sh", "<cmd>Telescope help_tags<CR>", desc = "Help" },
+      { "<leader>sk", "<cmd>Telescope keymaps<CR>", desc = "Keymaps" },
+      { "<leader>sm", "<cmd>Telescope man_pages<CR>", desc = "Man Pages" },
+      { "<leader>sr", "<cmd>Telescope oldfiles only_cwd=true<CR>", desc = "Recent" },
       {
-        "<leader>fls",
+        "<leader>ss",
         "<cmd>Telescope lsp_document_symbols<CR>",
-        desc = "Symbols",
+        desc = "Symbols (LSP)",
       },
+      { "<leader>sz", "<cmd>Telescope spell_suggest<CR>", desc = "Spell" },
     }
   end,
   init = function()
     local m = require("utils.map")
-    m.group("<leader>f", "+find")
-    m.group("<leader>fg", "+git")
-    m.group("<leader>fl", "+lsp")
+    m.group("<leader>s", "+search")
   end,
   config = function()
     local telescope = require("telescope")
