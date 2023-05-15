@@ -18,7 +18,6 @@
 - include_tasks: delta.yml
 - include_tasks: exa.yml
 - include_tasks: neovim.yml
-- include_tasks: zk.yml
 - include_tasks: zoxide.yml
 - include_tasks: common-gui.yml
   when: desktop_env.stdout is defined and desktop_env.stdout != ""

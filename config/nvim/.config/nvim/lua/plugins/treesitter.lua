@@ -21,7 +21,6 @@ return {
         ignore_install = { "perl" },
         highlight = {
           enable = true,
-          additional_vim_regex_highlighting = { "markdown" },
         },
         textobjects = {
           lookahead = true,
@@ -71,10 +70,9 @@ return {
       })
 
       -- Enable treesitter folding
-      vim.opt.foldenable = true
+      vim.opt.foldenable = false -- disable at startup
       vim.opt.foldmethod = "expr" -- use expression folding
       vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-      vim.opt.foldlevel = 20
     end,
   },
 }

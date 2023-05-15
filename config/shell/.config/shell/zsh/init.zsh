@@ -29,7 +29,6 @@ xsh module -s bash ripgrep interactive
 xsh module -s bash tmux interactive
 xsh module -s bash trash interactive:logout
 xsh module -s bash wsl login
-xsh module -s bash zk interactive
 xsh module -s bash zoxide interactive:login
 
 # Load the completion system and define core ZLE widgets and bindings.

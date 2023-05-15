@@ -9,8 +9,8 @@ return {
     },
     cmd = { "Neotree" },
     keys = {
-      { "-", "<cmd>Neotree toggle<CR>", desc = "Explorer" },
-      { "_", "<cmd>Neotree reveal<CR>", desc = "Open file in explorer" },
+      { "<C-n>", "<cmd>Neotree toggle<CR>", desc = "Explorer" },
+      { "<C-f>", "<cmd>Neotree reveal<CR>", desc = "Open file in explorer" },
     },
     init = function()
       vim.g.neo_tree_remove_legacy_commands = true
@@ -84,14 +84,6 @@ return {
         },
         hide_by_pattern = {
           "*.o",
-        },
-      },
-      default_component_configs = {
-        indent = {
-          with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
-          expander_collapsed = "",
-          expander_expanded = "",
-          expander_highlight = "NeoTreeExpander",
         },
       },
     },

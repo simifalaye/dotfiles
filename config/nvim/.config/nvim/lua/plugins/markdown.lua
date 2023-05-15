@@ -11,4 +11,14 @@ return {
       }
     end
   },
+  {
+    "jakewvincent/mkdnflow.nvim",
+    ft = "markdown",
+    opts = {
+      mappings = {
+        MkdnNewListItem = {'i', '<M-CR>'},
+        MkdnTablePrevRow = false,
+      }
+    },
+  }
 }
