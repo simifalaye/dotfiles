@@ -89,7 +89,7 @@ return {
           hidden = true,
         },
         buffers = {
-          sort_lastused = true,
+          sort_mru = true,
           previewer = false,
           mappings = {
             i = {
