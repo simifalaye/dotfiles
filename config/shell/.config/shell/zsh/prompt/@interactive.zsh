@@ -1,6 +1,6 @@
 # shellcheck shell=zsh
 
-if ! is_callable; then
+if ! is_callable starship; then
     curl -sS https://starship.rs/install.sh | sh
 fi
 
