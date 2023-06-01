@@ -50,6 +50,7 @@ Thumbs.db
 *.lock
 .tags
 .ccls
+.clangd
 .classpath
 .cproject
 .project

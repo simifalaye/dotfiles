@@ -82,13 +82,19 @@ return {
             ["<C-j>"] = actions.cycle_history_next,
             ["<C-k>"] = actions.cycle_history_prev,
           },
+          n = { q = actions.close },
         },
       },
       pickers = {
         find_files = {
           hidden = true,
         },
+        live_grep = {
+          -- don't include the filename in the search results
+          only_sort_text = true,
+        },
         buffers = {
+          initial_mode = "normal",
           sort_mru = true,
           previewer = false,
           mappings = {
@@ -99,10 +105,6 @@ return {
               ["dd"] = actions.delete_buffer,
             },
           },
-        },
-        git_files = {
-          hidden = true,
-          show_untracked = true,
         },
         colorscheme = {
           enable_preview = true,

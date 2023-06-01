@@ -48,6 +48,8 @@ return {
           documentation = cmp.config.window.bordered(border_opts),
         },
         mapping = {
+          ["<Up>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Select },
+          ["<Down>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Select },
           ["<C-p>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Insert },
           ["<C-n>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Insert },
           ["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),

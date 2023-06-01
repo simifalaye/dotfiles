@@ -161,8 +161,12 @@ api.nvim_create_user_command("OpenLink", function(opt)
   if
     fn.isdirectory(path) > 0 -- directory
     or fn.filereadable(path) > 0 -- file
-    or path:match("http[s]?://") -- link
   then
+    if _G.is_wsl then
+      path = vim.fn.system("wslpath -w " .. path)
+    end
+    return open(path)
+  elseif path:match("http[s]?://") then -- link
     return open(path)
   end
 

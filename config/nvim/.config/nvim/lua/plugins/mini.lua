@@ -2,7 +2,7 @@ return {
   {
     "echasnovski/mini.indentscope",
     version = "*",
-    event = "BufRead",
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       local indentscope = require("mini.indentscope")
       indentscope.setup({
@@ -56,7 +56,7 @@ return {
   {
     "echasnovski/mini.bracketed",
     version = false,
-    lazy = false,
+    event = "BufRead",
     config = function ()
       require("mini.bracketed").setup()
     end

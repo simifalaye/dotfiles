@@ -18,6 +18,8 @@ return {
       mappings = {
         MkdnNewListItem = {'i', '<M-CR>'},
         MkdnTablePrevRow = false,
+        MkdnIncreaseHeading = {'n', '<leader>+'},
+        MkdnDecreaseHeading = {'n', '<leader>-'},
       }
     },
   }

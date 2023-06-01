@@ -4,7 +4,12 @@ return {
     event = "InsertEnter",
     opts = {
       check_ts = true,
-      ts_config = { java = false },
+      ts_config = {
+        lua = { "string", "source" },
+        javascript = { "string", "template_string" },
+        java = false,
+      },
+      ignored_next_char = string.gsub([[ [%w%%%'%[%"%.] ]], "%s+", ""),
       fast_wrap = {
         map = "<M-e>",
         chars = { "{", "[", "(", '"', "'" },
