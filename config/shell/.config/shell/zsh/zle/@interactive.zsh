@@ -41,14 +41,14 @@ function zle-line-init() {
     # Enables term app mode so $terminfo values are valid
     (( ${+terminfo[smkx]} )) && echoti smkx
 }
-zle -N zle-line-init
+zle -A zle-line-init zle-line-init
 
 # Runs on zle finish
 function zle-line-finish() {
     # Disables term app mode so apps behave properly
     (( ${+terminfo[rmkx]} )) && echoti rmkx
 }
-zle -N zle-line-finish
+zle -A zle-line-finish zle-line-finish
 
 
 # Toggle process as bg and fg
