@@ -21,8 +21,8 @@ return {
           event = "BufEnter",
           pattern = "*",
           command = "if index(['fzf', 'help'], &ft) >= 0 "
-            .. "|| index(['nofile', 'terminal'], &bt) >= 0 "
-            .. "| let b:miniindentscope_disable=v:true | endif",
+              .. "|| index(['nofile', 'terminal'], &bt) >= 0 "
+              .. "| let b:miniindentscope_disable=v:true | endif",
         },
       })
     end,
@@ -31,7 +31,7 @@ return {
     "echasnovski/mini.surround",
     version = "*",
     keys = {
-      { "sa", desc = "Surround add", mode = { "n", "x" } },
+      { "sa", desc = "Surround add",      mode = { "n", "x" } },
       { "sd", desc = "Surround delete" },
       { "sr", desc = "Surround replace" },
       { "sf", desc = "Surround find" },
@@ -57,8 +57,20 @@ return {
     "echasnovski/mini.bracketed",
     version = false,
     event = "BufRead",
-    config = function ()
+    config = function()
       require("mini.bracketed").setup()
-    end
+    end,
   },
+  {
+    'echasnovski/mini.bufremove',
+    version = false,
+    event = "BufRead",
+    keys = {
+      { "<leader>x", "<cmd>lua MiniBufremove.delete()<CR>",  desc = "Delete Buffer" },
+      { "<leader>X", "<cmd>lua MiniBufremove.wipeout()<CR>", desc = "Wipe Buffer" },
+    },
+    config = function()
+      require("mini.bufremove").setup()
+    end,
+  }
 }

@@ -25,8 +25,9 @@ m.noremap(
   "Save buffer"
 )
 
--- Normal mode
---------------
+--------------------------------------------------------------------------------
+--  Normal mode
+--------------------------------------------------------------------------------
 
 -- Remaps
 m.nnoremap("<Esc>", ":noh<CR><Esc>")
@@ -85,8 +86,8 @@ m.nnoremap("<leader>pc", ":Lazy clean<CR>", "Clean")
 m.nnoremap("<leader>ph", ":Lazy health<CR>", "Health")
 m.nnoremap("<leader>pi", ":Lazy install<CR>", "Install")
 m.nnoremap("<leader>ps", ":Lazy sync<CR>", "Sync")
-m.nnoremap("<leader>x", ":BufDel<CR>", "Exit buffer")
-m.nnoremap("<leader>X", ":BufWipe<CR>", "Wipe buffer")
+m.nnoremap("<leader>x", ":bd<CR>", "Delete Buffer")
+m.nnoremap("<leader>X", ":bw<CR>", "Wipe Buffer")
 
 -- Visual/select/operator mode
 ------------------------------
