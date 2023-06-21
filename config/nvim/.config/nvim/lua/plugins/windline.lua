@@ -2,6 +2,22 @@ return {
   {
     "windwp/windline.nvim",
     event = "VeryLazy",
+    init = function()
+      require("utils.command").augroup("user_statusline_search_count", {
+        {
+          desc = "hello",
+          event = { "CursorMoved", "CursorMovedI" },
+          pattern = "*",
+          -- Function to update the search count
+          command = function()
+            if vim.v.hlsearch == 1 then
+              vim.fn.searchcount({ recompute = 1, maxcount = 0, timeout = 100 })
+              vim.api.nvim_command("redrawstatus")
+            end
+          end,
+        },
+      })
+    end,
     config = function()
       local windline = require("windline")
       local explorer = {
@@ -17,7 +33,7 @@ return {
 
       windline.setup({
         statuslines = {
-          require('wlsample.vscode'),
+          require("wlsample.vscode"),
           explorer,
         },
       })

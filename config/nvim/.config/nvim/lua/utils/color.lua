@@ -3,6 +3,7 @@ local M = {}
 local function hl_by_name(name)
   return string.format(
     "#%06x",
+    ---@diagnostic disable-next-line: undefined-field
     vim.api.nvim_get_hl_by_name(name.group, true)[name.prop]
   )
 end

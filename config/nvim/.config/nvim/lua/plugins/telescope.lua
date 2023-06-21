@@ -11,32 +11,90 @@ return {
   keys = function()
     return {
       -- Leader
-      { "<leader>,", "<cmd>Telescope builtin<CR>", desc = "Picker Builtin" },
-      { "<leader>.", "<cmd>Telescope resume<CR>", desc = "Resume picker" },
-      { "<leader>:", "<cmd>Telescope command_history<CR>", desc = "Cmd Hist", },
-      { "<leader>;", "<cmd>Telescope oldfiles<CR>", desc = "Recent Files" },
-      { "<leader>/", "<cmd>Telescope live_grep<CR>", desc = "Global Search" },
+      {
+        "<leader>,",
+        "<cmd>Telescope builtin<CR>",
+        desc = "Picker Builtin",
+      },
+      {
+        "<leader>.",
+        "<cmd>Telescope resume<CR>",
+        desc = "Resume picker",
+      },
+      {
+        "<leader>:",
+        "<cmd>Telescope command_history<CR>",
+        desc = "Cmd Hist",
+      },
+      {
+        "<leader>;",
+        "<cmd>Telescope oldfiles<CR>",
+        desc = "Recent Files",
+      },
+      {
+        "<leader>/",
+        "<cmd>Telescope live_grep<CR>",
+        desc = "Global Search",
+      },
       { "<leader>b", "<cmd>Telescope buffers<CR>", desc = "Buffers" },
       { "<leader>f", "<cmd>Telescope find_files<CR>", desc = "Files" },
-      { "<leader>F", "<cmd>Telescope git_files<CR>", desc = "Git Files" },
+      -- Git
+      { "<leader>gb", "<cmd>Telescope git_branches<CR>", desc = "Branches" },
+      {
+        "<leader>gc",
+        "<cmd>Telescope git_bcommits<CR>",
+        desc = "Commits (buf)",
+      },
+      {
+        "<leader>gC",
+        "<cmd>Telescope git_commits<CR>",
+        desc = "Commits (repo)",
+      },
+      { "<leader>gf", "<cmd>Telescope git_files<CR>", desc = "Files" },
+      { "<leader>gs", "<cmd>Telescope git_status<CR>", desc = "Status" },
+      { "<leader>gS", "<cmd>Telescope git_stash<CR>", desc = "Stash" },
       -- Search
       { "<leader>s'", "<cmd>Telescope marks<CR>", desc = "Marks" },
-      { '<leader>s"', "<cmd>Telescope registers<CR>", desc = "Registers" },
+      {
+        '<leader>s"',
+        "<cmd>Telescope registers<CR>",
+        desc = "Registers",
+      },
       { "<leader>sc", "<cmd>Telescope commands<CR>", desc = "Commands" },
-      { "<leader>sd", "<cmd>Telescope diagnostics<CR>", desc = "Diagnostics (LSP)" },
+      {
+        "<leader>sd",
+        "<cmd>Telescope diagnostics<CR>",
+        desc = "LSP: Diagnostics",
+      },
       {
         "<leader>sf",
         "<cmd>Telescope find_files no_ignore=true<CR>",
         desc = "Files (All)",
       },
-      { "<leader>sh", "<cmd>Telescope help_tags<CR>", desc = "Help" },
-      { "<leader>sk", "<cmd>Telescope keymaps<CR>", desc = "Keymaps" },
-      { "<leader>sm", "<cmd>Telescope man_pages<CR>", desc = "Man Pages" },
-      { "<leader>sr", "<cmd>Telescope oldfiles only_cwd=true<CR>", desc = "Recent" },
+      {
+        "<leader>sh",
+        "<cmd>Telescope help_tags<CR>",
+        desc = "Help",
+      },
+      {
+        "<leader>sk",
+        "<cmd>Telescope keymaps<CR>",
+        desc = "Keymaps",
+      },
+      {
+        "<leader>sm",
+        "<cmd>Telescope man_pages<CR>",
+        desc = "Man Pages",
+      },
+      {
+        "<leader>sr",
+        "<cmd>Telescope oldfiles only_cwd=true<CR>",
+        desc = "Recent",
+      },
       {
         "<leader>ss",
         "<cmd>Telescope lsp_document_symbols<CR>",
-        desc = "Symbols (LSP)",
+        desc = "LSP: Symbols",
       },
       { "<leader>sz", "<cmd>Telescope spell_suggest<CR>", desc = "Spell" },
     }

@@ -6,7 +6,7 @@ return {
     },
     config = function()
       require("osc52").setup({
-        silent = false
+        silent = false,
       })
       local m = require("utils.map")
       local osc52 = require("osc52")

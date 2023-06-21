@@ -75,3 +75,4 @@ htmlcov/
 .vscode/
 .clangd/
 .ccls*/
+.include/

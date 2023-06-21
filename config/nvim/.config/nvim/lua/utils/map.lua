@@ -1,4 +1,5 @@
-local log = require("utils.log")
+local prequire = require("utils.prequire")
+local utils = require("utils")
 
 local M = {}
 
@@ -22,7 +23,10 @@ local function make_mapper(mode, o)
       opts.desc = desc
     end
     vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("keep", opts, parent_opts))
-    log.debug("Keymap {%s, %s, %s}", mode, lhs, rhs)
+    utils.notify(
+      string.format("Keymap {%s, %s, %s}", mode, lhs, rhs),
+      vim.log.levels.DEBUG
+    )
   end
 end
 
@@ -78,17 +82,17 @@ M.group = function(prefix, name, mode)
   if not prefix or not name then
     return
   end
-  local wk = _G.prequire("which-key")
+  local wk = prequire("which-key")
   if wk then
     if type(mode) == "nil" then
-      mode = {"n"}
+      mode = { "n" }
     elseif type(mode) == "string" then
-      mode = {mode}
+      mode = { mode }
     end
     for _, v in pairs(mode) do
       wk.register({ [prefix] = { name = name, mode = v } })
     end
-    log.debug("Key Group {%s, %s}", prefix, name)
+    utils.notify(string.format("Key Group {%s, %s}", prefix, name), vim.log.levels.DEBUG)
   end
 end
 

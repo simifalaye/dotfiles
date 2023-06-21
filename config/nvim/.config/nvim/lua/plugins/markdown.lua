@@ -5,22 +5,22 @@ return {
       vim.fn["mkdp#util#install"]()
     end,
     ft = "markdown",
-    config = function ()
+    config = function()
       vim.g.mkdp_preview_options = {
-        disable_sync_scroll = true
+        disable_sync_scroll = true,
       }
-    end
+    end,
   },
   {
     "jakewvincent/mkdnflow.nvim",
     ft = "markdown",
     opts = {
       mappings = {
-        MkdnNewListItem = {'i', '<M-CR>'},
+        MkdnNewListItem = { "i", "<M-CR>" },
         MkdnTablePrevRow = false,
-        MkdnIncreaseHeading = {'n', '<leader>+'},
-        MkdnDecreaseHeading = {'n', '<leader>-'},
-      }
+        MkdnIncreaseHeading = { "n", "<leader>+" },
+        MkdnDecreaseHeading = { "n", "<leader>-" },
+      },
     },
-  }
+  },
 }

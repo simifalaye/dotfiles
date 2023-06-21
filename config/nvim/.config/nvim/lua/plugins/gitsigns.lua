@@ -7,65 +7,36 @@ return {
     cmd = { "Gitsigns" },
     keys = {
       {
-        "ih",
+        "ig",
         ":<C-U>Gitsigns select_hunk<CR>",
         mode = { "o", "x" },
         desc = "In hunk",
       },
+      { "]g", "<cmd>Gitsigns next_hunk<CR>", desc = "Next git hunk" },
+      { "[g", "<cmd>Gitsigns prev_hunk<CR>", desc = "Prev git hunk" },
+      { "<leader>gd", "<cmd>Gitsigns diffthis<CR>", desc = "Diff" },
+      { "<leader>gD", "<cmd>Gitsigns diffthis ~<CR>", desc = "Diff HEAD" },
       {
-        "]h",
-        function()
-          if vim.wo.diff then
-            return "]h"
-          end
-          vim.schedule(function()
-            require("gitsigns").next_hunk()
-          end)
-          return "<Ignore>"
-        end,
-        desc = "Next hunk",
-        expr = true,
-      },
-      {
-        "[h",
-        function()
-          if vim.wo.diff then
-            return "[h"
-          end
-          vim.schedule(function()
-            require("gitsigns").prev_hunk()
-          end)
-          return "<Ignore>"
-        end,
-        desc = "Prev hunk",
-        expr = true,
-      },
-      {
-        "<leader>hb",
+        "<leader>gl",
         "<cmd>Gitsigns blame_line full=true<CR>",
         desc = "Blame line",
       },
-      { "<leader>hd", "<cmd>Gitsigns diffthis<CR>", desc = "Diff" },
-      { "<leader>hD", "<cmd>Gitsigns diffthis ~<CR>", desc = "Diff HEAD" },
-      { "<leader>hp", "<cmd>Gitsigns preview_hunk<CR>", desc = "Preview" },
-      { "<leader>hr", "<cmd>Gitsigns reset_hunk<CR>", desc = "Reset Hunk" },
-      { "<leader>hR", "<cmd>Gitsigns reset_buffer<CR>", desc = "Reset Buff" },
-      { "<leader>hS", "<cmd>Gitsigns stage_buffer<CR>", desc = "Stage Buff" },
+      { "<leader>gp", "<cmd>Gitsigns preview_hunk<CR>", desc = "Preview hunk" },
+      { "<leader>gr", "<cmd>Gitsigns reset_hunk<CR>", desc = "Reset hunk" },
+      { "<leader>gR", "<cmd>Gitsigns reset_buffer<CR>", desc = "Reset Buff" },
       {
-        "<leader>ht",
+        "<leader>gt",
         "<cmd>Gitsigns toggle_current_line_blame<CR>",
         desc = "Toggle blame",
       },
       {
-        "<leader>hu",
+        "<leader>gu",
         "<cmd>Gitsigns undo_stage_hunk<CR>",
-        desc = "Undo Stage",
+        desc = "Undo htage",
       },
+      { "<leader>gw", "<cmd>Gitsigns stage_hunk<CR>", desc = "Stage hunk" },
+      { "<leader>gW", "<cmd>Gitsigns stage_buffer<CR>", desc = "Stage huff" },
     },
-    init = function()
-      local m = require("utils.map")
-      m.group("<leader>h", "+hunk", { "n", "v" })
-    end,
     opts = {},
   },
 }

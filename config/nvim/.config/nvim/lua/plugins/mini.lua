@@ -20,9 +20,31 @@ return {
           desc = "Highlight window when focused",
           event = "BufEnter",
           pattern = "*",
-          command = "if index(['fzf', 'help'], &ft) >= 0 "
-              .. "|| index(['nofile', 'terminal'], &bt) >= 0 "
-              .. "| let b:miniindentscope_disable=v:true | endif",
+          set = function()
+            vim.g.user_indent_scope_ft_disable = {
+              "help",
+              "startify",
+              "aerial",
+              "alpha",
+              "dashboard",
+              "lazy",
+              "neogitstatus",
+              "NvimTree",
+              "neo-tree",
+              "Trouble",
+              "ranger",
+              "rnvimr",
+            }
+            vim.g.user_indent_scope_bt_disable = { "nofile", "terminal" }
+          end,
+          command = function()
+            if
+              vim.tbl_contains(vim.g.user_indent_scope_ft_disable, vim.bo.ft)
+              or vim.tbl_contains(vim.g.user_indent_scope_bt_disable, vim.bo.bt)
+            then
+              vim.b.miniindentscope_disable = true
+            end
+          end,
         },
       })
     end,
@@ -31,7 +53,7 @@ return {
     "echasnovski/mini.surround",
     version = "*",
     keys = {
-      { "sa", desc = "Surround add",      mode = { "n", "x" } },
+      { "sa", desc = "Surround add", mode = { "n", "x" } },
       { "sd", desc = "Surround delete" },
       { "sr", desc = "Surround replace" },
       { "sf", desc = "Surround find" },
@@ -55,22 +77,30 @@ return {
   },
   {
     "echasnovski/mini.bracketed",
-    version = false,
+    version = "*",
     event = "BufRead",
     config = function()
       require("mini.bracketed").setup()
     end,
   },
   {
-    'echasnovski/mini.bufremove',
-    version = false,
+    "echasnovski/mini.bufremove",
+    version = "*",
     event = "BufRead",
     keys = {
-      { "<leader>x", "<cmd>lua MiniBufremove.delete()<CR>",  desc = "Delete Buffer" },
-      { "<leader>X", "<cmd>lua MiniBufremove.wipeout()<CR>", desc = "Wipe Buffer" },
+      {
+        "<leader>x",
+        "<cmd>lua MiniBufremove.delete()<CR>",
+        desc = "Delete Buffer",
+      },
+      {
+        "<leader>X",
+        "<cmd>lua MiniBufremove.wipeout()<CR>",
+        desc = "Wipe Buffer",
+      },
     },
     config = function()
       require("mini.bufremove").setup()
     end,
-  }
+  },
 }

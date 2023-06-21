@@ -1,5 +1,6 @@
+local utils = require("utils")
+
 local M = {}
-local log = require("utils.log")
 
 local function validate_autocmd(name, cmd)
   local keys = {
@@ -13,7 +14,7 @@ local function validate_autocmd(name, cmd)
     "nested",
     "set",
   }
-  local incorrect = _G.fold(function(accum, _, key)
+  local incorrect = utils.fold(function(accum, _, key)
     if not vim.tbl_contains(keys, key) then
       table.insert(accum, key)
     end
@@ -23,14 +24,39 @@ local function validate_autocmd(name, cmd)
     return
   end
   vim.schedule(function()
-    log.error("Autocmd: %s: Incorrect keys: %s", name, table.concat(incorrect, ", ")
+    utils.notify(
+      string.format(
+        "Autocmd: %s: Incorrect keys: %s",
+        name,
+        table.concat(incorrect, ", ")
+      ),
+      vim.log.levels.ERROR
     )
   end)
 end
 
+---@class AutocmdArgs
+---@field id number autocmd ID
+---@field event string
+---@field group string?
+---@field buf number
+---@field file string
+---@field match string | number
+---@field data any
+
+---@class Autocommand
+---@field desc string
+---@field event  string | string[] list of autocommand events
+---@field pattern string | string[] list of autocommand patterns
+---@field command string | fun(args: AutocmdArgs): boolean?
+---@field nested  boolean
+---@field once    boolean
+---@field buffer  number
+---@field set fun() function to run when creating the autocmd
+
 --- Create an augroup with a list of autocommands
 ---@param name string
----@param commands table
+---@param commands Autocommand[]
 ---@return integer
 M.augroup = function(name, commands)
   assert(name ~= "User", "The name of an augroup CANNOT be User")
@@ -57,6 +83,20 @@ M.augroup = function(name, commands)
     })
   end
   return id
+end
+
+--- @class CommandArgs
+--- @field args string
+--- @field fargs table
+--- @field bang boolean
+
+--- Create an nvim command
+---@param name string
+---@param rhs string | fun(args: CommandArgs)
+---@param opts table?
+M.command = function(name, rhs, opts)
+  opts = opts or {}
+  vim.api.nvim_create_user_command(name, rhs, opts)
 end
 
 return M

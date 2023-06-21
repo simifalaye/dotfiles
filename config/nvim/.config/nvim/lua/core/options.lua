@@ -1,87 +1,73 @@
----@diagnostic disable: assign-type-mismatch
-local o = vim.opt
-local g = vim.g
+local utils = require("utils")
 
--- Map leader
-g.mapleader = " "
-g.maplocalleader = "\\"
-
--- Misc
-o.clipboard = ""
-o.encoding = "utf-8"
-o.matchpairs = { "(:)", "{:}", "[:]", "<:>" }
-o.syntax = "enable"
-
--- Indention
-o.autoindent = true
-o.expandtab = true
-o.shiftwidth = 2
-o.shiftround = true
-o.smartindent = true
-o.softtabstop = 2
-o.tabstop = 2
-
--- Search
-o.hlsearch = true
-o.incsearch = true
-o.ignorecase = true
-o.infercase = true
-o.smartcase = true
-o.wildignore = o.wildignore
-  + { "*/node_modules/*", "*/.git/*", "*/vendor/*" }
-o.wildmenu = true
-
--- Ui
-o.cmdheight = 0
-o.laststatus = 3 -- global statusline
-o.list = true
-o.listchars = {
-  tab = "»·",
-  nbsp = "+",
-  trail = "·",
-  extends = "→",
-  precedes = "←",
-  eol = nil,
-}
-o.mouse = "a"
-o.number = true
-o.relativenumber = true
-o.scrolloff = 10
-o.sidescrolloff = 10 -- Lines to scroll horizontally
-o.showmode = false
-o.signcolumn = "yes"
-o.splitbelow = true -- Open new split below
-o.splitright = true -- Open new split to the right
-o.wrap = false
-o.showbreak = [[↪ ]] -- Options include -> '…', '↳ ', '→','↪ '
-o.termguicolors = true
-o.conceallevel = 3 -- Hide * markup for bold/italic
-
--- Backups
-o.backup = false
-o.writebackup = false
-o.swapfile = false
-o.undofile = true
-if vim.fn.isdirectory(vim.o.undodir) == 0 then
-  vim.fn.mkdir(vim.o.undodir, "p")
+vim.opt.viewoptions:remove("curdir") -- disable saving current directory with views
+vim.opt.shortmess:append({ I = true, S = true }) -- disable startup message
+vim.opt.backspace:append({ "nostop" }) -- Don't stop backspace at insert
+if vim.fn.has("nvim-0.9") == 1 then
+  vim.opt.diffopt:append("linematch:60") -- enable linematch diff algorithm
 end
 
--- Autocomplete
-o.completeopt = { "menu", "menuone", "noselect" }
-o.shortmess = o.shortmess + { c = true, I = true }
+local options = {
+  opt = {
+    breakindent = true, -- Wrap indent to match  line start
+    clipboard = "unnamedplus", -- Connection to the system clipboard
+    cmdheight = 0, -- hide command line unless needed
+    completeopt = { "menu", "menuone", "noselect" }, -- Options for insert mode completion
+    copyindent = true, -- Copy the previous indentation on autoindenting
+    cursorline = true, -- Highlight the text line of the cursor
+    expandtab = true, -- Enable the use of space in tab
+    fileencoding = "utf-8", -- File content encoding for the buffer
+    fillchars = { eob = " " }, -- Disable `~` on nonexistent lines
+    foldenable = true, -- enable fold for nvim-ufo
+    foldlevel = 99, -- set high foldlevel
+    foldlevelstart = 99, -- start with all code unfolded
+    history = 100, -- Number of commands to remember in a history table
+    ignorecase = true, -- Case insensitive searching
+    infercase = true, -- Infer cases in keyword completion
+    laststatus = 3, -- globalstatus
+    linebreak = true, -- Wrap lines at 'breakat'
+    mouse = "a", -- Enable mouse support
+    number = true, -- Show numberline
+    preserveindent = true, -- Preserve indent structure as much as possible
+    pumheight = 10, -- Height of the pop up menu
+    relativenumber = true, -- Show relative numberline
+    scrolloff = 8, -- Number of lines to keep above and below the cursor
+    selection = "old", -- Don't select the newline symbol when using <End> on visual mode
+    shiftwidth = 2, -- Number of space inserted for indentation
+    showmode = false, -- Disable showing modes in command line
+    showtabline = 1, -- always display tabline (if there are 2 or more)
+    sidescrolloff = 8, -- Number of columns to keep at the sides of the cursor
+    signcolumn = "yes", -- Always show the sign column
+    smartcase = true, -- Case sensitivie searching
+    smartindent = true, -- Smarter autoindentation
+    splitbelow = true, -- Splitting a new window below the current one
+    splitright = true, -- Splitting a new window at the right of the current one
+    tabstop = 2, -- Number of space in a tab
+    termguicolors = true, -- Enable 24-bit RGB color in the TUI
+    timeoutlen = 500, -- Shorten key timeout length a little bit for which-key
+    undofile = true, -- Enable persistent undo
+    updatetime = 300, -- Length of time to wait before triggering the plugin
+    virtualedit = "block", -- allow going past end of line in visual block mode
+    wrap = false, -- Disable wrapping of lines longer than the width of window
+    writebackup = false, -- Disable making a backup before overwriting a file
+    swapfile = false, -- Ask what state to recover when opening a file that was not saved.
+    undodir = utils.join_paths(vim.fn.stdpath("data"), "undodir"), -- Chooses where to store the undodir
+    exrc = true, -- Allow local project config
+  },
+  g = {
+    mapleader = " ", -- set leader key
+    maplocalleader = "\\", -- set default local leader key
 
--- Perfomance
-o.timeoutlen = 300
-o.updatetime = 200
+    -- Custom user-specific global options
+    user_codelens_enabled = true, -- enable or disable automatic codelens refreshing for lsp that support it
+    user_diagnostics_mode = 3, -- set the visibility of diagnostics in the UI (0=off, 1=only show in status line, 2=virtual text off, 3=all on)
+    user_semantic_tokens_enabled = true, -- enable LSP semantic tokens on startup
+    user_notifications_enabled = true, -- disable notifications
+  },
+}
 
--- Filetype
-g.do_filetype_lua = 1 -- use filetype.lua when possible
-
--- Grep
-if vim.fn.executable("rg") > 0 then -- Use faster grep if available
-  vim.o.grepprg = [[rg --glob "!.git" --no-heading --vimgrep --follow $*]]
-  o.grepformat = o.grepformat ^ { '%f:%l:%c:%m' }
-elseif vim.fn.executable("fzf") > 0 then
-  vim.o.grepprg = [[ag --nogroup --nocolor --vimgrep]]
-  o.grepformat = o.grepformat ^ { '%f:%l:%c:%m' }
+for scope, table in pairs(options) do
+  for setting, value in pairs(table) do
+    vim[scope][setting] = value
+  end
 end

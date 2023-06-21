@@ -1,4 +1,5 @@
 local m = require("utils.map")
+local ui = require("utils.ui")
 
 -- Multi mode
 -------------
@@ -72,25 +73,44 @@ m.nnoremap(
   "Select last changed text",
   { expr = true }
 )
-m.nnoremap("gx", ":OpenLink<CR>", "Open link in browser")
+m.nnoremap("gx", ":SystemOpen<CR>", "Open link in browser")
 
 -- Toggle windows
 m.nnoremap("<F3>", ":ToggleList c<CR>", "Toggle Quickfix")
 m.nnoremap("<F4>", ":ToggleList l<CR>", "Toggle Loclist")
 
+-- Leader core groups
+m.group("<leader>g", "+git")
+m.group("<leader>p", "+plugin")
+m.group("<leader>s", "+search")
+m.group("<leader>u", "+ui")
+
 -- Leader
 m.nnoremap("<leader>!", ":! chmod +x %<CR>", "Make file executable")
-m.group("<leader>p", "+plugin")
 m.nnoremap("<leader>pp", ":Lazy<CR>", "Open")
 m.nnoremap("<leader>pc", ":Lazy clean<CR>", "Clean")
 m.nnoremap("<leader>ph", ":Lazy health<CR>", "Health")
 m.nnoremap("<leader>pi", ":Lazy install<CR>", "Install")
 m.nnoremap("<leader>ps", ":Lazy sync<CR>", "Sync")
+m.nnoremap("<leader>ud", ui.toggle_diagnostics, "Toggle diagnostics")
+m.nnoremap("<leader>uf", ui.toggle_foldcolumn, "Toggle foldcolumn")
+m.nnoremap("<leader>ug", ui.toggle_signcolumn, "Toggle signcolumn")
+m.nnoremap("<leader>ui", ui.set_indent, "Change indent setting")
+m.nnoremap("<leader>ul", ui.toggle_statusline, "Toggle statusline")
+m.nnoremap("<leader>uL", ui.toggle_codelens, "Toggle CodeLens")
+m.nnoremap("<leader>un", ui.change_number, "Change line numbering")
+m.nnoremap("<leader>uN", ui.toggle_notifications, "Toggle UI notifications")
+m.nnoremap("<leader>up", ui.toggle_paste, "Toggle paste mode")
+m.nnoremap("<leader>us", ui.toggle_spell, "Toggle spellcheck")
+m.nnoremap("<leader>uS", ui.toggle_conceal, "Toggle conceal")
+m.nnoremap("<leader>ut", ui.toggle_tabline, "Toggle tabline")
+m.nnoremap("<leader>uw", ui.toggle_wrap, "Toggle wrap")
 m.nnoremap("<leader>x", ":bd<CR>", "Delete Buffer")
 m.nnoremap("<leader>X", ":bw<CR>", "Wipe Buffer")
 
--- Visual/select/operator mode
-------------------------------
+--------------------------------------------------------------------------------
+--  Visual/select/operator mode
+--------------------------------------------------------------------------------
 
 -- Remaps
 m.vnoremap(".", ":norm.<CR>") -- visual dot repeat
@@ -100,7 +120,8 @@ m.vnoremap(">", ">gv")
 m.xnoremap("*", [[y/\V<C-R>=escape(@", '/\')<CR><CR>]]) -- visual search
 m.xnoremap("#", [[y?\V<C-R>=escape(@", '?\')<CR><CR>]]) -- visual search
 m.vnoremap("Q", ":norm @q<CR>", "Run Q silent", { silent = false })
-m.xnoremap("p", "pgvy") -- paste no copy
+m.xnoremap("p", "P") -- paste no copy
+m.xnoremap("P", "p") -- paste and copy
 vim.cmd([[
   function! ExecuteMacroOverVisualRange()
     echo "@".getcmdline()
@@ -122,8 +143,9 @@ m.onoremap("il", ":normal vil<CR>", "in line")
 m.onoremap("al", ":normal val<CR>", "a line")
 m.onoremap("ie", ":<C-u>normal! GVgg<CR>", "in entire")
 
--- Insert mode
---------------
+--------------------------------------------------------------------------------
+--  Insert mode
+--------------------------------------------------------------------------------
 
 -- Readline
 m.inoremap("<C-a>", "<C-o>^")
@@ -148,8 +170,9 @@ m.inoremap(
   { expr = true }
 )
 
--- Command mode
----------------
+--------------------------------------------------------------------------------
+--  Command mode
+--------------------------------------------------------------------------------
 
 -- Readline
 m.cnoremap("<c-x><c-a>", "<C-a>", "Expand globs")
@@ -157,10 +180,7 @@ m.cnoremap("<C-a>", "<Home>")
 m.cnoremap("<C-e>", "<End>")
 m.cnoremap("<C-b>", "<Left>")
 m.cnoremap("<C-d>", "<Del>")
-m.cnoremap(
-  "<C-k>",
-  [[<C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos() - 2]<CR>]]
-)
+m.cnoremap("<C-k>", [[<C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos() - 2]<CR>]])
 m.cnoremap(
   "<C-f>",
   [[getcmdpos()>strlen(getcmdline())?&cedit:"\<Lt>Right>"]],
@@ -182,8 +202,8 @@ m.cnoremap(
   { silent = false }
 )
 
--- Abbreviations
--- -------------
+--------------------------------------------------------------------------------
+--  Abbreviations
+--------------------------------------------------------------------------------
 
 vim.cmd('iab <expr> dts strftime("%F %b %T")')
-

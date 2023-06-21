@@ -16,7 +16,6 @@ return {
     },
     init = function()
       vim.g.neo_tree_remove_legacy_commands = true
-      _G.user_neotree_boot = false
       require("utils.command").augroup("user_neotree_start", {
         {
           desc = "Start neo-tree when no commands are provided",
@@ -44,7 +43,6 @@ return {
               end
             end
             if not should_skip then
-              _G.user_neotree_boot = true
               vim.cmd("Neotree position=current")
             end
           end,
@@ -59,30 +57,26 @@ return {
               and vim.fn.isdirectory(vim.fn.argv()[1]) == 1
               and vim.fn.exists("s:std_in") ~= 1
             then
-              _G.user_neotree_boot = true
               vim.cmd("Neotree position=current " .. vim.fn.argv()[1])
             end
           end,
         },
+        {
+          desc = "Unlist neotree buffer",
+          event = "FileType",
+          pattern = "neo-tree",
+          command = function ()
+            vim.opt_local.buflisted = false
+          end
+        }
       })
     end,
     opts = {
       auto_clean_after_session_restore = true,
       close_if_last_window = true,
-      sources = { "filesystem", "buffers", "git_status" },
-      source_selector = {
-        winbar = true,
-        content_layout = "center",
-        sources = {
-          { source = "filesystem", display_name = "File" },
-          { source = "buffers", display_name = "Bufs" },
-          { source = "git_status", display_name = "Git" },
-          { source = "diagnostics", display_name = "Diagnostic" },
-        },
-      },
       commands = {
         system_open = function(state)
-          vim.cmd("OpenLink " .. state.tree:get_node():get_id())
+          require("utils").system_open(state.tree:get_node():get_id())
         end,
         parent_or_close = function(state)
           local node = state.tree:get_node()
@@ -128,24 +122,6 @@ return {
           "*.o",
         },
       },
-      event_handlers = {
-        {
-          event = "file_opened",
-          handler = function(_)
-            if (not _G.user_neotree_boot) then
-              return
-            end
-            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-              if vim.api.nvim_buf_get_name(buf) == "" then
-                vim.api.nvim_buf_delete(buf, {force = true})
-                _G.user_neotree_boot = false
-                break
-              end
-            end
-          end,
-          id = "delete_empty_buffers_on_open"
-        }
-      }
     },
   },
 }

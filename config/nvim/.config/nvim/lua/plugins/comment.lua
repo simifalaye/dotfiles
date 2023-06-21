@@ -1,3 +1,5 @@
+local prequire = require("utils.prequire")
+
 return {
   {
     "numToStr/Comment.nvim",
@@ -10,7 +12,7 @@ return {
       "JoosepAlviste/nvim-ts-context-commentstring",
     },
     opts = function(_, opts)
-      local commentstring = _G.prequire("ts_context_commentstring.integrations.comment_nvim")
+      local commentstring = prequire("ts_context_commentstring.integrations.comment_nvim")
       if commentstring then
         opts.pre_hook = commentstring.create_pre_hook()
       end

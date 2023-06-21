@@ -1,3 +1,5 @@
+local utils = require("utils")
+
 -- Install lazy plugin manager if not installed and add to rtp
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -44,13 +46,10 @@ require("lazy").setup("plugins", {
         "getscriptPlugin",
         "vimball",
         "vimballPlugin",
+        "tohtml",
         "2html_plugin",
-        "logipat",
-        "rrhelper",
-        "spellfile_plugin",
-        "matchit",
       },
     },
   },
-  lockfile = vim.fn.stdpath("data") .. "/lazy-lock.json",
+  lockfile = utils.join_paths(vim.fn.stdpath("data"), "lazy-lock.json"),
 })

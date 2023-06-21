@@ -4,7 +4,7 @@ return {
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      local log = require("utils.log")
+      local utils = require("utils")
       local base16 = require("base16-colorscheme")
 
       local colorscheme = "default-dark"
@@ -14,7 +14,7 @@ return {
 
       local bcolors = base16.colorschemes[colorscheme]
       if not colorscheme or colorscheme == "" or not bcolors then
-        log.debug("Using default colorscheme instead of: %s", colorscheme)
+        utils.notify("Using default colorscheme instead of: " .. colorscheme, vim.log.levels.DEBUG)
         colorscheme = "default-dark"
         bcolors = base16.colorscheme[colorscheme]
       end
