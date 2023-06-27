@@ -6,7 +6,7 @@ return {
     },
     cmd = { "Neogen" },
     keys = {
-      { "<leader>a", "<cmd>Neogen<CR>", desc = "Generate (a)nnotations" },
+      { "<leader>cg", "<cmd>Neogen<CR>", desc = "Generate Annotation" },
     },
     opts = { snippet_engine = "luasnip" },
   },

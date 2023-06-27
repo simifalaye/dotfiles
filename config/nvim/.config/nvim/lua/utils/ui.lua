@@ -63,26 +63,27 @@ end
 
 --- Set the indent and tab related numbers
 M.set_indent = function()
-  local input_avail, input =
-    pcall(vim.fn.input, "Set indent value (>0 expandtab, <=0 noexpandtab): ")
-  if input_avail then
-    local indent = tonumber(input)
-    if not indent or indent == 0 then
-      return
-    end
-    vim.bo.expandtab = (indent > 0) -- local to buffer
-    indent = math.abs(indent)
-    vim.bo.tabstop = indent -- local to buffer
-    vim.bo.softtabstop = indent -- local to buffer
-    vim.bo.shiftwidth = indent -- local to buffer
-    M.ui_notify(
-      string.format(
-        "indent=%d %s",
-        indent,
-        vim.bo.expandtab and "expandtab" or "noexpandtab"
+  vim.ui.input(
+    { prompt = "Set indent value (>0 expandtab, <=0 noexpandtab): " },
+    function(input)
+      local indent = tonumber(input)
+      if not indent or indent == 0 then
+        return
+      end
+      vim.bo.expandtab = (indent > 0) -- local to buffer
+      indent = math.abs(indent)
+      vim.bo.tabstop = indent -- local to buffer
+      vim.bo.softtabstop = indent -- local to buffer
+      vim.bo.shiftwidth = indent -- local to buffer
+      M.ui_notify(
+        string.format(
+          "indent=%d %s",
+          indent,
+          vim.bo.expandtab and "expandtab" or "noexpandtab"
+        )
       )
-    )
-  end
+    end
+  )
 end
 
 --- Change the number display modes

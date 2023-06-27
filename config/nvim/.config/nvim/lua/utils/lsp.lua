@@ -1,6 +1,38 @@
 local utils = require("utils")
-local ui = require("utils.ui")
+local prequire = require("utils.prequire")
 local augroup = require("utils.command").augroup
+
+--- Get the lsp clients on this buffer
+local function get_attached_clients()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
+  return clients, bufnr
+end
+
+--- Helper function to check if any active LSP clients given a filter provide a specific capability
+---@param capability string The server capability to check for (example: "documentFormattingProvider")
+---@param filter vim.lsp.get_active_clients.filter|nil (table|nil) A table with
+---              key-value pairs used to filter the returned clients.
+---              The available keys are:
+---               - id (number): Only return clients with the given id
+---               - bufnr (number): Only return clients attached to this buffer
+---               - name (string): Only return clients with the given name
+---@return boolean # Whether or not any of the clients provide the capability
+local has_capability = function(capability, filter)
+  for _, client in ipairs(vim.lsp.get_active_clients(filter)) do
+    if client.supports_method(capability) then
+      return true
+    end
+  end
+  return false
+end
+
+local formatting_opts = {
+  async = true,
+  filter = nil,
+}
+
+local attach_handlers = {}
 
 local M = {}
 
@@ -65,22 +97,58 @@ M.diagnostics = {
   default_diagnostics,
 }
 
---- Helper function to check if any active LSP clients given a filter provide a specific capability
----@param capability string The server capability to check for (example: "documentFormattingProvider")
----@param filter vim.lsp.get_active_clients.filter|nil (table|nil) A table with
----              key-value pairs used to filter the returned clients.
----              The available keys are:
----               - id (number): Only return clients with the given id
----               - bufnr (number): Only return clients attached to this buffer
----               - name (string): Only return clients with the given name
----@return boolean # Whether or not any of the clients provide the capability
-M.has_capability = function(capability, filter)
-  for _, client in ipairs(vim.lsp.get_active_clients(filter)) do
-    if client.supports_method(capability) then
-      return true
+--- Set the formatting filter function to use
+---@param func fun(c: lsp.Client): boolean
+M.set_format_filter = function(func)
+  formatting_opts.filter = func
+end
+
+--- Add an attach handler to be called with the on_attach lsp function
+---@param handler fun(args: lsp.Client, bufnr: integer)
+---@param once boolean?
+M.register_attach_handler = function(handler, once)
+  once = once and once or true
+  table.insert(attach_handlers, handler)
+  local clients, bufnr = get_attached_clients()
+  for _, client in ipairs(clients) do
+    -- Run the handler immediately if there is already a client attached
+    handler(client, bufnr)
+    if once then
+      break
     end
   end
-  return false
+end
+
+---@class UserLspKeys
+---@field [1] string lhs
+---@field [2]? string|fun()|false rhs
+---@field desc? string
+---@field mode? string|string[]
+---@field noremap? boolean
+---@field remap? boolean
+---@field expr? boolean
+---@field id string
+---@field has string
+
+--- Register lsp keys for the current buffer
+---@param client lsp.Client
+---@param bufnr integer
+---@param keys UserLspKeys[]
+M.register_keys = function(client, bufnr, keys)
+  for _, key in ipairs(keys) do
+    if not key.has or client.server_capabilities[key.has .. "Provider"] then
+      local opts = {}
+      for k, v in pairs(key) do
+        if type(k) ~= "number" and k ~= "mode" and k ~= "id" then
+          opts[k] = v
+        end
+      end
+      opts.has = nil
+      opts.silent = opts.silent ~= false
+      opts.buffer = bufnr
+      require("utils.map").map(key.mode or "n", key[1], key[2], opts)
+    end
+  end
 end
 
 --- Configures lsp diagnostics
@@ -93,60 +161,66 @@ M.setup_diagnostics = function()
   vim.diagnostic.config(M.diagnostics[vim.g.user_diagnostics_mode])
 end
 
+--- Get a list of common lsp capabilities
+---@return table
+M.get_capabilities = function()
+  local capabilities = M.capabilities
+  local cmp_lsp = prequire("cmp_nvim_lsp")
+  if cmp_lsp then
+    capabilities = cmp_lsp.default_capabilities(capabilities)
+  end
+  return capabilities
+end
+
+--- Common lsp attach handler
+---@param client lsp.Client
+---@param bufnr integer
 M.on_attach = function(client, bufnr)
   local m = require("utils.map")
-  local o = { buffer = bufnr }
 
   -- Enable completion triggered by <c-x><c-o>
   vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
 
-  -- Default LSP mappings
-  m.nnoremap("[d", vim.diagnostic.goto_prev, "LSP: Goto prev diag", o)
-  m.nnoremap("]d", vim.diagnostic.goto_next, "LSP: Goto next diag", o)
-  m.nnoremap("<localleader>d", vim.diagnostic.open_float, "LSP: Diagnostics line", o)
-  m.nnoremap("<localleader>D", vim.diagnostic.setloclist, "LSP: Diagnostics list", o)
-  m.nnoremap("gD", vim.lsp.buf.declaration, "LSP: Goto decl", o)
-  m.nnoremap("gd", vim.lsp.buf.definition, "LSP: Goto def", o)
-  m.nnoremap("gs", vim.lsp.buf.signature_help, "LSP: Show signature", o)
-  m.nnoremap("gi", vim.lsp.buf.implementation, "LSP: Goto impl", o)
-  m.nnoremap("gr", vim.lsp.buf.references, "LSP: Goto ref", o)
-  m.nnoremap("K", vim.lsp.buf.hover, "LSP: Hover", o)
-  m.nnoremap("<localleader>r", vim.lsp.buf.rename, "LSP: Rename", o)
-  m.group("<localleader>w", "+workspace")
-  m.nnoremap(
-    "<localleader>wa",
-    vim.lsp.buf.add_workspace_folder,
-    "LSP: Add workspace folder",
-    o
-  )
-  m.nnoremap(
-    "<localleader>wr",
-    vim.lsp.buf.remove_workspace_folder,
-    "LSP: Remove workspace folder",
-    o
-  )
-  m.nnoremap("<localleader>wl", function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, "LSP: List workspace folders", o)
-
-  -- Conditionals
-  if client.supports_method("textDocument/typeDefinition") then
-    m.nnoremap("gy", vim.lsp.buf.type_definition, "Goto type", o)
-  end
-  if client.supports_method("textDocument/codeAction") then
-    m.noremap(
-      { "n", "x" },
-      "<localleader>a",
+  local keys = {
+    { "gd", vim.lsp.buf.definition, desc = "Goto Def (lsp)", has = "definition" },
+    { "gD", vim.lsp.buf.declaration, desc = "Goto Dec (lsp)" },
+    { "gr", vim.lsp.buf.references, desc = "Goto Ref (lsp)" },
+    { "gi", vim.lsp.buf.implementation, desc = "Goto Impl (lsp)" },
+    { "gz", vim.lsp.buf.type_definition, desc = "Goto Type (lsp)" },
+    { "K", vim.lsp.buf.hover, desc = "Hover (lsp)" },
+    { "gK", vim.lsp.buf.signature_help, desc = "Signature (lsp)", has = "signatureHelp" },
+    { "]d", vim.diagnostic.goto_next, desc = "Diagnostic (lsp)" },
+    { "[d", vim.diagnostic.goto_prev, desc = "Diagnostic (lsp)" },
+    {
+      "<leader>ca",
       vim.lsp.buf.code_action,
-      "LSP: Code action",
-      o
-    )
-  end
-  if client.supports_method("textDocument/formatting") then
-    m.nnoremap("<localleader>f", function()
-      vim.lsp.buf.format({ async = true })
-    end, "LSP: Format", o)
-  end
+      desc = "Code Action (lsp)",
+      mode = { "n", "v" },
+      has = "codeAction",
+    },
+    { "<leader>cd", vim.diagnostic.open_float, desc = "Line Diagnostics (lsp)" },
+    { "<leader>cD", vim.diagnostic.setloclist, desc = "Work Diagnostics (lsp)" },
+    {
+      "<leader>cf",
+      function()
+        vim.lsp.buf.format(formatting_opts)
+      end,
+      desc = "Format Document (lsp)",
+      has = "documentFormatting",
+    },
+    {
+      "<leader>cf",
+      function()
+        vim.lsp.buf.format(formatting_opts)
+      end,
+      desc = "Format Range (lsp)",
+      mode = "v",
+      has = "documentRangeFormatting",
+    },
+    { "<leader>ci", "<cmd>LspInfo<cr>", desc = "Info (lsp)" },
+    { "<leader>cr", vim.lsp.buf.rename, desc = "Rename (lsp)" },
+  }
+
   if client.supports_method("textDocument/codeLens") then
     augroup("user_lsp_codelens_refresh", {
       {
@@ -154,7 +228,7 @@ M.on_attach = function(client, bufnr)
         event = { "InsertLeave", "BufEnter" },
         buffer = bufnr,
         command = function()
-          if not M.has_capability("textDocument/codeLens", { bufnr = bufnr }) then
+          if not has_capability("textDocument/codeLens", { bufnr = bufnr }) then
             vim.api.nvim_del_augroup_by_name("user_lsp_codelens_refresh")
             return
           end
@@ -167,12 +241,20 @@ M.on_attach = function(client, bufnr)
     if vim.g.user_codelens_enabled then
       vim.lsp.codelens.refresh()
     end
-    m.nnoremap("<localleader>l", function()
-      vim.lsp.codelens.refresh()
-    end, "LSP: Codelens refresh")
-    m.nnoremap("<localleader>L", function()
-      vim.lsp.codelens.run()
-    end, "LSP: Codelens run")
+    table.insert(keys, {
+      "<leader>cl",
+      function()
+        vim.lsp.codelens.refresh()
+      end,
+      desc = "Codelens refresh (lsp)",
+    })
+    table.insert(keys, {
+      "<leader>cL",
+      function()
+        vim.lsp.codelens.run()
+      end,
+      desc = "Codelens run (lsp)",
+    })
   end
   if
     (
@@ -191,6 +273,15 @@ M.on_attach = function(client, bufnr)
       require("utils.ui").toggle_buffer_semantic_tokens(bufnr)
     end, "Toggle LSP semantic highlight")
   end
+  if client.name == "clangd" then
+    table.insert(keys, {
+      "g;",
+      function()
+        vim.cmd("ClangdSwitchSourceHeader")
+      end,
+      desc = "Alt file (lsp)",
+    })
+  end
   if client.supports_method("textDocument/documentHighlight") then
     augroup("user_lsp_document_highlight", {
       {
@@ -198,9 +289,7 @@ M.on_attach = function(client, bufnr)
         event = { "CursorHold", "CursorHoldI" },
         buffer = bufnr,
         command = function()
-          if
-            not M.has_capability("textDocument/documentHighlight", { bufnr = bufnr })
-          then
+          if not has_capability("textDocument/documentHighlight", { bufnr = bufnr }) then
             vim.api.nvim_del_augroup_by_name("user_lsp_document_highlight")
             return
           end
@@ -216,6 +305,14 @@ M.on_attach = function(client, bufnr)
         end,
       },
     })
+  end
+
+  -- Register lsp keys
+  M.register_keys(client, bufnr, keys)
+
+  -- Call additional attach handlers
+  for _, handler in ipairs(attach_handlers) do
+    handler(client, bufnr)
   end
 end
 

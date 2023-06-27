@@ -30,20 +30,9 @@ return {
       local lspconfig = require("lspconfig")
       local null_ls = require("null-ls")
       local mason = require("mason")
-
-      -- Default server options
       local default_opts = {
-        on_attach = function(client, bufnr)
-          lsp.on_attach(client, bufnr)
-        end,
-        capabilities = (function()
-          local capabilities = lsp.capabilities
-          local cmp_lsp = prequire("cmp_nvim_lsp")
-          if cmp_lsp then
-            capabilities = cmp_lsp.default_capabilities(capabilities)
-          end
-          return capabilities
-        end)(),
+        on_attach = lsp.on_attach,
+        capabilities = lsp.get_capabilities(),
         flags = lsp.flags,
       }
 
@@ -54,7 +43,7 @@ return {
       -- Setup mason-lspconfig (NOTE: MUST come after mason setup)
       local mason_lspconfig = require("mason-lspconfig")
       mason_lspconfig.setup({
-        ensure_installed = { "lua_ls", "bashls" },
+        ensure_installed = { "lua_ls" },
         automatic_installation = true,
       })
       mason_lspconfig.setup_handlers({
@@ -86,15 +75,26 @@ return {
       })
       -- Setup null-ls (NOTE: MUST come after mason-null-ls)
       null_ls.setup({})
+      -- Setup the formatting filter to prefer null-ls when available
+      lsp.set_format_filter(function(c)
+        local bufnr = vim.api.nvim_get_current_buf()
+        local file_type = vim.api.nvim_buf_get_option(bufnr, "filetype")
+        local generators = require("null-ls.generators").get_available(
+          file_type,
+          require("null-ls.methods").internal.FORMATTING
+        )
+        -- If there is a null-ls generator, use null-ls formatting instead
+        if #generators > 0 then
+          return c.name == "null-ls"
+        end
+        return c.name ~= "null-ls"
+      end)
     end,
   },
   {
     "j-hui/fidget.nvim",
     tag = "legacy",
     event = "BufReadPre",
-    config = function()
-      -- Setup fidget
-      require("fidget").setup({})
-    end,
+    config = true,
   },
 }

@@ -23,7 +23,7 @@ m.noremap(
   { "n", "i", "x", "s" },
   "<C-s>",
   "<Esc><cmd>silent! update | redraw<CR>",
-  "Save buffer"
+  "Save Buffer"
 )
 
 --------------------------------------------------------------------------------
@@ -36,18 +36,8 @@ m.nnoremap("/", "ms/\\v", { silent = false })
 m.nnoremap("?", "ms?\\v", { silent = false })
 m.nnoremap("n", "nzzzv")
 m.nnoremap("N", "Nzzzv")
-m.nnoremap("p", "p`[v`]=", "Paste & format")
-m.nnoremap("Q", "@q", "Run q macro")
-m.nmap(
-  "c.",
-  [[:%s/\<<C-r><C-w>\>//g<Left><Left>]],
-  { desc = "search and replace word under cursor" }
-)
-m.nmap(
-  "c>",
-  [[:%s/\V<C-r><C-a>//g<Left><Left>]],
-  { desc = "search and replace WORD under cursor" }
-)
+m.nnoremap("p", "p`[v`]=", "Paste & Format")
+m.nnoremap("Q", "@q", "Run q Macro")
 
 -- (g) namespace
 m.nmap("g-", "yyp^v$r-Vk", "Underline -")
@@ -55,56 +45,55 @@ m.nmap("g=", "yyp^v$r=Vk", "Underline =")
 m.nnoremap(
   "gm",
   [[<cmd>set nomore<bar>40messages<bar>set more<CR>]],
-  "Show message history"
+  "Show Message History"
 )
 m.nnoremap(
   "gO",
   "<Cmd>call append(line('.') - 1, repeat([''], v:count1))<CR>",
-  "Put empty line above"
+  "Put Empty Line Above"
 )
 m.nnoremap(
   "go",
   "<Cmd>call append(line('.'), repeat([''], v:count1))<CR>",
-  "Put empty line below"
+  "Put Empty Line Below"
 )
 m.nnoremap(
   "gp",
   "'`[' . strpart(getregtype(), 0, 1) . '`]'",
-  "Select last changed text",
+  "Select Last Changed Text",
   { expr = true }
 )
-m.nnoremap("gx", ":SystemOpen<CR>", "Open link in browser")
+m.nnoremap("gx", ":SystemOpen<CR>", "System Open")
 
 -- Toggle windows
 m.nnoremap("<F3>", ":ToggleList c<CR>", "Toggle Quickfix")
 m.nnoremap("<F4>", ":ToggleList l<CR>", "Toggle Loclist")
 
--- Leader core groups
-m.group("<leader>g", "+git")
-m.group("<leader>p", "+plugin")
-m.group("<leader>s", "+search")
-m.group("<leader>u", "+ui")
-
 -- Leader
-m.nnoremap("<leader>!", ":! chmod +x %<CR>", "Make file executable")
+m.nnoremap("<leader>!", ":! chmod +x %<CR>", "Make File Executable")
+m.nnoremap("<leader><tab>]", "<cmd>tabnext<cr>", "Next Tab")
+m.nnoremap("<leader><tab>[", "<cmd>tabprevious<cr>", "Prev Tab")
+m.nnoremap("<leader><tab><tab>", "<cmd>tabnew<cr>", "New Tab")
+m.nnoremap("<leader><tab>q", "<cmd>tabclose<cr>", "Close Tab")
+m.nnoremap("<leader><tab>c", "<cmd>tabclose<cr>", "Close Tab")
 m.nnoremap("<leader>pp", ":Lazy<CR>", "Open")
 m.nnoremap("<leader>pc", ":Lazy clean<CR>", "Clean")
 m.nnoremap("<leader>ph", ":Lazy health<CR>", "Health")
 m.nnoremap("<leader>pi", ":Lazy install<CR>", "Install")
 m.nnoremap("<leader>ps", ":Lazy sync<CR>", "Sync")
-m.nnoremap("<leader>ud", ui.toggle_diagnostics, "Toggle diagnostics")
-m.nnoremap("<leader>uf", ui.toggle_foldcolumn, "Toggle foldcolumn")
-m.nnoremap("<leader>ug", ui.toggle_signcolumn, "Toggle signcolumn")
-m.nnoremap("<leader>ui", ui.set_indent, "Change indent setting")
-m.nnoremap("<leader>ul", ui.toggle_statusline, "Toggle statusline")
+m.nnoremap("<leader>ud", ui.toggle_diagnostics, "Toggle Diagnostics")
+m.nnoremap("<leader>uf", ui.toggle_foldcolumn, "Toggle Foldcolumn")
+m.nnoremap("<leader>ug", ui.toggle_signcolumn, "Toggle Signcolumn")
+m.nnoremap("<leader>ui", ui.set_indent, "Change Indent Setting")
+m.nnoremap("<leader>ul", ui.toggle_statusline, "Toggle Statusline")
 m.nnoremap("<leader>uL", ui.toggle_codelens, "Toggle CodeLens")
-m.nnoremap("<leader>un", ui.change_number, "Change line numbering")
-m.nnoremap("<leader>uN", ui.toggle_notifications, "Toggle UI notifications")
-m.nnoremap("<leader>up", ui.toggle_paste, "Toggle paste mode")
-m.nnoremap("<leader>us", ui.toggle_spell, "Toggle spellcheck")
-m.nnoremap("<leader>uS", ui.toggle_conceal, "Toggle conceal")
-m.nnoremap("<leader>ut", ui.toggle_tabline, "Toggle tabline")
-m.nnoremap("<leader>uw", ui.toggle_wrap, "Toggle wrap")
+m.nnoremap("<leader>un", ui.change_number, "Change Line Numbering")
+m.nnoremap("<leader>uN", ui.toggle_notifications, "Toggle UI Notifications")
+m.nnoremap("<leader>up", ui.toggle_paste, "Toggle Paste Mode")
+m.nnoremap("<leader>us", ui.toggle_spell, "Toggle Spellcheck")
+m.nnoremap("<leader>uS", ui.toggle_conceal, "Toggle Conceal")
+m.nnoremap("<leader>ut", ui.toggle_tabline, "Toggle Tabline")
+m.nnoremap("<leader>uw", ui.toggle_wrap, "Toggle Wrap")
 m.nnoremap("<leader>x", ":bd<CR>", "Delete Buffer")
 m.nnoremap("<leader>X", ":bw<CR>", "Wipe Buffer")
 
@@ -136,12 +125,12 @@ m.xnoremap(
 )
 
 -- Text objects
-m.xnoremap("il", "g_o0", "in line")
-m.xnoremap("al", "$o0", "a line")
-m.xnoremap("ie", ":<C-u>normal! G$Vgg0<CR>", "in entire")
-m.onoremap("il", ":normal vil<CR>", "in line")
-m.onoremap("al", ":normal val<CR>", "a line")
-m.onoremap("ie", ":<C-u>normal! GVgg<CR>", "in entire")
+m.xnoremap("il", "g_o0", "In Line")
+m.xnoremap("al", "$o0", "A Line")
+m.xnoremap("ie", ":<C-u>normal! G$Vgg0<CR>", "In Entire")
+m.onoremap("il", ":normal vil<CR>", "In Line")
+m.onoremap("al", ":normal val<CR>", "A Line")
+m.onoremap("ie", ":<C-u>normal! GVgg<CR>", "In Entire")
 
 --------------------------------------------------------------------------------
 --  Insert mode
@@ -192,13 +181,13 @@ m.cnoremap("<C-y>", [[pumvisible() ? "\<C-Y>" : "\<C-R>-"]], { expr = true })
 m.cnoremap(
   "<M-,>",
   "<C-r>=fnameescape(expand('%:p:h'))<cr>/",
-  "Insert dir path",
+  "Insert Dir Path",
   { silent = false }
 )
 m.cnoremap(
   "<M-.>",
   "<C-r>=fnameescape(expand('%'))<cr>",
-  "Insert file path",
+  "Insert File Path",
   { silent = false }
 )
 

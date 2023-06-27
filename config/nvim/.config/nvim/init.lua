@@ -10,7 +10,7 @@ Maintainer: simifalaye
 --- ex. P({1,2,3})
 --- @vararg any
 --- @return any
-P = function(...)
+_G.P = function(...)
   local objects, v = {}, nil
   for i = 1, select("#", ...) do
     v = select(i, ...)

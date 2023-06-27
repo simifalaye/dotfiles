@@ -1,3 +1,15 @@
+--- Return a function that executes a gitsigns command lazy-loading it
+--first if it is not loaded
+---@param cmd string builtin command to run
+---@vararg any? arguments to pass to the command
+---@return fun()
+local gcmd = function(cmd, ...)
+  local args = { ... }
+  return function()
+    require("gitsigns")[cmd](unpack(args))
+  end
+end
+
 return {
   {
     "lewis6991/gitsigns.nvim",
@@ -5,37 +17,28 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     event = "BufReadPre",
     cmd = { "Gitsigns" },
+    init = function()
+      local m = require("utils.map")
+      m.group("<leader>gh", "+hunk")
+    end,
     keys = {
       {
-        "ig",
+        "ih",
         ":<C-U>Gitsigns select_hunk<CR>",
         mode = { "o", "x" },
-        desc = "In hunk",
+        desc = "In Hunk",
       },
-      { "]g", "<cmd>Gitsigns next_hunk<CR>", desc = "Next git hunk" },
-      { "[g", "<cmd>Gitsigns prev_hunk<CR>", desc = "Prev git hunk" },
-      { "<leader>gd", "<cmd>Gitsigns diffthis<CR>", desc = "Diff" },
-      { "<leader>gD", "<cmd>Gitsigns diffthis ~<CR>", desc = "Diff HEAD" },
-      {
-        "<leader>gl",
-        "<cmd>Gitsigns blame_line full=true<CR>",
-        desc = "Blame line",
-      },
-      { "<leader>gp", "<cmd>Gitsigns preview_hunk<CR>", desc = "Preview hunk" },
-      { "<leader>gr", "<cmd>Gitsigns reset_hunk<CR>", desc = "Reset hunk" },
-      { "<leader>gR", "<cmd>Gitsigns reset_buffer<CR>", desc = "Reset Buff" },
-      {
-        "<leader>gt",
-        "<cmd>Gitsigns toggle_current_line_blame<CR>",
-        desc = "Toggle blame",
-      },
-      {
-        "<leader>gu",
-        "<cmd>Gitsigns undo_stage_hunk<CR>",
-        desc = "Undo htage",
-      },
-      { "<leader>gw", "<cmd>Gitsigns stage_hunk<CR>", desc = "Stage hunk" },
-      { "<leader>gW", "<cmd>Gitsigns stage_buffer<CR>", desc = "Stage huff" },
+      { "]h", gcmd("next_hunk"), desc = "Next Git Hunk" },
+      { "[h", gcmd("prev_hunk"), desc = "Prev Git Hunk" },
+      { "<leader>ghb", gcmd("blame_line", { full = true }), desc = "Blame Line" },
+      { "<leader>ghd", gcmd("diffthis"), desc = "Diff" },
+      { "<leader>ghD", gcmd("diffthis", "~"), desc = "Diff HEAD" },
+      { "<leader>ghp", gcmd("preview_hunk"), desc = "Preview Hunk" },
+      { "<leader>ghr", gcmd("reset_hunk"), desc = "Reset Hunk" },
+      { "<leader>ghR", gcmd("reset_buffer"), desc = "Reset Buff" },
+      { "<leader>ghu", gcmd("undo_stage_hunk"), desc = "Undo Stage" },
+      { "<leader>ghs", gcmd("stage_hunk"), desc = "Stage Hunk" },
+      { "<leader>ghS", gcmd("stage_buffer"), desc = "Stage Buff" },
     },
     opts = {},
   },

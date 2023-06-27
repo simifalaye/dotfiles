@@ -1,3 +1,15 @@
+--- Return a function that executes a telescope builtin command lazy-loading it
+--first if it is not loaded
+---@param cmd string builtin command to run
+---@vararg any? arguments to pass to the command
+---@return fun()
+local tcmd = function(cmd, ...)
+  local args = { ... }
+  return function()
+    require("telescope.builtin")[cmd](unpack(args))
+  end
+end
+
 return {
   "nvim-telescope/telescope.nvim",
   dependencies = {
@@ -11,97 +23,66 @@ return {
   keys = function()
     return {
       -- Leader
-      {
-        "<leader>,",
-        "<cmd>Telescope builtin<CR>",
-        desc = "Picker Builtin",
-      },
-      {
-        "<leader>.",
-        "<cmd>Telescope resume<CR>",
-        desc = "Resume picker",
-      },
-      {
-        "<leader>:",
-        "<cmd>Telescope command_history<CR>",
-        desc = "Cmd Hist",
-      },
-      {
-        "<leader>;",
-        "<cmd>Telescope oldfiles<CR>",
-        desc = "Recent Files",
-      },
-      {
-        "<leader>/",
-        "<cmd>Telescope live_grep<CR>",
-        desc = "Global Search",
-      },
-      { "<leader>b", "<cmd>Telescope buffers<CR>", desc = "Buffers" },
-      { "<leader>f", "<cmd>Telescope find_files<CR>", desc = "Files" },
+      { "<leader><space>", tcmd("find_files"), desc = "Find File" },
+      { "<leader>;", tcmd("buffers"), desc = "Find Buffer" },
+      { "<leader>:", tcmd("command_history"), desc = "Find Cmd History" },
+      { "<leader>,", tcmd("oldfiles"), desc = "Find Recent File" },
+      { "<leader>.", tcmd("resume"), desc = "Find Resume" },
+      { "<leader>/", tcmd("live_grep"), desc = "Grep" },
+      { "<leader>?", tcmd("builtin"), desc = "Find Picker Cmd" },
+      -- Find
+      { "<leader>f'", tcmd("marks"), desc = "Marks" },
+      { '<leader>f"', tcmd("registers"), desc = "Registers" },
+      { "<leader>fc", tcmd("commands"), desc = "Commands" },
+      { "<leader>ff", tcmd("find_files", { no_ignore = true }), desc = "Files All" },
+      { "<leader>fh", tcmd("help_tags"), desc = "Help" },
+      { "<leader>fk", tcmd("keymaps"), desc = "Keymaps" },
+      { "<leader>fm", tcmd("man_pages"), desc = "Man Pages" },
+      { "<leader>fr", tcmd("oldfiles", { only_cwd = true }), desc = "Recent File (cwd)" },
+      { "<leader>fz", tcmd("spell_suggest"), desc = "Spell" },
       -- Git
-      { "<leader>gb", "<cmd>Telescope git_branches<CR>", desc = "Branches" },
-      {
-        "<leader>gc",
-        "<cmd>Telescope git_bcommits<CR>",
-        desc = "Commits (buf)",
-      },
-      {
-        "<leader>gC",
-        "<cmd>Telescope git_commits<CR>",
-        desc = "Commits (repo)",
-      },
-      { "<leader>gf", "<cmd>Telescope git_files<CR>", desc = "Files" },
-      { "<leader>gs", "<cmd>Telescope git_status<CR>", desc = "Status" },
-      { "<leader>gS", "<cmd>Telescope git_stash<CR>", desc = "Stash" },
-      -- Search
-      { "<leader>s'", "<cmd>Telescope marks<CR>", desc = "Marks" },
-      {
-        '<leader>s"',
-        "<cmd>Telescope registers<CR>",
-        desc = "Registers",
-      },
-      { "<leader>sc", "<cmd>Telescope commands<CR>", desc = "Commands" },
-      {
-        "<leader>sd",
-        "<cmd>Telescope diagnostics<CR>",
-        desc = "LSP: Diagnostics",
-      },
-      {
-        "<leader>sf",
-        "<cmd>Telescope find_files no_ignore=true<CR>",
-        desc = "Files (All)",
-      },
-      {
-        "<leader>sh",
-        "<cmd>Telescope help_tags<CR>",
-        desc = "Help",
-      },
-      {
-        "<leader>sk",
-        "<cmd>Telescope keymaps<CR>",
-        desc = "Keymaps",
-      },
-      {
-        "<leader>sm",
-        "<cmd>Telescope man_pages<CR>",
-        desc = "Man Pages",
-      },
-      {
-        "<leader>sr",
-        "<cmd>Telescope oldfiles only_cwd=true<CR>",
-        desc = "Recent",
-      },
-      {
-        "<leader>ss",
-        "<cmd>Telescope lsp_document_symbols<CR>",
-        desc = "LSP: Symbols",
-      },
-      { "<leader>sz", "<cmd>Telescope spell_suggest<CR>", desc = "Spell" },
+      { "<leader>gb", tcmd("git_branches"), desc = "Branches" },
+      { "<leader>gc", tcmd("git_bcommits"), desc = "Commits (buf)" },
+      { "<leader>gC", tcmd("git_commits"), desc = "Commits (repo)" },
+      { "<leader>gf", tcmd("git_files"), desc = "Files" },
+      { "<leader>gs", tcmd("git_status"), desc = "Status" },
+      { "<leader>gw", tcmd("git_stash"), desc = "Stash" },
     }
   end,
   init = function()
-    local m = require("utils.map")
-    m.group("<leader>s", "+search")
+    -- Lsp additions
+    local lsp = require("utils.lsp")
+    lsp.register_attach_handler(function(client, bufnr)
+      local symbols = {
+        "Class",
+        "Function",
+        "Method",
+        "Constructor",
+        "Interface",
+        "Module",
+        "Struct",
+        "Trait",
+        "Field",
+        "Property",
+      }
+      lsp.register_keys(client, bufnr, {
+        { "gd", tcmd("lsp_definitions"), desc = "Goto Def (lsp)", has = "definition" },
+        { "gr", tcmd("lsp_references"), desc = "Goto Ref (lsp)" },
+        { "gI", tcmd("lsp_implementations"), desc = "Goto Impl (lsp)" },
+        { "gz", tcmd("lsp_type_definitions"), desc = "Goto Type (lsp)" },
+        { "<leader>cD", tcmd("diagnostics"), desc = "Work Diagnostics (lsp)" },
+        {
+          "<leader>cs",
+          tcmd("lsp_document_symbols", { symbols = symbols }),
+          desc = "Document Symbols (lsp)",
+        },
+        {
+          "<leader>cS",
+          tcmd("lsp_dynamic_workspace_symbols", { symbols = symbols }),
+          desc = "Workspace Symbols (lsp)",
+        },
+      })
+    end)
   end,
   config = function()
     local telescope = require("telescope")

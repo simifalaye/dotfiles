@@ -19,68 +19,39 @@ return {
       "TSUpdateSync",
     },
     dependencies = {
-      "nvim-treesitter/nvim-treesitter-textobjects",
+      -- "nvim-treesitter/nvim-treesitter-textobjects",
       "windwp/nvim-ts-autotag",
+      {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+        init = function()
+          -- disable rtp plugin, as we only need its queries for mini.ai
+          require("lazy.core.loader").disable_rtp_plugin("nvim-treesitter-textobjects")
+        end,
+      },
     },
-    config = function()
-      local ts_config = require("nvim-treesitter.configs")
-
-      ts_config.setup({
-        ensure_installed = "all",
-        -- Some issues with certain perl files
-        ignore_install = { "perl" },
-        highlight = {
-          enable = true,
-          disable = function(_, bufnr)
-            return vim.api.nvim_buf_line_count(bufnr) > 10000
-          end,
+    opts = {
+      ensure_installed = "all",
+      -- Some issues with certain perl files
+      ignore_install = { "perl" },
+      highlight = {
+        enable = true,
+        disable = function(_, bufnr)
+          return vim.api.nvim_buf_line_count(bufnr) > 10000
+        end,
+      },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "<C-space>",
+          node_incremental = "<C-space>",
+          scope_incremental = false,
+          node_decremental = "<bs>",
         },
-        textobjects = {
-          lookahead = true,
-          select = {
-            enable = true,
-            keymaps = {
-              ["aa"] = "@parameter.outer",
-              ["ia"] = "@parameter.inner",
-              ["af"] = "@function.outer",
-              ["if"] = "@function.inner",
-              ["ac"] = "@class.outer",
-              ["ic"] = "@class.inner",
-            },
-          },
-          swap = {
-            enable = true,
-            swap_next = {
-              ["]a"] = "@parameter.inner",
-            },
-            swap_previous = {
-              ["[a"] = "@parameter.inner",
-            },
-          },
-          move = {
-            enable = true,
-            set_jumps = true, -- whether to set jumps in the jumplist
-            goto_next_start = {
-              ["]m"] = "@function.outer",
-              ["]]"] = "@class.outer",
-            },
-            goto_previous_start = {
-              ["[m"] = "@function.outer",
-              ["[["] = "@class.outer",
-            },
-          },
-        },
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = "<CR>",
-            node_incremental = "<CR>",
-            scope_incremental = false,
-            node_decremental = "<bs>",
-          },
-        },
-        autotag = { enable = true },
-      })
+      },
+      autotag = { enable = true },
+    },
+    config = function(_, opts)
+      require("nvim-treesitter.configs").setup(opts)
 
       -- Enable treesitter folding
       vim.opt.foldenable = false -- disable at startup

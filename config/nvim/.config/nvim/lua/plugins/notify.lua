@@ -11,12 +11,10 @@ return {
       end,
     },
     init = function()
-      -- Load plugin when vim.notify is called
-      local old_func = vim.notify
+      ---@diagnostic disable-next-line: duplicate-set-field
       vim.notify = function(...)
-        vim.notify = old_func
-        require("notify")
-        vim.notify(...)
+        require("lazy").load({ plugins = { "nvim-notify" } })
+        return vim.notify(...)
       end
     end,
     config = function(_, opts)
