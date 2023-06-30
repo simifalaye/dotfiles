@@ -127,11 +127,6 @@ return {
       })
     end,
     opts = {
-      windows = {
-        preview = true,
-        width_focus = 30,
-        width_preview = 30,
-      },
       options = {
         -- Manual autocmd setup since netrw is disabled completely (in lazy.nvim)
         use_as_default_explorer = false,

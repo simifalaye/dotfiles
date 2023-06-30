@@ -17,7 +17,7 @@ return {
       if telescope then
         telescope.load_extension("luasnip")
         require("utils.map").nnoremap(
-          "<leader>sS",
+          "<leader>fs",
           "<cmd>Telescope luasnip<CR>",
           "Snippets"
         )

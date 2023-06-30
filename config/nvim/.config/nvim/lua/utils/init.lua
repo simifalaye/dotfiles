@@ -55,9 +55,12 @@ end
 ---@param type number|nil The type of the notification (:help vim.log.levels)
 ---@param opts? table The nvim-notify options to use (:help notify-options)
 M.notify = function(msg, type, opts)
-  vim.schedule(function()
-    vim.notify(msg, type, M.extend_tbl({ title = "Nvim" }, opts))
-  end)
+  local lvl = vim.g.user_log_level
+  if not lvl or type >= lvl then
+    vim.schedule(function()
+      vim.notify(msg, type, M.extend_tbl({ title = "Nvim" }, opts))
+    end)
+  end
 end
 
 --- Trigger an Nvim user event ("User <event>")
@@ -84,7 +87,7 @@ M.system_open = function(path)
       cmd = { "open" }
     end
     if not cmd then
-      vim.notify("Available system opening tool not found!", vim.log.levels.ERROR)
+      M.notify("Available system opening tool not found!", vim.log.levels.ERROR)
     end
     vim.fn.jobstart(vim.fn.extend(cmd, { p }), { detach = true })
   end

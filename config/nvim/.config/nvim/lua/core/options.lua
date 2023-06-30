@@ -1,5 +1,13 @@
 local utils = require("utils")
 
+local log_level = nil
+if vim.env.USER_LOG_LEVEL and type(vim.env.USER_LOG_LEVEL) == "string" then
+  local lvl = tonumber(vim.env.USER_LOG_LEVEL)
+  if lvl >= vim.log.levels.TRACE and lvl <= vim.log.levels.OFF then
+    log_level = lvl
+  end
+end
+
 vim.opt.viewoptions:remove("curdir") -- disable saving current directory with views
 vim.opt.shortmess:append({ I = true, S = true }) -- disable startup message
 vim.opt.backspace:append({ "nostop" }) -- Don't stop backspace at insert
@@ -63,6 +71,7 @@ local options = {
     user_diagnostics_mode = 3, -- set the visibility of diagnostics in the UI (0=off, 1=only show in status line, 2=virtual text off, 3=all on)
     user_semantic_tokens_enabled = true, -- enable LSP semantic tokens on startup
     user_notifications_enabled = true, -- disable notifications
+    user_log_level = log_level and log_level or vim.log.levels.WARN,
   },
 }
 

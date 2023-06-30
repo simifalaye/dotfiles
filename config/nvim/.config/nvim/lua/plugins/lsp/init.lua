@@ -1,7 +1,8 @@
 local prequire = require("utils.prequire")
 local utils = require("utils")
+local mod = (...):gsub("%.init$", "")
 local get_provider = function (name)
-  return "plugins.lsp.providers." .. name
+  return prequire(mod .. ".providers." .. name)
 end
 
 return {
@@ -49,7 +50,7 @@ return {
       mason_lspconfig.setup_handlers({
         function(name) -- default handler
           local opts = default_opts
-          local provider = prequire(get_provider(name))
+          local provider = get_provider(name)
           if provider and type(provider) == "table" then
             opts = utils.extend_tbl(opts, provider)
           end
@@ -64,7 +65,7 @@ return {
         automatic_setup = true,
         handlers = {
           function(name, methods) -- default handler
-            local provider = prequire(get_provider(name))
+            local provider = get_provider(name)
             if provider and type(provider) == "function" then
               provider(name, methods)
             else
@@ -90,11 +91,5 @@ return {
         return c.name ~= "null-ls"
       end)
     end,
-  },
-  {
-    "j-hui/fidget.nvim",
-    tag = "legacy",
-    event = "BufReadPre",
-    config = true,
   },
 }
