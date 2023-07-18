@@ -182,13 +182,6 @@ M.on_attach = function(client, bufnr)
   vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
 
   local keys = {
-    { "gd", vim.lsp.buf.definition, desc = "Goto Def (lsp)", has = "definition" },
-    { "gD", vim.lsp.buf.declaration, desc = "Goto Dec (lsp)" },
-    { "gr", vim.lsp.buf.references, desc = "Goto Ref (lsp)" },
-    { "gi", vim.lsp.buf.implementation, desc = "Goto Impl (lsp)" },
-    { "gz", vim.lsp.buf.type_definition, desc = "Goto Type (lsp)" },
-    { "K", vim.lsp.buf.hover, desc = "Hover (lsp)" },
-    { "gK", vim.lsp.buf.signature_help, desc = "Signature (lsp)", has = "signatureHelp" },
     { "]d", vim.diagnostic.goto_next, desc = "Diagnostic (lsp)" },
     { "[d", vim.diagnostic.goto_prev, desc = "Diagnostic (lsp)" },
     {
@@ -199,7 +192,7 @@ M.on_attach = function(client, bufnr)
       has = "codeAction",
     },
     { "<leader>cd", vim.diagnostic.open_float, desc = "Line Diagnostics (lsp)" },
-    { "<leader>cD", vim.diagnostic.setloclist, desc = "Work Diagnostics (lsp)" },
+    { "<leader>cD", vim.diagnostic.setloclist, desc = "Doc Diagnostics (lsp)" },
     {
       "<leader>cf",
       function()
@@ -218,7 +211,24 @@ M.on_attach = function(client, bufnr)
       has = "documentRangeFormatting",
     },
     { "<leader>ci", "<cmd>LspInfo<cr>", desc = "Info (lsp)" },
-    { "<leader>cr", vim.lsp.buf.rename, desc = "Rename (lsp)" },
+    { "<leader>cr", vim.lsp.buf.rename, desc = "Rename (lsp)", has = "rename" },
+    { "gd", vim.lsp.buf.definition, desc = "Goto Def (lsp)", has = "definition" },
+    { "gD", vim.lsp.buf.declaration, desc = "Goto Dec (lsp)", has = "declaration" },
+    { "gK", vim.lsp.buf.signature_help, desc = "Signature (lsp)", has = "signatureHelp" },
+    {
+      "gi",
+      vim.lsp.buf.implementation,
+      desc = "Goto Impl (lsp)",
+      has = "implementation",
+    },
+    { "gr", vim.lsp.buf.references, desc = "Goto Ref (lsp)", has = "references" },
+    {
+      "gz",
+      vim.lsp.buf.type_definition,
+      desc = "Goto Type (lsp)",
+      has = "typeDefinition",
+    },
+    { "K", vim.lsp.buf.hover, desc = "Hover (lsp)", has = "hover" },
   }
 
   if client.supports_method("textDocument/codeLens") then
@@ -272,15 +282,6 @@ M.on_attach = function(client, bufnr)
     m.nnoremap("<leader>uy", function()
       require("utils.ui").toggle_buffer_semantic_tokens(bufnr)
     end, "Toggle LSP semantic highlight")
-  end
-  if client.name == "clangd" then
-    table.insert(keys, {
-      "g;",
-      function()
-        vim.cmd("ClangdSwitchSourceHeader")
-      end,
-      desc = "Alt file (lsp)",
-    })
   end
   if client.supports_method("textDocument/documentHighlight") then
     augroup("user_lsp_document_highlight", {

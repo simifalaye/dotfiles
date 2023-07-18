@@ -66,20 +66,36 @@ return {
         "Property",
       }
       lsp.register_keys(client, bufnr, {
-        { "gd", tcmd("lsp_definitions"), desc = "Goto Def (lsp)", has = "definition" },
-        { "gr", tcmd("lsp_references"), desc = "Goto Ref (lsp)" },
-        { "gI", tcmd("lsp_implementations"), desc = "Goto Impl (lsp)" },
-        { "gz", tcmd("lsp_type_definitions"), desc = "Goto Type (lsp)" },
-        { "<leader>cD", tcmd("diagnostics"), desc = "Work Diagnostics (lsp)" },
+        {
+          "<leader>cD",
+          tcmd("diagnostics", { bufnr = 0 }),
+          desc = "Doc Diagnostics (lsp)",
+        },
         {
           "<leader>cs",
           tcmd("lsp_document_symbols", { symbols = symbols }),
           desc = "Document Symbols (lsp)",
+          has = "documentSymbol",
         },
         {
           "<leader>cS",
           tcmd("lsp_dynamic_workspace_symbols", { symbols = symbols }),
           desc = "Workspace Symbols (lsp)",
+          has = "workspaceSymbol",
+        },
+        { "gd", tcmd("lsp_definitions"), desc = "Goto Def (lsp)", has = "definition" },
+        {
+          "gi",
+          tcmd("lsp_implementations"),
+          desc = "Goto Impl (lsp)",
+          has = "implementation",
+        },
+        { "gr", tcmd("lsp_references"), desc = "Goto Ref (lsp)", has = "references" },
+        {
+          "gz",
+          tcmd("lsp_type_definitions"),
+          desc = "Goto Type (lsp)",
+          has = "typeDefinition",
         },
       })
     end)

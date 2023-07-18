@@ -43,7 +43,7 @@ m.nnoremap("Q", "@q", "Run q Macro")
 m.nmap("g-", "yyp^v$r-Vk", "Underline -")
 m.nmap("g=", "yyp^v$r=Vk", "Underline =")
 m.nnoremap(
-  "gm",
+  "g>",
   [[<cmd>set nomore<bar>40messages<bar>set more<CR>]],
   "Show Message History"
 )

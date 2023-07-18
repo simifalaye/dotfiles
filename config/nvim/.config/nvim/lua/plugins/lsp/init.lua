@@ -53,6 +53,15 @@ return {
           local provider = get_provider(name)
           if provider and type(provider) == "table" then
             opts = utils.extend_tbl(opts, provider)
+            if opts.on_attach_ext then
+              local oa = opts.on_attach
+              local oa_ext = opts.on_attach_ext
+              opts.on_attach = function(client, bufnr)
+                oa(client, bufnr)
+                oa_ext(client, bufnr)
+              end
+              opts.on_attach_ext = nil
+            end
           end
           lspconfig[name].setup(opts)
         end,
@@ -75,7 +84,9 @@ return {
         },
       })
       -- Setup null-ls (NOTE: MUST come after mason-null-ls)
-      null_ls.setup({})
+      null_ls.setup({
+        on_attach = lsp.on_attach,
+      })
       -- Setup the formatting filter to prefer null-ls when available
       lsp.set_format_filter(function(c)
         local bufnr = vim.api.nvim_get_current_buf()
@@ -91,5 +102,11 @@ return {
         return c.name ~= "null-ls"
       end)
     end,
+  },
+  {
+    "j-hui/fidget.nvim",
+    tag = "legacy",
+    event = "BufReadPre",
+    config = true,
   },
 }

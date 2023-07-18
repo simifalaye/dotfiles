@@ -14,7 +14,10 @@ return {
 
       local bcolors = base16.colorschemes[colorscheme]
       if not colorscheme or colorscheme == "" or not bcolors then
-        utils.notify("Using default colorscheme instead of: " .. colorscheme, vim.log.levels.DEBUG)
+        utils.notify(
+          "Using default colorscheme instead of: " .. colorscheme,
+          vim.log.levels.DEBUG
+        )
         colorscheme = "default-dark"
         bcolors = base16.colorscheme[colorscheme]
       end

@@ -5,6 +5,7 @@ Nvim version: 0.8.0+
 Maintainer: simifalaye
 
 --]]
+local utils = require("utils")
 
 --- Inspect the contents of an object very quickly
 --- ex. P({1,2,3})
@@ -29,6 +30,9 @@ for _, source in ipairs({
 }) do
   local status_ok, fault = pcall(require, source)
   if not status_ok then
-    vim.api.nvim_err_writeln("Failed to load " .. source .. "\n\n" .. fault)
+    utils.notify(
+      "Failed to load " .. source .. "\n\n" .. fault,
+      vim.log.levels.ERROR
+    )
   end
 end
