@@ -1,6 +1,16 @@
 return {
   {
     "rcarriga/nvim-notify",
+    keys = {
+      { "g>", "<cmd>Notifications<CR>", desc = "Show Notifications" },
+    },
+    init = function()
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.notify = function(...)
+        require("lazy").load({ plugins = { "nvim-notify" } })
+        return vim.notify(...)
+      end
+    end,
     opts = {
       on_open = function(win)
         vim.api.nvim_win_set_config(win, { zindex = 1000 })
@@ -11,16 +21,6 @@ return {
       end,
       -- Manage log levels ourselves
       level = 0,
-    },
-    init = function()
-      ---@diagnostic disable-next-line: duplicate-set-field
-      vim.notify = function(...)
-        require("lazy").load({ plugins = { "nvim-notify" } })
-        return vim.notify(...)
-      end
-    end,
-    keys = {
-      { "g>", "<cmd>Notifications<CR>", desc = "Show Notifications" },
     },
     config = function(_, opts)
       local m = require("utils.map")

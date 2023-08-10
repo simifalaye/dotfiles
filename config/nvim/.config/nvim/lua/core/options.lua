@@ -71,7 +71,7 @@ local options = {
     user_diagnostics_mode = 3, -- set the visibility of diagnostics in the UI (0=off, 1=only show in status line, 2=virtual text off, 3=all on)
     user_semantic_tokens_enabled = true, -- enable LSP semantic tokens on startup
     user_notifications_enabled = true, -- disable notifications
-    user_log_level = log_level and log_level or vim.log.levels.WARN,
+    user_log_level = log_level and log_level or vim.log.levels.INFO,
   },
 }
 

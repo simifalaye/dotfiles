@@ -6,7 +6,7 @@ local M = {}
 ---@param str string message to print
 M.ui_notify = function(str)
   if vim.g.user_notifications_enabled then
-    require("utils").notify(str)
+    require("utils").notify(str, vim.log.levels.INFO)
   end
 end
 

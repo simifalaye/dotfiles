@@ -19,7 +19,6 @@ return {
       "TSUpdateSync",
     },
     dependencies = {
-      -- "nvim-treesitter/nvim-treesitter-textobjects",
       "windwp/nvim-ts-autotag",
       {
         "nvim-treesitter/nvim-treesitter-textobjects",
@@ -28,6 +27,7 @@ return {
           require("lazy.core.loader").disable_rtp_plugin("nvim-treesitter-textobjects")
         end,
       },
+      "JoosepAlviste/nvim-ts-context-commentstring",
     },
     opts = {
       ensure_installed = "all",

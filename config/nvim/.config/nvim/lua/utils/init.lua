@@ -56,7 +56,7 @@ end
 ---@param opts? table The nvim-notify options to use (:help notify-options)
 M.notify = function(msg, type, opts)
   local lvl = vim.g.user_log_level
-  if not lvl or type >= lvl then
+  if not lvl or not type or type >= lvl then
     vim.schedule(function()
       vim.notify(msg, type, M.extend_tbl({ title = "Nvim" }, opts))
     end)

@@ -15,11 +15,30 @@ return {
     "lewis6991/gitsigns.nvim",
     tag = "release",
     dependencies = { "nvim-lua/plenary.nvim" },
-    event = "BufReadPre",
     cmd = { "Gitsigns" },
+    ft = { "gitcommit", "diff" },
     init = function()
+      -- Add keymap group
       local m = require("utils.map")
       m.group("<leader>gh", "+hunk")
+      -- Load gitsigns only when a git file is opened
+      require("utils.command").augroup("user_gitsigns_lazyload", {
+        {
+          desc = "Lazy load gitsigns",
+          event = { "BufRead" },
+          command = function()
+            vim.fn.system(
+              "git -C " .. '"' .. vim.fn.expand("%:p:h") .. '"' .. " rev-parse"
+            )
+            if vim.v.shell_error == 0 then
+              vim.api.nvim_del_augroup_by_name("user_gitsigns_lazyload")
+              vim.schedule(function()
+                require("lazy").load({ plugins = { "gitsigns.nvim" } })
+              end)
+            end
+          end,
+        },
+      })
     end,
     keys = {
       {
