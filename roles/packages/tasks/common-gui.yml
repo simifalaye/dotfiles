@@ -1,5 +1,6 @@
-# Main
-# ====
+#-
+#  Main
+#-
 
 - name: Install core common gui packages
   become: true

@@ -28,6 +28,14 @@ return {
         end,
       },
       "JoosepAlviste/nvim-ts-context-commentstring",
+      {
+        "Wansmer/treesj",
+        keys = {
+          { "gS", "<Cmd>TSJSplit<CR>", desc = "Split Lines (ts)" },
+          { "gJ", "<Cmd>TSJJoin<CR>", desc = "Join Lines (ts)" },
+        },
+        opts = { use_default_keymaps = false },
+      },
     },
     opts = {
       ensure_installed = "all",
@@ -42,9 +50,9 @@ return {
       incremental_selection = {
         enable = true,
         keymaps = {
-          init_selection = "<C-space>",
-          node_incremental = "<C-space>",
-          scope_incremental = false,
+          init_selection = "<Enter>",
+          node_incremental = "<Enter>",
+          scope_incremental = "<S-Enter>",
           node_decremental = "<bs>",
         },
       },

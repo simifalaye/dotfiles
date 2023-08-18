@@ -27,10 +27,7 @@ local has_capability = function(capability, filter)
   return false
 end
 
-local formatting_opts = {
-  async = true,
-  filter = nil,
-}
+local formatting_opts = { async = true }
 
 local attach_handlers = {}
 
@@ -61,8 +58,8 @@ M.flags = {
 M.signs = {
   { name = "DiagnosticSignError", text = "" },
   { name = "DiagnosticSignWarn", text = "" },
-  { name = "DiagnosticSignHint", text = "" },
-  { name = "DiagnosticSignInfo", text = "" },
+  { name = "DiagnosticSignHint", text = "" },
+  { name = "DiagnosticSignInfo", text = "" },
 }
 
 -- Default diagnostics (based on mode toggle in ./ui.lua)
@@ -97,15 +94,9 @@ M.diagnostics = {
   default_diagnostics,
 }
 
---- Set the formatting filter function to use
----@param func fun(c: lsp.Client): boolean
-M.set_format_filter = function(func)
-  formatting_opts.filter = func
-end
-
 --- Add an attach handler to be called with the on_attach lsp function
 ---@param handler fun(args: lsp.Client, bufnr: integer)
----@param once boolean?
+---@param once boolean? only run for one attached client
 M.register_attach_handler = function(handler, once)
   once = once and once or true
   table.insert(attach_handlers, handler)
@@ -121,14 +112,14 @@ end
 
 ---@class UserLspKeys
 ---@field [1] string lhs
----@field [2]? string|fun()|false rhs
----@field desc? string
----@field mode? string|string[]
----@field noremap? boolean
----@field remap? boolean
----@field expr? boolean
----@field id string
----@field has string
+---@field [2] string|fun()|false rhs
+---@field desc string?
+---@field mode string|string[]|nil
+---@field noremap boolean?
+---@field remap boolean?
+---@field expr boolean?
+---@field id string?
+---@field has string? map only if the client has a specific capability
 
 --- Register lsp keys for the current buffer
 ---@param client lsp.Client
@@ -181,20 +172,21 @@ M.on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
 
+  m.group("<localleader>w", "+workspace", "n", true)
   local keys = {
     { "]d", vim.diagnostic.goto_next, desc = "Diagnostic (lsp)" },
     { "[d", vim.diagnostic.goto_prev, desc = "Diagnostic (lsp)" },
     {
-      "<leader>ca",
+      "<localleader>a",
       vim.lsp.buf.code_action,
       desc = "Code Action (lsp)",
       mode = { "n", "v" },
       has = "codeAction",
     },
-    { "<leader>cd", vim.diagnostic.open_float, desc = "Line Diagnostics (lsp)" },
-    { "<leader>cD", vim.diagnostic.setloclist, desc = "Doc Diagnostics (lsp)" },
+    { "<localleader>d", vim.diagnostic.open_float, desc = "Line Diagnostics (lsp)" },
+    { "<localleader>D", vim.diagnostic.setloclist, desc = "Doc Diagnostics (lsp)" },
     {
-      "<leader>cf",
+      "<localleader>f",
       function()
         vim.lsp.buf.format(formatting_opts)
       end,
@@ -202,7 +194,7 @@ M.on_attach = function(client, bufnr)
       has = "documentFormatting",
     },
     {
-      "<leader>cf",
+      "<localleader>f",
       function()
         vim.lsp.buf.format(formatting_opts)
       end,
@@ -210,8 +202,24 @@ M.on_attach = function(client, bufnr)
       mode = "v",
       has = "documentRangeFormatting",
     },
-    { "<leader>ci", "<cmd>LspInfo<cr>", desc = "Info (lsp)" },
-    { "<leader>cr", vim.lsp.buf.rename, desc = "Rename (lsp)", has = "rename" },
+    { "<localleader>r", vim.lsp.buf.rename, desc = "Rename (lsp)", has = "rename" },
+    {
+      "<localleader>wa",
+      vim.lsp.buf.add_workspace_folder,
+      desc = "Add Folder (lsp)",
+    },
+    {
+      "<localleader>wr",
+      vim.lsp.buf.remove_workspace_folder,
+      desc = "Remove Folder (lsp)",
+    },
+    {
+      "<localleader>wl",
+      function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+      end,
+      desc = "List Folders (lsp)",
+    },
     { "gd", vim.lsp.buf.definition, desc = "Goto Def (lsp)", has = "definition" },
     { "gD", vim.lsp.buf.declaration, desc = "Goto Dec (lsp)", has = "declaration" },
     { "gK", vim.lsp.buf.signature_help, desc = "Signature (lsp)", has = "signatureHelp" },
@@ -223,7 +231,7 @@ M.on_attach = function(client, bufnr)
     },
     { "gr", vim.lsp.buf.references, desc = "Goto Ref (lsp)", has = "references" },
     {
-      "gz",
+      "gy",
       vim.lsp.buf.type_definition,
       desc = "Goto Type (lsp)",
       has = "typeDefinition",
@@ -252,14 +260,14 @@ M.on_attach = function(client, bufnr)
       vim.lsp.codelens.refresh()
     end
     table.insert(keys, {
-      "<leader>cl",
+      "<localleader>l",
       function()
         vim.lsp.codelens.refresh()
       end,
       desc = "Codelens refresh (lsp)",
     })
     table.insert(keys, {
-      "<leader>cL",
+      "<localleader>L",
       function()
         vim.lsp.codelens.run()
       end,
@@ -307,6 +315,11 @@ M.on_attach = function(client, bufnr)
       },
     })
   end
+  if client.name == "clangd" then
+    m.nnoremap("g;", function()
+      vim.cmd("ClangdSwitchSourceHeader")
+    end, { desc = "Alt file (lsp)", buffer = bufnr })
+  end
 
   -- Register lsp keys
   M.register_keys(client, bufnr, keys)
@@ -315,6 +328,57 @@ M.on_attach = function(client, bufnr)
   for _, handler in ipairs(attach_handlers) do
     handler(client, bufnr)
   end
+end
+
+--- Start a dev containter for lsp
+---@param src string the path to your local project
+---@param tar string the path on the container to mount your project
+---@param name string the name of the container to use
+---@param image string the image to use
+---@param cmd string the command to run after creating the container
+M.container_setup = function(src, tar, name, image, cmd)
+  cmd = cmd or "echo 'nil'"
+  -- Check if the container already exists and is running
+  local containerStatus =
+    vim.fn.systemlist("docker ps --format '{{.Names}}' --filter name=" .. name)
+  if #containerStatus == 0 then
+    -- Container doesn't exist, start it
+    local keep_alive_cmd = "tail -f /dev/null"
+    local command = string.format(
+      "docker run --rm -d --mount type=bind,source=%s,target=%s --name %s %s sh -c '%s && %s'",
+      src,
+      tar,
+      name,
+      image,
+      cmd,
+      keep_alive_cmd
+    )
+    local _ = vim.fn.system(command)
+    local exit_code = vim.v.shell_error
+
+    if exit_code == 0 then
+      utils.notify("Dev container started: " .. name, vim.log.levels.INFO)
+      return true
+    else
+      utils.notify("Dev container failed to start: " .. exit_code, vim.log.levels.ERROR)
+      return false
+    end
+    return
+  else
+    utils.notify("Dev container already running", vim.log.levels.DEBUG)
+    return true
+  end
+end
+
+--- Combine the default server configuration with custom additions
+---@param conf table? the server config to add
+---@return table
+M.get_conf = function(conf)
+  return utils.extend_tbl({
+    on_attach = M.on_attach,
+    capabilities = M.get_capabilities(),
+    flags = M.flags,
+  }, conf)
 end
 
 return M

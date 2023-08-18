@@ -1,7 +1,7 @@
 return {
   {
     "nmac427/guess-indent.nvim",
-    lazy = false,
+    event = "BufReadPre",
     opts = {
       auto_cmd = true,
       override_editorconfig = false,

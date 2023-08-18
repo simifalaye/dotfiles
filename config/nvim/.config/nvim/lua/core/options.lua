@@ -9,7 +9,7 @@ if vim.env.USER_LOG_LEVEL and type(vim.env.USER_LOG_LEVEL) == "string" then
 end
 
 vim.opt.viewoptions:remove("curdir") -- disable saving current directory with views
-vim.opt.shortmess:append({ I = true, S = true }) -- disable startup message
+vim.opt.shortmess:append({ s = true, I = true }) -- disable startup message
 vim.opt.backspace:append({ "nostop" }) -- Don't stop backspace at insert
 if vim.fn.has("nvim-0.9") == 1 then
   vim.opt.diffopt:append("linematch:60") -- enable linematch diff algorithm
@@ -21,6 +21,7 @@ local options = {
     clipboard = "unnamedplus", -- Connection to the system clipboard
     cmdheight = 0, -- hide command line unless needed
     completeopt = { "menu", "menuone", "noselect" }, -- Options for insert mode completion
+    wildmode = "longest:full,full", -- Command-line completion mode
     copyindent = true, -- Copy the previous indentation on autoindenting
     cursorline = true, -- Highlight the text line of the cursor
     expandtab = true, -- Enable the use of space in tab

@@ -1,5 +1,6 @@
-# Main
-# ====
+#-
+#  Main
+#-
 
 - name: Override some variables based on distribution
   include_vars: "{{ item }}"
@@ -17,7 +18,6 @@
 - include_tasks: cheat.yml
 - include_tasks: delta.yml
 - include_tasks: exa.yml
-- include_tasks: lazygit.yml
 - include_tasks: neovim.yml
 - include_tasks: zoxide.yml
 - include_tasks: common-gui.yml

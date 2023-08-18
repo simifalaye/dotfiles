@@ -74,26 +74,59 @@ M.tnoremap = make_mapper("t", noremap_opts)
 M.snoremap = make_mapper("s", noremap_opts)
 M.cnoremap = make_mapper("c", { noremap = true, silent = false })
 
---- Register a which-key group name
----@param prefix string
----@param name string
----@param mode string|table|nil
-M.group = function(prefix, name, mode)
-  if not prefix or not name then
+-- --- Register a which-key group name
+-- ---@param prefix string
+-- ---@param name string
+-- ---@param mode string|table|nil
+-- ---@param buf boolean|nil
+-- M.group = function(prefix, name, mode, buf)
+--   if not prefix or not name then
+--     return
+--   end
+--   local wk = prequire("which-key")
+--   if wk then
+--     if type(mode) == "nil" then
+--       mode = { "n" }
+--     elseif type(mode) == "string" then
+--       mode = { mode }
+--     end
+--     for _, v in pairs(mode) do
+--       wk.register({ [prefix] = { name = name, mode = v, buffer = buf } })
+--     end
+--     utils.notify(string.format("Key Group {%s, %s}", prefix, name), vim.log.levels.DEBUG)
+--   end
+-- end
+
+--- Register a name for a keymap group
+---@param prefix string the keymap for the group
+---@param name string the group name
+---@param mode string|nil the mode(s)
+---@param buffer boolean|nil
+M.group = function(prefix, name, mode, buffer)
+  local clue = prequire("mini.clue")
+  if not clue then
     return
   end
-  local wk = prequire("which-key")
-  if wk then
-    if type(mode) == "nil" then
-      mode = { "n" }
-    elseif type(mode) == "string" then
-      mode = { mode }
-    end
-    for _, v in pairs(mode) do
-      wk.register({ [prefix] = { name = name, mode = v } })
-    end
-    utils.notify(string.format("Key Group {%s, %s}", prefix, name), vim.log.levels.DEBUG)
+
+  mode = mode or "n"
+  buffer = buffer or false
+  local group = { mode = mode, keys = prefix, desc = name }
+  if buffer then
+    vim.b.miniclue_config =
+      utils.extend_tbl(vim.b.miniclue_config or {}, { clues = { group } })
+  else
+    table.insert(clue.config.clues, group)
   end
+  utils.notify(string.format("Key Group {%s, %s}", prefix, name), vim.log.levels.DEBUG)
+end
+
+--- Refresh the keymap clues
+M.refresh_clues = function()
+  local clue = prequire("mini.clue")
+  if not clue then
+    return
+  end
+  clue.ensure_buf_triggers()
 end
 
 return M

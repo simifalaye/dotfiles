@@ -5,8 +5,8 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       local alpha = require("alpha")
-      local startify = require("alpha.themes.startify")
-      startify.section.header.val = {
+      local theta = require("alpha.themes.theta")
+      theta.header.val = {
         "           ▄ ▄                   ",
         "       ▄   ▄▄▄     ▄ ▄▄▄ ▄ ▄     ",
         "       █ ▄ █▄█ ▄▄▄ █ █▄█ █ █     ",
@@ -17,7 +17,7 @@ return {
         "█▄█ ▄ █▄▄█▄▄█ █ ▄▄█ █ ▄ █ █▄█▄█ █",
         "    █▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█ █▄█▄▄▄█    ",
       }
-      alpha.setup(startify.config)
+      alpha.setup(theta.config)
     end,
   },
 }

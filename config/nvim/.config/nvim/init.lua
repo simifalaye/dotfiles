@@ -30,9 +30,6 @@ for _, source in ipairs({
 }) do
   local status_ok, fault = pcall(require, source)
   if not status_ok then
-    utils.notify(
-      "Failed to load " .. source .. "\n\n" .. fault,
-      vim.log.levels.ERROR
-    )
+    utils.notify("Failed to load " .. source .. "\n\n" .. fault, vim.log.levels.ERROR)
   end
 end

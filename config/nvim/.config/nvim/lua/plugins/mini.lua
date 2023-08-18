@@ -33,6 +33,7 @@ return {
             "notify",
             "toggleterm",
             "lazyterm",
+            "fzf",
           },
           command = function()
             vim.b.miniindentscope_disable = true
@@ -78,12 +79,12 @@ return {
       {
         "<leader>x",
         "<cmd>lua MiniBufremove.delete()<CR>",
-        desc = "Delete Buffer",
+        desc = "E[x]it Buf",
       },
       {
         "<leader>X",
-        "<cmd>lua MiniBufremove.wipeout()<CR>",
-        desc = "Wipe Buffer",
+        "<cmd>lua MiniBufremove.delete(0, true)<CR>",
+        desc = "E[x]it Buf!",
       },
     },
     config = true,
@@ -174,12 +175,20 @@ return {
   {
     "echasnovski/mini.ai",
     event = "VeryLazy",
-    dependencies = { "nvim-treesitter-textobjects" },
     opts = function()
+      local prequire = require("utils.prequire")
       local ai = require("mini.ai")
-      return {
+      local opts = {
         n_lines = 500,
-        custom_textobjects = {
+        mappings = {
+          around_last = "",
+          inside_last = "",
+          around_next = "",
+          inside_next = "",
+        },
+      }
+      if prequire("nvim-treesitter-textobjects") ~= nil then
+        opts.custom_textobjects = {
           o = ai.gen_spec.treesitter({
             a = { "@block.outer", "@conditional.outer", "@loop.outer" },
             i = { "@block.inner", "@conditional.inner", "@loop.inner" },
@@ -189,9 +198,82 @@ return {
             {}
           ),
           c = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }, {}),
-        },
-      }
+        }
+      end
+      return opts
     end,
     config = true,
+  },
+  {
+    "echasnovski/mini.clue",
+    lazy = false,
+    version = false,
+    config = function()
+      local miniclue = require("mini.clue")
+      miniclue.setup({
+        triggers = {
+          -- Leader triggers
+          { mode = "n", keys = "<Leader>" },
+          { mode = "x", keys = "<Leader>" },
+          { mode = "n", keys = "<localleader>" },
+          { mode = "x", keys = "<localleader>" },
+
+          -- [/]
+          { mode = "n", keys = "]" },
+          { mode = "x", keys = "]" },
+          { mode = "o", keys = "]" },
+          { mode = "n", keys = "[" },
+          { mode = "x", keys = "[" },
+          { mode = "o", keys = "[" },
+
+          -- Built-in completion
+          -- { mode = "i", keys = "<C-x>" },
+
+          -- `g` key
+          { mode = "n", keys = "g" },
+          { mode = "x", keys = "g" },
+
+          -- Marks
+          { mode = "n", keys = "'" },
+          { mode = "n", keys = "`" },
+          { mode = "x", keys = "'" },
+          { mode = "x", keys = "`" },
+
+          -- Registers
+          { mode = "n", keys = '"' },
+          { mode = "x", keys = '"' },
+          { mode = "i", keys = "<C-r>" },
+          { mode = "c", keys = "<C-r>" },
+
+          -- Window commands
+          { mode = "n", keys = "<C-w>" },
+
+          -- `z` key
+          { mode = "n", keys = "z" },
+          { mode = "x", keys = "z" },
+        },
+
+        clues = {
+          -- Enhance this by adding descriptions for <Leader> mapping groups
+          { mode = "n", keys = "<leader>f", desc = "+find" },
+          { mode = "x", keys = "<leader>f", desc = "+find" },
+          { mode = "n", keys = "<leader>g", desc = "+git" },
+          { mode = "n", keys = "<leader>p", desc = "+plugin" },
+          { mode = "n", keys = "<leader>u", desc = "+ui" },
+          miniclue.gen_clues.builtin_completion(),
+          miniclue.gen_clues.g(),
+          miniclue.gen_clues.marks(),
+          miniclue.gen_clues.registers(),
+          miniclue.gen_clues.windows(),
+          miniclue.gen_clues.z(),
+        },
+        window = {
+          delay = 500,
+          config = {
+            width = "auto",
+          }
+        }
+      })
+    end,
   },
 }

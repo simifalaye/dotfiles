@@ -1,13 +1,15 @@
-# Checks
-# ======
+#-
+#  Checks
+#-
 
 - name: Check if zsh is installed
   shell: "which zsh"
   register: zsh_path
   ignore_errors: true
 
-# Main
-# ====
+#-
+#  Main
+#-
 
 # Includes
 - include_tasks: xsh.yml
