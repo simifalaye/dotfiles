@@ -10,11 +10,10 @@ function has {
 }
 
 # - Installs core dependencies:
-#   - python3
-#   - python3-pip
 #   - curl
 #   - gnu-stow
-#   - pipx (for installing ansible)
+#   - python3
+#   - python3-pip
 #   - ansible
 function install_deps {
   echo "### Installing dependencies"
@@ -27,7 +26,7 @@ function install_deps {
     'Darwin')
       echo "### Detected macOS"
       brew update
-      brew install python curl stow pipx
+      brew install curl stow python
       pipx ensurepath
       ;;
     'Linux')
@@ -37,28 +36,25 @@ function install_deps {
         if grep -q -E '(debian|ubuntu|linuxmint)' /etc/os-release; then
           echo "Detected Debian/Ubuntu/Linux Mint"
           sudo apt-get update
-          sudo apt-get install -y python3 python3-pip curl stow
+          sudo apt-get install -y curl stow python3 python3-pip
         elif grep -q -E '(centos|rhel|fedora)' /etc/os-release; then
           echo "Detected CentOS/RHEL/Fedora"
           if [ -f /etc/centos-release ]; then
             sudo yum update
             sudo yum install -y epel-release
           fi
-          sudo yum install -y python3 python3-pip curl stow
+          sudo yum install -y curl stow python3 python3-pip
         elif grep -q -E '(arch)' /etc/os-release; then
           echo "Detected Arch"
-          sudo pacman -Syyu --noconfirm python python-pip curl stow
+          sudo pacman -Syyu --noconfirm curl stow python python-pip
         elif grep -q -E '(opensuse)' /etc/os-release; then
           echo "Detected openSUSE"
           sudo zypper update
-          sudo zypper install -y python3 python3-pip curl stow
+          sudo zypper install -y curl stow python3 python3-pip
         else
           echo "Unsupported Linux distribution"
           exit 1
         fi
-        # Install pipx
-        python3 -m pip install --user pipx
-        python3 -m pipx ensurepath
       else
         echo "Unsupported Linux distribution"
         exit 1
@@ -71,8 +67,7 @@ function install_deps {
   esac
 
   # Install ansible and community modules
-  pip install ansible requests
-  pipx install --include-deps ansible
+  python3 -m pip install --user ansible
   ansible-galaxy collection install community.general
 }
 
@@ -81,7 +76,7 @@ function install_deps {
 #-
 
 # Install deps if not installed
-if ! has curl ansible stow; then
+if ! has curl stow ansible; then
   if ! install_deps; then
     echo "### Failed to install dependencies"
     exit 0
