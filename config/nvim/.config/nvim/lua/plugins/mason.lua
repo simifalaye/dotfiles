@@ -19,11 +19,8 @@ return {
         -- a list of all tools you want to ensure are installed upon
         -- start; they should be the names Mason uses for each tool
         ensure_installed = {
-          -- TODO: Setup ansible server (note, newer versions require a higher
-          -- nodejs version which isn't installed in my ubuntu version)
-          -- See: https://ansible.readthedocs.io/projects/language-server/changelog/
-          -- { "ansible-language-server", version = "1.0.2" },
-          -- "ansible-lint",
+          "ansible-language-server", -- NOTE: node version matters
+          "ansible-lint", -- NOTE: node version matters
           "clangd",
           "cpplint",
           "clang-format",
@@ -31,9 +28,8 @@ return {
           "stylua",
           "shellcheck",
           "shfmt",
-          -- Versions: https://www.npmjs.com/package/vscode-langservers-extracted/v/4.0.0?activeTab=versions
-          { "json-lsp", version = "2.3.0", auto_update = false }, -- Node compatability (ubuntu 22.04)
-          { "yaml-language-server", version = "1.10.0", auto_update = false }, -- Node compatability (ubuntu 22.04)
+          "json-lsp", -- NOTE: node version matters
+          "yaml-language-server", -- NOTE: node version matters
         },
         auto_update = false,
         run_on_start = true,

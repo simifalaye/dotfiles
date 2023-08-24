@@ -10,18 +10,14 @@
 
 # Pre-Install Requirements
 
-- wget (installed by default on most distributions)
+- git
 
 # Install
 
 ```sh
-wget -O - https://raw.githubusercontent.com/simifalaye/dotfiles/main/install.sh | sh
-```
-
-# Run
-
-```sh
-./run.sh
+git clone https://github.com/simifalaye/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+./install
 ```
 
 # Graphical Applications

@@ -59,3 +59,4 @@ export CALCHISTFILE="${XDG_CACHE_HOME}/calc_history"
 # Prepend additonal app binaries to PATH to allow overriding system commands.
 path_prepend "${CARGO_HOME}"/bin PATH
 path_prepend "${XDG_DATA_HOME}"/npm/bin PATH
+path_prepend "${XDG_DATA_HOME}"/python/bin PATH

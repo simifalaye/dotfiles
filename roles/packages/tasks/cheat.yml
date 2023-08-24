@@ -1,24 +1,9 @@
-#-
-#  Checks
-#-
+# vim: filetype=yaml.ansible
 
-- command_exists:
-    command: cht.sh
-  register: cheat_cmd
-  ignore_errors: true
-
-#-
-#  Main
-#-
-
-- name: Install cht.sh if not installed
+- name: Install cht.sh
   become: true
-  become_method: sudo
-  get_url:
+  ansible.builtin.get_url:
     url: https://cht.sh/:cht.sh
     dest: /usr/local/bin/cht.sh
     mode: '0755'
-  register: cht_sh_install_result
-  changed_when: cht_sh_install_result.changed
-  failed_when: false
-  when: not cheat_cmd.exists
+  when: "not ('cht.sh' | is_installed)"

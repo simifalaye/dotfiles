@@ -1,0 +1,9 @@
+# vim: filetype=yaml.ansible
+
+- name: Setup Workstation
+  hosts: local
+  roles:
+    - packages
+    - fonts
+    - dot
+    - shell

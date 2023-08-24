@@ -157,6 +157,20 @@ return {
             vim.keymap.set("n", "g.", toggle_dotfiles, { buffer = buf_id })
           end,
         },
+        {
+          desc = "Close mini.files on lost focus",
+          event = "BufEnter",
+          pattern = "*",
+          command = function(_)
+            local ft = vim.bo.filetype
+            if ft == "minifiles" or ft == "minifiles-help" then
+              return
+            end
+            local cur_win_id = vim.api.nvim_get_current_win()
+            require("mini.files").close()
+            pcall(vim.api.nvim_set_current_win, cur_win_id)
+          end,
+        },
       })
       opts.content = {
         filter = function(fs_entry)
@@ -271,8 +285,8 @@ return {
           delay = 500,
           config = {
             width = "auto",
-          }
-        }
+          },
+        },
       })
     end,
   },

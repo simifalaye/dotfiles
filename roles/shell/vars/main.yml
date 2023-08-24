@@ -1,0 +1,4 @@
+# vim: filetype=yaml.ansible
+
+xsh_dir: ~/.config/xsh
+xsh_src: "{{ xsh_dir }}/xsh.sh"

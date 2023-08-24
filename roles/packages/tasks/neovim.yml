@@ -1,15 +1,4 @@
-#-
-#  Checks
-#-
-
-- command_exists:
-    command: nvim
-  register: neovim_cmd
-  ignore_errors: true
-
-#-
-#  Main
-#-
+# vim: filetype=yaml.ansible
 
 - name: Download and install Neovim
   vars:
@@ -17,31 +6,31 @@
     nvim_bin_path: "{{ bin_dir }}/nvim"
     nvim_dir_path: "{{ bin_dir }}/nvim-linux64"
     tmp_tar_path: "/tmp/nvim.tar.gz"
+  when: "not ('nvim' | is_installed)"
   block:
     - name: Create bin dir
-      file:
+      ansible.builtin.file:
         path: ~/.local/bin
         state: directory
+        mode: '0755'
     - name: Download Neovim release
-      get_url:
+      ansible.builtin.get_url:
         url: "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
         dest: "{{ tmp_tar_path }}"
         mode: "0755"
     - name: Extract Neovim tar
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ tmp_tar_path }}"
         dest: "{{ bin_dir }}"
         copy: false
         mode: '0755'
     - name: Link Neovim binary
-      file:
+      ansible.builtin.file:
         src: "{{ nvim_dir_path }}/bin/nvim"
         dest: "{{ nvim_bin_path }}"
         state: link
         force: true
     - name: Remove temporary files
-      file:
+      ansible.builtin.file:
         path: "{{ tmp_tar_path }}"
         state: absent
-      changed_when: true
-  when: not neovim_cmd.exists

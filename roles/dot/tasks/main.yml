@@ -1,10 +1,13 @@
+# vim: filetype=yaml.ansible
+
 - name: Set ~/.stowrc contents
-  copy:
+  ansible.builtin.copy:
     dest: "{{ ansible_env.HOME }}/.stowrc"
     content: |
       --no-folding
       --dir={{ playbook_dir }}/config
       --target={{ ansible_env.HOME }}
+    mode: '0644'
 
 - name: Clean up home
   vars:
@@ -27,31 +30,33 @@
       - "{{ ansible_env.HOME }}/.tmux.conf"
   block:
     - name: Remove unwanted dotfiles
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         state: absent
       loop: "{{ remove_list }}"
     - name: Get the file stat of each file to backup
-      stat:
+      ansible.builtin.stat:
         path: "{{ item }}"
       loop: "{{ backup_list }}"
       register: file_stat
     - name: Backup duplicate dotfiles
-      command: mv "{{ item.item }}" "{{ item.item }}.bak"
+      ansible.builtin.command: mv "{{ item.item }}" "{{ item.item }}.bak"
       with_items: "{{ file_stat.results }}"
+      register: backup_results
       when: item.stat.exists and item.stat.isreg
       no_log: true
+      changed_when: backup_results.results | selectattr("rc", "eq", 0) | list | length > 0
 
 - name: Build directories list
-  find:
+  ansible.builtin.find:
     paths: [config]
-    recurse: no
+    recurse: false
     file_type: directory
-  register: files
+  register: dotfiles
 
 - name: Deploy dotfiles!
-  with_items: '{{ files.files }}'
-  shell: |
+  with_items: '{{ dotfiles.files }}'
+  ansible.builtin.shell: |
     PKG={{ item.path | replace("config/", "") }}
     stow -R ${PKG}
   args:
@@ -59,7 +64,7 @@
     executable: /bin/bash
   loop_control:
     label: |-
-      {% if output.stderr|length > 1 %}
+      {% if output.stderr | length > 1 %}
       {{ item.path }}
       {{ output.stderr }}
       {%- else %}

@@ -1,18 +1,8 @@
-#-
-#  Checks
-#-
-
-- command_exists:
-    command: zoxide
-  register: zoxide_cmd
-  ignore_errors: true
-
-#-
-#  Main
-#-
+# vim: filetype=yaml.ansible
 
 - name: Install latest release of ajeetdsouza/zoxide
   become: true
+  when: "not ('zoxide' | is_installed)"
   block:
     - name: Get latest version of zoxide
       get_latest_github_tag:
@@ -20,40 +10,42 @@
         repo: zoxide
       register: gh_tag
     - name: Create zoxide tmp dir
-      file:
+      ansible.builtin.file:
         path: /tmp/zoxide
         state: directory
+        mode: '0755'
     - name: Extract zoxide archive
-      unarchive:
-        src: "https://github.com/ajeetdsouza/zoxide/releases/download/{{ gh_tag.latest }}/zoxide-{{ gh_tag.latest | replace('v', '') }}-x86_64-unknown-linux-musl.tar.gz"
+      ansible.builtin.unarchive:
+        src: >-
+          https://github.com/ajeetdsouza/zoxide/releases/download/{{ gh_tag.latest }}/
+          zoxide-{{ gh_tag.latest | replace('v', '') }}-x86_64-unknown-linux-musl.tar.gz
         dest: /tmp/zoxide
-        remote_src: yes
+        remote_src: true
     - name: Install zoxide bin
-      copy:
+      ansible.builtin.copy:
         src: "/tmp/zoxide/zoxide"
         dest: /usr/local/bin/zoxide
-        mode: 0755
+        mode: '0755'
     - name: Install zoxide bash completion
-      copy:
+      ansible.builtin.copy:
         src: "/tmp/zoxide/completions/zoxide.bash"
         dest: "{{ bash_completions_dir }}/zoxide"
-        mode: 0644
+        mode: '0644'
     - name: Install zoxide zsh completion
-      copy:
+      ansible.builtin.copy:
         src: "/tmp/zoxide/completions/_zoxide"
         dest: "{{ zsh_completions_dir }}/_zoxide"
-        mode: 0644
+        mode: '0644'
     - name: Install zoxide man pages
-      copy:
+      ansible.builtin.copy:
         src: "{{ item }}"
         dest: "{{ man_dir }}"
-        mode: 0644
+        mode: '0644'
       with_fileglob:
         - "/tmp/zoxide/man/man1/*.1"
     - name: Remove zoxide temporary files
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         state: absent
       with_items:
         - "/tmp/zoxide"
-  when: not zoxide_cmd.exists

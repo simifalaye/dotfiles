@@ -1,24 +1,87 @@
-#-
-#  Main
-#-
+# vim: filetype=yaml.ansible
 
 - name: Override some variables based on distribution
-  include_vars: "{{ item }}"
+  ansible.builtin.include_vars: "{{ item }}"
   with_fileglob:
     - "../vars/{{ ansible_distribution }}.yml"
-    - "../vars/{{ ansible_distribution }}-{{ ansible_distribution_major_version | int}}.yml"
+    - "../vars/{{ ansible_distribution }}-{{ ansible_distribution_major_version | int }}.yml"
   when: item is file
 
-- name: Get desktop environment
-  shell: echo $XDG_CURRENT_DESKTOP
-  register: desktop_env
+# Install common packages that should be availabe on all package managers (with the same name)
+- name: Install core common packages
+  become: true
+  ansible.builtin.package:
+    name:
+      - atool
+      - bat
+      - bitwise
+      - calc
+      - cloc
+      - elinks
+      - fzf
+      - htop
+      - jq
+      - nodejs
+      - npm
+      - ripgrep
+      - rsync
+      - tig
+      - tmux
+      - tree
+      - unison
+      - zsh
+    state: present
 
-# Includes
-- include_tasks: common.yml
-- include_tasks: cheat.yml
-- include_tasks: delta.yml
-- include_tasks: exa.yml
-- include_tasks: neovim.yml
-- include_tasks: zoxide.yml
-- include_tasks: common-gui.yml
-  when: desktop_env.stdout is defined and desktop_env.stdout != ""
+# Install common gui packages that should be availabe on all package managers (with the same name)
+- name: Install core gui packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - arandr
+      - autorandr
+      - dunst
+      - mpv
+      - nitrogen
+      - pasystray
+      - peek
+      - policykit-1-gnome
+      - ppa-purge
+      - redshift
+      - rofi
+      - screenkey
+      - scrot
+      - zathura
+    state: present
+  when:
+    - ansible_env.XDG_CURRENT_DESKTOP is defined
+    - ansible_env.XDG_CURRENT_DESKTOP != ""
+
+- name: Install common pip packages
+  ansible.builtin.pip:
+    name:
+      - pynvim
+      - trash-cli
+    state: present
+
+- name: Install common global npm packages
+  become: true
+  npm:
+    name: "{{ item }}"
+    global: true
+    state: present
+  loop:
+    - n # Used for download other node versions
+    - neovim
+
+# Install distro-specific apps
+- name: Include standalone package installer tasks
+  ansible.builtin.include_tasks: "{{ outer_item }}"
+  loop:
+    - cheat.yml
+    - delta.yml
+    - exa.yml
+    - fd.yml
+    - neovim.yml
+    - zoxide.yml
+  loop_control:
+    loop_var: outer_item
