@@ -10,7 +10,7 @@
 
 # Disable control flow (^S/^Q).
 if [ -r "${TTY:-}" ] && [ -w "${TTY:-}" ] && command -v stty >/dev/null; then
-    stty -ixon
+  stty -ixon
 fi
 
 # General parameters and options.

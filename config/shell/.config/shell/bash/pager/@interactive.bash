@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 
 if [[ $TERM == 'dumb' ]]; then
-    return 1
+  return 1
 fi
 
 # Convenience aliases.

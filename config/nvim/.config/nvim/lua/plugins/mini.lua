@@ -219,6 +219,17 @@ return {
     config = true,
   },
   {
+    "echasnovski/mini.align",
+    version = "*",
+    keys = {
+      { "ga", mode = { "n", "x" } },
+      { "gA", mode = { "n", "x" } },
+    },
+    config = function ()
+      require("mini.align").setup()
+    end
+  },
+  {
     "echasnovski/mini.clue",
     lazy = false,
     version = false,

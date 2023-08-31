@@ -68,9 +68,7 @@ compile_flags.txt
 
 # Directories #
 #####################
-build*/
-oe-workdir
-oe-logs
+build/
 *.egg-info/
 htmlcov/
 .vscode/

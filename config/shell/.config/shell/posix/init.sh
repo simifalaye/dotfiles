@@ -11,3 +11,11 @@
 
 # Load core config
 xsh module core
+
+# Load application modules that have no requirements
+xsh module calc login
+xsh module golang login
+xsh module node login
+xsh module python login
+xsh module rustlang login
+xsh module tig login

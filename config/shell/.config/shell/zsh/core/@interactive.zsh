@@ -10,13 +10,13 @@ setopt interactive_comments # Allow comments starting with `#` in the interactiv
 setopt no_clobber # Disallow `>` to overwrite existing files. Use `>|` or `>!` instead.
 
 # CD
-setopt auto_cd # pERFORM cd to a directory if the typed command is invalid, but is a directory.
-setopt auto_pushd # mAKE cd push the old directory to the directory stack.
+setopt auto_cd # Perform cd to a directory if the typed command is invalid, but is a directory.
+setopt auto_pushd # Make cd push the old directory to the directory stack.
 autoload -Uz is-at-least && if is-at-least 5.8; then
-    setopt cd_silent # dON'T print the working directory after a cd.
+  setopt cd_silent # Don't print the working directory after a cd.
 fi
 setopt pushd_ignore_dups # Don't push multiple copies of the same directory to the stack.
-setopt pushd_silent # dOn't print the directory stack after pushd or popd.
+setopt pushd_silent # Don't print the directory stack after pushd or popd.
 setopt pushd_to_home # have pushd without arguments act like `pushd ${HOME}`.
 setopt extended_glob # Treat `#`, `~`, and `^` as patterns for filename globbing.
 
@@ -65,12 +65,12 @@ alias -g NUL="> /dev/null 2>&1"
 autoload -Uz add-zsh-hook
 
 function -auto-ls-after-cd() {
-    emulate -L zsh
-    # Only in response to a user-initiated `cd`, not indirectly (eg. via another
-    # function).
-    if [ "$ZSH_EVAL_CONTEXT" = "toplevel:shfunc" ]; then
-        ls -a
-    fi
+  emulate -L zsh
+  # Only in response to a user-initiated `cd`, not indirectly (eg. via another
+  # function).
+  if [ "$ZSH_EVAL_CONTEXT" = "toplevel:shfunc" ]; then
+      ls -a
+  fi
 }
 add-zsh-hook chpwd -auto-ls-after-cd
 

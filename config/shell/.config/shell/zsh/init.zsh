@@ -13,13 +13,21 @@ xsh module core -s posix
 xsh module core
 
 # Load plugin manager early
-xsh module zi interactive
+# xsh module zi interactive
+
+# Load theme early (before prompt)
+xsh module -s bash base16 interactive
 
 # Load prompt early
 xsh module prompt interactive
 
 # Load application modules that have no requirements
-xsh module -s bash base16 interactive
+xsh module -s posix calc login
+xsh module -s posix golang login
+xsh module -s posix node login
+xsh module -s posix python login
+xsh module -s posix rustlang login
+xsh module -s posix tig login
 xsh module -s bash browser interactive:env
 xsh module -s bash cheat interactive
 xsh module -s bash editor interactive:env

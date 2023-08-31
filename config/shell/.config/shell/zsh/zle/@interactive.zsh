@@ -10,7 +10,7 @@
 #
 
 if [[ $TERM == 'dumb' ]]; then
-    return 1
+  return 1
 fi
 
 #-
@@ -19,11 +19,11 @@ fi
 
 # See 'Character Highlighting' in zshzle(1).
 zle_highlight=(
-    isearch:underline
-    region:standout
-    special:standout
-    suffix:bold
-    paste:none # does not integrate well with syntax-highlighting
+  isearch:underline
+  region:standout
+  special:standout
+  suffix:bold
+  paste:none # does not integrate well with syntax-highlighting
 )
 
 #-
@@ -35,56 +35,56 @@ zmodload zsh/terminfo
 
 # Runs on zle start
 function zle-line-init() {
-    # Reset prompt
-    zle reset-prompt
-    zle -R
-    # Enables term app mode so $terminfo values are valid
-    (( ${+terminfo[smkx]} )) && echoti smkx
+  # Reset prompt
+  zle reset-prompt
+  zle -R
+  # Enables term app mode so $terminfo values are valid
+  (( ${+terminfo[smkx]} )) && echoti smkx
 }
 zle -A zle-line-init zle-line-init
 
 # Runs on zle finish
 function zle-line-finish() {
-    # Disables term app mode so apps behave properly
-    (( ${+terminfo[rmkx]} )) && echoti rmkx
+  # Disables term app mode so apps behave properly
+  (( ${+terminfo[rmkx]} )) && echoti rmkx
 }
 zle -A zle-line-finish zle-line-finish
 
 
 # Toggle process as bg and fg
 function fancy-ctrl-z {
-    if [[ $#BUFFER -eq 0 ]]; then
-        BUFFER="fg"
-        zle accept-line
-    else
-        zle push-input
-        zle clear-screen
-    fi
+  if [[ $#BUFFER -eq 0 ]]; then
+    BUFFER="fg"
+    zle accept-line
+  else
+    zle push-input
+    zle clear-screen
+  fi
 }
 zle -N fancy-ctrl-z
 
 # Toggle prepend "sudo" to last command
 function toggle-prepend-sudo {
-    [[ -z $BUFFER ]] && zle up-history
-    if [[ $BUFFER == "sudo "* ]]; then
-        LBUFFER="${LBUFFER#sudo }"
-    elif [[ $BUFFER == "${EDITOR} "* ]]; then
-        LBUFFER="${LBUFFER#$EDITOR }"
-        LBUFFER="sudoedit ${LBUFFER}"
-    elif [[ $BUFFER == "sudoedit "* ]]; then
-        LBUFFER="${LBUFFER#sudoedit }"
-        LBUFFER="${EDITOR} ${LBUFFER}"
-    else
-        LBUFFER="sudo ${LBUFFER}"
-    fi
+  [[ -z $BUFFER ]] && zle up-history
+  if [[ $BUFFER == "sudo "* ]]; then
+    LBUFFER="${LBUFFER#sudo }"
+  elif [[ $BUFFER == "${EDITOR} "* ]]; then
+    LBUFFER="${LBUFFER#$EDITOR }"
+    LBUFFER="sudoedit ${LBUFFER}"
+  elif [[ $BUFFER == "sudoedit "* ]]; then
+    LBUFFER="${LBUFFER#sudoedit }"
+    LBUFFER="${EDITOR} ${LBUFFER}"
+  else
+    LBUFFER="sudo ${LBUFFER}"
+  fi
 }
 zle -N toggle-prepend-sudo
 
 # Perform all types of shell expansions: history, alias, parameter,
 # arithmetic, brace, filename.
 function expand-all {
-    zle _expand_alias
-    zle expand-word
+  zle _expand_alias
+  zle expand-word
 }
 zle -N expand-all
 
@@ -101,27 +101,27 @@ zle -N list-keys
 # Use human-friendly identifiers.
 typeset -gA keys
 keys=(
-    'Esc'              '\e'
-    'Ctrl'             '^'
-    'Alt'              '^['
-    'Backspace'        "$terminfo[kbs]"
-    'Enter'            "$terminfo[cr]"
-    'Home'             "$terminfo[khome]"
-    'End'              "$terminfo[kend]"
-    'Insert'           "$terminfo[kich1]"
-    'Delete'           "$terminfo[kdch1]"
-    'PageUp'           "$terminfo[kpp]"
-    'PageDown'         "$terminfo[knp]"
-    'Up'               "$terminfo[kcuu1]"
-    'Left'             "$terminfo[kcub1]"
-    'Down'             "$terminfo[kcud1]"
-    'Right'            "$terminfo[kcuf1]"
-    'BackTab'          "$terminfo[kcbt]"
-    'ShiftEnter'       "$terminfo[kent]"
-    'ShiftPageUp'      "$terminfo[kPRV]"
-    'ShiftPageDown'    "$terminfo[kNXT]"
-    'ScrollUp'         "$terminfo[kri]"
-    'ScrollDown'       "$terminfo[kind]"
+  'Esc'              '\e'
+  'Ctrl'             '^'
+  'Alt'              '^['
+  'Backspace'        "$terminfo[kbs]"
+  'Enter'            "$terminfo[cr]"
+  'Home'             "$terminfo[khome]"
+  'End'              "$terminfo[kend]"
+  'Insert'           "$terminfo[kich1]"
+  'Delete'           "$terminfo[kdch1]"
+  'PageUp'           "$terminfo[kpp]"
+  'PageDown'         "$terminfo[knp]"
+  'Up'               "$terminfo[kcuu1]"
+  'Left'             "$terminfo[kcub1]"
+  'Down'             "$terminfo[kcud1]"
+  'Right'            "$terminfo[kcuf1]"
+  'BackTab'          "$terminfo[kcbt]"
+  'ShiftEnter'       "$terminfo[kent]"
+  'ShiftPageUp'      "$terminfo[kPRV]"
+  'ShiftPageDown'    "$terminfo[kNXT]"
+  'ScrollUp'         "$terminfo[kri]"
+  'ScrollDown'       "$terminfo[kind]"
 )
 
 # General
@@ -145,8 +145,8 @@ if [[ -n ${keys[Right]} ]] bindkey ${keys[Right]} forward-char
 bindkey ' ' magic-space
 
 # <Ctrl-x><Ctrl-e> to edit command-line in EDITOR
-autoload -Uz edit-command-line && zle -N edit-command-line && \
-    bindkey "${keys[Ctrl]}x${keys[Ctrl]}e" edit-command-line
+autoload -Uz edit-command-line && zle -N edit-command-line &&
+  bindkey "${keys[Ctrl]}x${keys[Ctrl]}e" edit-command-line
 
 # Bind <Shift-Tab> to go to the previous menu item.
 if [[ -n ${keys[BackTab]} ]] bindkey ${keys[BackTab]} reverse-menu-complete

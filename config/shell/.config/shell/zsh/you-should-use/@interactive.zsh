@@ -1,11 +1,9 @@
 # shellcheck shell=zsh
 
-if (( ! $+functions[zi] )); then
-    return 1
+# Load plugin
+plugin_dir=${ZPLUGDIR}/zsh-you-should-use
+if [[ ! -e ${plugin_dir} ]]; then
+  git clone --depth=1 https://github.com/MichaelAquilina/zsh-you-should-use.git ${plugin_dir}
+  zcompile-many ${plugin_dir}/you-should-use.plugin.zsh
 fi
-
-# Setup you-should-use
-zi light-mode wait'0b' lucid for \
-  id-as'plugin/zsh-you-should-use' \
-  depth=1 reset nocompile'!' \
-  @MichaelAquilina/zsh-you-should-use
+source ${plugin_dir}/you-should-use.plugin.zsh

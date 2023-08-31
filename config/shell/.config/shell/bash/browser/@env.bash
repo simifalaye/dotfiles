@@ -2,9 +2,9 @@
 
 # Define the default web browser.
 if [ -n "${DISPLAY}" ]; then
-    export BROWSER=firefox
+  export BROWSER=firefox
 else
-    export BROWSER=elinks
+  export BROWSER=elinks
 fi
 
 # Use XDG base dir spec

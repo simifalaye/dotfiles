@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 
 if ! grep -q "microsoft" /proc/version &>/dev/null; then # WSL 2
-    return 1
+  return 1
 fi
 
 # Required: Enables copy/paste (need to specify ip of wsl 2 VM)

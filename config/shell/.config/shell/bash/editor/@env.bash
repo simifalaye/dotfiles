@@ -2,11 +2,11 @@
 
 # Define the default editor.
 if is_callable nvim; then
-    export EDITOR='nvim'
+  export EDITOR='nvim'
 elif is_callable vi; then
-    export EDITOR='vi'
+  export EDITOR='vi'
 elif is_callable nano; then
-    export EDITOR='nano'
+  export EDITOR='nano'
 fi
 export GIT_EDITOR="$EDITOR"
 export USE_EDITOR="$EDITOR"

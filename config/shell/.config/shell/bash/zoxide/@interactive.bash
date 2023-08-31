@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 
 if ! is_callable zoxide; then
-    return 1
+  return 1
 fi
 
 # Config

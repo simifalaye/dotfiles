@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 
 if ! is_callable trash; then
-    return 1
+  return 1
 fi
 
 # This is not recommended by the author:
