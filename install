@@ -12,8 +12,6 @@ function has {
 # - Installs core dependencies:
 #   - curl
 #   - gnu-stow
-#   - python3
-#   - python3-pip
 #   - ansible
 function install_deps {
   echo "### Installing dependencies"
@@ -23,12 +21,6 @@ function install_deps {
   # Install required apps
   os="$(uname)"
   case $os in
-    'Darwin')
-      echo "### Detected macOS"
-      brew update
-      brew install curl stow python
-      pipx ensurepath
-      ;;
     'Linux')
       echo "### Detected Linux"
       if [ -f /etc/os-release ]; then
@@ -46,7 +38,7 @@ function install_deps {
           sudo yum install -y curl stow python3 python3-pip
         elif grep -q -E '(arch)' /etc/os-release; then
           echo "Detected Arch"
-          sudo pacman -Syyu --noconfirm curl stow python python-pip
+          sudo pacman -Syyu --noconfirm curl stow python python-pip python-venv
         elif grep -q -E '(opensuse)' /etc/os-release; then
           echo "Detected openSUSE"
           sudo zypper update
@@ -66,8 +58,11 @@ function install_deps {
       ;;
   esac
 
+  # Ensure PATH for new python executable locations
+  export PATH=${HOME}/.local/share/python/bin:${PATH}
+
   # Install ansible and community modules
-  python3 -m pip install --user ansible
+  pip install ansible
   ansible-galaxy collection install community.general
 }
 

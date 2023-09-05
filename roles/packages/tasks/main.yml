@@ -12,6 +12,9 @@
   become: true
   ansible.builtin.package:
     name:
+      - "{{ python_pkg_name }}"
+      - "{{ pip_pkg_name }}"
+      - "{{ venv_pkg_name }}"
       - atool
       - bat
       - bitwise
@@ -70,10 +73,25 @@
     global: true
     state: present
   loop:
-    - n # Used for download other node versions
+    - n # Used for downloading other node versions
     - neovim
 
-# Install distro-specific apps
+- name: Set node/npm versions to lts
+  become: true
+  ansible.builtin.shell: |
+    node_ver="$(node --version)"
+    node_ver="${node_ver#v}"
+    lts_ver="$(sudo n --lts)"
+    if [[ "${node_ver}" != "${lts_ver}" ]]; then
+      sudo n lts
+      echo "NODE_VER_EQ"
+    fi
+  args:
+    executable: /bin/bash
+  register: node_ver_check
+  changed_when: '"NODE_VER_EQ" in node_ver_check.stdout'
+
+# Install apps that require more complex installation processes
 - name: Include standalone package installer tasks
   ansible.builtin.include_tasks: "{{ outer_item }}"
   loop:

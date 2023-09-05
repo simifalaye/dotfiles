@@ -17,8 +17,7 @@
     - name: Extract zoxide archive
       ansible.builtin.unarchive:
         src: >-
-          https://github.com/ajeetdsouza/zoxide/releases/download/{{ gh_tag.latest }}/
-          zoxide-{{ gh_tag.latest | replace('v', '') }}-x86_64-unknown-linux-musl.tar.gz
+          https://github.com/ajeetdsouza/zoxide/releases/download/{{ gh_tag.latest }}/zoxide-{{ gh_tag.latest | replace('v', '') }}-x86_64-unknown-linux-musl.tar.gz
         dest: /tmp/zoxide
         remote_src: true
     - name: Install zoxide bin

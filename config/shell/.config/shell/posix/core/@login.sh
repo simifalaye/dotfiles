@@ -20,10 +20,3 @@ if [ -f "$XDG_CACHE_HOME/Xauthority" ]; then
   # X server auth cookie
   export XAUTHORITY="${XDG_CACHE_HOME}/Xauthority"
 fi
-
-#-
-#  PATHs
-#-
-
-# Prepend additonal app binaries to PATH to allow overriding system commands.
-path_prepend "${CARGO_HOME}"/bin PATH

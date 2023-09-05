@@ -1,0 +1,7 @@
+# vim: filetype=yaml.ansible
+
+# Packages
+
+python_pkg_name: python
+pip_pkg_name: python-pip
+venv_pkg_name: python-venv
