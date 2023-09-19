@@ -42,6 +42,7 @@ xsh module -s bash zoxide interactive:login
 # Load the completion system and define core ZLE widgets and bindings.
 xsh module completion interactive
 xsh module zle interactive # load after completion
+xsh module kubernetes interactive # load after completion
 
 # Load additional application modules that provide and bind ZLE widgets.
 xsh module -s bash fzf interactive

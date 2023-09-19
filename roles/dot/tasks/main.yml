@@ -27,6 +27,7 @@
       - "{{ ansible_env.HOME }}/.bashrc"
       - "{{ ansible_env.HOME }}/.zshrc"
       - "{{ ansible_env.HOME }}/.profile"
+      - "{{ ansible_env.HOME }}/.p10k.zsh"
       - "{{ ansible_env.HOME }}/.tmux.conf"
   block:
     - name: Remove unwanted dotfiles
