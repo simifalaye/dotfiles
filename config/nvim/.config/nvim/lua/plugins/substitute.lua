@@ -8,6 +8,7 @@ return {
           require("substitute").visual()
         end,
         mode = "x",
+        desc = "Substitute",
       },
       {
         "S",
@@ -15,6 +16,7 @@ return {
           require("substitute").operator()
         end,
         mode = "n",
+        desc = "Substitute",
       },
       {
         "X",
@@ -22,6 +24,7 @@ return {
           require("substitute.exchange").operator()
         end,
         mode = "n",
+        desc = "eXchange",
       },
       {
         "X",
@@ -29,6 +32,7 @@ return {
           require("substitute.exchange").visual()
         end,
         mode = "x",
+        desc = "eXchange",
       },
       {
         "Xc",
@@ -36,6 +40,7 @@ return {
           require("substitute.exchange").cancel()
         end,
         mode = { "n", "x" },
+        desc = "eXchange Cancel",
       },
     },
     config = true,

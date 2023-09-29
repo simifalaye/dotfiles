@@ -27,8 +27,6 @@ local has_capability = function(capability, filter)
   return false
 end
 
-local formatting_opts = { async = true }
-
 local attach_handlers = {}
 
 local M = {}
@@ -185,23 +183,6 @@ M.on_attach = function(client, bufnr)
     },
     { "<localleader>d", vim.diagnostic.open_float, desc = "Line Diagnostics (lsp)" },
     { "<localleader>D", vim.diagnostic.setloclist, desc = "Doc Diagnostics (lsp)" },
-    {
-      "<localleader>f",
-      function()
-        vim.lsp.buf.format(formatting_opts)
-      end,
-      desc = "Format Document (lsp)",
-      has = "documentFormatting",
-    },
-    {
-      "<localleader>f",
-      function()
-        vim.lsp.buf.format(formatting_opts)
-      end,
-      desc = "Format Range (lsp)",
-      mode = "v",
-      has = "documentRangeFormatting",
-    },
     { "<localleader>r", vim.lsp.buf.rename, desc = "Rename (lsp)", has = "rename" },
     {
       "<localleader>wa",
@@ -231,7 +212,7 @@ M.on_attach = function(client, bufnr)
     },
     { "gr", vim.lsp.buf.references, desc = "Goto Ref (lsp)", has = "references" },
     {
-      "gy",
+      "gz",
       vim.lsp.buf.type_definition,
       desc = "Goto Type (lsp)",
       has = "typeDefinition",

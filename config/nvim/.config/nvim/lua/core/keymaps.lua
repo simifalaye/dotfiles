@@ -34,12 +34,6 @@ m.nmap("g-", "yyp^v$r-Vk", "Underline -")
 m.nmap("g=", "yyp^v$r=Vk", "Underline =")
 m.nnoremap("g!", ":! chmod +x %<CR>", "Make File Executable")
 m.nnoremap(
-  "g>",
-  [[<cmd>set nomore<bar>40messages<bar>set more<CR>]],
-  "Show Message History"
-)
-m.nnoremap("g<", [[<cmd>messages clear<CR>]], "Show Message History")
-m.nnoremap(
   "gO",
   "<Cmd>call append(line('.') - 1, repeat([''], v:count1))<CR>",
   "Put Empty Line Above"
@@ -49,6 +43,14 @@ m.nnoremap(
   "<Cmd>call append(line('.'), repeat([''], v:count1))<CR>",
   "Put Empty Line Below"
 )
+m.nnoremap("gq.", function()
+  -- Save state
+  local winview = vim.fn.winsaveview()
+  -- Run 'gq' to format the entire document
+  vim.cmd([[normal! ggVGgq]])
+  -- Restore state
+  vim.fn.winrestview(winview)
+end, "Format Document")
 m.nnoremap(
   "gv",
   "'`[' . strpart(getregtype(), 0, 1) . '`]'",
@@ -113,12 +115,16 @@ m.xnoremap(
 )
 
 -- Text objects
-m.xnoremap("il", "g_o0", "In Line")
-m.xnoremap("al", "$o0", "A Line")
-m.xnoremap("ie", ":<C-u>normal! G$Vgg0<CR>", "In Entire")
-m.onoremap("il", ":normal vil<CR>", "In Line")
-m.onoremap("al", ":normal val<CR>", "A Line")
-m.onoremap("ie", ":<C-u>normal! GVgg<CR>", "In Entire")
+m.xnoremap("al", "$o0", "A line")
+m.onoremap("al", "<cmd>normal val<CR>", "A line")
+m.xnoremap("il", [[<Esc>^vg_]], "In line")
+m.onoremap("il", [[<cmd>normal! ^vg_<CR>]], "In line")
+m.xnoremap("ie", [[gg0oG$]], "In entire buf")
+m.onoremap(
+  "ie",
+  [[<cmd>execute "normal! m`"<Bar>keepjumps normal! ggVG<CR>]],
+  "In entire buf"
+)
 
 --------------------------------------------------------------------------------
 --  Insert mode

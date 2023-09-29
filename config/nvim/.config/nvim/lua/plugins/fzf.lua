@@ -74,12 +74,6 @@ return {
             has = "documentSymbol",
           },
           {
-            "<localleader>S",
-            fzf.lsp_workspace_symbols,
-            desc = "Workspace Symbols (lsp)",
-            has = "workspaceSymbol",
-          },
-          {
             "gd",
             fzf.lsp_definitions,
             desc = "Goto Def (lsp)",
@@ -98,10 +92,21 @@ return {
             has = "references",
           },
           {
-            "gy",
+            "gz",
             fzf.lsp_typedefs,
             desc = "Goto Type (lsp)",
             has = "typeDefinition",
+          },
+          {
+            "<localleader>wd",
+            fzf.diagnostics_workspace,
+            desc = "Diagnostics (lsp)",
+          },
+          {
+            "<localleader>ws",
+            fzf.lsp_workspace_symbols,
+            desc = "Symbols (lsp)",
+            has = "workspaceSymbol",
           },
         })
       end)

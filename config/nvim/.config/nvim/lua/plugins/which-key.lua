@@ -1,7 +1,6 @@
 return {
   {
     "folke/which-key.nvim",
-    enabled = false,
     event = "BufWinEnter",
     opts = {
       disable = { filetypes = { "TelescopePrompt" } },
@@ -14,12 +13,13 @@ return {
         ["<tab>"] = "TAB",
       },
       defaults = {
-        mode = { "n", "v" },
-        ["g"] = { name = "+goto" },
-        ["]"] = { name = "+next" },
-        ["["] = { name = "+prev" },
-        ["<leader>c"] = { name = "+code" },
-        ["<leader>f"] = { name = "+find" },
+        ["]"] = { name = "+next", mode = {"n", "x"} },
+        ["["] = { name = "+prev", mode = {"n", "x"} },
+        ["g"] = { name = "+namespace", mode = {"n", "x"} },
+        ["z"] = { name = "+namespace", mode = {"n", "x"} },
+        ["<localleader>"] = { name = "+localleader", mode = {"n", "x"} },
+        ["<leader>"] = { name = "+leader", mode = {"n", "x"} },
+        ["<leader>f"] = { name = "+find", mode = {"n", "x"} },
         ["<leader>g"] = { name = "+git" },
         ["<leader>p"] = { name = "+plugin" },
         ["<leader>u"] = { name = "+ui" },

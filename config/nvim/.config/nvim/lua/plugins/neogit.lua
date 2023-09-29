@@ -23,16 +23,6 @@ return {
       },
     },
     config = function ()
-      require("utils.command").augroup("user_neogit", {
-        {
-          desc = "Setup keymap groups",
-          event = "Filetype",
-          pattern = "NeogitStatus",
-          command = function()
-            require("utils.map").refresh_clues()
-          end,
-        },
-      })
       require("neogit").setup({})
     end
   },

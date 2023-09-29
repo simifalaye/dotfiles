@@ -57,6 +57,7 @@ Thumbs.db
 tags
 compile_commands.json
 compile_flags.txt
+bazel*
 
 # Temp files #
 #####################
@@ -65,6 +66,7 @@ compile_flags.txt
 *.swo
 *.tmp
 *.bak
+.nvim.lua
 
 # Directories #
 #####################
