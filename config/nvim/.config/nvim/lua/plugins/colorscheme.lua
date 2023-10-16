@@ -5,26 +5,26 @@ return {
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
       local utils = require("utils")
-      local base16 = require("base16-colorscheme")
+      local fn = vim.fn
+      local cmd = vim.cmd
+      local set_theme_path = "$HOME/.config/tinted-theming/set_theme.lua"
+      local is_set_theme_file_readable = fn.filereadable(fn.expand(set_theme_path)) == 1
+          and true
+        or false
 
-      local colorscheme = "default-dark"
-      if vim.env.BASE16_THEME ~= nil and vim.env.BASE16_THEME ~= "" then
-        colorscheme = vim.env.BASE16_THEME
-      end
-
-      local bcolors = base16.colorschemes[colorscheme]
-      if not colorscheme or colorscheme == "" or not bcolors then
+      -- Load the scheme
+      if is_set_theme_file_readable then
+        utils.notify("Found theme script, sourcing...", vim.log.levels.DEBUG)
+        cmd("let base16colorspace=256")
+        cmd("source " .. set_theme_path)
+      else
         utils.notify(
-          "Using default colorscheme instead of: " .. colorscheme,
+          "No base16 theme script found, using default-dark",
           vim.log.levels.DEBUG
         )
-        colorscheme = "default-dark"
-        bcolors = base16.colorscheme[colorscheme]
+        cmd("let base16colorspace=256")
+        cmd("colorscheme base16-default-dark")
       end
-      colorscheme = "base16-" .. colorscheme
-
-      -- load the colorscheme here
-      vim.cmd("colorscheme " .. colorscheme)
     end,
   },
 }

@@ -12,7 +12,7 @@
 
 [delta]
   features = truecolor
-  syntax-theme = base16
+  syntax-theme = "ansi" # Use terminal colors
   max-line-length = 4096
   tabs = 2
 
@@ -27,3 +27,8 @@
   minus-emph-style = normal "#700000"
   minus-empty-line-marker-style = normal "#420000"
   whitespace-error-style = reverse brightyellow
+
+[include]
+  # Import ${XDG_CONFIG_HOME:-$HOME/.config}/tinted-theming/delta.gitconfig.
+	# It will set delta.light=(true|false):
+	path = ~/.config/tinted-theming/delta.gitconfig

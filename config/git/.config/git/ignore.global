@@ -71,6 +71,7 @@ bazel*
 # Directories #
 #####################
 build/
+build_cc/
 *.egg-info/
 htmlcov/
 .vscode/

@@ -60,10 +60,12 @@
     - ansible_env.XDG_CURRENT_DESKTOP != ""
 
 - name: Install common pip packages
+  become: true
   ansible.builtin.pip:
     name:
       - pynvim
       - trash-cli
+      - requests # Required for "get_latest_github" custom module
     state: present
 
 - name: Install common global npm packages
@@ -101,6 +103,7 @@
     - fd.yml
     - neovim.yml
     - wsl-open.yml
+    - zellij.yml
     - zoxide.yml
   loop_control:
     loop_var: outer_item
