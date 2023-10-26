@@ -34,7 +34,8 @@ xsh module -s bash editor interactive:env
 xsh module -s bash exa interactive
 xsh module -s bash pager interactive:env
 xsh module -s bash ripgrep interactive
-xsh module -s bash tmux interactive
+# TODO: Remove after moving entirely to zellij
+# xsh module -s bash tmux interactive
 xsh module -s bash trash interactive:logout
 xsh module -s bash wsl login
 xsh module -s bash zoxide interactive:login
@@ -45,7 +46,8 @@ xsh module zle interactive # load after completion
 xsh module kubernetes interactive # load after completion
 
 # Load additional application modules that provide and bind ZLE widgets.
-xsh module -s bash fzf interactive
+xsh module -s bash fzf login
+xsh module fzf interactive
 xsh module you-should-use interactive
 
 # Load the modules that wrap ZLE widgets after they have all been defined

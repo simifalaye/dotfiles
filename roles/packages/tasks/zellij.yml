@@ -31,3 +31,15 @@
         state: absent
       with_items:
         - "/tmp/zellij"
+
+- name: Setup zellij shell completions
+  become: true
+  ansible.builtin.shell: |
+    if [ ! -f "{{ bash_completions_dir }}/zellij" ] || [ ! -f "{{ zsh_completions_dir }}/_zellij" ]; then
+      /usr/local/bin/zellij setup --generate-completion bash > {{ bash_completions_dir }}/zellij
+      /usr/local/bin/zellij setup --generate-completion zsh > {{ zsh_completions_dir }}/_zellij
+      return 0
+    fi
+    return 1
+  register: zellij_comp_res
+  changed_when: "zellij_comp_res.rc == 0"

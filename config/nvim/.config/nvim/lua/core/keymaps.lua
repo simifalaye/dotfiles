@@ -1,8 +1,9 @@
 local m = require("utils.map")
 local ui = require("utils.ui")
 
--- Multi mode
--------------
+--------------------------------------------------------------------------------
+--  Multi mode
+--------------------------------------------------------------------------------
 
 -- Move up/down by visual line
 m.noremap({ "n", "x" }, "j", [[v:count == 0 ? 'gj' : 'j']], { expr = true })

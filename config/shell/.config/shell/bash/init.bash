@@ -26,10 +26,11 @@ xsh module browser interactive:env
 xsh module cheat interactive
 xsh module editor interactive:env
 xsh module exa interactive
-xsh module fzf interactive
+xsh module fzf interactive:login
 xsh module pager interactive:env
 xsh module ripgrep interactive
-xsh module tmux interactive
+# TODO: Remove after moving entirely to zellij
+# xsh module tmux interactive
 xsh module trash interactive:logout
 xsh module wsl login
 xsh module zoxide interactive:login

@@ -64,9 +64,9 @@ return {
       -- 'cover_or_nearest'. For more details, see `:h MiniSurround.config`.
       search_method = "cover_or_next",
     },
-    init = function ()
+    init = function()
       local utils = require("utils.map")
-      utils.group("s", "+surround", {"n", "x"})
+      utils.group("s", "+surround", { "n", "x" })
     end,
   },
   {
@@ -120,12 +120,13 @@ return {
           event = "VimEnter",
           pattern = "*",
           command = function()
+            local arg = vim.fn.argv()[1]
             if
               vim.fn.argc() == 1
-              and vim.fn.isdirectory(vim.fn.argv()[1]) == 1
+              and vim.fn.isdirectory(arg) == 1
               and vim.fn.exists("s:std_in") ~= 1
             then
-              require("mini.files").open()
+              require("mini.files").open(arg)
             end
           end,
         },
@@ -226,11 +227,212 @@ return {
     "echasnovski/mini.align",
     version = "*",
     keys = {
-      { "ga", mode = { "n", "x" } },
-      { "gA", mode = { "n", "x" } },
+      { "ga", mode = { "n", "x" }, desc = "Align Text" },
+      { "gA", mode = { "n", "x" }, desc = "Align Text (Preview)" },
     },
-    config = function ()
+    config = function()
       require("mini.align").setup()
-    end
+    end,
+  },
+  {
+    "echasnovski/mini.pick",
+    version = false,
+    cmd = "Pick",
+    keys = {
+      { "<leader>f", "<cmd>Pick files<CR>", desc = "File Picker" },
+      {
+        "<leader>b",
+        function()
+          local buffers_output = vim.api.nvim_exec("ls t", true)
+          local cur_buf_id = vim.api.nvim_get_current_buf()
+          local items = {}
+          local curr_item = {}
+          for _, l in ipairs(vim.split(buffers_output, "\n")) do
+            local buf_str, name = l:match("^%s*%d+"), l:match('"(.*)"')
+            local buf_id = tonumber(buf_str)
+            local item = { text = name, bufnr = buf_id }
+            if buf_id ~= cur_buf_id then
+              table.insert(items, item)
+            else
+              curr_item = item
+            end
+          end
+          table.insert(items, curr_item)
+          local minipick = require("mini.pick")
+          local show = minipick.config.source.show
+            or function(buf_id, items_, query)
+              minipick.default_show(buf_id, items_, query, { show_icons = true })
+            end
+          local opts = { source = { name = "Buffers", show = show, items = items } }
+          return minipick.start(opts)
+        end,
+        desc = "Buffer Picker",
+      },
+      { "<leader>.", "<cmd>Pick resume<CR>", desc = "Resume Picker" },
+      { "<leader>/", "<cmd>Pick grep_live<CR>", desc = "Grep Picker" },
+      { "<leader>,", "<cmd>Pick help<CR>", desc = "Help Picker" },
+    },
+    config = function()
+      require("mini.pick").setup()
+    end,
+  },
+  {
+    "echasnovski/mini.clue",
+    version = false,
+    event = "BufWinEnter",
+    config = function()
+      local miniclue = require("mini.clue")
+      miniclue.setup({
+        clues = {
+          {
+            { mode = "n", keys = "<Leader>g", desc = "+git" },
+            { mode = "n", keys = "<Leader>n", desc = "+notes" },
+            { mode = "n", keys = "<Leader>p", desc = "+plugins" },
+            { mode = "n", keys = "<Leader>u", desc = "+ui" },
+          },
+          miniclue.gen_clues.builtin_completion(),
+          miniclue.gen_clues.g(),
+          miniclue.gen_clues.marks(),
+          miniclue.gen_clues.registers(),
+          miniclue.gen_clues.windows({ submode_resize = true }),
+          miniclue.gen_clues.z(),
+        },
+
+        triggers = {
+          -- Leader triggers
+          { mode = "n", keys = "<Leader>" },
+          { mode = "x", keys = "<Leader>" },
+
+          -- mini.basics
+          { mode = "n", keys = [[\]] },
+
+          -- mini.bracketed
+          { mode = "n", keys = "[" },
+          { mode = "n", keys = "]" },
+          { mode = "x", keys = "[" },
+          { mode = "x", keys = "]" },
+
+          -- Built-in completion
+          { mode = "i", keys = "<C-x>" },
+
+          -- `g` key
+          { mode = "n", keys = "g" },
+          { mode = "x", keys = "g" },
+
+          -- Marks
+          { mode = "n", keys = "'" },
+          { mode = "n", keys = "`" },
+          { mode = "x", keys = "'" },
+          { mode = "x", keys = "`" },
+
+          -- Registers
+          { mode = "n", keys = '"' },
+          { mode = "x", keys = '"' },
+          { mode = "i", keys = "<C-r>" },
+          { mode = "c", keys = "<C-r>" },
+
+          -- Window commands
+          { mode = "n", keys = "<C-w>" },
+
+          -- `z` key
+          { mode = "n", keys = "z" },
+          { mode = "x", keys = "z" },
+        },
+
+        window = { config = { width = "auto", border = "double" }, delay = 500 },
+      })
+      -- Enable triggers in help buffer
+      local clue_group = vim.api.nvim_create_augroup("my-miniclue", { clear = true })
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "help",
+        group = clue_group,
+        callback = function(data)
+          miniclue.enable_buf_triggers(data.buf)
+        end,
+      })
+    end,
+  },
+  {
+    "echasnovski/mini.statusline",
+    version = "*",
+    lazy = false,
+    config = function()
+      local statusline = require("mini.statusline")
+      statusline.setup({
+        content = {
+          active = function()
+            -- stylua: ignore start
+            local mode, mode_hl = statusline.section_mode({ trunc_width = 120 })
+            local spell         = vim.wo.spell and (statusline.is_truncated(120) and 'S' or 'SPELL') or ''
+            local wrap          = vim.wo.wrap and (statusline.is_truncated(120) and 'W' or 'WRAP') or ''
+            local macro         = vim.fn.reg_recording() ~= "" and ("@" .. vim.fn.reg_recording()) or ""
+            local git           = statusline.section_git({ trunc_width = 75 })
+            -- Default diagnstics icon has some problems displaying in Kitty terminal
+            local diagnostics   = statusline.section_diagnostics({ trunc_width = 75 })
+            local filename      = statusline.section_filename({ trunc_width = 140 })
+            local fileinfo      = statusline.section_fileinfo({ trunc_width = 120 })
+            local searchcount   = statusline.section_searchcount({ trunc_width = 75 })
+            local location      = statusline.section_location({ trunc_width = 10000 })
+
+            -- Usage of `statusline.combine_groups()` ensures highlighting and
+            -- correct padding with spaces between groups (accounts for 'missing'
+            -- sections, etc.)
+            return statusline.combine_groups({
+              { hl = mode_hl,                 strings = { mode, spell, wrap, macro } },
+              { hl = 'MiniStatuslineDevinfo', strings = { git, diagnostics } },
+              '%<', -- Mark general truncate point
+              { hl = 'MiniStatuslineFilename', strings = { filename } },
+              '%=', -- End left alignment
+              { hl = 'MiniStatuslineFileinfo', strings = { fileinfo } },
+              { hl = mode_hl,                  strings = { searchcount, location } },
+            })
+            -- stylua: ignore end
+          end,
+        },
+      })
+    end,
+  },
+  {
+    "echasnovski/mini.starter",
+    version = "*",
+    lazy = false,
+    config = function()
+      require("mini.starter").setup({
+        header = "           ▄ ▄                   \n"
+          .. "       ▄   ▄▄▄     ▄ ▄▄▄ ▄ ▄     \n"
+          .. "       █ ▄ █▄█ ▄▄▄ █ █▄█ █ █     \n"
+          .. "    ▄▄ █▄█▄▄▄█ █▄█▄█▄▄█▄▄█ █     \n"
+          .. "  ▄ █▄▄█ ▄ ▄▄ ▄█ ▄▄▄▄▄▄▄▄▄▄▄▄▄▄  \n"
+          .. "  █▄▄▄▄ ▄▄▄ █ ▄ ▄▄▄ ▄ ▄▄▄ ▄ ▄ █ ▄\n"
+          .. "▄ █ █▄█ █▄█ █ █ █▄█ █ █▄█ ▄▄▄ █ █\n"
+          .. "█▄█ ▄ █▄▄█▄▄█ █ ▄▄█ █ ▄ █ █▄█▄█ █\n"
+          .. "    █▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█ █▄█▄▄▄█    \n",
+      })
+    end,
+  },
+  {
+    "echasnovski/mini.pairs",
+    version = "*",
+    event = "InsertEnter",
+    config = function()
+      require("mini.pairs").setup({})
+    end,
+  },
+  {
+    "echasnovski/mini.comment",
+    version = "*",
+    keys = {
+      { "gc", mode = { "n", "v" }, desc = "Comment toggle linewise" },
+    },
+    config = function()
+      require("mini.comment").setup({
+        options = {
+          custom_commentstring = function()
+            return require("ts_context_commentstring.internal").calculate_commentstring()
+              or vim.bo.commentstring
+          end,
+        },
+      })
+    end,
   },
 }
