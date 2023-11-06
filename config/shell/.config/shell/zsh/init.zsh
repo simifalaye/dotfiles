@@ -34,8 +34,7 @@ xsh module -s bash editor interactive:env
 xsh module -s bash exa interactive
 xsh module -s bash pager interactive:env
 xsh module -s bash ripgrep interactive
-# TODO: Remove after moving entirely to zellij
-# xsh module -s bash tmux interactive
+xsh module -s bash tmux interactive
 xsh module -s bash trash interactive:logout
 xsh module -s bash wsl login
 xsh module -s bash zoxide interactive:login

@@ -1,12 +1,12 @@
 return {
   {
     "williamboman/mason.nvim",
-    lazy = false,
-    build = ":MasonUpdate",
     dependencies = {
       "williamboman/mason-lspconfig.nvim",
       "WhoIsSethDaniel/mason-tool-installer.nvim",
     },
+    build = ":MasonUpdate",
+    lazy = false,
     config = function()
       -- Setup mason
       require("mason").setup()

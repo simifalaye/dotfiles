@@ -6,7 +6,7 @@ return {
   {
     "mfussenegger/nvim-lint",
     init = function ()
-      -- Load nvim-lint only when lintable file is specified
+      -- Load nvim-lint only when a lintable file is specified
       require("utils.command").augroup("user_lint_lazyload", {
         {
           desc = "Lazy load linter",

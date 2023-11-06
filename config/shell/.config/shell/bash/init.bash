@@ -29,8 +29,7 @@ xsh module exa interactive
 xsh module fzf interactive:login
 xsh module pager interactive:env
 xsh module ripgrep interactive
-# TODO: Remove after moving entirely to zellij
-# xsh module tmux interactive
+xsh module tmux interactive
 xsh module trash interactive:logout
 xsh module wsl login
 xsh module zoxide interactive:login

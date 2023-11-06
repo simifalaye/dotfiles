@@ -93,7 +93,7 @@ M.diagnostics = {
 }
 
 --- Add an attach handler to be called with the on_attach lsp function
----@param handler fun(args: lsp.Client, bufnr: integer)
+---@param handler fun(client: lsp.Client, bufnr: integer)
 ---@param once boolean? only run for one attached client
 M.register_attach_handler = function(handler, once)
   once = once and once or true

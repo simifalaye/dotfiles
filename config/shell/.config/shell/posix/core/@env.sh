@@ -66,6 +66,11 @@ is_callable() {
   done
 }
 
+# Usage: is_wsl
+is_wsl() {
+  grep -iq microsoft /proc/version || return 1
+}
+
 #-
 #  General
 #-
