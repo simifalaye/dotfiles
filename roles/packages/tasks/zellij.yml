@@ -41,5 +41,6 @@
       return 0
     fi
     return 1
+  ignore_errors: true
   register: zellij_comp_res
   changed_when: "zellij_comp_res.rc == 0"
