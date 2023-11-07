@@ -61,8 +61,8 @@ set -g @resurrect-dir "${TMUX_STATE_DIR}/resurrect"
 set -g @resurrect-capture-pane-contents on
 
 # Key bindings for tmux-resurrect.
-set -g @resurrect-save 'M-S'
-set -g @resurrect-restore 'M-R'
+set -g @resurrect-save 'C-s'
+set -g @resurrect-restore 'C-r'
 
 # Hooks for tmux-resurrect.
 set -g @resurrect-hook-pre-restore-all '

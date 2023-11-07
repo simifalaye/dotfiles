@@ -39,9 +39,9 @@ fi
 # Compile the completion dumpfile; significant speedup
 if [[ ! ${zdumpfile}.zwc -nt ${zdumpfile} ]] zcompile ${zdumpfile}
 
-#
-# Zsh options
-#
+#-
+#  Zsh options
+#-
 
 # Move cursor to end of word if a full completion is inserted.
 setopt ALWAYS_TO_END
@@ -55,9 +55,9 @@ fi
 # Don't beep on ambiguous completions.
 setopt NO_LIST_BEEP
 
-#
-# Completion module options
-#
+#-
+#  Completion module options
+#-
 
 # Enable caching
 zstyle ':completion::complete:*' use-cache on

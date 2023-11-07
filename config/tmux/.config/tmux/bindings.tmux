@@ -35,8 +35,10 @@ bind -N "Move pane up" -n "M-C-k" swap-pane -s '{up-of}'
 bind -N "Move pane right" -n "M-C-l" swap-pane -s '{right-of}'
 
 # Layout selection
-bind -N 'Layout next' -n 'M-]' next-layout
-bind -N 'Layout prev' -n 'M-[' previous-layout
+bind -N 'Select the next window' -n 'M-]' next-window
+bind -N 'Select the previous window' -n 'M-[' previous-window
+bind -N 'Swap window right' -n 'M-{' swap-window -d -t -1
+bind -N 'Swap window left' -n 'M-}' swap-window -d -t +1
 
 # Quick new pane
 bind -N 'New pane' -n "M-Enter" \
@@ -139,6 +141,13 @@ bind 'M-s' send-prefix
 bind -N 'Edit the tmux configuration'   'e' edit-config
 bind -N 'Reload the tmux configuration' 'r' reload
 
+# Client operations.
+bind -N 'Detach the current client' 'd' detach-client
+bind -N 'Suspend the current client' 'z' suspend-client
+
+# Client selection.
+bind -N 'Select a client interactively' 'c' choose-client -Z
+
 # Session operations
 bind -N 'Create a new session' 'N' command-prompt { new-session -s "%%" }
 bind -N 'Rename the current session' 'S' command-prompt -I "#S" { rename-session "%%" }
@@ -157,11 +166,7 @@ bind -N 'Split the current window vertically' '_' split-window -v -c "#{pane_cur
 
 # Window selection/movement
 bind -N 'Select a window interactively' 'w' choose-tree -Zw
-bind -N 'Select the last window' 'l' last-window
-bind -N 'Select the next window' -r 'M-]' next-window
-bind -N 'Select the previous window' -r 'M-[' previous-window
-bind -N 'Swap window right' -r 'M-{' swap-window -d -t -1
-bind -N 'Swap window left' -r 'M-}' swap-window -d -t +1
+bind -N 'Select the last window' '`' last-window
 
 # Window layouts.
 bind -N 'Select the even-horizontal layout' 'M-1' select-layout even-horizontal
@@ -170,12 +175,17 @@ bind -N 'Select the main-horizontal layout' 'M-3' select-layout main-horizontal
 bind -N 'Select the main-vertical layout' 'M-4' select-layout main-vertical
 bind -N 'Select the tiled layout' 'M-5' select-layout tiled
 bind -N 'Spread the panes out evenly' '=' select-layout -E
+bind -N 'Layout next' -r 'Space' next-layout
 
 # Pane operations
 bind -N 'Mark the current pane' 'm' select-pane -m
 bind -N 'Clear the marked pane' 'M' select-pane -M
 bind -N 'Join the marked pane with the current pane' 'M-y' join-pane
 bind -N 'Kill the current pane' 'x' kill-pane
+
+# Pane selection/movement
+bind -N 'List and select a pane by index' 'p' display-panes
+bind -N 'Select the last pane' -r '~' last-pane
 
 # Enter backward search mode directly.
 bind -N 'Search backward for a regular expression' '/' copy-mode \; send '?'
@@ -188,7 +198,7 @@ bind -N 'Describe a key binding' '.' command-prompt -k -p "(key)" { list-keys -1
 bind -N 'Customize options and bindings' ',' customize-mode -Z
 
 # Status line commands.
-bind -N 'Prompt for a command'      ':' command-prompt
+bind -N 'Prompt for a command' ':' command-prompt
 bind -N 'Show status line messages' ';' show-messages
 
 # Activity monitoring.

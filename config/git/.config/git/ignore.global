@@ -77,4 +77,5 @@ htmlcov/
 .vscode/
 .clangd/
 .ccls*/
-.include/
+.build-include/
+.bazel-external/
