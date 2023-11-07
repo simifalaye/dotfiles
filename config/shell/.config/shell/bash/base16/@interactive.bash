@@ -16,7 +16,7 @@ fi
 # Enable to color profile helper
 [ -n "$PS1" ] &&
 	[ -s "${BASE16_SHELL}/profile_helper.sh" ] &&
-	source "${BASE16_SHELL}/profile_helper.sh" | grep -v '\->' || true # Remove symlink output
+	source "${BASE16_SHELL}/profile_helper.sh"
 
 #-
 #  Base16 fzf
