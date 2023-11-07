@@ -14,9 +14,10 @@ if [ ! -d "${BASE16_SHELL}" ]; then
 fi
 
 # Enable to color profile helper
-[ -n "$PS1" ] &&
+if [ -n "$PS1" ] && [ -z "$SSH_TTY" ]; then
 	[ -s "${BASE16_SHELL}/profile_helper.sh" ] &&
-	source "${BASE16_SHELL}/profile_helper.sh"
+		source "${BASE16_SHELL}/profile_helper.sh"
+fi
 
 #-
 #  Base16 fzf
