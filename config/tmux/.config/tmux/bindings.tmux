@@ -13,12 +13,27 @@ run-shell "${TMUX_CONFIG_DIR}/bindings.sh"
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
         | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'";
 
-# Pane selection with awareness of Vim splits.
+
+# Window operations
+bind -N 'Name window' -n "M-n" \
+	     command-prompt -p 'Window name:' 'rename-window "%%"';
+
+# Window selection/movement
+bind -N 'Select the next window' -n 'M-]' next-window
+bind -N 'Select the previous window' -n 'M-[' previous-window
+bind -N 'Swap window right' -n 'M-{' swap-window -d -t -1
+bind -N 'Swap window left' -n 'M-}' swap-window -d -t +1
+
+# Pane selection with awareness of Vim splits/movement
 # See: https://github.com/mrjones2014/smart-splits.nvim
 bind -N "Select pane left" -n M-h if-shell "$is_vim" 'send-keys M-h'  'select-pane -L'
 bind -N "Select pane down" -n M-j if-shell "$is_vim" 'send-keys M-j'  'select-pane -D'
 bind -N "Select pane up" -n M-k if-shell "$is_vim" 'send-keys M-k'  'select-pane -U'
 bind -N "Select pane right" -n M-l if-shell "$is_vim" 'send-keys M-l'  'select-pane -R'
+bind -N "Move pane left" -n "M-C-h" swap-pane -s '{left-of}'
+bind -N "Move pane down" -n "M-C-j" swap-pane -s '{down-of}'
+bind -N "Move pane up" -n "M-C-k" swap-pane -s '{up-of}'
+bind -N "Move pane right" -n "M-C-l" swap-pane -s '{right-of}'
 
 # Pane resize with awareness of Vim splits.
 # See: https://github.com/mrjones2014/smart-splits.nvim
@@ -28,33 +43,9 @@ bind -N "Resize up" -n M-K if-shell "$is_vim" 'send-keys M-K' 'resize-pane -U 3'
 bind -N "Resize right" -n M-L if-shell "$is_vim" 'send-keys M-L' 'resize-pane -R 3'
 bind -N 'Zoom the current pane' -n M-z resize-pane -Z
 
-# Pane movement
-bind -N "Move pane left" -n "M-C-h" swap-pane -s '{left-of}'
-bind -N "Move pane down" -n "M-C-j" swap-pane -s '{down-of}'
-bind -N "Move pane up" -n "M-C-k" swap-pane -s '{up-of}'
-bind -N "Move pane right" -n "M-C-l" swap-pane -s '{right-of}'
-
-# Layout selection
-bind -N 'Select the next window' -n 'M-]' next-window
-bind -N 'Select the previous window' -n 'M-[' previous-window
-bind -N 'Swap window right' -n 'M-{' swap-window -d -t -1
-bind -N 'Swap window left' -n 'M-}' swap-window -d -t +1
-
 # Quick new pane
 bind -N 'New pane' -n "M-Enter" \
 		run-shell 'cwd="`tmux display -p \"#{pane_current_path}\"`"; tmux select-pane -t "bottom-right"; tmux split-pane -c "$cwd"';
-
-# Name a window with Alt + n.
-bind -N 'Name window' -n "M-n" \
-	command-prompt -p 'Window name:' 'rename-window "%%"';
-
-# Toggle scratchpad
-bind-key -N 'Toggle scratch window' -n M-w if-shell -F '#{==:#{session_name},scratch}' {
-  detach-client
-} {
-  display-popup -d "#{pane_current_path}" -xC -yC -w 80% -h 75% -E 'tmux new-session -A -s scratch'
-}
-
 
 #-
 #  Mouse
@@ -167,6 +158,20 @@ bind -N 'Split the current window vertically' '_' split-window -v -c "#{pane_cur
 # Window selection/movement
 bind -N 'Select a window interactively' 'w' choose-tree -Zw
 bind -N 'Select the last window' '`' last-window
+bind -N 'Select the next window' 'M-]' next-window
+bind -N 'Select the previous window' 'M-[' previous-window
+bind -N 'Swap window right' 'M-{' swap-window -d -t -1
+bind -N 'Swap window left' 'M-}' swap-window -d -t +1
+bind -N 'Select window 1' '1' select-window -t :=1
+bind -N 'Select window 2' '2' select-window -t :=2
+bind -N 'Select window 3' '3' select-window -t :=3
+bind -N 'Select window 4' '4' select-window -t :=4
+bind -N 'Select window 5' '5' select-window -t :=5
+bind -N 'Select window 6' '6' select-window -t :=6
+bind -N 'Select window 7' '7' select-window -t :=7
+bind -N 'Select window 8' '8' select-window -t :=8
+bind -N 'Select window 9' '9' select-window -t :=9
+bind -N 'Select window 10' '0' select-window -t :=10
 
 # Window layouts.
 bind -N 'Select the even-horizontal layout' 'M-1' select-layout even-horizontal
@@ -180,12 +185,28 @@ bind -N 'Layout next' -r 'Space' next-layout
 # Pane operations
 bind -N 'Mark the current pane' 'm' select-pane -m
 bind -N 'Clear the marked pane' 'M' select-pane -M
+bind -N 'Break the current pane into a new window' 'M-b' break-pane
 bind -N 'Join the marked pane with the current pane' 'M-y' join-pane
 bind -N 'Kill the current pane' 'x' kill-pane
 
 # Pane selection/movement
 bind -N 'List and select a pane by index' 'p' display-panes
 bind -N 'Select the last pane' -r '~' last-pane
+bind -N 'Select the pane above the active pane' 'k' select-pane -U
+bind -N 'Select the pane below the active pane' 'j' select-pane -D
+bind -N 'Select the pane to the left of the active pane' 'h' select-pane -L
+bind -N 'Select the pane to the right of the active pane' 'l' select-pane -R
+bind -N 'Swap the current pane with the pane above' -r 'o' swap-pane -U
+bind -N 'Swap the current pane with the pane below' -r 'O' swap-pane -D
+bind -N 'Rotate the panes upward in the current window' -r 'C-o' rotate-window -U
+bind -N 'Rotate the panes downward in the current window' -r 'M-o' rotate-window -D
+
+# Pane resizing.
+bind -N 'Zoom the current pane' 'Space' resize-pane -Z
+bind -N 'Resize the current pane up' -r 'M-Up' resize-pane -U
+bind -N 'Resize the current pane down' -r 'M-Down' resize-pane -D
+bind -N 'Resize the current pane left' -r 'M-Left' resize-pane -L
+bind -N 'Resize the current pane right' -r 'M-Right' resize-pane -R
 
 # Enter backward search mode directly.
 bind -N 'Search backward for a regular expression' '/' copy-mode \; send '?'
