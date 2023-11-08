@@ -19,26 +19,11 @@ if "test ! -d ${TPM_DIR}" \
 set -g @tpm_plugins '                \
   tmux-plugins/tpm                   \
   tmux-plugins/tmux-prefix-highlight \
-  tmux-plugins/tmux-resurrect        \
-  tmux-plugins/tmux-continuum        \
-  tmux-plugins/tmux-yank             \
   tmux-plugins/tmux-logging          \
+  tmux-plugins/tmux-resurrect        \
+  tmux-plugins/tmux-yank             \
   fcsonline/tmux-thumbs              \
 '
-
-#-
-#  tmux-thumbs
-#-
-
-# Override copy to use osc52
-set -g @thumbs-command "tmux set-buffer -w -- {} && tmux display-message \"Copied {}\""
-set -g @thumbs-upcase-command "tmux set-buffer -w -- {} && tmux paste-buffer && tmux display-message \"Copied {}\""
-set -g @thumbs-multi-command "tmux set-buffer -w -- {} && tmux paste-buffer && tmux send-keys ' ' && tmux display-message \"Copied multiple items!\""
-
-# Load thumbs
-if-shell "test -f ${TMUX_PLUGIN_MANAGER_PATH}/tmux-thumbs/tmux-thumbs.tmux" {
-  run-shell "${TMUX_PLUGIN_MANAGER_PATH}/tmux-thumbs/tmux-thumbs.tmux"
-}
 
 #-
 #  tmux-logging
@@ -100,12 +85,18 @@ set -g @resurrect-hook-post-restore-all '
 set -g @override_copy_command "tmux load-buffer -w -"
 
 #-
-#  tmux-continuum (MUST BE LAST)
+#  tmux-thumbs
 #-
 
-# Restore the last saved environment automatically when tmux starts.
-set -g @continuum-restore off
-set -g @continuum-save-interval 10
+# Override copy to use osc52
+set -g @thumbs-command "tmux set-buffer -w -- {} && tmux display-message \"Copied {}\""
+set -g @thumbs-upcase-command "tmux set-buffer -w -- {} && tmux paste-buffer && tmux display-message \"Copied {}\""
+set -g @thumbs-multi-command "tmux set-buffer -w -- {} && tmux paste-buffer && tmux send-keys ' ' && tmux display-message \"Copied multiple items!\""
+
+# Load thumbs
+if-shell "test -f ${TMUX_PLUGIN_MANAGER_PATH}/tmux-thumbs/tmux-thumbs.tmux" {
+  run-shell "${TMUX_PLUGIN_MANAGER_PATH}/tmux-thumbs/tmux-thumbs.tmux"
+}
 
 #-
 #  Load plugins
