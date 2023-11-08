@@ -13,8 +13,8 @@ keybinds clear-defaults=true {
         bind "p" { SwitchFocus; }
         bind "n" { NewPane; SwitchToMode "normal"; }
         bind "x" { CloseFocus; SwitchToMode "normal"; }
-        bind "f" { ToggleFocusFullscreen; SwitchToMode "normal"; }
-        bind "z" { TogglePaneFrames; SwitchToMode "normal"; }
+        bind "z" { ToggleFocusFullscreen; SwitchToMode "normal"; }
+        bind "f" { TogglePaneFrames; SwitchToMode "normal"; }
         bind "r" { SwitchToMode "RenamePane"; PaneNameInput 0;}
         bind "w" { ToggleFloatingPanes; SwitchToMode "Normal"; }
         bind "e" { TogglePaneEmbedOrFloating; SwitchToMode "Normal"; }
@@ -103,7 +103,7 @@ keybinds clear-defaults=true {
     // normal {}
     shared_except "locked" {
         bind "Alt g" { SwitchToMode "Locked"; }
-        bind "Alt f" { ToggleFocusFullscreen; SwitchToMode "normal"; }
+        bind "Alt z" { ToggleFocusFullscreen; SwitchToMode "normal"; }
         bind "Alt w" { ToggleFloatingPanes; SwitchToMode "normal"; }
         bind "Alt p" { SwitchToMode "pane"; }
         bind "Alt r" { SwitchToMode "resize"; }
@@ -170,7 +170,7 @@ simplified_ui true
 //   - true (default)
 //   - false
 //
-// pane_frames true
+pane_frames false
 
 // Toggle between having Zellij lay out panes according to a predefined set of layouts whenever possible
 // Options:
@@ -184,19 +184,6 @@ simplified_ui true
 // Once these themes are defined, one of them should to be selected in the "theme" section of this file
 //
 themes {
-    dracula {
-        fg 248 248 242
-        bg 40 42 54
-        red 255 85 85
-        green 80 250 123
-        yellow 241 250 140
-        blue 98 114 164
-        magenta 255 121 198
-        orange 255 184 108
-        cyan 139 233 253
-        black 0 0 0
-        white 255 255 255
-    }
     gruvbox-dark {
  		fg "#D5C4A1"
  		bg "#282828"
@@ -215,7 +202,7 @@ themes {
 // Choose the theme that is specified in the themes section.
 // Default: default
 //
-theme "gruvbox-dark"
+theme "catppuccin-macchiato"
 
 // The name of the default layout to load on startup
 // Default: "default"

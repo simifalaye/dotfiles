@@ -4,7 +4,7 @@
 #
 
 # Load additional keybinds configured through shell functions
-run-shell "${TMUX_CONFIG_DIR}/bindings.sh"
+run-shell "${TMUX_CONFIG_DIR}/scripts/switch_move_binds.sh"
 
 #-
 #  Root
@@ -46,6 +46,14 @@ bind -N 'Zoom the current pane' -n M-z resize-pane -Z
 # Quick new pane
 bind -N 'New pane' -n "M-Enter" \
 		run-shell 'cwd="`tmux display -p \"#{pane_current_path}\"`"; tmux select-pane -t "bottom-right"; tmux split-pane -c "$cwd"';
+
+# Toggle scratchpad
+bind-key -N 'Toggle scratch window' -n M-w if-shell -F '#{==:#{session_name},scratch}' {
+  detach-client
+} {
+  display-popup -d "#{pane_current_path}" -xC -yC -w 80% -h 75% -E 'tmux new-session -A -s scratch'
+  # display-popup -E -xC -yC -w 80% -h 75% 'tmux attach-session -t scratch 2>/dev/null || tmux new-session -s scratch -c "#{pane_current_path}"'
+}
 
 #-
 #  Mouse

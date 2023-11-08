@@ -8,11 +8,6 @@ if ! is_callable tmux; then
   return 1
 fi
 
-# Setup copy command for wsl
-if is_wsl; then
-  export TMUX_CLIPBOARD="clip.exe"
-fi
-
 # Convenience aliases
 # shellcheck disable=SC2139
 alias tmux="tmux -2 -f '${HOME}/.config/tmux/tmux.conf'"

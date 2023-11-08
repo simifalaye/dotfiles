@@ -12,26 +12,37 @@
 # Install tpm if not installed
 TPM_REPO="https://github.com/tmux-plugins/tpm"
 TPM_DIR="${TMUX_PLUGIN_MANAGER_PATH}/tpm"
-if "test ! -d ${TMUX_PLUGIN_MANAGER_PATH}/tpm" \
-     "run 'git clone ${TPM_REPO} ${TPM_DIR} && ${TPM_DIR}/bin/install_plugins'"
+if "test ! -d ${TPM_DIR}" \
+     "run 'git clone ${TPM_REPO} ${TPM_DIR} && ${TPM_DIR}/bin/install_plugins'";
+
+ # List of plugins
+set -g @tpm_plugins '                \
+  tmux-plugins/tpm                   \
+  tmux-plugins/tmux-prefix-highlight \
+  tmux-plugins/tmux-resurrect        \
+  tmux-plugins/tmux-continuum        \
+  tmux-plugins/tmux-yank             \
+  tmux-plugins/tmux-logging          \
+  fcsonline/tmux-thumbs              \
+'
 
 #-
-#  tmux-fingers
+#  tmux-thumbs
 #-
 
-set -g @plugin 'Morantron/tmux-fingers'
+# Override copy to use osc52
+set -g @thumbs-command "tmux set-buffer -w -- {} && tmux display-message \"Copied {}\""
+set -g @thumbs-upcase-command "tmux set-buffer -w -- {} && tmux paste-buffer && tmux display-message \"Copied {}\""
+set -g @thumbs-multi-command "tmux set-buffer -w -- {} && tmux paste-buffer && tmux send-keys ' ' && tmux display-message \"Copied multiple items!\""
 
-# Bindings and actions for tmux-fingers.
-set -g @fingers-key 'M-f'
-set -g @fingers-main-action  ':copy:'
-set -g @fingers-ctrl-action  ':open:'
-set -g @fingers-shift-action ':paste:'
+# Load thumbs
+if-shell "test -f ${TMUX_PLUGIN_MANAGER_PATH}/tmux-thumbs/tmux-thumbs.tmux" {
+  run-shell "${TMUX_PLUGIN_MANAGER_PATH}/tmux-thumbs/tmux-thumbs.tmux"
+}
 
 #-
 #  tmux-logging
 #-
-
-set -g @plugin 'tmux-plugins/tmux-logging'
 
 # Key bindings for tmux-logging.
 set -g @logging_key 'i'
@@ -51,8 +62,6 @@ set -g @save-complete-history-filename 'tmux-history.#{session_name}:#{window_in
 #-
 #  tmux-resurrect
 #-
-
-set -g @plugin 'tmux-plugins/tmux-resurrect'
 
 # Save directory for tmux-resurrect.
 set -g @resurrect-dir "${TMUX_STATE_DIR}/resurrect"
@@ -84,28 +93,15 @@ set -g @resurrect-hook-post-restore-all '
 '
 
 #-
-#  tmux-prefix-highlight
-#-
-
-set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
-
-#-
 #  tmux-yank
 #-
 
-set -g @plugin 'tmux-plugins/tmux-yank'
-
-# Set copy command
-if-shell "command -v ${TMUX_CLIPBOARD} >/dev/null" {
-  set -g @override_copy_command "${TMUX_CLIPBOARD}"
-}
+# Override copy to use osc52
+set -g @override_copy_command "tmux load-buffer -w -"
 
 #-
 #  tmux-continuum (MUST BE LAST)
 #-
-
-
-set -g @plugin 'tmux-plugins/tmux-continuum'
 
 # Restore the last saved environment automatically when tmux starts.
 set -g @continuum-restore off
@@ -116,6 +112,6 @@ set -g @continuum-save-interval 10
 #-
 
 # Initialize the plugin manager (should be last in the config file).
-run -b ${TMUX_PLUGIN_MANAGER_PATH}/tpm/tpm
+run -b ${TPM_DIR}/tpm
 
 %endif

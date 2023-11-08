@@ -16,7 +16,7 @@ xsh module core
 # xsh module zi interactive
 
 # Load theme early (before prompt)
-xsh module -s bash base16 interactive
+# xsh module -s bash base16 interactive
 
 # Load prompt early
 xsh module prompt interactive

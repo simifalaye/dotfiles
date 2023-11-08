@@ -13,7 +13,7 @@ xsh module core -s posix
 xsh module core
 
 # Load theme early
-xsh module base16 interactive
+# xsh module base16 interactive
 
 # Load application modules that have no requirements
 xsh module -s posix calc login
