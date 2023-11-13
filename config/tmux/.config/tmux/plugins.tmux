@@ -3,13 +3,12 @@
 # Configuration of tmux plugins.
 #
 
-%if "${TMUX_PLUGIN_MANAGER_PATH}"
-
 #-
 #  plugin setup
 #-
 
 # Install tpm if not installed
+TMUX_PLUGIN_MANAGER_PATH="${TMUX_DATA_DIR}/plugins"
 TPM_REPO="https://github.com/tmux-plugins/tpm"
 TPM_DIR="${TMUX_PLUGIN_MANAGER_PATH}/tpm"
 if "test ! -d ${TPM_DIR}" \
@@ -49,7 +48,7 @@ set -g @save-complete-history-filename 'tmux-history.#{session_name}:#{window_in
 #-
 
 # Save directory for tmux-resurrect.
-set -g @resurrect-dir "${TMUX_STATE_DIR}/resurrect"
+set -g @resurrect-dir "${TMUX_CACHE_DIR}/resurrect"
 
 # Capture and restore pane contents.
 set -g @resurrect-capture-pane-contents on
@@ -104,5 +103,3 @@ if-shell "test -f ${TMUX_PLUGIN_MANAGER_PATH}/tmux-thumbs/tmux-thumbs.tmux" {
 
 # Initialize the plugin manager (should be last in the config file).
 run -b ${TPM_DIR}/tpm
-
-%endif

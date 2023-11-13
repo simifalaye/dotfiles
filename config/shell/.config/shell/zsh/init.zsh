@@ -45,7 +45,6 @@ xsh module zle interactive # load after completion
 xsh module kubernetes interactive # load after completion
 
 # Load additional application modules that provide and bind ZLE widgets.
-xsh module -s bash fzf login
 xsh module fzf interactive
 xsh module you-should-use interactive
 

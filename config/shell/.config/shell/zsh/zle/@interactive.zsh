@@ -33,23 +33,23 @@ zle_highlight=(
 # Explicitly load terminfo
 zmodload zsh/terminfo
 
-# Runs on zle start
-function zle-line-init() {
-  # Reset prompt
-  zle reset-prompt
-  zle -R
-  # Enables term app mode so $terminfo values are valid
-  (( ${+terminfo[smkx]} )) && echoti smkx
+# Enables terminal application mode when the editor starts,
+# so that $terminfo values are valid.
+function zle-line-init {
+  if (( $+terminfo[smkx] )); then
+    echoti smkx
+  fi
 }
-zle -A zle-line-init zle-line-init
+zle -N zle-line-init
 
-# Runs on zle finish
-function zle-line-finish() {
-  # Disables term app mode so apps behave properly
-  (( ${+terminfo[rmkx]} )) && echoti rmkx
+# Disables terminal application mode when the editor exits,
+# so that other applications behave normally.
+function zle-line-finish {
+  if (( $+terminfo[rmkx] )); then
+    echoti rmkx
+  fi
 }
-zle -A zle-line-finish zle-line-finish
-
+zle -N zle-line-finish
 
 # Toggle process as bg and fg
 function fancy-ctrl-z {

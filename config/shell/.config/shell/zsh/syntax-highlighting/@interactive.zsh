@@ -8,9 +8,9 @@ if [[ $TERM == 'dumb' ]]; then
 fi
 
 # Load plugin
-plugin_dir=${ZPLUGDIR}/zsh-syntax-highlighting
+plugin_dir=${ZPLUGDIR}/F-Sy-H
 if [[ ! -e ${plugin_dir} ]]; then
-  git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${plugin_dir}
-  zcompile-many ${plugin_dir}/{zsh-syntax-highlighting.zsh,highlighters/*/*.zsh}
+  git clone --depth=1 https://github.com/z-shell/F-Sy-H.git ${plugin_dir}
+  zcompile-many ${plugin_dir}/{functions/fast*,functions/.fast*,**/*.ch,**/*.zsh}
 fi
-source ${plugin_dir}/zsh-syntax-highlighting.zsh
+source ${plugin_dir}/F-Sy-H.plugin.zsh

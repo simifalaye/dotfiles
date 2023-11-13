@@ -10,7 +10,6 @@ typeset -gU \
   PATH path
 
 # Skip the not really helping Ubuntu global compinit
-# NOTE: Zim will load compinit itself
 skip_global_compinit=1
 
 # Disable control flow (^S/^Q) even for non-interactive shells.

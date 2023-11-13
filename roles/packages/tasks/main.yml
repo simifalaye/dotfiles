@@ -18,11 +18,11 @@
       - atool
       - bat
       - bitwise
+      - btop
       - calc
       - cloc
       - elinks
       - fzf
-      - htop
       - jq
       - nodejs
       - npm
@@ -98,7 +98,6 @@
   ansible.builtin.include_tasks: "{{ outer_item }}"
   loop:
     - cheat.yml
-    - delta.yml
     - exa.yml
     - fd.yml
     - neovim.yml

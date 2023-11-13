@@ -8,9 +8,23 @@ if ! is_callable tmux; then
   return 1
 fi
 
+# Figure out the TERM to use inside tmux.
+if [[ "$TERM" == *"256color"* ]]; then
+  export TMUX_TERM="tmux-256color"
+else
+  export TMUX_TERM="${TERM}"
+fi
+
+# Path to tmux internal dirs
+export TMUX_DATA_DIR="${XDG_DATA_HOME}/tmux"
+export TMUX_CACHE_DIR="${XDG_STATE_HOME}/tmux"
+
+# Path to the tmux directory to source other configuration files.
+export TMUX_CONFIG_DIR="${TMUX_CONFIG:h}"
+
 # Convenience aliases
 # shellcheck disable=SC2139
-alias tmux="tmux -2 -f '${HOME}/.config/tmux/tmux.conf'"
+alias tmux="tmux -2 -f '${TMUX_CONFIG}'"
 alias tl="tmux ls"
 
 # Credit: https://github.com/akinsho/dotfiles/blob/main/zsh/scripts/fzf.sh

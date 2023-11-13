@@ -103,4 +103,3 @@
 [include]
     path = ~/.config/git/alias
     path = ~/.config/git/config.local
-    path = ~/.config/git/delta
