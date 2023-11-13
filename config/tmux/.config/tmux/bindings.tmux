@@ -134,7 +134,7 @@ unbind -a -T prefix
 unbind 'C-b'
 set -g prefix 'M-s'
 bind 'M-s' send-prefix
-bind 'M-v' send-prefix # Nested session prefix
+bind 'M-a' -n send-prefix # Nested session prefix
 
 # Config
 bind -N 'Edit the tmux configuration'   'e' edit-config
