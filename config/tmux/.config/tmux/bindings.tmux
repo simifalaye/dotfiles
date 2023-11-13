@@ -52,7 +52,6 @@ bind-key -N 'Toggle scratch window' -n M-w if-shell -F '#{==:#{session_name},scr
   detach-client
 } {
   display-popup -d "#{pane_current_path}" -xC -yC -w 80% -h 75% -E 'tmux new-session -A -s scratch'
-  # display-popup -E -xC -yC -w 80% -h 75% 'tmux attach-session -t scratch 2>/dev/null || tmux new-session -s scratch -c "#{pane_current_path}"'
 }
 
 #-
@@ -135,6 +134,7 @@ unbind -a -T prefix
 unbind 'C-b'
 set -g prefix 'M-s'
 bind 'M-s' send-prefix
+bind 'M-a' send-prefix # Nested session prefix
 
 # Config
 bind -N 'Edit the tmux configuration'   'e' edit-config

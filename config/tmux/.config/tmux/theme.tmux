@@ -10,9 +10,10 @@ set -g status-justify left
 set -g status-left-length 200    # increase length (from 10)
 set -g status-right-length 200    # increase length (from 10)
 set -g status-bg default
+set -g status-style bg=default # transparent
 set -g window-status-style fg=white,bg=default
 set -g window-status-current-format '#[fg=black,bg=blue] #I #W#{?window_zoomed_flag,(),} '
-set -g window-status-format '#[fg=gray,bg=#1e1e2e] #I #W '
+set -g window-status-format '#[fg=gray,bg=default] #I #W '
 set -g window-status-last-style 'fg=white,bg=black'
 
 # Message

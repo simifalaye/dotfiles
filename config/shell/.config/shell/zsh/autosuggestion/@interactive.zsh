@@ -71,3 +71,6 @@ if [[ ! -e ${plugin_dir} ]]; then
   zcompile-many ${plugin_dir}/{zsh-autosuggestions.zsh,src/**/*.zsh}
 fi
 source ${plugin_dir}/zsh-autosuggestions.zsh
+
+# Setup zle keybinds
+bindkey "${keys[Ctrl]} " autosuggest-accept

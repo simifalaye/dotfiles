@@ -4,9 +4,17 @@ return {
     lazy = false,
     name = "catppuccin",
     priority = 1000,
-    opts = {},
-    config = function()
-      vim.cmd.colorscheme("catppuccin")
+    opts = {
+      flavour = "macchiato", -- latte, frappe, macchiato, mocha
+      background = { -- :h background
+        light = "latte",
+        dark = "macchiato",
+      },
+    },
+    config = function(_, opts)
+      require("catppuccin").setup(opts)
+      vim.o.termguicolors = true
+      vim.cmd("colorscheme catppuccin")
     end,
   },
   {
