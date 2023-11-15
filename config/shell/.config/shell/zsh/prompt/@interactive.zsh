@@ -4,8 +4,6 @@ if [[ $TERM == 'dumb' ]]; then
   return 1
 fi
 
-source ~/oss/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
-
 # # Activate Powerlevel10k Instant Prompt.
 # if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
 #   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
