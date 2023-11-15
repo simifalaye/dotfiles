@@ -35,6 +35,12 @@ m.nmap("g-", "yyp^v$r-Vk", "Underline -")
 m.nmap("g=", "yyp^v$r=Vk", "Underline =")
 m.nnoremap("g!", ":! chmod +x %<CR>", "Make File Executable")
 m.nnoremap(
+  "g>",
+  [[<cmd>set nomore<bar>40messages<bar>set more<CR>]],
+  "Show Message History"
+)
+m.nnoremap("g<", [[<cmd>messages clear<CR>]], "Show Message History")
+m.nnoremap(
   "gO",
   "<Cmd>call append(line('.') - 1, repeat([''], v:count1))<CR>",
   "Put Empty Line Above"

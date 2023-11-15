@@ -14,7 +14,8 @@ return {
         },
         -- Which character to use for drawing scope indicator
         -- alternative styles: ┆ ┊ ╎
-        symbol = "│",
+        -- symbol = "│",
+        symbol = "┆",
         options = { try_as_border = true },
       })
       -- Disable for certain filetypes
@@ -34,6 +35,7 @@ return {
             "toggleterm",
             "lazyterm",
             "fzf",
+            "minifiles",
           },
           command = function()
             vim.b.miniindentscope_disable = true

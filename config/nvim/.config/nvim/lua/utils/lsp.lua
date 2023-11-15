@@ -311,6 +311,29 @@ M.on_attach = function(client, bufnr)
   end
 end
 
+--- Trigger the lsp on_rename handler when renaming a file
+---@param from string old name
+---@param to string new name
+M.on_rename = function(from, to)
+  local clients = M.get_attached_clients()
+  for _, client in ipairs(clients) do
+    if client.supports_method("workspace/willRenameFiles") then
+      ---@diagnostic disable-next-line: invisible
+      local resp = client.request_sync("workspace/willRenameFiles", {
+        files = {
+          {
+            oldUri = vim.uri_from_fname(from),
+            newUri = vim.uri_from_fname(to),
+          },
+        },
+      }, 1000, 0)
+      if resp and resp.result ~= nil then
+        vim.lsp.util.apply_workspace_edit(resp.result, client.offset_encoding)
+      end
+    end
+  end
+end
+
 --- Start a dev containter for lsp
 ---@param src string the path to your local project
 ---@param tar string the path on the container to mount your project

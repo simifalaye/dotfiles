@@ -1,0 +1,49 @@
+# vim: filetype=yaml.ansible
+
+- name: Install eza
+  become: true
+  when: "not ('eza' | is_installed)"
+  block:
+    - name: Get latest version of eza
+      get_latest_github_tag:
+        owner: eza-community
+        repo: eza
+      register: gh_tag
+    - name: Create eza tmp dir
+      ansible.builtin.file:
+        path: /tmp/eza
+        state: directory
+        mode: '0755'
+    - name: Extract eza archive
+      ansible.builtin.unarchive:
+        src: "https://github.com/eza-community/eza/releases/download/{{ gh_tag.latest }}/eza_x86_64-unknown-linux-gnu.tar.gz"
+        dest: /tmp/eza
+        remote_src: true
+    # TODO: May need to correct bin path in new releases
+    - name: Install eza bin
+      ansible.builtin.copy:
+        src: "/tmp/eza/eza"
+        dest: /usr/local/bin/eza
+        mode: '0755'
+    # TODO: Install completions and manpages when shipped with release
+    # - name: Install eza bash completion
+    #   ansible.builtin.copy:
+    #     src: "/tmp/eza/completions/eza.bash"
+    #     dest: "{{ bash_completions_dir }}/eza"
+    #     mode: '0644'
+    # - name: Install eza zsh completion
+    #   ansible.builtin.copy:
+    #     src: "/tmp/eza/completions/eza.zsh"
+    #     dest: "{{ zsh_completions_dir }}/eza"
+    #     mode: '0644'
+    # - name: Install eza man page
+    #   ansible.builtin.copy:
+    #     src: "/tmp/eza/man/eza.1"
+    #     dest: "{{ man_dir }}/eza.1"
+    #     mode: '0644'
+    - name: Remove eza temporary files
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "/tmp/eza"

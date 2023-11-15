@@ -10,4 +10,4 @@ fi
 
 # Path to the root tmux config file.
 # Using this will bypass the system-wide configuration file, if any.
-export TMUX_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/tmux/main.tmux"
+export TMUX_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf"

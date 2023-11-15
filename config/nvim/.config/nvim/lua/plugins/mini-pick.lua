@@ -19,7 +19,6 @@ return {
           local items = {}
           local curr_item = {}
           for _, l in ipairs(vim.split(buffers_output, "\n")) do
-            P("Buf line:" .. l)
             local buf_str, name = l:match("^%s*%d+"), l:match('"(.*)"')
             local buf_id = tonumber(buf_str)
             local item = { text = name, bufnr = buf_id }

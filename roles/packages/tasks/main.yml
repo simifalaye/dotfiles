@@ -98,7 +98,7 @@
   ansible.builtin.include_tasks: "{{ outer_item }}"
   loop:
     - cheat.yml
-    - exa.yml
+    - eza.yml
     - fd.yml
     - neovim.yml
     - wsl-open.yml

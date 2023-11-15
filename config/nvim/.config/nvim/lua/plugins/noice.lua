@@ -7,8 +7,8 @@ return {
     },
     event = "VeryLazy",
     keys = {
-      { "g>", "<cmd>NoiceHistory<CR>", desc = "Show notifications" },
-      { "g<", "<cmd>NoiceDismiss<CR>", desc = "Dismiss notifications" },
+      { "<leader>u>", "<cmd>NoiceHistory<CR>", desc = "Show notifications" },
+      { "<leader>u<", "<cmd>NoiceDismiss<CR>", desc = "Dismiss notifications" },
       {
         "<S-Enter>",
         function()
