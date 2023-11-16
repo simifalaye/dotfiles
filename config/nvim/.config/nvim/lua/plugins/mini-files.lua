@@ -21,7 +21,7 @@ return {
     },
     opts = {
       windows = {
-        preview = true,
+        -- preview = true,
         width_focus = 30,
         width_preview = 30,
       },

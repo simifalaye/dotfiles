@@ -72,6 +72,6 @@ if is_callable fzf; then
 fi
 
 # Will be used by zsh module also
-if [ -n "${BASH}" ]; then
+if [ -n "${BASH_SOURCE}" ]; then
 	include /usr/share/doc/fzf/examples/key-bindings.bash
 fi

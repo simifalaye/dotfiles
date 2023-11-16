@@ -7,6 +7,7 @@
 # This is necessary so that the `menuselect` keymap and the bindable commands
 # of the completion system are available. For more information about the
 # latter, see the definition of _rebind_compsys_widgets below.
+# NOTE: Dependent on the zim input module
 #
 
 if [[ $TERM == 'dumb' ]]; then
@@ -14,42 +15,11 @@ if [[ $TERM == 'dumb' ]]; then
 fi
 
 #-
-#  Character highlighting
-#-
-
-# See 'Character Highlighting' in zshzle(1).
-zle_highlight=(
-  isearch:underline
-  region:standout
-  special:standout
-  suffix:bold
-  paste:none # does not integrate well with syntax-highlighting
-)
-
-#-
 #  ZLE Widgets
 #-
 
 # Explicitly load terminfo
 zmodload zsh/terminfo
-
-# Enables terminal application mode when the editor starts,
-# so that $terminfo values are valid.
-function zle-line-init {
-  if (( $+terminfo[smkx] )); then
-    echoti smkx
-  fi
-}
-zle -N zle-line-init
-
-# Disables terminal application mode when the editor exits,
-# so that other applications behave normally.
-function zle-line-finish {
-  if (( $+terminfo[rmkx] )); then
-    echoti rmkx
-  fi
-}
-zle -N zle-line-finish
 
 # Toggle process as bg and fg
 function fancy-ctrl-z {
@@ -63,31 +33,6 @@ function fancy-ctrl-z {
 }
 zle -N fancy-ctrl-z
 
-# Toggle prepend "sudo" to last command
-function toggle-prepend-sudo {
-  [[ -z $BUFFER ]] && zle up-history
-  if [[ $BUFFER == "sudo "* ]]; then
-    LBUFFER="${LBUFFER#sudo }"
-  elif [[ $BUFFER == "${EDITOR} "* ]]; then
-    LBUFFER="${LBUFFER#$EDITOR }"
-    LBUFFER="sudoedit ${LBUFFER}"
-  elif [[ $BUFFER == "sudoedit "* ]]; then
-    LBUFFER="${LBUFFER#sudoedit }"
-    LBUFFER="${EDITOR} ${LBUFFER}"
-  else
-    LBUFFER="sudo ${LBUFFER}"
-  fi
-}
-zle -N toggle-prepend-sudo
-
-# Perform all types of shell expansions: history, alias, parameter,
-# arithmetic, brace, filename.
-function expand-all {
-  zle _expand_alias
-  zle expand-word
-}
-zle -N expand-all
-
 # List key bindings.
 function list-keys {
   bindkey | grep -v noop | "$PAGER"
@@ -98,71 +43,17 @@ zle -N list-keys
 #  Keymaps
 #-
 
-# Use human-friendly identifiers.
-typeset -gA keys
-keys=(
-  'Esc'              '\e'
-  'Ctrl'             '^'
-  'Alt'              '^['
-  'Backspace'        "$terminfo[kbs]"
-  'Enter'            "$terminfo[cr]"
-  'Home'             "$terminfo[khome]"
-  'End'              "$terminfo[kend]"
-  'Insert'           "$terminfo[kich1]"
-  'Delete'           "$terminfo[kdch1]"
-  'PageUp'           "$terminfo[kpp]"
-  'PageDown'         "$terminfo[knp]"
-  'Up'               "$terminfo[kcuu1]"
-  'Left'             "$terminfo[kcub1]"
-  'Down'             "$terminfo[kcud1]"
-  'Right'            "$terminfo[kcuf1]"
-  'BackTab'          "$terminfo[kcbt]"
-  'ShiftEnter'       "$terminfo[kent]"
-  'ShiftPageUp'      "$terminfo[kPRV]"
-  'ShiftPageDown'    "$terminfo[kNXT]"
-  'ScrollUp'         "$terminfo[kri]"
-  'ScrollDown'       "$terminfo[kind]"
-)
-
-# General
-# ---------
-
-# Emacs mode
-bindkey -e
-
-# Fix basic behaviour
-bindkey ${keys[Backspace]} backward-delete-char
-bindkey ${keys[Delete]} delete-char
-if [[ -n ${keys[Home]} ]] bindkey ${keys[Home]} beginning-of-line
-if [[ -n ${keys[End]} ]] bindkey ${keys[End]} end-of-line
-if [[ -n ${keys[PageUp]} ]] bindkey ${keys[PageUp]} up-line-or-history
-if [[ -n ${keys[PageDown]} ]] bindkey ${keys[PageDown]} down-line-or-history
-if [[ -n ${keys[Insert]} ]] bindkey ${keys[Insert]} overwrite-mode
-if [[ -n ${keys[Left]} ]] bindkey ${keys[Left]} backward-char
-if [[ -n ${keys[Right]} ]] bindkey ${keys[Right]} forward-char
-
-# Expandpace.
-bindkey ' ' magic-space
-
-# <Ctrl-x><Ctrl-e> to edit command-line in EDITOR
-autoload -Uz edit-command-line && zle -N edit-command-line &&
-  bindkey "${keys[Ctrl]}x${keys[Ctrl]}e" edit-command-line
-
-# Bind <Shift-Tab> to go to the previous menu item.
-if [[ -n ${keys[BackTab]} ]] bindkey ${keys[BackTab]} reverse-menu-complete
-
-# Use smart URL pasting and escaping.
-autoload -Uz bracketed-paste-url-magic && zle -N bracketed-paste bracketed-paste-url-magic
-autoload -Uz url-quote-magic && zle -N self-insert url-quote-magic
-
 # Toggle process bg and fg
-bindkey "${keys[Ctrl]}z" fancy-ctrl-z
-
-# Add sudo to last command
-bindkey "${keys[Ctrl]}\\" toggle-prepend-sudo
-
-# Expand whatever is under the cursor.
-bindkey "${keys[Ctrl]};" expand-all
+bindkey "$key_info[Control]z" fancy-ctrl-z
 
 # List key bindings.
-bindkey "${keys[Ctrl]}x${keys[Ctrl]}?" list-keys
+bindkey "$key_info[Control]x$key_info[Control]?" list-keys
+
+# plugin: zsh-history-substring-search
+bindkey "$key_info[Up]" history-substring-search-up
+bindkey "$key_info[Control]p" history-substring-search-up
+bindkey "$key_info[Down]" history-substring-search-down
+bindkey "$key_info[Control]n" history-substring-search-down
+
+# plugin: zsh-autosuggestions
+bindkey "$key_info[Control] " autosuggest-accept

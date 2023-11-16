@@ -1,0 +1,57 @@
+# vim: filetype=conf
+
+#-
+#  Core modules
+#-
+
+# Applies correct bindkeys for input events.
+zmodule input
+# Shown when there is no command and user presses ENTER.
+zmodule magic-enter
+# Figures out where to get the best help, and gets it. Uses Zsh's provided run-help function.
+zmodule run-help
+# Provides handy Git aliases and functions
+zmodule git
+
+#-
+#  Prompt
+#-
+
+# Exposes to prompts how long the last command took to execute, used by asciiship.
+zmodule duration-info
+# Exposes git repository status information to prompts, used by asciiship.
+zmodule git-info
+# Formats the current working directory to be used by prompts.
+zmodule prompt-pwd
+# Prompt theme
+zmodule minimal
+
+#-
+#  Completion
+#-
+
+# Additional completion definitions for Zsh.
+zmodule zsh-users/zsh-completions --fpath src
+# Kubectl completions
+zmodule joke/zim-kubectl
+# Enables and configures smart and extensive tab completion.
+# completion must be sourced after all modules that add completion definitions.
+zmodule completion
+
+#-
+#  Modules that must be initialized after completion and input
+#  (Modules that provide or bind zle widgets)
+#-
+
+# Fish-like syntax highlighting for Zsh.
+# Must be sourced after completion
+zmodule z-shell/F-Sy-H
+# Fish-like history search (up arrow) for Zsh.
+# Must be sourced after zsh-users/zsh-syntax-highlighting
+zmodule zsh-users/zsh-history-substring-search
+# Fish-like autosuggestions for Zsh.
+zmodule zsh-users/zsh-autosuggestions
+# Reminds you of your existing aliases
+zmodule MichaelAquilina/zsh-you-should-use --source you-should-use.plugin.zsh
+# Toggles "sudo" before the current/previous command by pressing [ESC][ESC]
+zmodule hcgraf/zsh-sudo --source sudo.plugin.zsh

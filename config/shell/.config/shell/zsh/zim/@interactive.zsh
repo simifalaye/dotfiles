@@ -1,9 +1,37 @@
 # shellcheck shell=zsh
 
-# NOTE: Similarly to syntax-highlighting, this module wraps ZLE widgets and
-# should be loaded after all widgets have been defined.
-# For best results, syntax-highlighting should be loaded before so that
-# highlighting is updated when the plugin updates the editor buffer.
+#-
+#  Core module: Git
+#-
+
+# Set a custom prefix for the generated aliases. The default prefix is 'G'.
+zstyle ':zim:git' aliases-prefix 'g'
+
+#-
+#  Core module: Input
+#-
+
+# Append \`../\` to your input for each \`.\` you type after an initial \`..\`
+zstyle ':zim:input' double-dot-expand yes
+
+#-
+#  Core module: Completion
+#-
+
+# Move dump files to zcache directory
+zstyle ':zim:completion' dumpfile "${ZCACHEDIR}/zcompdump"
+zstyle ':completion::complete:*' cache-path "${ZCACHEDIR}/zcompcache"
+
+#-
+#  zsh-history-substring-search module
+#-
+
+# Half case-sensitive: lower matches upper, upper does not match lower.
+HISTORY_SUBSTRING_SEARCH_GLOBBING_FLAGS=l
+
+#-
+#  zsh-autosuggest module
+#-
 
 # Disable highlighting for terminals with 8-color or less.
 (( $terminfo[colors] <= 8 )) && ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=''
@@ -64,13 +92,21 @@ ZSH_AUTOSUGGEST_IGNORE_WIDGETS=(
   yank-pop
 )
 
-# Load plugin
-plugin_dir=${ZPLUGDIR}/zsh-autosuggestions
-if [[ ! -e ${plugin_dir} ]]; then
-  git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git ${plugin_dir}
-  zcompile-many ${plugin_dir}/{zsh-autosuggestions.zsh,src/**/*.zsh}
-fi
-source ${plugin_dir}/zsh-autosuggestions.zsh
+#-
+#  Zim setup
+#-
 
-# Setup zle keybinds
-bindkey "${keys[Ctrl]} " autosuggest-accept
+# Download zimfw plugin manager if missing.
+if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
+  curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
+      https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+fi
+
+# Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
+[ -f ${ZIM_CONFIG_FILE} ] && conf=${ZIM_CONFIG_FILE} || conf=${ZDOTDIR:-${HOME}}/.zimrc
+if [[ ! ${ZIM_HOME}/init.zsh -nt ${conf} ]]; then
+  source ${ZIM_HOME}/zimfw.zsh init -q
+fi
+
+# Initialize modules.
+source ${ZIM_HOME}/init.zsh

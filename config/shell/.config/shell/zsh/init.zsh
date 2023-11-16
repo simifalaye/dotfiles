@@ -12,14 +12,8 @@
 xsh module core -s posix
 xsh module core
 
-# Load plugin manager early
-# xsh module zi interactive
-
-# Load theme early (before prompt)
-# xsh module -s bash base16 interactive
-
 # Load prompt early
-xsh module prompt interactive
+# xsh module prompt interactive
 
 # Load application modules that have no requirements
 xsh module -s posix calc login
@@ -39,16 +33,16 @@ xsh module -s bash trash interactive:logout
 xsh module -s bash wsl login
 xsh module -s bash zoxide interactive:login
 
-# Load the completion system and define core ZLE widgets and bindings.
-xsh module completion interactive
-xsh module zle interactive # load after completion
-xsh module kubernetes interactive # load after completion
-
-# Load additional application modules that provide and bind ZLE widgets.
-xsh module fzf interactive
-xsh module you-should-use interactive
-
-# Load the modules that wrap ZLE widgets after they have all been defined
-xsh module syntax-highlighting interactive
+# Load plugin configuration (before loading plugin manager)
 xsh module history-substring-search interactive
 xsh module autosuggestion interactive
+
+# Load plugin manager
+# NOTE: ZLE and completion will be setup here
+xsh module zim interactive:login
+
+# Load ZLE widgets and bindings after completion (core, then apps)
+xsh module zle interactive
+xsh module fzf interactive
+
+# Load the modules that wrap ZLE widgets after they have all been defined

@@ -72,10 +72,6 @@
   # Continue listing the history of a file beyond renames (works only for a single file).
   follow = true
 
-[status]
-  # Use the short format by default.
-  short = true
-
 [stash]
   # Show the diffstat and patch of the stash entry by default.
   showPatch = true
