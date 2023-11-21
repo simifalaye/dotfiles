@@ -74,8 +74,8 @@ build/
 build_cc/
 *.egg-info/
 htmlcov/
+bazel-tmp/
 .vscode/
 .clangd/
 .ccls*/
 .build-include/
-.bazel-external/
