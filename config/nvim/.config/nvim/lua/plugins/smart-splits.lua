@@ -4,6 +4,7 @@ local ss = reqcall("smart-splits") ---@module 'smart-splits'
 return {
   {
     "mrjones2014/smart-splits.nvim",
+    enabled = false,
     tag = "v1.2.4",
     keys = {
       { "<A-S-h>", ss.resize_left, desc = "Resize Window Left" },

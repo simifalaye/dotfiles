@@ -1,0 +1,8 @@
+# vim: filetype=yaml.ansible
+
+- name: Install clang-format formatter
+  become: true
+  ansible.builtin.package:
+    name:
+      - clang-format
+    state: present

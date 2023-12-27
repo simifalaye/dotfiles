@@ -7,102 +7,83 @@
     - "../vars/{{ ansible_distribution }}-{{ ansible_distribution_major_version | int }}.yml"
   when: item is file
 
-# Install common packages that should be availabe on all package managers (with the same name)
-- name: Install core common packages
+# Things that will be used for installing other packages
+- name: Install core dependencies and package managers
   become: true
   ansible.builtin.package:
     name:
       - "{{ python_pkg_name }}"
       - "{{ pip_pkg_name }}"
-      - "{{ venv_pkg_name }}"
-      - atool
-      - bat
-      - bitwise
-      - btop
-      - calc
-      - cloc
-      - elinks
-      - fzf
-      - jq
       - nodejs
       - npm
-      - ripgrep
-      - rsync
-      - tig
-      - tmux
-      - tree
-      - unison
-      - zsh
     state: present
 
-# Install common gui packages that should be availabe on all package managers (with the same name)
-- name: Install core gui packages
+- name: Setup nodejs to use lts version
   become: true
-  ansible.builtin.apt:
-    name:
-      - arandr
-      - autorandr
-      - dunst
-      - mpv
-      - nitrogen
-      - pasystray
-      - peek
-      - policykit-1-gnome
-      - ppa-purge
-      - redshift
-      - rofi
-      - screenkey
-      - scrot
-      - zathura
-    state: present
-  when:
-    - ansible_env.XDG_CURRENT_DESKTOP is defined
-    - ansible_env.XDG_CURRENT_DESKTOP != ""
+  block:
+    - name: Install 'n' node version manager
+      community.general.npm:
+        name: n # Used for installing newer node versions
+        global: true
+        state: present
+    - name: Set node/npm versions to lts
+      become: true
+      ansible.builtin.shell: |
+        node_ver="$(node --version)"
+        node_ver="${node_ver#v}"
+        lts_ver="$(sudo n --lts)"
+        if [[ "${node_ver}" != "${lts_ver}" ]]; then
+          sudo n lts
+          echo "NODE_VER_EQ"
+        fi
+      args:
+        executable: /bin/bash
+      register: node_ver_check
+      changed_when: '"NODE_VER_EQ" in node_ver_check.stdout'
 
-- name: Install common pip packages
+# Required to use "get_latest_github" custom module
+- name: Install python requests package (used for ansible config)
   become: true
   ansible.builtin.pip:
     name:
-      - pynvim
-      - trash-cli
-      - requests # Required for "get_latest_github" custom module
+      - requests
     state: present
 
-- name: Install common global npm packages
-  become: true
-  npm:
-    name: "{{ item }}"
-    global: true
-    state: present
-  loop:
-    - n # Used for downloading other node versions
-    - neovim
-
-- name: Set node/npm versions to lts
-  become: true
-  ansible.builtin.shell: |
-    node_ver="$(node --version)"
-    node_ver="${node_ver#v}"
-    lts_ver="$(sudo n --lts)"
-    if [[ "${node_ver}" != "${lts_ver}" ]]; then
-      sudo n lts
-      echo "NODE_VER_EQ"
-    fi
-  args:
-    executable: /bin/bash
-  register: node_ver_check
-  changed_when: '"NODE_VER_EQ" in node_ver_check.stdout'
-
-# Install apps that require more complex installation processes
-- name: Include standalone package installer tasks
+- name: Install all user apps
   ansible.builtin.include_tasks: "{{ outer_item }}"
   loop:
+    - ansible-ls.yml
+    - atool.yml
+    - bat.yml
+    - bitwise.yml
+    - btop.yml
+    - calc.yml
     - cheat.yml
+    - clang-format.yml
+    - clangd-ls.yml
+    - cpplint.yml
+    - elinks.yml
     - eza.yml
     - fd.yml
+    - fzf.yml
+    - jq.yml
+    - json-ls.yml
+    - lua-ls.yml
     - neovim.yml
+    - ripgrep.yml
+    - rsync.yml
+    - shellcheck.yml
+    - shfmt.yml
+    - stylua.yml
+    - tig.yml
+    - tmux.yml
+    - trash-cli.yml
+    - tree.yml
+    - unison.yml
     - wsl-open.yml
+    - yaml-ls.yml
     - zellij.yml
     - zoxide.yml
+    - zsh.yml
   loop_control:
     loop_var: outer_item

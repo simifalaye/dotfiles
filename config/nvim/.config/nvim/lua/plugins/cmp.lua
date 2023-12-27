@@ -1,5 +1,17 @@
 local prequire = require("utils.prequire")
 
+---Filter out unwanted entries
+---@param entry cmp.Entry
+---@param _ cmp.Context ignored
+---@return boolean
+local function entry_filter(entry, _)
+  return not vim.tbl_contains({
+    "No matches found",
+    "Searching...",
+    "Workspace loading",
+  }, entry.completion_item.label)
+end
+
 return {
   {
     "hrsh7th/nvim-cmp",
@@ -7,10 +19,23 @@ return {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-nvim-lsp-signature-help",
       "saadparwaiz1/cmp_luasnip",
       "onsails/lspkind.nvim",
+      {
+        "altermo/ultimate-autopair.nvim",
+        branch = "v0.6", --recomended as each new version will have breaking changes
+        opts = {
+          tabout = {
+            enable = true,
+            map = "<tab>",
+            cmap = "<tab>",
+            hopout = true,
+          },
+        },
+      },
     },
-    event = "InsertEnter",
+    event = { "InsertEnter" },
     config = function()
       local cmp = require("cmp")
       local luasnip = prequire("luasnip")
@@ -19,18 +44,12 @@ return {
         border = "single",
         winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:Visual,Search:None",
       }
-      local has_words_before = function()
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0
-          and vim.api
-              .nvim_buf_get_lines(0, line - 1, line, true)[1]
-              :sub(col, col)
-              :match("%s")
-            == nil
-      end
 
       -- Insert mode setup
       cmp.setup({
+        enabled = function()
+          return not vim.b.large_file
+        end,
         formatting = {
           format = lspkind.cmp_format({
             mode = "symbol", -- show only symbol annotations
@@ -53,15 +72,30 @@ return {
           documentation = cmp.config.window.bordered(border_opts),
         },
         mapping = {
-          ["<C-n>"] = cmp.mapping.select_next_item({
-            behavior = cmp.SelectBehavior.Insert,
+          ["<PageUp>"] = cmp.mapping.select_prev_item({
+            behavior = cmp.SelectBehavior.Select,
+            count = 8,
+          }),
+          ["<PageDown>"] = cmp.mapping.select_next_item({
+            behavior = cmp.SelectBehavior.Select,
+            count = 8,
+          }),
+          ["<Up>"] = cmp.mapping.select_prev_item({
+            behavior = cmp.SelectBehavior.Select,
+          }),
+          ["<Down>"] = cmp.mapping.select_next_item({
+            behavior = cmp.SelectBehavior.Select,
           }),
           ["<C-p>"] = cmp.mapping.select_prev_item({
+            behavior = cmp.SelectBehavior.Insert,
+          }),
+          ["<C-n>"] = cmp.mapping.select_next_item({
             behavior = cmp.SelectBehavior.Insert,
           }),
           ["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
           ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
           ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
+          ["<C-y>"] = cmp.config.disable,
           ["<C-e>"] = cmp.mapping({
             i = cmp.mapping.abort(),
             c = cmp.mapping.close(),
@@ -72,8 +106,6 @@ return {
               cmp.select_next_item()
             elseif luasnip and luasnip.expand_or_jumpable() then
               luasnip.expand_or_jump()
-            elseif has_words_before() then
-              cmp.complete()
             else
               fallback()
             end
@@ -89,10 +121,15 @@ return {
           end, { "i", "s" }),
         },
         sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "luasnip" },
-        }, {
-          { name = "buffer" },
+          { name = "luasnip", max_item_count = 3 },
+          { name = "nvim_lsp_signature_help" },
+          {
+            name = "nvim_lsp",
+            max_item_count = 20,
+            -- Suppress LSP completion when workspace is not ready yet
+            entry_filter = entry_filter,
+          },
+          { name = "buffer", max_item_count = 8 },
           { name = "path" },
         }),
       })

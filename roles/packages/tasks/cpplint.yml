@@ -1,0 +1,8 @@
+# vim: filetype=yaml.ansible
+
+- name: Install cpplint linter
+  become: true
+  ansible.builtin.pip:
+    name:
+      - cpplint
+    state: present

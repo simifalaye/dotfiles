@@ -1,0 +1,8 @@
+# vim: filetype=yaml.ansible
+
+- name: Install unison
+  become: true
+  ansible.builtin.package:
+    name:
+      - unison
+    state: present

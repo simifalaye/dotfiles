@@ -34,3 +34,16 @@
       ansible.builtin.file:
         path: "{{ tmp_tar_path }}"
         state: absent
+
+- name: Install neovim for nodejs
+  community.general.npm:
+    name: neovim
+    global: true
+    state: present
+
+- name: Install neovim for python
+  become: true
+  ansible.builtin.pip:
+    name:
+      - pynvim
+    state: present

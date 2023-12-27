@@ -1,0 +1,8 @@
+# vim: filetype=yaml.ansible
+
+- name: Install shfmt
+  become: true
+  ansible.builtin.package:
+    name:
+      - shfmt
+    state: present

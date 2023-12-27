@@ -5,10 +5,10 @@ return {
     name = "catppuccin", -- make sure to load this before all the other start plugins
     priority = 1000,
     opts = {
-      flavour = "macchiato", -- latte, frappe, macchiato, mocha
+      flavour = "mocha", -- latte, frappe, macchiato, mocha
       background = { -- :h background
         light = "latte",
-        dark = "macchiato",
+        dark = "mocha",
       },
       term_colors = true,
     },

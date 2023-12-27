@@ -1,5 +1,3 @@
-local utils = require("utils")
-
 -- Install lazy plugin manager if not installed and add to rtp
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -15,10 +13,12 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- Load lazy and configure
+-- NOTE: Map leader must be set before this point
 require("lazy").setup("plugins", {
   defaults = { lazy = true },
   install = {
     colorscheme = {
+      "catppuccin-mocha",
       (function()
         if vim.env.BASE16_THEME ~= nil and vim.env.BASE16_THEME ~= "" then
           return "base16-" .. vim.env.BASE16_THEME
@@ -32,24 +32,8 @@ require("lazy").setup("plugins", {
   },
   performance = {
     rtp = {
-      disabled_plugins = {
-        "netrw",
-        "netrwPlugin",
-        "netrwSettings",
-        "netrwFileHandlers",
-        "gzip",
-        "zip",
-        "zipPlugin",
-        "tar",
-        "tarPlugin",
-        "getscript",
-        "getscriptPlugin",
-        "vimball",
-        "vimballPlugin",
-        "tohtml",
-        "2html_plugin",
-      },
+      disabled_plugins = {},
     },
   },
-  lockfile = utils.join_paths(vim.fn.stdpath("data"), "lazy-lock.json"),
+  lockfile = require("utils.fs").join_paths(vim.fn.stdpath("data"), "lazy-lock.json"),
 })

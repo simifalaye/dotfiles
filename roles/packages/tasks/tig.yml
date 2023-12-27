@@ -1,0 +1,8 @@
+# vim: filetype=yaml.ansible
+
+- name: Install tig
+  become: true
+  ansible.builtin.package:
+    name:
+      - tig
+    state: present

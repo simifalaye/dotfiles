@@ -1,8 +1,8 @@
 return {
   {
-    "echasnovski/mini.bracketed",
+    "akinsho/git-conflict.nvim",
+    lazy = false,
     version = "*",
-    event = "BufRead",
     config = true,
   },
 }

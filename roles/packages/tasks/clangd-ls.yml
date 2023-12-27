@@ -1,0 +1,8 @@
+# vim: filetype=yaml.ansible
+
+- name: Install clangd language server
+  become: true
+  ansible.builtin.package:
+    name:
+      - clangd
+    state: present

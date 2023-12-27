@@ -7,8 +7,8 @@ return {
     },
     event = "VeryLazy",
     keys = {
-      { "<leader>u>", "<cmd>NoiceHistory<CR>", desc = "Show notifications" },
-      { "<leader>u<", "<cmd>NoiceDismiss<CR>", desc = "Dismiss notifications" },
+      { "g>", "<cmd>NoiceHistory<CR>", desc = "Show notifications" },
+      { "g<", "<cmd>NoiceDismiss<CR>", desc = "Dismiss notifications" },
       {
         "<S-Enter>",
         function()
@@ -16,6 +16,28 @@ return {
         end,
         mode = "c",
         desc = "Redirect Output",
+      },
+      {
+        "<C-d>",
+        function()
+          if not require("noice.lsp").scroll(4) then
+            return "<c-d>"
+          end
+        end,
+        desc = "Scroll lsp docs down",
+        silent = true,
+        expr = true,
+      },
+      {
+        "<C-u>",
+        function()
+          if not require("noice.lsp").scroll(-4) then
+            return "<c-u>"
+          end
+        end,
+        desc = "Scroll lsp docs up",
+        silent = true,
+        expr = true,
       },
     },
     opts = {
@@ -31,6 +53,7 @@ return {
           view = "mini",
           opts = {},
         },
+        signature = { enabled = false }, -- handled by cmp
       },
       routes = {
         {

@@ -1,0 +1,14 @@
+# vim: filetype=yaml.ansible
+
+- name: Install ansible language server
+  community.general.npm:
+    name: "@ansible/ansible-language-server"
+    global: true
+    state: present
+
+- name: Install ansible-lint for ansible-ls
+  become: true
+  ansible.builtin.pip:
+    name:
+      - ansible-lint
+    state: present

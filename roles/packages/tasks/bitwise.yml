@@ -1,0 +1,8 @@
+# vim: filetype=yaml.ansible
+
+- name: Install bitwise
+  become: true
+  ansible.builtin.package:
+    name:
+      - bitwise
+    state: present

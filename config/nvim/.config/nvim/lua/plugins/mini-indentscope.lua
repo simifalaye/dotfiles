@@ -1,11 +1,10 @@
-local augroup = require("utils.command").augroup
-
 return {
   {
     "echasnovski/mini.indentscope",
     version = "*",
     event = { "BufReadPost", "BufNewFile" },
     config = function()
+      local augroup = require("utils.augroup")
       local indentscope = require("mini.indentscope")
       indentscope.setup({
         draw = {
@@ -38,6 +37,7 @@ return {
             "minifiles",
           },
           command = function()
+            ---@diagnostic disable-next-line: inject-field
             vim.b.miniindentscope_disable = true
           end,
         },

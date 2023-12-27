@@ -1,0 +1,8 @@
+# vim: filetype=yaml.ansible
+
+- name: Install tree
+  become: true
+  ansible.builtin.package:
+    name:
+      - tree
+    state: present

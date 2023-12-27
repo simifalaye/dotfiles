@@ -1,6 +1,4 @@
-local utils = require("utils")
-
-local M = {}
+local lib = require("utils.lib")
 
 local function validate_autocmd(name, cmd)
   local keys = {
@@ -14,7 +12,7 @@ local function validate_autocmd(name, cmd)
     "nested",
     "set",
   }
-  local incorrect = utils.fold(function(accum, _, key)
+  local incorrect = lib.fold(function(accum, _, key)
     if not vim.tbl_contains(keys, key) then
       table.insert(accum, key)
     end
@@ -24,7 +22,7 @@ local function validate_autocmd(name, cmd)
     return
   end
   vim.schedule(function()
-    utils.notify(
+    lib.notify(
       string.format(
         "Autocmd: %s: Incorrect keys: %s",
         name,
@@ -58,7 +56,7 @@ end
 ---@param name string
 ---@param commands Autocommand[]
 ---@return integer
-M.augroup = function(name, commands)
+return function(name, commands)
   assert(name ~= "User", "The name of an augroup CANNOT be User")
   assert(
     #commands > 0,
@@ -84,19 +82,3 @@ M.augroup = function(name, commands)
   end
   return id
 end
-
---- @class CommandArgs
---- @field args string
---- @field fargs table
---- @field bang boolean
-
---- Create an nvim command
----@param name string
----@param rhs string | fun(args: CommandArgs)
----@param opts table?
-M.command = function(name, rhs, opts)
-  opts = opts or {}
-  vim.api.nvim_create_user_command(name, rhs, opts)
-end
-
-return M

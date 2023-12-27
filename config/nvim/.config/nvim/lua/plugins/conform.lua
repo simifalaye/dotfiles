@@ -6,8 +6,6 @@ return {
     end,
     opts = {
       formatters_by_ft = {
-        bash = { "shfmt" },
-        sh = { "shfmt" },
         c = { "clang_format" },
         cpp = { "clang_format" },
         lua = { "stylua" },

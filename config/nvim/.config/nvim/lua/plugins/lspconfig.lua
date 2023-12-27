@@ -1,112 +1,62 @@
-local function project_name_to_container_name(lspconfig)
-  -- Notably _not_ including `compile_commands.json`, as we want the entire project
-  local root_pattern = lspconfig.util.root_pattern(".git")
-  -- Turn the name of the current file into the name of an expected container, assuming that
-  -- the container running/building this file is named the same as the basename of the project
-  -- that the file is in
-  --
-  -- The name of the current buffer
-  local bufname = vim.api.nvim_buf_get_name(0)
-
-  -- Turned into a filename
-  local filename = lspconfig.util.path.is_absolute(bufname) and bufname
-    or lspconfig.util.path.join(vim.loop.cwd(), bufname)
-
-  -- Then the directory of the project
-  local project_dirname = root_pattern(filename) or lspconfig.util.path.dirname(filename)
-
-  -- And finally perform what is essentially a `basename` on this directory
-  return project_dirname,
-    vim.fn.fnamemodify(lspconfig.util.find_git_ancestor(project_dirname), ":t") .. "-dev"
-end
-
 return {
   {
     "neovim/nvim-lspconfig",
     event = "BufReadPre",
     dependencies = {
-      "folke/neodev.nvim",
+      { "folke/neodev.nvim", opts = {} },
       "b0o/schemastore.nvim",
     },
     config = function()
-      local prequire = require("utils.prequire")
+      local manager = require("lspconfig.manager")
+      ---@diagnostic disable-next-line: invisible
+      local _start_new_client = manager._start_new_client
+      ---Override lspconfig manager `_start_new_client()` method to silently
+      ---quit if language server is not installed
+      ---@param _ integer bufnr, ignored
+      ---@param new_config lspconfig.Config
+      ---@vararg any
+      ---@diagnostic disable-next-line: duplicate-set-field, invisible
+      function manager:_start_new_client(_, new_config, ...)
+        local bin = new_config and new_config.cmd and new_config.cmd[1]
+        if bin and vim.fn.executable(bin) == 0 then
+          return
+        end
+        return _start_new_client(self, _, new_config, ...)
+      end
+
       local lsp = require("utils.lsp")
       local lspconfig = require("lspconfig")
-      local schemastore = require("schemastore")
+      local server_configs = require("static.lsp-servers")
 
-      -- Language server configuration
-      local servers = {
-        clangd = {
-          cmd = (function()
-            if vim.fn.executable("cclangd") == 1 then
-              local project_dir, container_name =
-                project_name_to_container_name(lspconfig)
-              return {
-                "cclangd",
-                project_dir,
-                container_name,
-              }
-            else
-              return {
-                "clangd",
-                "--background-index",
-                "--suggest-missing-includes",
-                "--header-insertion=iwyu",
-                "--offset-encoding=utf-16",
-              }
+      --- Setup the configuration for an lsp server using the config file
+      ---@param name string the name of the server
+      local function configure_server(name)
+        local conf = server_configs[name]
+        local keys = conf.keys
+        conf.keys = nil
+
+        if keys then
+          lsp.register_attach_handler(function(client, bufnr)
+            if client.name == name then
+              lsp.register_keys(client, bufnr, keys)
             end
-          end)(),
-        },
-        lua_ls = {
-          settings = {
-            Lua = {
-              workspace = {
-                checkThirdParty = false, -- fixes popup issue
-              },
-            },
-          },
-        },
-        jsonls = {
-          settings = {
-            json = {
-              schemas = schemastore.json.schemas(),
-              validate = { enable = true },
-            },
-          },
-        },
-        yamlls = {
-          settings = {
-            yaml = {
-              schemaStore = {
-                -- You must disable built-in schemaStore support if you want to use
-                -- this plugin and its advanced options like `ignore`.
-                enable = false,
-                -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
-                url = "",
-              },
-              schemas = schemastore.yaml.schemas(),
-            },
-          },
-        },
-      }
+          end)
+        end
+        lspconfig[name].setup(conf)
+      end
 
-      -- Setup neodev (NOTE: Must come before any lspconfig setup)
-      require("neodev").setup({})
-
-      -- Setup diagnostics
-      lsp.setup_diagnostics()
-
-      -- Configure servers (use mason if available)
-      local mason_lspconfig = prequire("mason-lspconfig")
-      if mason_lspconfig then
-        mason_lspconfig.setup_handlers({
-          function(name) -- default handler
-            lspconfig[name].setup(lsp.get_conf(servers[name]))
-          end,
-        })
-      else
-        for name, _ in ipairs(servers) do
-          lspconfig[name].setup(lsp.get_conf(servers[name]))
+      -- Configure all lsp servers that have a config file
+      for _, file in
+        ipairs(
+          vim.fn.readdir(
+            vim.fn.stdpath("config") .. "/lua/static/lsp-servers",
+            [[v:val =~ '\.lua$']]
+          )
+        )
+      do
+        local name = file:gsub("%.lua$", "")
+        if name ~= "init" and name ~= "default" then
+          configure_server(name)
         end
       end
     end,

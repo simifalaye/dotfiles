@@ -1,3 +1,4 @@
+local augroup = require("utils.augroup")
 local linters_by_ft = {
   cpp = { "cpplint" },
 }
@@ -5,9 +6,9 @@ local linters_by_ft = {
 return {
   {
     "mfussenegger/nvim-lint",
-    init = function ()
+    init = function()
       -- Load nvim-lint only when a lintable file is specified
-      require("utils.command").augroup("user_lint_lazyload", {
+      augroup("user_lint_lazyload", {
         {
           desc = "Lazy load linter",
           event = { "BufRead" },
@@ -31,7 +32,7 @@ return {
       -- Setup linters
       require("lint").linters_by_ft = linters_by_ft
       -- Setup lint-on-save
-      require("utils.command").augroup("user_nvim_lint", {
+      augroup("user_nvim_lint", {
         {
           desc = "Try linting file on save",
           event = "BufWritePost",

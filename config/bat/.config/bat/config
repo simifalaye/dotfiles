@@ -1,5 +1,5 @@
 # Set the theme.
---theme="Catppuccin-macchiato"
+--theme="Catppuccin-mocha"
 
 # Never wrap and let the pager do its job.
 --wrap=never

@@ -1,5 +1,5 @@
 local prequire = require("utils.prequire")
-local utils = require("utils")
+local lib = require("utils.lib")
 
 local M = {}
 
@@ -23,10 +23,7 @@ local function make_mapper(mode, o)
       opts.desc = desc
     end
     vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("keep", opts, parent_opts))
-    utils.notify(
-      string.format("Keymap {%s, %s, %s}", mode, lhs, rhs),
-      vim.log.levels.DEBUG
-    )
+    lib.notify(string.format("Keymap {%s, %s, %s}", mode, lhs, rhs), vim.log.levels.DEBUG)
   end
 end
 
@@ -79,7 +76,7 @@ M.cnoremap = make_mapper("c", { noremap = true, silent = false })
 ---@param name string
 ---@param mode string|table|nil
 ---@param buf boolean|nil
-M.group = function(prefix, name, mode, buf)
+function M.group(prefix, name, mode, buf)
   if not prefix or not name then
     return
   end
@@ -96,7 +93,7 @@ M.group = function(prefix, name, mode, buf)
         { mode = v, buffer = buf and vim.api.nvim_get_current_buf() or nil }
       )
     end
-    utils.notify(string.format("Key Group {%s, %s}", prefix, name), vim.log.levels.DEBUG)
+    lib.notify(string.format("Key Group {%s, %s}", prefix, name), vim.log.levels.DEBUG)
   end
 end
 

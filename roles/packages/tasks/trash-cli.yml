@@ -1,0 +1,8 @@
+# vim: filetype=yaml.ansible
+
+- name: Install trash-cli
+  become: true
+  ansible.builtin.pip:
+    name:
+      - trash-cli
+    state: present

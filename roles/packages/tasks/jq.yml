@@ -1,0 +1,8 @@
+# vim: filetype=yaml.ansible
+
+- name: Install jq
+  become: true
+  ansible.builtin.package:
+    name:
+      - jq
+    state: present

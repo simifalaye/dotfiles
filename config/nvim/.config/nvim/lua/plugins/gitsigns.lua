@@ -34,8 +34,9 @@ return {
       { "<leader>gS", gitsigns.stage_buffer, desc = "Stage Buff" },
     },
     init = function()
+      local augroup = require("utils.augroup")
       -- Load gitsigns only when a git file is opened
-      require("utils.command").augroup("user_gitsigns_lazyload", {
+      augroup("user_gitsigns_lazyload", {
         {
           desc = "Lazy load gitsigns",
           event = { "BufRead" },
