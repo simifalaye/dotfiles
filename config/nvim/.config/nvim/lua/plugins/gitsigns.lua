@@ -55,6 +55,8 @@ return {
           end,
         },
       })
+      -- Setup key group
+      require("utils.map").group("<leader>g", "+git")
     end,
     opts = {},
   },

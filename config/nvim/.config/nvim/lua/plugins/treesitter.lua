@@ -76,25 +76,25 @@ return {
           set_jumps = true, -- whether to set jumps in the jumplist
           goto_next_start = {
             ["]m"] = { query = "@function.outer", desc = "Next method start" },
-            ["]c"] = { query = "@class.outer", desc = "Next class start" },
+            ["]]"] = { query = "@class.outer", desc = "Next class start" },
             ["]a"] = { query = "@parameter.outer", desc = "Next arg start" },
           },
           goto_next_end = {
             ["]M"] = { query = "@function.outer", desc = "Next method end" },
-            ["]C"] = { query = "@class.outer", desc = "Next class end" },
+            ["]["] = { query = "@class.outer", desc = "Next class end" },
             ["]A"] = { query = "@parameter.outer", desc = "Next arg end" },
-            ["]]"] = { query = "@comment.outer", desc = "Next comment end" },
+            ["]c"] = { query = "@comment.outer", desc = "Next comment end" },
           },
           goto_previous_start = {
             ["[m"] = { query = "@function.outer", desc = "Prev method start" },
-            ["[c"] = { query = "@class.outer", desc = "Prev class start" },
+            ["[["] = { query = "@class.outer", desc = "Prev class start" },
             ["[a"] = { query = "@parameter.outer", desc = "Prev arg start" },
           },
           goto_previous_end = {
             ["[M"] = { query = "@function.outer", desc = "Prev method end" },
-            ["[C"] = { query = "@class.outer", desc = "Prev class end" },
+            ["[]"] = { query = "@class.outer", desc = "Prev class end" },
             ["[A"] = { query = "@parameter.outer", desc = "Prev arg end" },
-            ["[["] = { query = "@comment.outer", desc = "Prev comment end" },
+            ["[c"] = { query = "@comment.outer", desc = "Prev comment end" },
           },
         },
         swap = {

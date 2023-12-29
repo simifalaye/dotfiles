@@ -69,6 +69,7 @@
     - jq.yml
     - json-ls.yml
     - lua-ls.yml
+    - marksman-ls.yml
     - neovim.yml
     - ripgrep.yml
     - rsync.yml
@@ -83,7 +84,6 @@
     - wsl-open.yml
     - yaml-ls.yml
     - zellij.yml
-    - zoxide.yml
     - zsh.yml
   loop_control:
     loop_var: outer_item

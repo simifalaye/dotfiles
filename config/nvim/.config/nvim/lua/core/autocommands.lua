@@ -35,12 +35,6 @@ augroup("user_file_utilities", {
     end,
   },
   {
-    desc = "Use mkdir -p when writing file path that doesn't exist",
-    event = { "BufWritePre", "FileWritePre" },
-    pattern = "*",
-    command = "silent! call mkdir(expand('<afile>:p:h'), 'p')",
-  },
-  {
     desc = "Set settings for large files.",
     event = { "BufReadPre" },
     command = function(info)

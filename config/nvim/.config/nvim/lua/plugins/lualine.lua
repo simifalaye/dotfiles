@@ -111,7 +111,7 @@ local ext_oil = {
     lualine_a = { comp_mode },
     lualine_b = {
       function()
-        return "oil:/" .. vim.fn.getcwd()
+        return "oil://" .. vim.fn.getcwd()
       end,
     },
     lualine_x = {

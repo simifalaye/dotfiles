@@ -26,35 +26,3 @@
       [privilege_escalation]
       become_ask_pass = True
     mode: '0644'
-
-- name: Check for xsh file
-  ansible.builtin.stat:
-    path: "{{ xsh_src }}"
-  register: xsh_file_info
-
-- name: Install sgleizes/xsh
-  when: not xsh_file_info.stat.exists
-  block:
-    - name: Get latest version of xsh
-      get_latest_github_tag:
-        owner: sgleizes
-        repo: xsh
-      register: gh_tag
-    - name: Create xsh dir
-      ansible.builtin.file:
-        path: "{{ xsh_dir }}"
-        state: directory
-        mode: '0755'
-    - name: Unzip sgleizes/xsh
-      ansible.builtin.unarchive:
-        src: "https://github.com/sgleizes/xsh/archive/refs/tags/{{ gh_tag.latest }}.tar.gz"
-        dest: "{{ xsh_dir }}"
-        remote_src: true
-        extra_opts:
-          - "--strip-components=1"
-    - name: Bootstrap all shells
-      ansible.builtin.shell: |
-        . {{ xsh_src }}
-        xsh bootstrap --shells posix:bash:zsh
-      register: xsh_result
-      changed_when: "xsh_result.rc == 0"

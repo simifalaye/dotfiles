@@ -116,9 +116,6 @@ local function on_attach(client, bufnr)
       bufnr,
       client.id
     )
-    map.nnoremap("<leader>uy", function()
-      require("utils").ui.toggle_buffer_semantic_tokens(bufnr)
-    end, "Toggle LSP semantic highlight")
   end
   if client.supports_method("textDocument/documentHighlight") then
     utils.augroup("user_lsp_document_highlight", {
@@ -128,7 +125,10 @@ local function on_attach(client, bufnr)
         buffer = bufnr,
         command = function()
           if
-            not utils.lsp.has_capability("textDocument/documentHighlight", { bufnr = bufnr })
+            not utils.lsp.has_capability(
+              "textDocument/documentHighlight",
+              { bufnr = bufnr }
+            )
           then
             vim.api.nvim_del_augroup_by_name("user_lsp_document_highlight")
             return

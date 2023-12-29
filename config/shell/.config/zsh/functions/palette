@@ -1,0 +1,11 @@
+# vim: filetype=zsh
+#
+# Print a 256-color palette.
+#
+
+local n colors
+
+for n in {000..255}; do
+  colors+=("%F{$n}$n%f")
+done
+print -cP $colors
