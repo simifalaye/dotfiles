@@ -55,6 +55,7 @@
     - ansible-ls.yml
     - atool.yml
     - bat.yml
+    - bash-ls.yml
     - bitwise.yml
     - btop.yml
     - calc.yml

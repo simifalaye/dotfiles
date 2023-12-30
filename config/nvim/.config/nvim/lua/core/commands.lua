@@ -62,7 +62,7 @@ end, {
 
 vim.api.nvim_create_user_command("SystemOpen", function(args)
   local path = args.args and args.args or ""
-  require("utils.cmd").system_open(path)
+  require("utils.cmd").sys_open(path)
 end, {
   desc = "Open link/file under cursor",
   nargs = "?", -- {path?}

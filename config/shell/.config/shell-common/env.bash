@@ -65,7 +65,7 @@ export SYSTEMD_LESS="$LESS"
 mkdir -p "${XDG_STATE_HOME}/less" # Create less dir if not created
 
 # Prepend user binaries to PATH to allow overriding system commands.
-[[ "${PATH}" =~ "${HOME}/.local/bin" ]] || \
+[[ "${PATH}" =~ ${HOME}/.local/bin ]] || \
   export PATH="${HOME}/.local/bin:${PATH}"
 
 # Wsl2
@@ -121,7 +121,7 @@ export PYTHONUSERBASE="${XDG_DATA_HOME}/python" && \
   mkdir -p "${PYTHONUSERBASE}"
 export PYTHONPYCACHEPREFIX="${XDG_CACHE_HOME}/python" && \
   mkdir -p "${PYTHONPYCACHEPREFIX}"
-[[ "${PATH}" =~ "${XDG_DATA_HOME}/python/bin" ]] || \
+[[ "${PATH}" =~ ${XDG_DATA_HOME}/python/bin ]] || \
   export PATH="${XDG_DATA_HOME}/python/bin:${PATH}"
 
 #-

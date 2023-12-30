@@ -8,11 +8,11 @@ return {
       formatters_by_ft = {
         c = { "clang_format" },
         cpp = { "clang_format" },
+        -- Use a sub-list to run only the first available formatter
+        javascript = { { "prettierd", "prettier" } },
         lua = { "stylua" },
         -- Conform will run multiple formatters sequentially
         python = { "isort", "black" },
-        -- Use a sub-list to run only the first available formatter
-        javascript = { { "prettierd", "prettier" } },
       },
     },
   },

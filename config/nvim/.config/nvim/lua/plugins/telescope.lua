@@ -20,7 +20,7 @@ return {
     { "<leader>'", "<cmd>Telescope marks<CR>", desc = "Marks Picker" },
     { '<leader>"', "<cmd>Telescope registers<CR>", desc = "Registers Picker" },
     { "<leader><CR>", "<cmd>Telescope resume<CR>", desc = "Resume Picker" },
-    { "<leader>,", "<cmd>Telescope buffers<CR>", desc = "Buffer Picker" },
+    { "<leader>,", "<cmd>Telescope buffers sort_mru=true<CR>", desc = "Buffer Picker" },
     { "<leader>.", "<cmd>Telescope oldfiles<CR>", desc = "Oldfiles Picker" },
     { "<leader>/", "<cmd>Telescope live_grep<CR>", desc = "Grep Picker" },
     { "<leader>?", "<cmd>Telescope builtin<CR>", desc = "Picker Help" },

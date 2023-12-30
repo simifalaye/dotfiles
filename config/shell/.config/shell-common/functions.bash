@@ -25,7 +25,7 @@ is_callable() {
 take() {
   dir="${1}"
   if [ -n "${dir}" ]; then
-    mkdir -p "${1}" && builtin cd "${1}"
+    mkdir -p "${1}" && builtin cd "${1}" || return 1
   fi
 }
 

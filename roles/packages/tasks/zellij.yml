@@ -32,15 +32,18 @@
       with_items:
         - "/tmp/zellij"
 
-- name: Setup zellij shell completions
+- name: Create zellij bash completion file if not existing
   become: true
-  ansible.builtin.shell: |
-    if [ ! -f "{{ packages_bash_comp_dir }}/zellij" ] || [ ! -f "{{ packages_zsh_comp_dir }}/_zellij" ]; then
-      /usr/local/bin/zellij setup --generate-completion bash > {{ packages_bash_comp_dir }}/zellij
-      /usr/local/bin/zellij setup --generate-completion zsh > {{ packages_zsh_comp_dir }}/_zellij
-      return 0
-    fi
-    return 1
-  ignore_errors: true
-  register: zellij_comp_res
-  changed_when: "zellij_comp_res.rc == 0"
+  ansible.builtin.shell: >-
+    /usr/local/bin/zellij setup --generate-completion bash > {{ packages_bash_comp_dir }}/zellij
+  args:
+    chdir: "{{ packages_bash_comp_dir }}"
+    creates: "{{ packages_bash_comp_dir }}/zellij"
+
+- name: Create zellij zsh completion file if not existing
+  become: true
+  ansible.builtin.shell: >-
+    /usr/local/bin/zellij setup --generate-completion zsh > {{ packages_zsh_comp_dir }}/_zellij
+  args:
+    chdir: "{{ packages_zsh_comp_dir }}"
+    creates: "{{ packages_zsh_comp_dir }}/_zellij"

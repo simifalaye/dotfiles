@@ -1,6 +1,7 @@
 local augroup = require("utils.augroup")
 local linters_by_ft = {
   cpp = { "cpplint" },
+  zsh = { "zsh" },
 }
 
 return {
