@@ -2,13 +2,13 @@
 
 # General
 
-bash_completions_dir: /etc/bash_completion.d
-zsh_completions_dir: /usr/local/share/zsh/site-functions
-man_dir: /usr/local/share/man/man1
+packages_bash_comp_dir: /etc/bash_completion.d
+packages_zsh_comp_dir: /usr/local/share/zsh/site-functions
+packages_man_dir: /usr/local/share/man/man1
 
 # Packages
 
-fd_pkg_name: fd
-python_pkg_name: python3
-pip_pkg_name: python3-pip
-venv_pkg_name: python3-venv
+packages_fd_name: fd
+packages_python_name: python3
+packages_pip_name: python3-pip
+packages_venv_name: python3-venv

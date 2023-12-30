@@ -7,24 +7,24 @@
 # latter, see the definition of _rebind_compsys_widgets below.
 #
 
-#-
-#  Options
-#-
-
-# Disable control flow (^S/^Q) even for non-interactive shells.
-setopt NO_FLOW_CONTROL
-
-# Allow comments starting with `#` in the interactive shell.
-setopt INTERACTIVE_COMMENTS
-
-# Disallow `>` to overwrite existing files. Use `>|` or `>!` instead.
-setopt NO_CLOBBER
-
-#-
-#  Keymaps
-#-
-
 [[ ${TERM} != dumb ]] && () {
+  #-
+  #  Options
+  #-
+
+  # Disable control flow (^S/^Q) even for non-interactive shells.
+  setopt NO_FLOW_CONTROL
+
+  # Allow comments starting with `#` in the interactive shell.
+  setopt INTERACTIVE_COMMENTS
+
+  #-
+  #  Keymaps
+  #-
+
+  # Use emacs mode (Ran into several issues with vi mode)
+  bindkey -e
+
   # Use human-friendly identifiers.
   zmodload -F zsh/terminfo +b:echoti +p:terminfo
   typeset -gA key_info
@@ -64,18 +64,13 @@ setopt NO_CLOBBER
   local key
   for key (${(s: :)key_info[CtrlLeft]}) bindkey ${key} backward-word
   for key (${(s: :)key_info[CtrlRight]}) bindkey ${key} forward-word
-
   bindkey ${key_info[Backspace]} backward-delete-char
   bindkey ${key_info[Delete]} delete-char
-
   if [[ -n ${key_info[Home]} ]] bindkey ${key_info[Home]} beginning-of-line
   if [[ -n ${key_info[End]} ]] bindkey ${key_info[End]} end-of-line
-
   if [[ -n ${key_info[PageUp]} ]] bindkey ${key_info[PageUp]} up-line-or-history
   if [[ -n ${key_info[PageDown]} ]] bindkey ${key_info[PageDown]} down-line-or-history
-
   if [[ -n ${key_info[Insert]} ]] bindkey ${key_info[Insert]} overwrite-mode
-
   if [[ -n ${key_info[Left]} ]] bindkey ${key_info[Left]} backward-char
   if [[ -n ${key_info[Right]} ]] bindkey ${key_info[Right]} forward-char
 
@@ -98,7 +93,7 @@ setopt NO_CLOBBER
   autoload -Uz url-quote-magic && zle -N self-insert url-quote-magic
 
   # Toggle process as bg and fg
-  function fancy-ctrl-z {
+  fancy-ctrl-z() {
     if [[ $#BUFFER -eq 0 ]]; then
       BUFFER="fg"
       zle accept-line
@@ -111,7 +106,7 @@ setopt NO_CLOBBER
   bindkey "${key_info[Ctrl]}z" fancy-ctrl-z
 
   # Toggle prepend "sudo" to last command
-  function toggle-prepend-sudo {
+  toggle-prepend-sudo() {
     [[ -z $BUFFER ]] && zle up-history
     if [[ $BUFFER == "sudo "* ]]; then
       LBUFFER="${LBUFFER#sudo }"
@@ -140,6 +135,37 @@ setopt NO_CLOBBER
   zle -N double-dot-expand
   bindkey . double-dot-expand
   bindkey -M isearch . self-insert
+
+  # Magic-enter (Print data on enter key)
+  typeset -gi MNML_LAST_ERR
+  _prompt_mnml_precmd() {
+    MNML_LAST_ERR=${?}
+  }
+  _prompt_mnml_buffer-empty() {
+    if [[ -z ${BUFFER} && ${CONTEXT} == start ]]; then
+      # draw infoline
+      if (( MNML_LAST_ERR )) print -Pn '%F{red}${MNML_LAST_ERR} '
+      print -Pn '%(1j.%F{cyan}%j%f& .)%F{yellow}%n%f@%F{magenta}%m%f:'
+      print -Pn %F{blue}${${(D)PWD}//\//%f\/%F{blue}}
+      local -i a_files=$(command ls -Aq | command wc -l)
+      local -i v_files=$(command ls -q | command wc -l)
+      local -i h_files=$(( a_files - v_files ))
+      print -Pn " %f[%F{cyan}${v_files}%f"
+      if (( h_files )) print -Pn " (%F{cyan}${h_files}%f)"
+      print ]
+      # display magic enter
+      if (( ${#dirstack} )) print -P %F{white}${${(D)dirstack}//\//%f\/%F{white}}%f
+      ls -F
+      command git status -sb 2>/dev/null
+      print -Pn ${PS1}
+      zle redisplay
+    else
+      zle accept-line
+    fi
+  }
+  autoload -Uz add-zsh-hook && add-zsh-hook precmd _prompt_mnml_precmd
+  zle -N buffer-empty _prompt_mnml_buffer-empty
+  bindkey '^M' buffer-empty
 
   autoload -Uz is-at-least
   if ! is-at-least 5.3; then

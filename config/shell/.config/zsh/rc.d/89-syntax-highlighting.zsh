@@ -6,7 +6,13 @@
 #
 
 # Abort if requirements are not met
-(( $+functions[znap] )) || return 1
+(( $+functions[zcompile-many] )) || return 1
+[[ -o interactive ]] || return 1
 
-# `znap source` starts plugins.
-znap source zsh-users/zsh-syntax-highlighting
+# Load plugin
+plugin_dir=${ZPLUGDIR}/F-Sy-H
+if [[ ! -e ${plugin_dir} ]]; then
+  git clone --depth=1 https://github.com/z-shell/F-Sy-H.git ${plugin_dir}
+  zcompile-many ${plugin_dir}/{functions/fast*,functions/.fast*,**/*.ch,**/*.zsh}
+fi
+source ${plugin_dir}/F-Sy-H.plugin.zsh

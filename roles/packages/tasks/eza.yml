@@ -29,17 +29,17 @@
     # - name: Install eza bash completion
     #   ansible.builtin.copy:
     #     src: "/tmp/eza/completions/eza.bash"
-    #     dest: "{{ bash_completions_dir }}/eza"
+    #     dest: "{{ packages_bash_comp_dir }}/eza"
     #     mode: '0644'
     # - name: Install eza zsh completion
     #   ansible.builtin.copy:
     #     src: "/tmp/eza/completions/eza.zsh"
-    #     dest: "{{ zsh_completions_dir }}/eza"
+    #     dest: "{{ packages_zsh_comp_dir }}/eza"
     #     mode: '0644'
     # - name: Install eza man page
     #   ansible.builtin.copy:
     #     src: "/tmp/eza/man/eza.1"
-    #     dest: "{{ man_dir }}/eza.1"
+    #     dest: "{{ packages_man_dir }}/eza.1"
     #     mode: '0644'
     - name: Remove eza temporary files
       ansible.builtin.file:

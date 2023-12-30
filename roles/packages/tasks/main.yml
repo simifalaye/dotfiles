@@ -12,8 +12,8 @@
   become: true
   ansible.builtin.package:
     name:
-      - "{{ python_pkg_name }}"
-      - "{{ pip_pkg_name }}"
+      - "{{ packages_python_name }}"
+      - "{{ packages_pip_name }}"
       - nodejs
       - npm
     state: present

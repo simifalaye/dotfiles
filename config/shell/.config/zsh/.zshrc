@@ -9,24 +9,18 @@
 . "${HOME}/.config/shell-common/aliases.bash"
 . "${HOME}/.config/shell-common/functions.bash"
 
-# Autoload all appropriate functions from a directory.
-# Usage: autoload_dir <dir>
-function autoload_dir {
-  local dir="$1"
-  local skip_glob='^([_.]*|prompt_*_setup|*~)(-.N:t)'
+# Autoload all module functions.
+() {
   local func
+  local skip_glob='^([_.]*|prompt_*_setup|*~)(-.N:t)'
 
   # Extended globbing is needed for listing autoloadable function directories.
   setopt local_options extended_glob
 
-  fpath=($dir(-/FN) $fpath)
-  for func in $dir/$~skip_glob; do
+  for func in ${ZDOTDIR}/functions/$~skip_glob; do
     autoload -Uz "$func"
   done
 }
-
-# Autoload all module functions.
-autoload_dir ${ZDOTDIR}/functions
 
 # The construct below is what Zsh calls an anonymous function; most other
 # languages would call this a lambda or scope function. It gets called right

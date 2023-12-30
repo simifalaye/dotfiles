@@ -1,5 +1,7 @@
-# Compiled source #
-###################
+#-
+#  Compiled source
+#-
+
 *.com
 *.class
 *.dll
@@ -7,8 +9,10 @@
 *.o
 *.so
 
-# Packages #
-############
+#-
+#  Packages
+#-
+
 # it's better to unpack these files and commit the raw source
 # git has its own built in compression methods
 *.7z
@@ -29,13 +33,17 @@
 *.deb
 *.rpm
 
-# Logs and databases #
-######################
+#-
+#  Logs and databases
+#-
+
 *.log
 *.sqlite
 
-# OS generated files #
-######################
+#-
+#  OS generated files
+#-
+
 .DS_Store
 .DS_Store?
 ._*
@@ -44,8 +52,10 @@
 ehthumbs.db
 Thumbs.db
 
-# Code generated files #
-########################
+#-
+#  Code generated files
+#-
+
 *.coverage
 *.lock
 .tags
@@ -59,8 +69,10 @@ compile_commands.json
 compile_flags.txt
 bazel*
 
-# Temp files #
-#####################
+#-
+#  Temp files
+#-
+
 *~
 *.swp
 *.swo
@@ -68,8 +80,10 @@ bazel*
 *.bak
 .nvim.lua
 
-# Directories #
-#####################
+#-
+#  Directories
+#-
+
 build/
 build_cc/
 *.egg-info/

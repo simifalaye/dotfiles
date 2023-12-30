@@ -31,5 +31,8 @@ take() {
 
 # Usage: backupthis <file/dir>
 backupthis() {
-  cp -riv "${1}" "${1}"-"$(date +%Y%m%d%H%M)".backup
+  local item
+  for item in "$@"; do
+    cp -riv "${item}" "${item}"-"$(date +%Y%m%d%H%M)".backup
+  done
 }

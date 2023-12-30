@@ -29,6 +29,11 @@ setopt PUSHD_SILENT
 
 # Create shortcuts for your favorite directories.
 # Set these early, because it affects how dirs are displayed and printed.
-hash -d zsh=$ZDOTDIR
 # `hash -d <name>=<path>` makes ~<name> a shortcut for <path>.
 # You can use this ~name anywhere you would specify a dir, not just with `cd`!
+hash -d zcfg="${ZDOTDIR}"
+hash -d zdata="${ZDATADIR}"
+hash -d zplug="${ZPLUGDIR}"
+hash -d dot="${HOME}/.dotfiles"
+hash -d cfg="${XDG_CONFIG_HOME}"
+hash -d data="${XDG_DATA_HOME}"

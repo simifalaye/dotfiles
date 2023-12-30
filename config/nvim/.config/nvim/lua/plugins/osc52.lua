@@ -4,9 +4,23 @@ return {
     keys = {
       { "gy", mode = { "n", "x" }, desc = "System yank" },
     },
+    init = function()
+      local function copy(lines, _)
+        require("osc52").copy(table.concat(lines, "\n"))
+      end
+      local function paste()
+        return { vim.fn.split(vim.fn.getreg(""), "\n"), vim.fn.getregtype("") }
+      end
+      -- Make osc52 the clipboard provider
+      vim.g.clipboard = {
+        name = "osc52",
+        copy = { ["+"] = copy, ["*"] = copy },
+        paste = { ["+"] = paste, ["*"] = paste },
+      }
+    end,
     config = function()
       require("osc52").setup({
-        silent = false,
+        silent = true,
       })
       local m = require("utils.map")
       local osc52 = require("osc52")

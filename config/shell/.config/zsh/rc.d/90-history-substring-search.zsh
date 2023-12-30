@@ -8,7 +8,8 @@
 #
 
 # Abort if requirements are not met
-(( $+functions[znap] )) || return 1
+(( $+functions[zcompile-many] )) || return 1
+[[ -o interactive ]] || return 1
 
 #-
 #  Plugin setup
@@ -17,8 +18,13 @@
 # Half case-sensitive: lower matches upper, upper does not match lower.
 HISTORY_SUBSTRING_SEARCH_GLOBBING_FLAGS=l
 
-# `znap source` starts plugins.
-znap source zsh-users/zsh-history-substring-search
+# Load plugin
+plugin_dir=${ZPLUGDIR}/zsh-history-substring-search
+if [[ ! -e ${plugin_dir} ]]; then
+  git clone --depth=1 https://github.com/zsh-users/zsh-history-substring-search.git ${plugin_dir}
+  zcompile-many ${plugin_dir}/zsh-history-substring-search.plugin.zsh
+fi
+source ${plugin_dir}/zsh-history-substring-search.plugin.zsh
 
 #-
 #  Keybinds

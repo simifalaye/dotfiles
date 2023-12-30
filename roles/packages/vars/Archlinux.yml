@@ -2,6 +2,6 @@
 
 # Packages
 
-python_pkg_name: python
-pip_pkg_name: python-pip
-venv_pkg_name: python-venv
+packages_python_name: python
+packages_pip_name: python-pip
+packages_venv_name: python-venv

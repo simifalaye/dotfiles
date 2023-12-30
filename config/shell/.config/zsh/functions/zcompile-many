@@ -1,0 +1,9 @@
+# vim: filetype=zsh
+#
+# Run zcompile on multiple files with globbing also
+#
+
+local f
+for f; do
+  zcompile -R -- "$f".zwc "$f"
+done

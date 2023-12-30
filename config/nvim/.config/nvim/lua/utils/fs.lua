@@ -8,6 +8,7 @@ M.root_patterns = {
   ".bzr/",
   ".hg/",
   ".project/",
+  ".marksman.toml",
   ".pro",
   ".sln",
   ".vcxproj",

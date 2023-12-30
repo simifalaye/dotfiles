@@ -4,7 +4,7 @@
   become: true
   ansible.builtin.package:
     name:
-      - "{{ fd_pkg_name }}"
+      - "{{ packages_fd_name }}"
     state: present
 
 - name: Create symbolic link to fd binary if fdfind is used

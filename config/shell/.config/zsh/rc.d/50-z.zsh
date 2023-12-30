@@ -1,12 +1,16 @@
 #
-# Plugin: zsh-z -- Jump to commonly accessed directories
+# Plugin: z -- Jump to commonly accessed directories
 #
 
 # Abort if requirements are not met
-(( $+functions[znap] )) || return 1
+[[ -o interactive ]] || return 1
 
 # Config
-export ZSHZ_DATA="${ZCACHEDIR}/z"
+export _Z_DATA="${ZDATADIR}/z"
 
-# `znap source` starts plugins.
-znap source agkozak/zsh-z
+# Load plugin
+plugin_dir=${ZPLUGDIR}/z
+if [[ ! -e ${plugin_dir} ]]; then
+  git clone --depth=1 https://github.com/rupa/z.git ${plugin_dir}
+fi
+source ${plugin_dir}/z.sh

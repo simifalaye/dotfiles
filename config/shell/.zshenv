@@ -8,11 +8,14 @@
 #-
 
 # Move zsh config files to XDG base dir
-export ZDOTDIR="${XDG_CONFIG_HOME:=~/.config}/zsh"
+export ZDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
 
 # XDG paths for zsh.
-export ZDATADIR=${ZDATADIR:-${XDG_DATA_HOME:=~/.local/share}/zsh} && mkdir -p ${ZDATADIR}
-export ZCACHEDIR=${ZCACHEDIR:-${XDG_CACHE_HOME:=~/.cache}/zsh} && mkdir -p ${ZCACHEDIR}
+export ZDATADIR=${ZDATADIR:-${XDG_DATA_HOME:-$HOME/.local/share}/zsh} && mkdir -p ${ZDATADIR}
+export ZCACHEDIR=${ZCACHEDIR:-${XDG_CACHE_HOME:-$HOME/.cache}/zsh} && mkdir -p ${ZCACHEDIR}
+
+# Setup location to store plugins
+export ZPLUGDIR="${ZDATADIR}/plugins" && mkdir -p ${ZPLUGDIR}
 
 # Add your functions to your $fpath, so you can autoload them.
 fpath=(
