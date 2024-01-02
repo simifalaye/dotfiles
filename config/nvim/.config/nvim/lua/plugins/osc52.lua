@@ -13,16 +13,15 @@ return {
       { "gy", mode = { "n", "x" }, desc = "System yank" },
     },
     init = function()
-      -- Make osc52 the clipboard provider
-      vim.g.clipboard = {
-        name = "osc52",
-        copy = { ["+"] = copy, ["*"] = copy },
-        paste = { ["+"] = paste, ["*"] = paste },
-      }
-      -- TODO: Set as the default provider in SSH if I can get win32yank to work
-      -- consistently without being slow
-      -- if not vim.env.SSH_TTY then
-      -- end
+      -- Only use osc52 as the default provider when in SSH
+      if vim.env.SSH_TTY then
+        -- Make osc52 the clipboard provider
+        vim.g.clipboard = {
+          name = "osc52",
+          copy = { ["+"] = copy, ["*"] = copy },
+          paste = { ["+"] = paste, ["*"] = paste },
+        }
+      end
     end,
     config = function()
       require("osc52").setup({

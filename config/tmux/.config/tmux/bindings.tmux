@@ -20,57 +20,63 @@ bind -T off -N 'Unlock keys' 'M-g' \
   set -u key-table \;\
   refresh-client -S
 
-# Bind smart select
-bind -n -N 'Select window 1' 'M-1' run '${TMUX_SCRIPT_DIR}/smart_select.sh 1'
-bind -n -N 'Select window 2' 'M-2' run '${TMUX_SCRIPT_DIR}/smart_select.sh 2'
-bind -n -N 'Select window 3' 'M-3' run '${TMUX_SCRIPT_DIR}/smart_select.sh 3'
-bind -n -N 'Select window 4' 'M-4' run '${TMUX_SCRIPT_DIR}/smart_select.sh 4'
-bind -n -N 'Select window 5' 'M-5' run '${TMUX_SCRIPT_DIR}/smart_select.sh 5'
-bind -n -N 'Select window 6' 'M-6' run '${TMUX_SCRIPT_DIR}/smart_select.sh 6'
-bind -n -N 'Select window 7' 'M-7' run '${TMUX_SCRIPT_DIR}/smart_select.sh 7'
-bind -n -N 'Select window 8' 'M-8' run '${TMUX_SCRIPT_DIR}/smart_select.sh 8'
-bind -n -N 'Select window 9' 'M-9' run '${TMUX_SCRIPT_DIR}/smart_select.sh 9'
-bind -n -N 'Select window 10' 'M-0' run '${TMUX_SCRIPT_DIR}/smart_select.sh 10'
+# Bind window selection
+bind -n -N 'Select window 1' 'M-1' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 1'
+bind -n -N 'Select window 2' 'M-2' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 2'
+bind -n -N 'Select window 3' 'M-3' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 3'
+bind -n -N 'Select window 4' 'M-4' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 4'
+bind -n -N 'Select window 5' 'M-5' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 5'
+bind -n -N 'Select window 6' 'M-6' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 6'
+bind -n -N 'Select window 7' 'M-7' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 7'
+bind -n -N 'Select window 8' 'M-8' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 8'
+bind -n -N 'Select window 9' 'M-9' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 9'
+bind -n -N 'Select window 10' 'M-0' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 10'
+bind -n -N 'Select the next window' 'M-]' next-window
+bind -n -N 'Select the previous window' 'M-[' previous-window
 
-# Bind smart move
-bind -n -N 'Move pane 1' 'M-!' run '${TMUX_SCRIPT_DIR}/smart_move.sh 1'
-bind -n -N 'Move pane 2' 'M-@' run '${TMUX_SCRIPT_DIR}/smart_move.sh 2'
-bind -n -N 'Move pane 3' 'M-#' run '${TMUX_SCRIPT_DIR}/smart_move.sh 3'
-bind -n -N 'Move pane 4' 'M-$' run '${TMUX_SCRIPT_DIR}/smart_move.sh 4'
-bind -n -N 'Move pane 5' 'M-%' run '${TMUX_SCRIPT_DIR}/smart_move.sh 5'
-bind -n -N 'Move pane 6' 'M-^' run '${TMUX_SCRIPT_DIR}/smart_move.sh 6'
-bind -n -N 'Move pane 7' 'M-&' run '${TMUX_SCRIPT_DIR}/smart_move.sh 7'
-bind -n -N 'Move pane 8' 'M-*' run '${TMUX_SCRIPT_DIR}/smart_move.sh 8'
-bind -n -N 'Move pane 9' 'M-(' run '${TMUX_SCRIPT_DIR}/smart_move.sh 9'
-bind -n -N 'Move pane 10' 'M-)' run '${TMUX_SCRIPT_DIR}/smart_move.sh 10'
+# Bind window movement
+bind -n -N 'Swap window right' 'M-{' swap-window -d -t -1
+bind -n -N 'Swap window left' 'M-}' swap-window -d -t +1
 
-# Pane selection/resize with awareness of Vim splits/movement
-# See: https://github.com/mrjones2014/smart-splits.nvim
-is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-        | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'";
-bind -n -N 'Select pane left' 'M-h' if-shell "$is_vim" 'send-keys M-h' 'select-pane -L'
-bind -n -N 'Select pane down' 'M-j' if-shell "$is_vim" 'send-keys M-j' 'select-pane -D'
-bind -n -N 'Select pane up' 'M-k' if-shell "$is_vim" 'send-keys M-k' 'select-pane -U'
-bind -n -N 'Select pane right' 'M-l' if-shell "$is_vim" 'send-keys M-l' 'select-pane -R'
+# Bind pane selection
+bind -n -N 'Select pane left' 'M-h' run '${TMUX_SCRIPT_DIR}/smart_pane_select.sh M-h L'
+bind -n -N 'Select pane down' 'M-j' run '${TMUX_SCRIPT_DIR}/smart_pane_select.sh M-j D'
+bind -n -N 'Select pane up' 'M-k' run '${TMUX_SCRIPT_DIR}/smart_pane_select.sh M-k U'
+bind -n -N 'Select pane right' 'M-l' run '${TMUX_SCRIPT_DIR}/smart_pane_select.sh M-l R'
+
+# Bind pane movement
+bind -n -N 'Move pane 1' 'M-!' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 1'
+bind -n -N 'Move pane 2' 'M-@' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 2'
+bind -n -N 'Move pane 3' 'M-#' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 3'
+bind -n -N 'Move pane 4' 'M-$' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 4'
+bind -n -N 'Move pane 5' 'M-%' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 5'
+bind -n -N 'Move pane 6' 'M-^' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 6'
+bind -n -N 'Move pane 7' 'M-&' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 7'
+bind -n -N 'Move pane 8' 'M-*' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 8'
+bind -n -N 'Move pane 9' 'M-(' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 9'
+bind -n -N 'Move pane 10' 'M-)' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 10'
 bind -n -N 'Move pane left' 'M-H' swap-pane -s '{left-of}'
 bind -n -N 'Move pane down' 'M-J' swap-pane -s '{down-of}'
 bind -n -N 'Move pane up' 'M-K' swap-pane -s '{up-of}'
 bind -n -N 'Move pane right' 'M-L' swap-pane -s '{right-of}'
-bind -n -N 'Resize left' 'M-C-h' if-shell "$is_vim" 'send-keys M-C-h' 'resize-pane -L 3'
-bind -n -N 'Resize down' 'M-C-j' if-shell "$is_vim" 'send-keys M-C-j' 'resize-pane -D 3'
-bind -n -N 'Resize up' 'M-C-k' if-shell "$is_vim" 'send-keys M-C-k' 'resize-pane -U 3'
-bind -n -N 'Resize right' 'M-C-l' if-shell "$is_vim" 'send-keys M-C-l' 'resize-pane -R 3'
-bind -n -N 'Zoom the current pane' 'M-z' resize-pane -Z
 
-# Window selection/movement
-bind -n -N 'Select the next window' 'M-]' next-window
-bind -n -N 'Select the previous window' 'M-[' previous-window
-bind -n -N 'Swap window right' 'M-{' swap-window -d -t -1
-bind -n -N 'Swap window left' 'M-}' swap-window -d -t +1
+# Bind pane resizing
+bind -n -N 'Resize left' 'M-C-h' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M-C-h L 3'
+bind -n -N 'Resize down' 'M-C-j' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M-C-j D 3'
+bind -n -N 'Resize up' 'M-C-k' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M-C-k U 3'
+bind -n -N 'Resize right' 'M-C-l' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M-C-l R 3'
+bind -n -N 'Zoom the current pane' 'M-z' resize-pane -Z
 
 # See: https://www.reddit.com/r/tmux/comments/j7fcr7/tiling_in_tmux_as_in_bspwm/
 bind -n -N 'New pane' 'M-Enter' if-shell \
        "[ $(($(tmux display -p '8*#{pane_width}-20*#{pane_height}'))) -lt 0 ]" "splitw -v -c '#{pane_current_path}'" "splitw -h -c '#{pane_current_path}' "
+
+# Toggle scratchpad
+bind-key -N 'Toggle scratch window' -n 'M-;' if-shell -F '#{==:#{session_name},scratch}' {
+  detach-client
+} {
+  display-popup -d "#{pane_current_path}" -xC -yC -w 80% -h 75% -E 'tmux new-session -A -s scratch'
+}
 
 #-
 #  Mouse

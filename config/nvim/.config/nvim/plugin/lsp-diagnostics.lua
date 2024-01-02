@@ -44,10 +44,10 @@ _G.user_diagnostics = {
 --------------------------------------------------------------------------------
 
 -- Ensure we don't load the plugin twice
-if vim.g.user_plugin_loaded_lsp_diagnostics then
+if vim.g.loaded_user_plugin_lsp_diagnostics then
   return
 end
-vim.g.user_plugin_loaded_lsp_diagnostics = true
+vim.g.loaded_user_plugin_lsp_diagnostics = true
 
 -- Register signs
 for _, sign in ipairs(signs) do

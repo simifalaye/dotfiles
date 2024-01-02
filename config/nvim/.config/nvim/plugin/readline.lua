@@ -113,10 +113,10 @@ end
 --------------------------------------------------------------------------------
 
 -- Ensure we don't load the plugin twice
-if vim.g.user_plugin_loaded_readline then
+if vim.g.loaded_user_plugin_readline then
   return
 end
-vim.g.user_plugin_loaded_readline = true
+vim.g.loaded_user_plugin_readline = true
 
 map("!", "<C-a>", "<Home>")
 map("!", "<C-e>", "<End>")

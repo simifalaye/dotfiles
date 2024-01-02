@@ -8,13 +8,17 @@ local m = require("utils.map")
 m.noremap({ "n", "x" }, "j", [[v:count == 0 ? 'gj' : 'j']], { expr = true })
 m.noremap({ "n", "x" }, "k", [[v:count == 0 ? 'gk' : 'k']], { expr = true })
 
--- Save
-m.noremap(
-  { "n", "i", "x", "s" },
-  "<C-s>",
-  "<Esc><cmd>silent! update | redraw<CR>",
-  "Save Buffer"
-)
+-- Fast window navigation
+if not vim.g.loaded_user_plugin_tmux then
+  m.map({ "n", "x", "t" }, "<A-h>", "<C-w>h", "Goto left window")
+  m.map({ "n", "x", "t" }, "<A-j>", "<C-w>j", "Goto down window")
+  m.map({ "n", "x", "t" }, "<A-k>", "<C-w>k", "Goto up window")
+  m.map({ "n", "x", "t" }, "<A-l>", "<C-w>l", "Goto right window")
+  m.map({ "n", "x", "t" }, "<A-C-h>", "<cmd>ResizeWindow l<CR>", "Resize window left")
+  m.map({ "n", "x", "t" }, "<A-C-j>", "<cmd>ResizeWindow d<CR>", "Resize window down")
+  m.map({ "n", "x", "t" }, "<A-C-k>", "<cmd>ResizeWindow u<CR>", "Resize window up")
+  m.map({ "n", "x", "t" }, "<A-C-l>", "<cmd>ResizeWindow r<CR>", "Resize window right")
+end
 
 --------------------------------------------------------------------------------
 --  Normal mode
@@ -28,6 +32,7 @@ m.nnoremap("n", "nzzzv")
 m.nnoremap("N", "Nzzzv")
 m.nnoremap("p", "p`[v`]=", "Paste & Format")
 m.nnoremap("Q", "@q", "Run q Macro")
+m.nnoremap("q:", "<nop>")
 
 -- (g) namespace
 m.group("g", "+goto")
@@ -82,8 +87,6 @@ m.vnoremap(">", ">gv")
 m.xnoremap("*", [[y/\V<C-R>=escape(@", '/\')<CR><CR>]]) -- visual search
 m.xnoremap("#", [[y?\V<C-R>=escape(@", '?\')<CR><CR>]]) -- visual search
 m.vnoremap("Q", ":norm @q<CR>", "Run Q silent", { silent = false })
-m.xnoremap("p", "P") -- paste no copy
-m.xnoremap("P", "p") -- paste and copy
 vim.cmd([[
   function! ExecuteMacroOverVisualRange()
     echo "@".getcmdline()
@@ -140,3 +143,14 @@ m.cnoremap(
 --------------------------------------------------------------------------------
 
 vim.cmd('iab <expr> dts strftime("%F %b %T")')
+vim.cmd("cnoreabbrev W! w!")
+vim.cmd("cnoreabbrev Q! q!")
+vim.cmd("cnoreabbrev Qall! qall!")
+vim.cmd("cnoreabbrev X! x!")
+vim.cmd("cnoreabbrev Wq wq")
+vim.cmd("cnoreabbrev Wa wa")
+vim.cmd("cnoreabbrev wQ wq")
+vim.cmd("cnoreabbrev WQ wq")
+vim.cmd("cnoreabbrev W w")
+vim.cmd("cnoreabbrev Q q")
+vim.cmd("cnoreabbrev X x")

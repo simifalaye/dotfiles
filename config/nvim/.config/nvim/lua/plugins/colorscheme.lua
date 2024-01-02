@@ -9,9 +9,6 @@ return {
         telescope = false,
       })
 
-      -- Must be set for base16
-      vim.cmd("let base16colorspace=256")
-
       -- Use tinted-theming/base16-shell helpers if installed
       local set_theme_path = vim.env.HOME .. "/.config/tinted-theming/set_theme.lua"
       if vim.fn.filereadable(set_theme_path) == 1 then
@@ -20,7 +17,9 @@ return {
         require("utils.fs").watch(set_theme_path, {
           on_event = function()
             vim.schedule(function()
-              vim.cmd("source " .. set_theme_path)
+              if vim.fn.filereadable(set_theme_path) == 1 then
+                vim.cmd("source " .. set_theme_path)
+              end
             end)
           end,
         })

@@ -6,10 +6,10 @@ local lib = require("utils.lib")
 --------------------------------------------------------------------------------
 
 -- Ensure we don't load the plugin twice
-if vim.g.user_plugin_loaded_unimpaired then
+if vim.g.loaded_user_plugin_unimpaired then
   return
 end
-vim.g.user_plugin_loaded_unimpaired = true
+vim.g.loaded_user_plugin_unimpaired = true
 
 m.group("[", "+prev")
 m.group("]", "+next")

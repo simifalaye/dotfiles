@@ -9,8 +9,6 @@ export BASE16_THEME_DEFAULT="gruvbox-dark-hard"
 BASE16_SHELL="${XDG_CONFIG_HOME}/base16-shell"
 if [ ! -d "${BASE16_SHELL}" ]; then
   git clone https://github.com/tinted-theming/base16-shell.git ${BASE16_SHELL}
-  # Patch the profile helper to suppress the symlink output
-  sed -i.bak -e '/^[[:space:]]*ln -fs/s/$/ >\/dev\/null' "${BASE16_SHELL}/profile_helper.sh"
 fi
 
 # Enable to color profile helper

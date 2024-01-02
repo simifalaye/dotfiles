@@ -163,3 +163,24 @@ augroup("user_auto_cwd", {
     end,
   },
 })
+
+if vim.fn.has("wsl") == 1 and vim.fn.executable("clip.exe") > 0 then
+  augroup("user_wsl_yank", {
+    {
+      desc = "Automatically yank text to wsl clipboard also",
+      event = "TextYankPost",
+      command = function(_)
+        vim.schedule(function()
+          local reg = "0"
+          for _, value in pairs(vim.opt.clipboard:get()) do
+            if value == "unnamedplus" then
+              reg = "+"
+              break
+            end
+          end
+          vim.fn.system("clip.exe", vim.fn.getreg(reg))
+        end)
+      end,
+    },
+  })
+end

@@ -32,10 +32,15 @@ function M.file_exists(name)
   end
 end
 
+--- Get the basename of a file path
+---@param str string
+---@return [TODO:return]
 function M.basename(str)
   return string.gsub(str, "(.*/)(.*)", "%2")
 end
 
+--- Remove slash at end of file path
+---@param str string
 function M.remove_slash(str)
   if str:sub(-1) == "/" then
     return str:sub(1, -2)
@@ -106,7 +111,11 @@ function M.write_file(path, str)
   return true
 end
 
-local make_default_error_cb = function(path, runnable)
+--- Default fs watch callback handler (print error)
+---@param path string
+---@param runnable string|table
+---@return function(error: string, unwatch_cb: function?)
+local function make_default_error_cb(path, runnable)
   return function(error, _)
     error(
       "fwatch.watch("
@@ -120,11 +129,22 @@ local make_default_error_cb = function(path, runnable)
   end
 end
 
-function M.watch_with_function(path, on_event, on_error, opts)
-  -- TODO: Check for 'fail'? What is 'fail' in the context of handle creation?
-  --       Probably everything else is on fire anyway (or no inotify/etc?).
-  local handle = uv.new_fs_event()
+---@class user_fs_watch_opts_t
+---@field is_oneshot bool don't reattach after running
 
+--- Watch a file/dir with function callbacks
+---@param path string
+---@param on_event function(filename: string, events: table, unwatch_cb: function)
+---@param on_error function(error: string, unwatch_cb: function?)?
+---@param opts user_fs_watch_opts_t?
+---@return uv_fs_event_t?
+function M.watch_with_function(path, on_event, on_error, opts)
+  local handle = uv.new_fs_event()
+  if not handle then
+    return nil
+  end
+
+  -- Default flags
   -- these are just the default values
   local flags = {
     watch_entry = false, -- true = when dir, watch dir inode, not dir content
@@ -133,7 +153,7 @@ function M.watch_with_function(path, on_event, on_error, opts)
   }
 
   local unwatch_cb = function()
-    uv.fs_event_stop(handle)
+    handle:stop()
   end
 
   local event_cb = function(err, filename, events)
@@ -153,13 +173,11 @@ function M.watch_with_function(path, on_event, on_error, opts)
   return handle
 end
 
--- @doc """
--- Watch a path and run given string as an ex command
---
--- Internally creates on_event and on_error handler and
--- delegates to watch_with_function.
---
--- """
+--- Watch a file/dir with a command callback
+---@param path string
+---@param string string: vim command
+---@param opts user_fs_watch_opts_t?
+---@return uv_fs_event_t?
 function M.watch_with_string(path, string, opts)
   local on_event = function(_, _)
     vim.schedule(function()
@@ -170,9 +188,10 @@ function M.watch_with_string(path, string, opts)
   return M.watch_with_function(path, on_event, on_error, opts)
 end
 
--- @doc """
--- Sniff parameters and call appropriate watch handler
--- """
+--- Watch a file/dir with any callable callback
+---@param path string
+---@param runnable string|table|nil
+---@param opts user_fs_watch_opts_t?
 function M.watch(path, runnable, opts)
   if type(runnable) == "string" then
     return M.watch_with_string(path, runnable, opts)

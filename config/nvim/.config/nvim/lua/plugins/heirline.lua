@@ -200,7 +200,10 @@ return {
 
       local FileType = {
         provider = function()
-          return vim.bo.filetype
+          if vim.bo.buftype == "" then
+            return vim.bo.filetype
+          end
+          return ""
         end,
         hl = { fg = utils.get_highlight("Type").fg, bold = true },
       }
@@ -393,6 +396,7 @@ return {
       local Space = { provider = " " }
       ViMode = utils.surround({ "", "" }, "bright_bg", { ViMode })
 
+      -- Setup statuslines
       -- stylua: ignore start
       local DefaultStatusline = {
           ViMode, Space, FileNameBlock, Space, Git, Space, Diagnostics, Align,
