@@ -1,21 +1,75 @@
-local m = require("utils.map")
-local lib = require("utils.lib")
-
---------------------------------------------------------------------------------
---  Main
---------------------------------------------------------------------------------
-
 -- Ensure we don't load the plugin twice
 if vim.g.loaded_user_plugin_unimpaired then
   return
 end
 vim.g.loaded_user_plugin_unimpaired = true
 
+local m = require("utils.map")
+local lib = require("utils.lib")
+
+local get_current_wininfo = function()
+  return vim.fn.getwininfo(vim.fn.win_getid())[1]
+end
+
+local get_files = function(dir)
+  local entries = vim.fn.split(vim.fn.glob(dir .. "/*"), "\n")
+  local files = {}
+  for _, entry in pairs(entries) do
+    if vim.fn.isdirectory(entry) ~= 1 then
+      table.insert(files, vim.fn.fnamemodify(entry, ":t"))
+    end
+  end
+  if vim.tbl_isempty(files) then
+    return
+  else
+    return files
+  end
+end
+
+local file_by_offset = function(offset)
+  local dir = vim.fn.expand("%:p:h")
+  local files = get_files(dir)
+  if not files then
+    return
+  end
+  local current = vim.fn.expand("%:t")
+  if current == "" then
+    if offset < 0 then
+      return dir .. "/" .. files[1]
+    else
+      return dir .. "/" .. files[#files]
+    end
+  else
+    local index = vim.fn.index(files, current) + 1
+    if index == 0 then
+      return
+    end
+    index = index + offset
+    if index < 1 then
+      index = 1
+    elseif index > #files then
+      index = #files
+    end
+    return dir .. "/" .. files[index]
+  end
+end
+
+--------------------------------------------------------------------------------
+--  Main
+--------------------------------------------------------------------------------
+
 m.group("[", "+prev")
 m.group("]", "+next")
 m.group("[o", "+enable")
 m.group("]o", "+disable")
 m.group("yo", "+toggle")
+
+m.nnoremap("[<space>", function()
+  vim.cmd("put! =repeat(nr2char(10), v:count1)|silent ']+")
+end, "Add blank line above")
+m.nnoremap("]<space>", function()
+  vim.cmd("put =repeat(nr2char(10), v:count1)|silent '[-")
+end, "Add blank line below")
 
 m.nnoremap("[b", function()
   vim.cmd(vim.v.count1 .. "bprevious")
@@ -25,58 +79,6 @@ m.nnoremap("]b", function()
 end, "Next buffer")
 m.nnoremap("[B", "<cmd>bfirst<CR>", "First buffer")
 m.nnoremap("]B", "<cmd>blast<CR>", "Last buffer")
-
-m.nnoremap("[l", function()
-  vim.cmd("silent! " .. vim.v.count1 .. "lprevious")
-  vim.cmd.normal("zv")
-end, "Prev ll entry")
-m.nnoremap("]l", function()
-  vim.cmd("silent! " .. vim.v.count1 .. "lnext")
-  vim.cmd.normal("zv")
-end, "Next ll entry")
-m.nnoremap("[L", "<cmd>lfirst<CR>", "First ll entry")
-m.nnoremap("]L", "<cmd>llast<CR>", "Last ll entry")
-m.nnoremap("[<C-l>", function()
-  vim.cmd("silent! " .. vim.v.count1 .. "lpfile")
-end, "Last ll entry previous file")
-m.nnoremap("]<C-l>", function()
-  vim.cmd("silent! " .. vim.v.count1 .. "lnfile")
-end, "First ll entry next file")
-
-m.nnoremap("[q", function()
-  vim.cmd("silent! " .. vim.v.count1 .. "cprevious")
-  vim.cmd.normal("zv")
-end, "Prev qf entry")
-m.nnoremap("]q", function()
-  vim.cmd("silent! " .. vim.v.count1 .. "cnext")
-  vim.cmd.normal("zv")
-end, "Next qf entry")
-m.nnoremap("[Q", "<cmd>cfirst<CR>", "First qf entry")
-m.nnoremap("]Q", "<cmd>clast<CR>", "Last qf entry")
-m.nnoremap("[<C-q>", function()
-  vim.cmd("silent! " .. vim.v.count1 .. "cpfile")
-end, "Last qf entry previous file")
-m.nnoremap("]<C-q>", function()
-  vim.cmd("silent! " .. vim.v.count1 .. "cnfile")
-end, "First qf entry next file")
-
-m.nnoremap("[<space>", function()
-  vim.cmd("put! =repeat(nr2char(10), v:count1)|silent ']+")
-end, "Add blank line above")
-m.nnoremap("]<space>", function()
-  vim.cmd("put =repeat(nr2char(10), v:count1)|silent '[-")
-end, "Add blank line below")
-
-m.nnoremap("[e", function()
-  local count = vim.v.count1
-  vim.cmd("silent! move --" .. count)
-  vim.cmd.normal("==")
-end, "Exchange above")
-m.nnoremap("]e", function()
-  local count = vim.v.count1
-  vim.cmd("silent! move +" .. count)
-  vim.cmd.normal("==")
-end, "Exchange below")
 
 m.nnoremap("[ob", function()
   vim.o.background = "light"
@@ -138,6 +140,54 @@ m.nnoremap("yod", function()
   end
 end, "Diagnostics")
 
+m.nnoremap("[e", function()
+  local count = vim.v.count1
+  vim.cmd("silent! move --" .. count)
+  vim.cmd.normal("==")
+end, "Exchange above")
+m.nnoremap("]e", function()
+  local count = vim.v.count1
+  vim.cmd("silent! move +" .. count)
+  vim.cmd.normal("==")
+end, "Exchange below")
+m.vnoremap("[e", function()
+  local count = vim.v.count1
+  vim.cmd("silent! '<,'>move '<--" .. count)
+  vim.cmd.normal("gv=")
+end, "Exchange above")
+m.vnoremap("]e", function()
+  local count = vim.v.count1
+  vim.cmd("silent! '<,'>move '>+" .. count)
+  vim.cmd.normal("gv=")
+end, "Exchange below")
+
+m.nnoremap("[f", function()
+  local wininfo = get_current_wininfo()
+  if wininfo.loclist == 1 then
+    vim.cmd("silent! lolder " .. vim.v.count1)
+  elseif wininfo.quickfix == 1 then
+    vim.cmd("silent! colder " .. vim.v.count1)
+  else
+    local file = file_by_offset(-vim.v.count1)
+    if file then
+      vim.cmd("edit " .. file)
+    end
+  end
+end, "Prev file")
+m.nnoremap("]f", function()
+  local wininfo = get_current_wininfo()
+  if wininfo.loclist == 1 then
+    vim.cmd("silent! lnewer " .. vim.v.count1)
+  elseif wininfo.quickfix == 1 then
+    vim.cmd("silent! cnewer " .. vim.v.count1)
+  else
+    local file = file_by_offset(vim.v.count1)
+    if file then
+      vim.cmd("edit " .. file)
+    end
+  end
+end, "Next file")
+
 m.nnoremap("[oh", function()
   vim.o.hlsearch = true
   lib.ui_notify("Enabled hlsearch")
@@ -156,14 +206,31 @@ m.nnoremap("yoh", function()
   end
 end, "Hlsearch")
 
+m.nnoremap("[l", function()
+  vim.cmd("silent! " .. vim.v.count1 .. "lprevious")
+  vim.cmd.normal("zv")
+end, "Prev ll entry")
+m.nnoremap("]l", function()
+  vim.cmd("silent! " .. vim.v.count1 .. "lnext")
+  vim.cmd.normal("zv")
+end, "Next ll entry")
+m.nnoremap("[L", "<cmd>lfirst<CR>", "First ll entry")
+m.nnoremap("]L", "<cmd>llast<CR>", "Last ll entry")
+m.nnoremap("[<C-l>", function()
+  vim.cmd("silent! " .. vim.v.count1 .. "lpfile")
+end, "Last ll entry previous file")
+m.nnoremap("]<C-l>", function()
+  vim.cmd("silent! " .. vim.v.count1 .. "lnfile")
+end, "First ll entry next file")
+
 m.nnoremap("[ol", function()
   vim.o.list = true
   lib.ui_notify("Enabled list")
-end, "List")
+end, "List chars")
 m.nnoremap("]ol", function()
   vim.o.list = false
   lib.ui_notify("Disabled list")
-end, "List")
+end, "List chars")
 m.nnoremap("yol", function()
   if vim.o.list then
     vim.o.list = false
@@ -172,7 +239,7 @@ m.nnoremap("yol", function()
     vim.o.list = true
     lib.ui_notify("Enabled list")
   end
-end, "List")
+end, "List chars")
 
 m.nnoremap("[on", function()
   vim.o.number = true
@@ -209,6 +276,23 @@ m.nnoremap("yoN", function()
     lib.ui_notify("Enabled notifications")
   end
 end, "Notifications")
+
+m.nnoremap("[q", function()
+  vim.cmd("silent! " .. vim.v.count1 .. "cprevious")
+  vim.cmd.normal("zv")
+end, "Prev qf entry")
+m.nnoremap("]q", function()
+  vim.cmd("silent! " .. vim.v.count1 .. "cnext")
+  vim.cmd.normal("zv")
+end, "Next qf entry")
+m.nnoremap("[Q", "<cmd>cfirst<CR>", "First qf entry")
+m.nnoremap("]Q", "<cmd>clast<CR>", "Last qf entry")
+m.nnoremap("[<C-q>", function()
+  vim.cmd("silent! " .. vim.v.count1 .. "cpfile")
+end, "Last qf entry previous file")
+m.nnoremap("]<C-q>", function()
+  vim.cmd("silent! " .. vim.v.count1 .. "cnfile")
+end, "First qf entry next file")
 
 m.nnoremap("[or", function()
   vim.o.relativenumber = true
@@ -263,6 +347,24 @@ m.nnoremap("yoS", function()
     lib.ui_notify("Enabled signcolumn")
   end
 end, "Signcolumn")
+
+m.nnoremap("[ov", function()
+  vim.o.virtualedit = "all"
+  lib.ui_notify("Enabled virtualedit")
+end, "Virtualedit")
+m.nnoremap("]ov", function()
+  vim.o.virtualedit = ""
+  lib.ui_notify("Disabled virtualedit")
+end, "Virtualedit")
+m.nnoremap("yov", function()
+  if vim.o.virtualedit then
+    vim.o.virtualedit = false
+    lib.ui_notify("Disabled virtualedit")
+  else
+    vim.o.virtualedit = true
+    lib.ui_notify("Enabled virtualedit")
+  end
+end, "Virtualedit")
 
 m.nnoremap("[ow", function()
   vim.o.wrap = true

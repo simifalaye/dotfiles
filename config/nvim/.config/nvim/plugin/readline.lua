@@ -1,3 +1,9 @@
+-- Ensure we don't load the plugin twice
+if vim.g.loaded_user_plugin_readline then
+  return
+end
+vim.g.loaded_user_plugin_readline = true
+
 local api = vim.api
 local fn = vim.fn
 local map = vim.keymap.set
@@ -111,12 +117,6 @@ end
 --------------------------------------------------------------------------------
 --  Main
 --------------------------------------------------------------------------------
-
--- Ensure we don't load the plugin twice
-if vim.g.loaded_user_plugin_readline then
-  return
-end
-vim.g.loaded_user_plugin_readline = true
 
 map("!", "<C-a>", "<Home>")
 map("!", "<C-e>", "<End>")

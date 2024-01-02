@@ -1,7 +1,8 @@
 -- Only load if inside tmux
-if not vim.env.TMUX then
+if not vim.env.TMUX and vim.g.loaded_user_plugin_tmux then
   return
 end
+vim.g.loaded_user_plugin_tmux = true
 
 ---@alias nvim_direction_t 'h'|'j'|'k'|'l'
 ---@alias tmux_direction_t 'L'|'D'|'U'|'R'
@@ -164,11 +165,6 @@ end
 --------------------------------------------------------------------------------
 --  Main
 --------------------------------------------------------------------------------
-
-if vim.g.loaded_user_plugin_tmux then
-  return
-end
-vim.g.loaded_user_plugin_tmux = true
 
 local m = require("utils.map")
 

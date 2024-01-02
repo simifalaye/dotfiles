@@ -1,3 +1,9 @@
+-- Ensure we don't load the plugin twice
+if vim.g.loaded_user_plugin_lsp_diagnostics then
+  return
+end
+vim.g.loaded_user_plugin_lsp_diagnostics = true
+
 local lib = require("utils.lib")
 
 local signs = {
@@ -42,12 +48,6 @@ _G.user_diagnostics = {
 --------------------------------------------------------------------------------
 --  Main
 --------------------------------------------------------------------------------
-
--- Ensure we don't load the plugin twice
-if vim.g.loaded_user_plugin_lsp_diagnostics then
-  return
-end
-vim.g.loaded_user_plugin_lsp_diagnostics = true
 
 -- Register signs
 for _, sign in ipairs(signs) do
