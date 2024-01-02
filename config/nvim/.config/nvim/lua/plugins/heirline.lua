@@ -211,7 +211,8 @@ return {
 
       local LSPActive = {
         condition = function()
-          if vim.bo.buftype ~= "" then
+          local filename = vim.api.nvim_buf_get_name(0)
+          if vim.bo.buftype ~= "" or filename == "" then
             return false
           end
           return next(vim.lsp.get_active_clients()) ~= nil

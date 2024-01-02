@@ -1,3 +1,7 @@
+-- Enable faster lua loader using byte-compilation
+-- https://github.com/neovim/neovim/commit/2257ade3dc2daab5ee12d27807c0b3bcf103cd29
+vim.loader.enable()
+
 -- Process the log level environment variable if set
 local log_level = nil
 if vim.env.USER_LOG_LEVEL and type(vim.env.USER_LOG_LEVEL) == "string" then
@@ -6,10 +10,6 @@ if vim.env.USER_LOG_LEVEL and type(vim.env.USER_LOG_LEVEL) == "string" then
     log_level = lvl
   end
 end
-
--- Enable faster lua loader using byte-compilation
--- https://github.com/neovim/neovim/commit/2257ade3dc2daab5ee12d27807c0b3bcf103cd29
-vim.loader.enable()
 
 local g = vim.g
 local opt = vim.opt

@@ -100,9 +100,6 @@ return {
       keymaps = {
         ["g?"] = "actions.show_help",
         ["<CR>"] = "actions.select",
-        ["<C-s>"] = "actions.select_vsplit",
-        ["<C-h>"] = "actions.select_split",
-        ["<C-t>"] = "actions.select_tab",
         ["<C-p>"] = "actions.preview",
         ["<C-c>"] = "actions.close",
         ["<C-l>"] = "actions.refresh",
@@ -140,41 +137,16 @@ return {
             )
           end,
         },
-        ["<C-o>"] = { -- Prevent jumping to file buffers by accident
-          mode = "n",
-          expr = true,
-          buffer = true,
-          desc = "Jump to older cursor position in oil buffer",
-          callback = function()
-            local jumplist = vim.fn.getjumplist()
-            local prevloc = jumplist[1][jumplist[2]]
-            return prevloc
-                and vim.api.nvim_buf_is_valid(prevloc.bufnr)
-                and vim.bo[prevloc.bufnr].ft == "oil"
-                and "<C-o>"
-              or "<Ignore>"
-          end,
-        },
-        ["<C-i>"] = {
-          mode = "n",
-          expr = true,
-          buffer = true,
-          desc = "Jump to newer cursor position in oil buffer",
-          callback = function()
-            local jumplist = vim.fn.getjumplist()
-            local newloc = jumplist[1][jumplist[2] + 2]
-            return newloc
-                and vim.api.nvim_buf_is_valid(newloc.bufnr)
-                and vim.bo[newloc.bufnr].ft == "oil"
-                and "<C-i>"
-              or "<Ignore>"
-          end,
-        },
       },
     },
     config = function(_, opts)
+      local augroup = require("utils.augroup")
+
+      -- Setup plugin
+      oil.setup(opts)
+
       -- Setup auto change cwd autocommands
-      require("utils.augroup")("user_oil_sync_cwd", {
+      augroup("user_oil_sync_cwd", {
         {
           event = { "BufEnter", "TextChanged" },
           desc = "Set cwd to follow directory shown in oil buffers.",
@@ -210,28 +182,37 @@ return {
       })
 
       ---Set some default hlgroups for oil
-      local sethl = require("utils.hl").set
-      sethl(0, "OilDir", { fg = "Directory" })
-      sethl(0, "OilDirIcon", { fg = "Directory" })
-      sethl(0, "OilLink", { fg = "Constant" })
-      sethl(0, "OilLinkTarget", { fg = "Comment" })
-      sethl(0, "OilCopy", { fg = "DiagnosticSignHint", bold = true })
-      sethl(0, "OilMove", { fg = "DiagnosticSignWarn", bold = true })
-      sethl(0, "OilChange", { fg = "DiagnosticSignWarn", bold = true })
-      sethl(0, "OilCreate", { fg = "DiagnosticSignInfo", bold = true })
-      sethl(0, "OilDelete", { fg = "DiagnosticSignError", bold = true })
-      sethl(0, "OilPermissionNone", { fg = "NonText" })
-      sethl(0, "OilPermissionRead", { fg = "DiagnosticSignWarn" })
-      sethl(0, "OilPermissionWrite", { fg = "DiagnosticSignError" })
-      sethl(0, "OilPermissionExecute", { fg = "DiagnosticSignOk" })
-      sethl(0, "OilTypeDir", { fg = "Directory" })
-      sethl(0, "OilTypeFifo", { fg = "Special" })
-      sethl(0, "OilTypeFile", { fg = "NonText" })
-      sethl(0, "OilTypeLink", { fg = "Constant" })
-      sethl(0, "OilTypeSocket", { fg = "OilSocket" })
+      local function oil_sethl()
+        local sethl = require("utils.hl").set
+        sethl(0, "OilDir", { fg = "Directory" })
+        sethl(0, "OilDirIcon", { fg = "Directory" })
+        sethl(0, "OilLink", { fg = "Constant" })
+        sethl(0, "OilLinkTarget", { fg = "Comment" })
+        sethl(0, "OilCopy", { fg = "DiagnosticSignHint", bold = true })
+        sethl(0, "OilMove", { fg = "DiagnosticSignWarn", bold = true })
+        sethl(0, "OilChange", { fg = "DiagnosticSignWarn", bold = true })
+        sethl(0, "OilCreate", { fg = "DiagnosticSignInfo", bold = true })
+        sethl(0, "OilDelete", { fg = "DiagnosticSignError", bold = true })
+        sethl(0, "OilPermissionNone", { fg = "NonText" })
+        sethl(0, "OilPermissionRead", { fg = "DiagnosticSignWarn" })
+        sethl(0, "OilPermissionWrite", { fg = "DiagnosticSignError" })
+        sethl(0, "OilPermissionExecute", { fg = "DiagnosticSignOk" })
+        sethl(0, "OilTypeDir", { fg = "Directory" })
+        sethl(0, "OilTypeFifo", { fg = "Special" })
+        sethl(0, "OilTypeFile", { fg = "NonText" })
+        sethl(0, "OilTypeLink", { fg = "Constant" })
+        sethl(0, "OilTypeSocket", { fg = "OilSocket" })
+      end
+      oil_sethl()
 
-      -- Setup plugin
-      oil.setup(opts)
+      -- Setup auto refresh higlights on colorscheme change
+      augroup("user_oil_set_hl_groups", {
+        {
+          event = "Colorscheme",
+          desc = "Refresh hl groups for oil on colorscheme change",
+          command = oil_sethl,
+        },
+      })
     end,
   },
 }
