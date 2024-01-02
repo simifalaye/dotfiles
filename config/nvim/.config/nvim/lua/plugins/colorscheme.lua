@@ -1,48 +1,37 @@
 return {
   {
-    "catppuccin/nvim",
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    name = "catppuccin", -- make sure to load this before all the other start plugins
+    "RRethy/nvim-base16",
+    lazy = false,
     priority = 1000,
-    opts = {
-      flavour = "mocha", -- latte, frappe, macchiato, mocha
-      background = { -- :h background
-        light = "latte",
-        dark = "mocha",
-      },
-      term_colors = true,
-      integrations = {
-        alpha = true,
-        cmp = true,
-        gitsigns = true,
-        headlines = true,
-        mason = true,
-        markdown = true,
-        mini = {
-          enabled = true,
-          indentscope_color = "",
-        },
-        native_lsp = {
-          enabled = true,
-          underlines = {
-            errors = { "undercurl" },
-            hints = { "undercurl" },
-            warnings = { "undercurl" },
-            information = { "undercurl" },
-          },
-        },
-        noice = true,
-        notify = true,
-        semantic_tokens = true,
-        telescope = true,
-        treesitter = true,
-        treesitter_context = true,
-        which_key = true,
-      },
-    },
-    config = function(_, opts)
-      require("catppuccin").setup(opts)
-      vim.cmd("colorscheme catppuccin")
+    config = function()
+      -- Load base16 with configuration
+      require("base16-colorscheme").with_config({
+        telescope = false,
+      })
+
+      -- Must be set for base16
+      vim.cmd("let base16colorspace=256")
+
+      -- Use tinted-theming/base16-shell helpers if installed
+      local set_theme_path = vim.env.HOME .. "/.config/tinted-theming/set_theme.lua"
+      if vim.fn.filereadable(set_theme_path) == 1 then
+        vim.cmd("source " .. set_theme_path)
+        -- Autoload new theme if updated
+        require("utils.fs").watch(set_theme_path, {
+          on_event = function()
+            vim.schedule(function()
+              vim.cmd("source " .. set_theme_path)
+            end)
+          end,
+        })
+      else
+        -- Fallback to using base16 env
+        if vim.env.BASE16_THEME then
+          vim.cmd("colorscheme base16_" .. vim.env.BASE16_THEME)
+        else
+          vim.cmd("colorscheme base16_default-dark")
+        end
+      end
     end,
   },
 }

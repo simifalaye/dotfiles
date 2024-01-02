@@ -1,20 +1,19 @@
 # vim: filetype=conf
 
+keys_locked="#[fg=white,bg=black]#([ $(tmux show-option -qv key-table) = 'off' ] && echo 'OFF')#[default]"
+
 # Status bar
-set -g status           on
+set -g status on
 set -g status-position top
-set -g status-interval 3     # update the status bar every 3 seconds
-set -g status-left "#[fg=blue,bold] #S   "
-set -g status-right "#{prefix_highlight} #[fg=brightwhite,bold]%a %Y-%m-%d 󱑒 %l:%M %p "
+set -g status-left "#[bg=default,fg=white]#{?client_prefix,, #S }#[bg=blue,fg=black]#{?client_prefix, #S ,}"
+set -g status-right "$keys_locked #[fg=brightwhite,bold]%a %Y-%m-%d %l:%M %p "
 set -g status-justify left
 set -g status-left-length 200    # increase length (from 10)
 set -g status-right-length 200    # increase length (from 10)
 set -g status-bg default
 set -g status-style bg=default # transparent
-set -g window-status-style fg=white,bg=default
-set -g window-status-current-format '#[fg=black,bg=blue] #I #W#{?window_zoomed_flag,(),} '
-set -g window-status-format '#[fg=gray,bg=default] #I #W '
-set -g window-status-last-style 'fg=white,bg=black'
+set -g window-status-format '#[fg=gray,bg=default] #I:#W '
+set -g window-status-current-format '#[fg=black,bg=blue] #I:#W#{?window_zoomed_flag,(),} '
 
 # Message
 set -g message-command-style bg=default,fg=yellow

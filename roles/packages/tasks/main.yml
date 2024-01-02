@@ -80,8 +80,8 @@
     - tig.yml
     - tmux.yml
     - trash-cli.yml
-    - tree.yml
     - unison.yml
+    - win32yank.yml
     - wsl-open.yml
     - yaml-ls.yml
     - zellij.yml

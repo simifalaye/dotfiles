@@ -17,7 +17,6 @@ if "test ! -d ${TPM_DIR}" \
  # List of plugins
 set -g @tpm_plugins '                \
   tmux-plugins/tpm                   \
-  tmux-plugins/tmux-prefix-highlight \
   tmux-plugins/tmux-logging          \
   tmux-plugins/tmux-resurrect        \
   tmux-plugins/tmux-yank             \
@@ -80,17 +79,21 @@ set -g @resurrect-hook-post-restore-all '
 #  tmux-yank
 #-
 
-# Override copy to use osc52
-set -g @override_copy_command "tmux load-buffer -w -"
+# Override copy to use osc52 in SSH
+if-shell -b '[ -n "${SSH_TTY}" ]' {
+  set -g @override_copy_command "tmux load-buffer -w -"
+}
 
 #-
 #  tmux-thumbs
 #-
 
-# Override copy to use osc52
-set -g @thumbs-command "tmux set-buffer -w -- {} && tmux display-message \"Copied {}\""
-set -g @thumbs-upcase-command "tmux set-buffer -w -- {} && tmux paste-buffer && tmux display-message \"Copied {}\""
-set -g @thumbs-multi-command "tmux set-buffer -w -- {} && tmux paste-buffer && tmux send-keys ' ' && tmux display-message \"Copied multiple items!\""
+# Override copy to use osc52 in SSH
+if-shell -b '[ -n "${SSH_TTY}" ]' {
+  set -g @thumbs-command "tmux set-buffer -w -- {} && tmux display-message \"Copied {}\""
+  set -g @thumbs-upcase-command "tmux set-buffer -w -- {} && tmux paste-buffer && tmux display-message \"Copied {}\""
+  set -g @thumbs-multi-command "tmux set-buffer -w -- {} && tmux paste-buffer && tmux send-keys ' ' && tmux display-message \"Copied multiple items!\""
+}
 
 # Load thumbs
 if-shell "test -f ${TMUX_PLUGIN_MANAGER_PATH}/tmux-thumbs/tmux-thumbs.tmux" {

@@ -3,56 +3,74 @@
 # Configuration of tmux key bindings.
 #
 
-# Load additional keybinds configured through shell functions
-run-shell "${TMUX_CONFIG_DIR}/scripts/switch_move_binds.sh"
+TMUX_SCRIPT_DIR="${TMUX_CONFIG_DIR}/scripts"
 
 #-
 #  Root
 #-
 
+# Bind lock/unlock keys for nested sessions
+bind -T root -N 'Lock keys' 'M-g'  \
+  set prefix None \;\
+  set key-table off \;\
+  if -F '#{pane_in_mode}' 'send-keys -X cancel' \;\
+  refresh-client -S
+bind -T off -N 'Unlock keys' 'M-g' \
+  set -u prefix \;\
+  set -u key-table \;\
+  refresh-client -S
+
+# Bind smart select
+bind -n -N 'Select window 1' 'M-1' run '${TMUX_SCRIPT_DIR}/smart_select.sh 1'
+bind -n -N 'Select window 2' 'M-2' run '${TMUX_SCRIPT_DIR}/smart_select.sh 2'
+bind -n -N 'Select window 3' 'M-3' run '${TMUX_SCRIPT_DIR}/smart_select.sh 3'
+bind -n -N 'Select window 4' 'M-4' run '${TMUX_SCRIPT_DIR}/smart_select.sh 4'
+bind -n -N 'Select window 5' 'M-5' run '${TMUX_SCRIPT_DIR}/smart_select.sh 5'
+bind -n -N 'Select window 6' 'M-6' run '${TMUX_SCRIPT_DIR}/smart_select.sh 6'
+bind -n -N 'Select window 7' 'M-7' run '${TMUX_SCRIPT_DIR}/smart_select.sh 7'
+bind -n -N 'Select window 8' 'M-8' run '${TMUX_SCRIPT_DIR}/smart_select.sh 8'
+bind -n -N 'Select window 9' 'M-9' run '${TMUX_SCRIPT_DIR}/smart_select.sh 9'
+bind -n -N 'Select window 10' 'M-0' run '${TMUX_SCRIPT_DIR}/smart_select.sh 10'
+
+# Bind smart move
+bind -n -N 'Move pane 1' 'M-!' run '${TMUX_SCRIPT_DIR}/smart_move.sh 1'
+bind -n -N 'Move pane 2' 'M-@' run '${TMUX_SCRIPT_DIR}/smart_move.sh 2'
+bind -n -N 'Move pane 3' 'M-#' run '${TMUX_SCRIPT_DIR}/smart_move.sh 3'
+bind -n -N 'Move pane 4' 'M-$' run '${TMUX_SCRIPT_DIR}/smart_move.sh 4'
+bind -n -N 'Move pane 5' 'M-%' run '${TMUX_SCRIPT_DIR}/smart_move.sh 5'
+bind -n -N 'Move pane 6' 'M-^' run '${TMUX_SCRIPT_DIR}/smart_move.sh 6'
+bind -n -N 'Move pane 7' 'M-&' run '${TMUX_SCRIPT_DIR}/smart_move.sh 7'
+bind -n -N 'Move pane 8' 'M-*' run '${TMUX_SCRIPT_DIR}/smart_move.sh 8'
+bind -n -N 'Move pane 9' 'M-(' run '${TMUX_SCRIPT_DIR}/smart_move.sh 9'
+bind -n -N 'Move pane 10' 'M-)' run '${TMUX_SCRIPT_DIR}/smart_move.sh 10'
+
+# Pane selection/resize with awareness of Vim splits/movement
+# See: https://github.com/mrjones2014/smart-splits.nvim
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
         | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'";
-
-
-# Window operations
-bind -N 'Name window' -n "M-n" \
-	     command-prompt -p 'Window name:' 'rename-window "%%"';
+bind -n -N 'Select pane left' 'M-h' if-shell "$is_vim" 'send-keys M-h' 'select-pane -L'
+bind -n -N 'Select pane down' 'M-j' if-shell "$is_vim" 'send-keys M-j' 'select-pane -D'
+bind -n -N 'Select pane up' 'M-k' if-shell "$is_vim" 'send-keys M-k' 'select-pane -U'
+bind -n -N 'Select pane right' 'M-l' if-shell "$is_vim" 'send-keys M-l' 'select-pane -R'
+bind -n -N 'Move pane left' 'M-H' swap-pane -s '{left-of}'
+bind -n -N 'Move pane down' 'M-J' swap-pane -s '{down-of}'
+bind -n -N 'Move pane up' 'M-K' swap-pane -s '{up-of}'
+bind -n -N 'Move pane right' 'M-L' swap-pane -s '{right-of}'
+bind -n -N 'Resize left' 'M-C-h' if-shell "$is_vim" 'send-keys M-C-h' 'resize-pane -L 3'
+bind -n -N 'Resize down' 'M-C-j' if-shell "$is_vim" 'send-keys M-C-j' 'resize-pane -D 3'
+bind -n -N 'Resize up' 'M-C-k' if-shell "$is_vim" 'send-keys M-C-k' 'resize-pane -U 3'
+bind -n -N 'Resize right' 'M-C-l' if-shell "$is_vim" 'send-keys M-C-l' 'resize-pane -R 3'
+bind -n -N 'Zoom the current pane' 'M-z' resize-pane -Z
 
 # Window selection/movement
-bind -N 'Select the next window' -n 'M-]' next-window
-bind -N 'Select the previous window' -n 'M-[' previous-window
-bind -N 'Swap window right' -n 'M-{' swap-window -d -t -1
-bind -N 'Swap window left' -n 'M-}' swap-window -d -t +1
+bind -n -N 'Select the next window' 'M-]' next-window
+bind -n -N 'Select the previous window' 'M-[' previous-window
+bind -n -N 'Swap window right' 'M-{' swap-window -d -t -1
+bind -n -N 'Swap window left' 'M-}' swap-window -d -t +1
 
-# Pane selection with awareness of Vim splits/movement
-# See: https://github.com/mrjones2014/smart-splits.nvim
-bind -N "Select pane left" -n M-h if-shell "$is_vim" 'send-keys M-h'  'select-pane -L'
-bind -N "Select pane down" -n M-j if-shell "$is_vim" 'send-keys M-j'  'select-pane -D'
-bind -N "Select pane up" -n M-k if-shell "$is_vim" 'send-keys M-k'  'select-pane -U'
-bind -N "Select pane right" -n M-l if-shell "$is_vim" 'send-keys M-l'  'select-pane -R'
-bind -N "Move pane left" -n "M-C-h" swap-pane -s '{left-of}'
-bind -N "Move pane down" -n "M-C-j" swap-pane -s '{down-of}'
-bind -N "Move pane up" -n "M-C-k" swap-pane -s '{up-of}'
-bind -N "Move pane right" -n "M-C-l" swap-pane -s '{right-of}'
-
-# Pane resize with awareness of Vim splits.
-# See: https://github.com/mrjones2014/smart-splits.nvim
-bind -N "Resize left" -n M-H if-shell "$is_vim" 'send-keys M-H' 'resize-pane -L 3'
-bind -N "Resize down" -n M-J if-shell "$is_vim" 'send-keys M-J' 'resize-pane -D 3'
-bind -N "Resize up" -n M-K if-shell "$is_vim" 'send-keys M-K' 'resize-pane -U 3'
-bind -N "Resize right" -n M-L if-shell "$is_vim" 'send-keys M-L' 'resize-pane -R 3'
-bind -N 'Zoom the current pane' -n M-z resize-pane -Z
-
-# Quick new pane
-bind -N 'New pane' -n "M-Enter" \
-		run-shell 'cwd="`tmux display -p \"#{pane_current_path}\"`"; tmux select-pane -t "bottom-right"; tmux split-pane -c "$cwd"';
-
-# Toggle scratchpad
-bind-key -N 'Toggle scratch window' -n M-w if-shell -F '#{==:#{session_name},scratch}' {
-  detach-client
-} {
-  display-popup -d "#{pane_current_path}" -xC -yC -w 80% -h 75% -E 'tmux new-session -A -s scratch'
-}
+# See: https://www.reddit.com/r/tmux/comments/j7fcr7/tiling_in_tmux_as_in_bspwm/
+bind -n -N 'New pane' 'M-Enter' if-shell \
+       "[ $(($(tmux display -p '8*#{pane_width}-20*#{pane_height}'))) -lt 0 ]" "splitw -v -c '#{pane_current_path}'" "splitw -h -c '#{pane_current_path}' "
 
 #-
 #  Mouse
@@ -124,7 +142,79 @@ bind -T root 'TripleClick1Pane' {
 bind -T root 'C-DoubleClick1Pane' resize-pane -Zt=
 
 #-
-#  Prefix
+#  Pane mode
+#-
+
+bind -n -N '-- Mode: Pane (help = M-p + ?)' 'M-p' switch-client -T pane_mode
+
+bind -T pane_mode -N 'New (left)' 'h' split-window -hb -c "#{pane_current_path}"
+bind -T pane_mode -N 'New (below)' 'j' split-window -v -c "#{pane_current_path}"
+bind -T pane_mode -N 'New (up)' 'k' split-window -vb -c "#{pane_current_path}"
+bind -T pane_mode -N 'New (right)' 'l' split-window -h -c "#{pane_current_path}"
+bind -T pane_mode -N 'Mark' 'm' select-pane -m
+bind -T pane_mode -N 'Clear mark' 'M' select-pane -M
+bind -T pane_mode -N 'Break to new window' 'b' break-pane
+bind -T pane_mode -N 'Join marked with current' 'y' join-pane
+bind -T pane_mode -N 'Kill' 'x' kill-pane
+bind -T pane_mode -N 'List key bindings' '?' display-popup -w80 -h90% -E "tmux list-keys -N -T pane_mode | $PAGER"
+
+#-
+#  Window mode
+#-
+
+bind -n -N '-- Mode: Window (help = M-w + ?)' 'M-w' switch-client -T window_mode
+
+bind -T window_mode -N 'New' 'n' new-window -c "#{pane_current_path}"
+bind -T window_mode -N 'Rename' 'r' command-prompt -I "#W" { rename-window "%%" }
+bind -T window_mode -N 'Kill' 'x' confirm-before -p "kill-window #W? (y/n)" kill-window
+bind -T window_mode -N 'Select last' 'w' last-window
+bind -T window_mode -N 'Select interactively' 'Space' choose-tree -Zw
+bind -T window_mode -N 'Layout: even-horizontal' '\' select-layout even-horizontal
+bind -T window_mode -N 'Layout: even-vertical' '-' select-layout even-vertical
+bind -T window_mode -N 'Layout: main-horizontal' '|' select-layout main-horizontal
+bind -T window_mode -N 'Layout: main-vertical' '_' select-layout main-vertical
+bind -T window_mode -N 'Layout: tiled' '+' select-layout tiled
+bind -T window_mode -N 'Layout: even spread' '=' select-layout -E
+bind -T window_mode -N 'Toggle activity monitoring' 'm' {
+  set monitor-activity
+    display 'monitor-activity #{?monitor-activity,on,off}'
+}
+bind -T window_mode -N 'Toggle silence monitoring' 'M' {
+  if -F '#{monitor-silence}' {
+    set monitor-silence 0
+      display 'monitor-silence off'
+  } {
+    command-prompt -p "(silence interval)" -I "2" {
+      set monitor-silence '%%'
+        display 'monitor-silence #{monitor-silence}'
+    }
+  }
+}
+
+bind -T window_mode -N 'Toggle pane synchronization' 's' {
+  set synchronize-panes
+    display 'synchronize-panes #{?synchronize-panes,on,off}'
+}
+bind -T window_mode -N 'List key bindings' '?' display-popup -w80 -h90% -E "tmux list-keys -N -T window_mode | $PAGER"
+
+#-
+#  Session mode
+#-
+
+bind -n -N '-- Mode: Session (help = M-o + ?)' 'M-o' switch-client -T session_mode
+
+bind -T session_mode -N 'Detach' 'd' detach-client
+bind -T session_mode -N 'Kill' 'x' confirm-before -p "kill-session #S? (y/n)" kill-session
+bind -T session_mode -N 'Select last' 'o' switch-client -l
+bind -T session_mode -N 'Select next' -r 'n' switch-client -n
+bind -T session_mode -N 'Select prev' -r 'p' switch-client -p
+bind -T session_mode -N 'Select interactively' 'Space' choose-tree -Zs
+bind -T session_mode -N 'Create a new session' 'n' command-prompt { new-session -s "%%" }
+bind -T session_mode -N 'Rename the current session' 'r' command-prompt -I "#S" { rename-session "%%" }
+bind -T session_mode -N 'List key bindings' '?' display-popup -w80 -h90% -E "tmux list-keys -N -T session_mode | $PAGER"
+
+#-
+#  Prefix mode
 #-
 
 # Remove all default key bindings.
@@ -137,84 +227,10 @@ bind 'M-s' send-prefix
 bind -n 'M-a' send-prefix # Nested session prefix
 
 # Config
-bind -N 'Edit the tmux configuration'   'e' edit-config
-bind -N 'Reload the tmux configuration' 'r' reload
-
-# Client operations.
-bind -N 'Detach the current client' 'd' detach-client
-bind -N 'Suspend the current client' 'z' suspend-client
-
-# Client selection.
-bind -N 'Select a client interactively' 'c' choose-client -Z
-
-# Session operations
-bind -N 'Create a new session' 'N' command-prompt { new-session -s "%%" }
-bind -N 'Rename the current session' 'S' command-prompt -I "#S" { rename-session "%%" }
-
-# Session selection
-bind -N 'Select a session interactively' 's' choose-tree -Zs
-bind -N 'Select the next session' -r 'Tab' switch-client -n
-bind -N 'Select the previous session' -r 'BTab' switch-client -p
-
-# Window operations
-bind -N 'Create a new window' 'n' new-window -c "#{pane_current_path}"
-bind -N 'Rename the current window' 'W' command-prompt -I "#W" { rename-window "%%" }
-bind -N 'Kill the current window' 'X' confirm-before -p "kill-window #W? (y/n)" kill-window
-bind -N 'Split the current window horizontally' '|' split-window -h -c "#{pane_current_path}"
-bind -N 'Split the current window vertically' '_' split-window -v -c "#{pane_current_path}"
-
-# Window selection/movement
-bind -N 'Select a window interactively' 'w' choose-tree -Zw
-bind -N 'Select the last window' '`' last-window
-bind -N 'Select the next window' 'M-]' next-window
-bind -N 'Select the previous window' 'M-[' previous-window
-bind -N 'Swap window right' 'M-{' swap-window -d -t -1
-bind -N 'Swap window left' 'M-}' swap-window -d -t +1
-bind -N 'Select window 1' '1' select-window -t :=1
-bind -N 'Select window 2' '2' select-window -t :=2
-bind -N 'Select window 3' '3' select-window -t :=3
-bind -N 'Select window 4' '4' select-window -t :=4
-bind -N 'Select window 5' '5' select-window -t :=5
-bind -N 'Select window 6' '6' select-window -t :=6
-bind -N 'Select window 7' '7' select-window -t :=7
-bind -N 'Select window 8' '8' select-window -t :=8
-bind -N 'Select window 9' '9' select-window -t :=9
-bind -N 'Select window 10' '0' select-window -t :=10
-
-# Window layouts.
-bind -N 'Select the even-horizontal layout' 'M-1' select-layout even-horizontal
-bind -N 'Select the even-vertical layout' 'M-2' select-layout even-vertical
-bind -N 'Select the main-horizontal layout' 'M-3' select-layout main-horizontal
-bind -N 'Select the main-vertical layout' 'M-4' select-layout main-vertical
-bind -N 'Select the tiled layout' 'M-5' select-layout tiled
-bind -N 'Spread the panes out evenly' '=' select-layout -E
-bind -N 'Layout next' -r 'Space' next-layout
-
-# Pane operations
-bind -N 'Mark the current pane' 'm' select-pane -m
-bind -N 'Clear the marked pane' 'M' select-pane -M
-bind -N 'Break the current pane into a new window' 'M-b' break-pane
-bind -N 'Join the marked pane with the current pane' 'M-y' join-pane
-bind -N 'Kill the current pane' 'x' kill-pane
-
-# Pane selection/movement
-bind -N 'List and select a pane by index' 'p' display-panes
-bind -N 'Select the last pane' -r '~' last-pane
-bind -N 'Select the pane above the active pane' 'k' select-pane -U
-bind -N 'Select the pane below the active pane' 'j' select-pane -D
-bind -N 'Select the pane to the left of the active pane' 'h' select-pane -L
-bind -N 'Select the pane to the right of the active pane' 'l' select-pane -R
-bind -N 'Swap the current pane with the pane above' -r 'o' swap-pane -U
-bind -N 'Swap the current pane with the pane below' -r 'O' swap-pane -D
-bind -N 'Rotate the panes upward in the current window' -r 'C-o' rotate-window -U
-bind -N 'Rotate the panes downward in the current window' -r 'M-o' rotate-window -D
-
-# Pane resizing.
-bind -N 'Zoom the current pane' 'Space' resize-pane -Z
-bind -N 'Resize the current pane up' -r 'M-Up' resize-pane -U
-bind -N 'Resize the current pane down' -r 'M-Down' resize-pane -D
-bind -N 'Resize the current pane left' -r 'M-Left' resize-pane -L
-bind -N 'Resize the current pane right' -r 'M-Right' resize-pane -R
+bind -N 'Edit tmux configuration' 'e' run-shell \
+       'tmux popup -w90% -h90% -E -d "#{pane_current_path}" "${VISUAL:-${EDITOR}} $TMUX_CONFIG && tmux reload"'
+bind -N 'Reload the tmux configuration' 'r' run-shell \
+       'tmux source "$TMUX_CONFIG" && tmux display "sourced $TMUX_CONFIG"'
 
 # Enter backward search mode directly.
 bind -N 'Search backward for a regular expression' '/' copy-mode \; send '?'
@@ -230,31 +246,6 @@ bind -N 'Customize options and bindings' ',' customize-mode -Z
 bind -N 'Prompt for a command' ':' command-prompt
 bind -N 'Show status line messages' ';' show-messages
 
-# Activity monitoring.
-bind -N 'Toggle activity monitoring for the current window' '@' {
-  set monitor-activity
-  display 'monitor-activity #{?monitor-activity,on,off}'
-}
-
-# Silence monitoring.
-bind -N 'Toggle silence monitoring for the current window' '!' {
-  if -F '#{monitor-silence}' {
-    set monitor-silence 0
-    display 'monitor-silence off'
-  } {
-    command-prompt -p "(silence interval)" -I "2" {
-      set monitor-silence '%%'
-      display 'monitor-silence #{monitor-silence}'
-    }
-  }
-}
-
-# Pane synchronization.
-bind -N 'Toggle pane synchronization in the current window' '#' {
-  set synchronize-panes
-  display 'synchronize-panes #{?synchronize-panes,on,off}'
-}
-
 # Enter copy mode.
 bind -N 'Enter copy mode' 'Enter' copy-mode
 
@@ -264,7 +255,7 @@ bind -N 'Enter copy mode' 'Enter' copy-mode
 
 # Pane selection with awareness of Vim splits.
 # See: https://github.com/mrjones2014/smart-splits.nvim
-bind-key -T copy-mode-vi 'C-h' select-pane -L
-bind-key -T copy-mode-vi 'C-j' select-pane -D
-bind-key -T copy-mode-vi 'C-k' select-pane -U
-bind-key -T copy-mode-vi 'C-l' select-pane -R
+bind-key -T copy-mode-vi 'M-h' select-pane -L
+bind-key -T copy-mode-vi 'M-j' select-pane -D
+bind-key -T copy-mode-vi 'M-k' select-pane -U
+bind-key -T copy-mode-vi 'M-l' select-pane -R

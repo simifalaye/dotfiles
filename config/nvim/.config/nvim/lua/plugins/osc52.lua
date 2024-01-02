@@ -1,3 +1,11 @@
+local function copy(lines, _)
+  require("osc52").copy(table.concat(lines, "\n"))
+end
+
+local function paste()
+  return { vim.fn.split(vim.fn.getreg(""), "\n"), vim.fn.getregtype("") }
+end
+
 return {
   {
     "ojroques/nvim-osc52",
@@ -5,18 +13,16 @@ return {
       { "gy", mode = { "n", "x" }, desc = "System yank" },
     },
     init = function()
-      local function copy(lines, _)
-        require("osc52").copy(table.concat(lines, "\n"))
-      end
-      local function paste()
-        return { vim.fn.split(vim.fn.getreg(""), "\n"), vim.fn.getregtype("") }
-      end
       -- Make osc52 the clipboard provider
       vim.g.clipboard = {
         name = "osc52",
         copy = { ["+"] = copy, ["*"] = copy },
         paste = { ["+"] = paste, ["*"] = paste },
       }
+      -- TODO: Set as the default provider in SSH if I can get win32yank to work
+      -- consistently without being slow
+      -- if not vim.env.SSH_TTY then
+      -- end
     end,
     config = function()
       require("osc52").setup({

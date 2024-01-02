@@ -16,7 +16,7 @@ local opt = vim.opt
 local fn = vim.fn
 
 opt.viewoptions:remove("curdir")
-opt.shortmess:append({ s = true, I = true, S = true })
+opt.shortmess:append({ s = true, I = true })
 opt.backspace:append({ "nostop" })
 if fn.has("nvim-0.9") == 1 then
   opt.diffopt:append("linematch:60")
@@ -69,7 +69,7 @@ opt.guifont = "MesloLGS NerdFont:h13"
 opt.diffopt:append("algorithm:histogram")
 
 -- Use system clipboard
-opt.clipboard:append("unnamedplus")
+opt.clipboard = "unnamedplus"
 
 -- Allow local project config
 opt.exrc = true

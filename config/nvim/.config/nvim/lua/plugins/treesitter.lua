@@ -28,18 +28,6 @@ return {
       "windwp/nvim-ts-autotag",
       "nvim-treesitter/nvim-treesitter-textobjects",
       "JoosepAlviste/nvim-ts-context-commentstring",
-      {
-        "Wansmer/treesj",
-        keys = {
-          { "gS", "<Cmd>TSJSplit<CR>", desc = "Split Lines (ts)" },
-          { "gJ", "<Cmd>TSJJoin<CR>", desc = "Join Lines (ts)" },
-        },
-        opts = { use_default_keymaps = false },
-      },
-      {
-        "andymass/vim-matchup",
-        config = true,
-      },
     },
     opts = {
       ensure_installed = "all",
@@ -118,10 +106,6 @@ return {
         },
       },
       autotag = { enable = true },
-      matchup = {
-        enable = true, -- mandatory, false will disable the whole extension
-        disable = {}, -- optional, list of language that will be disabled
-      },
     },
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
@@ -130,18 +114,6 @@ return {
       vim.opt.foldenable = false -- disable at startup
       vim.opt.foldmethod = "expr" -- use expression folding
       vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-
-      local ts_repeat_move = require("nvim-treesitter.textobjects.repeatable_move")
-      local map = require("utils.map")
-
-      -- vim way: ; goes to the direction you were moving.
-      map.map({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move, "Repeat f,t,F,T")
-      map.map(
-        { "n", "x", "o" },
-        ",",
-        ts_repeat_move.repeat_last_move_opposite,
-        "Repeat f,t,F,T opposite"
-      )
     end,
   },
 }

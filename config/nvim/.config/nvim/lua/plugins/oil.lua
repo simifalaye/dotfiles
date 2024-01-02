@@ -28,7 +28,8 @@ local type_hlgroups = setmetatable({
 return {
   {
     "stevearc/oil.nvim",
-    cmd = "Oil",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    lazy = false,
     keys = {
       {
         "-",
@@ -43,7 +44,6 @@ return {
         desc = "Open root directory",
       },
     },
-    dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       columns = {
         {

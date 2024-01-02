@@ -41,6 +41,17 @@ return {
       },
     },
     opts = {
+      messages = {
+        enabled = true,
+        view = "mini", -- default view for messages
+        view_error = "mini", -- view for errors
+        view_warn = "mini", -- view for warnings
+        view_search = false,
+      },
+      notify = {
+        enabled = true,
+        view = "mini",
+      },
       lsp = {
         -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
         override = {
@@ -53,7 +64,6 @@ return {
           view = "mini",
           opts = {},
         },
-        signature = { enabled = false }, -- handled by cmp
       },
       routes = {
         {
@@ -75,15 +85,6 @@ return {
         long_message_to_split = true, -- long messages will be sent to a split
         inc_rename = false, -- enables an input dialog for inc-rename.nvim
         lsp_doc_border = false, -- add a border to hover docs and signature help
-      },
-      messages = {
-        view = "mini", -- default view for messages
-        view_error = "mini", -- view for errors
-        view_warn = "mini", -- view for warnings
-      },
-      notify = {
-        enabled = true,
-        view = "mini",
       },
     },
   },

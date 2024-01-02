@@ -30,10 +30,5 @@ require("lazy").setup("plugins", {
   change_detection = {
     notify = false,
   },
-  performance = {
-    rtp = {
-      disabled_plugins = {},
-    },
-  },
   lockfile = require("utils.fs").join_paths(vim.fn.stdpath("data"), "lazy-lock.json"),
 })
