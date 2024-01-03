@@ -7,10 +7,12 @@
 [[ -o interactive ]] || return 1
 
 # Figure out the TERM to use inside tmux.
-if [[ "$TERM" == *"256color"* ]]; then
-  export TMUX_TERM="tmux-256color"
+if [[ $terminfo[setb24] ]]; then
+  export TMUX_TERM="$TERM"
+elif (( $terminfo[colors] >= 256 )); then
+  export TMUX_TERM='tmux-256color'
 else
-  export TMUX_TERM="${TERM}"
+  export TMUX_TERM='tmux'
 fi
 
 # Path to tmux internal dirs

@@ -6,7 +6,7 @@ keys_locked="#[fg=white,bg=black]#([ $(tmux show-option -qv key-table) = 'off' ]
 set -g status on
 set -g status-position top
 set -g status-left "#[bg=default,fg=white]#{?client_prefix,, #S }#[bg=blue,fg=black]#{?client_prefix, #S ,}"
-set -g status-right "$keys_locked #[fg=brightwhite,bold]%a %Y-%m-%d %l:%M %p "
+set -g status-right "$keys_locked #[fg=brightwhite,bold]%a %Y-%m-%d  %H:%M "
 set -g status-justify left
 set -g status-left-length 200    # increase length (from 10)
 set -g status-right-length 200    # increase length (from 10)

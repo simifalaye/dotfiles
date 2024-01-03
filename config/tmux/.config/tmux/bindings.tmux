@@ -5,6 +5,8 @@
 
 TMUX_SCRIPT_DIR="${TMUX_CONFIG_DIR}/scripts"
 
+if-shell -b '[ "$(echo "$TMUX_VERSION >= 3.1" | bc)" = 1 ]' { # Require for '-N' flag
+
 #-
 #  Root
 #-
@@ -265,3 +267,5 @@ bind-key -T copy-mode-vi 'M-h' select-pane -L
 bind-key -T copy-mode-vi 'M-j' select-pane -D
 bind-key -T copy-mode-vi 'M-k' select-pane -U
 bind-key -T copy-mode-vi 'M-l' select-pane -R
+
+} # Version >= 3.1

@@ -28,9 +28,9 @@ set -g @tpm_plugins '                \
 #-
 
 # Key bindings for tmux-logging.
-set -g @logging_key 'i'
-set -g @screen-capture-key 'M-i'
-set -g @save-complete-history-key 'M-I'
+set -g @logging_key 'l'
+set -g @screen-capture-key 'M-l'
+set -g @save-complete-history-key 'M-L'
 
 # Path for tmux-logging saved files.
 set -g @logging-path '#{pane_current_path}'
@@ -53,8 +53,8 @@ set -g @resurrect-dir "${TMUX_CACHE_DIR}/resurrect"
 set -g @resurrect-capture-pane-contents on
 
 # Key bindings for tmux-resurrect.
-set -g @resurrect-save 'C-s'
-set -g @resurrect-restore 'C-r'
+set -g @resurrect-save 'M-s'
+set -g @resurrect-restore 'M-r'
 
 # Hooks for tmux-resurrect.
 set -g @resurrect-hook-pre-restore-all '
@@ -105,4 +105,4 @@ if-shell "test -f ${TMUX_PLUGIN_MANAGER_PATH}/tmux-thumbs/tmux-thumbs.tmux" {
 #-
 
 # Initialize the plugin manager (should be last in the config file).
-run -b ${TPM_DIR}/tpm
+run -b '${TPM_DIR}/tpm'

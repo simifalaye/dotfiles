@@ -145,7 +145,7 @@ mkdir -p "${XDG_DATA_HOME}/tig" # Needed for tig_history
 
 # Path to the root tmux config file.
 # Using this will bypass the system-wide configuration file, if any.
-export TMUX_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf"
+export TMUX_CONFIG="${XDG_CONFIG_HOME}/tmux/tmux.conf"
 
 #-
 #  App: Wget
