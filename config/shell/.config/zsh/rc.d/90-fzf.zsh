@@ -38,15 +38,6 @@ export FZF_DEFAULT_OPTS='
 --bind alt-J:preview-page-down
 --bind alt-K:preview-page-up'
 
-# Add colors if supported
-if [[ "$TERM" == *"256color"* ]]; then
-  # Colors: https://github.com/catppuccin/fzf
-  FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
-  --color=bg+:#363a4f,bg:#24273a,spinner:#f4dbd6,hl:#ed8796
-  --color=fg:#cad3f5,header:#ed8796,info:#c6a0f6,pointer:#f4dbd6
-  --color=marker:#f4dbd6,fg+:#cad3f5,prompt:#c6a0f6,hl+:#ed8796"'
-fi
-
 # Use fd if available
 if command -v fd >/dev/null; then
   export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'

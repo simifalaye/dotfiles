@@ -19,6 +19,7 @@
       - "{{ ansible_env.HOME }}/.calc_history"
       - "{{ ansible_env.HOME }}/.zcompdump"
     backup_list:
+      - "{{ ansible_env.HOME }}/.gitconfig"
       - "{{ ansible_env.HOME }}/.gitignore"
       - "{{ ansible_env.HOME }}/.npmrc"
       - "{{ ansible_env.HOME }}/.ripgreprc"
