@@ -148,8 +148,7 @@ local function on_attach(client, bufnr)
   end
 
   -- Call additional attach handlers
-  local handlers = vim.g.user_lsp_attach_handlers and vim.g.user_lsp_attach_handlers or {}
-  for _, h in ipairs(handlers) do
+  for _, h in ipairs(require("utils.lsp").attach_handlers) do
     h(client, bufnr)
   end
 end

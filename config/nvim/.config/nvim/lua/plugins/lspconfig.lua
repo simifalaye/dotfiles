@@ -32,6 +32,7 @@ return {
       ---@param name string the name of the server
       local function configure_server(name)
         local conf = server_configs[name]
+        conf.autostart = lsp.autostart
         local keys = conf.keys
         conf.keys = nil
 

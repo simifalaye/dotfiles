@@ -3,9 +3,19 @@ local map = require("utils.map")
 
 local M = {}
 
+-- Whether to autostart lsp when config has loaded
+M.autostart = true
+
+-- Additional handlers to run on attach
+M.attach_handlers = {}
+
 --- Get the lsp clients on this buffer
 function M.get_attached_clients()
   local bufnr = vim.api.nvim_get_current_buf()
+  local filename = vim.api.nvim_buf_get_name(bufnr)
+  if vim.bo.buftype ~= "" or filename == "" then
+    return {}, bufnr
+  end
   local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
   return clients, bufnr
 end
@@ -33,10 +43,7 @@ end
 ---@param once boolean? only run for one attached client
 function M.register_attach_handler(handler, once)
   once = once and once or true
-  if not vim.g.user_lsp_attach_handlers then
-    vim.g.user_lsp_attach_handlers = {}
-  end
-  table.insert(vim.g.user_lsp_attach_handlers, handler)
+  table.insert(M.attach_handlers, handler)
   local clients, bufnr = M.get_attached_clients()
   for _, client in ipairs(clients) do
     -- Run the handler immediately if there is already a client attached
@@ -103,17 +110,16 @@ function M.on_rename(from, to)
 end
 
 --- Start a dev containter for lsp
----@param src string the path to your local project
----@param tar string the path on the container to mount your project
 ---@param name string the name of the container to use
 ---@param image string the image to use
 ---@param opts table? the func options
 ---@return boolean
-function M.dev_container_setup(src, tar, name, image, opts)
+function M.dev_container_setup(name, image, opts)
   opts = lib.extend_tbl({
     uid = 0,
     gid = 0,
     cmd = "echo 'done'",
+    mounts = {},
   }, opts and opts or {})
   -- Check if the container already exists and is running
   local containerStatus =
@@ -121,11 +127,23 @@ function M.dev_container_setup(src, tar, name, image, opts)
   if #containerStatus == 0 then
     -- Container doesn't exist, start it
     local keep_alive_cmd = "tail -f /dev/null"
+    local mount_str = ""
+    for _, v in ipairs(opts.mounts) do
+      if v.type and v.source and v.target then
+        mount_str = mount_str
+          .. string.format(
+            "--mount type=%s,source=%s,target=%s ",
+            v.type,
+            v.source,
+            v.target
+          )
+      end
+    end
+
     local command = string.format(
-      "docker run --user %s --rm -d --mount type=bind,source=%s,target=%s --name %s %s sh -c '%s && %s'",
+      "docker run --user %s --rm -d %s --name %s %s sh -c '%s && %s'",
       string.format("%s:%s", opts.uid, opts.gid),
-      src,
-      tar,
+      mount_str,
       name,
       image,
       opts.cmd,
@@ -203,7 +221,7 @@ end
 --- Generate a docker command for the lsp server
 ---@param name string the container name
 ---@param workdir string the working directory of the container
----@param cmd table the lsp command on the container
+---@param cmd table|string the lsp command on the container
 ---@param opts table? the function options
 ---@return table
 function M.dev_container_get_cmd(name, workdir, cmd, opts)
@@ -222,7 +240,7 @@ function M.dev_container_get_cmd(name, workdir, cmd, opts)
     name,
     "/bin/sh",
     "-c",
-    table.concat(cmd, " "),
+    type(cmd) == "table" and table.concat(cmd, " ") or cmd,
   }
 end
 

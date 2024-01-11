@@ -64,6 +64,8 @@ Thumbs.db
 .classpath
 .cproject
 .project
+.nvim.lua
+.docker-dev.json
 tags
 compile_commands.json
 compile_flags.txt
@@ -78,7 +80,6 @@ bazel*
 *.swo
 *.tmp
 *.bak
-.nvim.lua
 
 #-
 #  Directories

@@ -164,7 +164,11 @@ augroup("user_auto_cwd", {
   },
 })
 
+-- Disable clipboard on WSL and manually copy to system clipboard
+-- win32yank is very slow for pasting
 if vim.fn.has("wsl") == 1 and vim.fn.executable("clip.exe") > 0 then
+  vim.opt.clipboard = ""
+  vim.g.loaded_clipboard_provider = true
   augroup("user_wsl_yank", {
     {
       desc = "Automatically yank text to wsl clipboard also",

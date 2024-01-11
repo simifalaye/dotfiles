@@ -1,5 +1,33 @@
 local prequire = require("utils.prequire")
 
+local kind_icons = {
+  Text = "",
+  Method = "",
+  Function = "",
+  Constructor = "",
+  Field = "",
+  Variable = "",
+  Class = "",
+  Interface = "",
+  Module = "",
+  Property = "",
+  Unit = "",
+  Value = "=",
+  Enum = "",
+  Keyword = "",
+  Snippet = "",
+  Color = "",
+  File = "",
+  Reference = "",
+  Folder = "",
+  EnumMember = "",
+  Constant = "",
+  Struct = "",
+  Event = "",
+  Operator = "",
+  TypeParameter = "",
+}
+
 return {
   {
     "hrsh7th/nvim-cmp",
@@ -45,6 +73,25 @@ return {
         window = {
           completion = cmp.config.window.bordered(border_opts),
           documentation = cmp.config.window.bordered(border_opts),
+        },
+        formatting = {
+          fields = { "kind", "abbr", "menu" },
+          format = function(entry, vim_item)
+            -- Kind icons
+            vim_item.kind = kind_icons[vim_item.kind]
+            -- Source
+            vim_item.menu = ({
+              nvim_lsp = "(Lsp)",
+              nvim_lua = "(Lua)",
+              path = "(Path)",
+              luasnip = "(Snip)",
+              buffer = "(Buf)",
+              spell = "(Spell)",
+              rg = "(Rg)",
+              git = "(Git)",
+            })[entry.source.name] or "(Unkown)"
+            return vim_item
+          end,
         },
         mapping = {
           ["<PageUp>"] = cmp.mapping.select_prev_item({

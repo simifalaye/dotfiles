@@ -2,7 +2,7 @@ return {
   {
     "stevearc/conform.nvim",
     init = function()
-      vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+      vim.o.formatexpr = "v:lua.require'conform'.formatexpr({'lsp_fallback': v:false})"
     end,
     opts = {
       formatters_by_ft = {

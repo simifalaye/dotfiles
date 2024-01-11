@@ -2,15 +2,6 @@
 -- https://github.com/neovim/neovim/commit/2257ade3dc2daab5ee12d27807c0b3bcf103cd29
 vim.loader.enable()
 
--- Process the log level environment variable if set
-local log_level = nil
-if vim.env.USER_LOG_LEVEL and type(vim.env.USER_LOG_LEVEL) == "string" then
-  local lvl = tonumber(vim.env.USER_LOG_LEVEL)
-  if lvl >= vim.log.levels.TRACE and lvl <= vim.log.levels.OFF then
-    log_level = lvl
-  end
-end
-
 local g = vim.g
 local opt = vim.opt
 local fn = vim.fn
@@ -30,7 +21,7 @@ opt.mousemoveevent = true
 opt.number = true
 opt.relativenumber = true
 opt.ruler = true
-opt.cmdheight = 1
+opt.cmdheight = 0
 opt.pumheight = 16
 opt.scrolloff = 4
 opt.sidescrolloff = 8
@@ -119,8 +110,15 @@ g.user_diagnostics_mode = 2
 -- enable LSP semantic tokens on startup
 g.user_semantic_tokens_enabled = true
 
--- disable notifications
+-- enable notifications
 g.user_notifications_enabled = true
 
--- notification log levels
-g.user_log_level = log_level and log_level or vim.log.levels.INFO
+-- Process the log level environment variable if set
+if vim.env.USER_LOG_LEVEL and type(vim.env.USER_LOG_LEVEL) == "string" then
+  local lvl = tonumber(vim.env.USER_LOG_LEVEL)
+  if lvl >= vim.log.levels.TRACE and lvl <= vim.log.levels.OFF then
+    g.user_log_level = lvl
+  end
+else
+  g.user_log_level = vim.log.levels.WARN
+end

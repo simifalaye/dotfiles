@@ -1,5 +1,5 @@
 -- Only load if inside tmux
-if not vim.env.TMUX and vim.g.loaded_user_plugin_tmux then
+if not vim.env.TMUX or vim.g.loaded_user_plugin_tmux then
   return
 end
 vim.g.loaded_user_plugin_tmux = true

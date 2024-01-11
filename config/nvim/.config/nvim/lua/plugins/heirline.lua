@@ -99,7 +99,7 @@ return {
           },
         },
         provider = function(self)
-          return self.mode_names[self.mode]
+          return "%-2("..self.mode_names[self.mode].."%)"
         end,
         hl = function(self)
           local mode = self.mode:sub(1, 1) -- get only the first mode character
@@ -197,41 +197,6 @@ return {
         FileFlags,
         { provider = "%<" } -- this means that the statusline is cut here when there's not enough space
       )
-
-      local FileType = {
-        provider = function()
-          if vim.bo.buftype == "" then
-            return vim.bo.filetype
-          end
-          return ""
-        end,
-        hl = { fg = utils.get_highlight("Type").fg, bold = true },
-      }
-
-      local Ruler = {
-        provider = "%l/%L:%c",
-      }
-
-      local LSPActive = {
-        condition = function()
-          local filename = vim.api.nvim_buf_get_name(0)
-          if vim.bo.buftype ~= "" or filename == "" then
-            return false
-          end
-          return next(vim.lsp.get_active_clients()) ~= nil
-        end,
-
-        update = { "LspAttach", "LspDetach" },
-
-        provider = function()
-          local names = {}
-          for _, server in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
-            table.insert(names, server.name)
-          end
-          return " [" .. table.concat(names, " ") .. "]"
-        end,
-        hl = { fg = "green", bold = true },
-      }
 
       local Diagnostics = {
 
@@ -381,6 +346,43 @@ return {
         SearchCount,
       }
 
+      local FileType = {
+        condition = function ()
+          return vim.bo.buftype == ""
+        end,
+        provider = function()
+          return vim.bo.filetype
+        end,
+        hl = { fg = utils.get_highlight("Type").fg, bold = true },
+      }
+
+      local LSPActive = {
+        condition = function()
+          local clients, _ = require("utils.lsp").get_attached_clients()
+          return next(clients) ~= nil
+        end,
+        update = { "LspAttach", "LspDetach", "BufEnter"  },
+        provider = function()
+          local names = {}
+          local clients, _ = require("utils.lsp").get_attached_clients()
+          for _, server in pairs(clients) do
+            table.insert(names, server.name)
+          end
+          return " [" .. table.concat(names, " ") .. "]"
+        end,
+        hl = { fg = utils.get_highlight("Type").fg, bold = true },
+      }
+
+      local FileTypeOrLSP = {
+        fallthrough = false,
+        LSPActive,
+        FileType,
+      }
+
+      local Ruler = {
+        provider = "%l/%L:%c",
+      }
+
       local HelpFileName = {
         condition = function()
           return vim.bo.filetype == "help"
@@ -400,7 +402,7 @@ return {
       -- stylua: ignore start
       local DefaultStatusline = {
           ViMode, Space, FileNameBlock, Space, Git, Space, Diagnostics, Align,
-          SearchOrMacro, Space, LSPActive, Space, FileType, Space, Ruler, Space,
+          SearchOrMacro, Space, FileTypeOrLSP, Space, Ruler, Space,
       }
       local InactiveStatusline = {
         condition = conditions.is_not_active,
@@ -413,7 +415,8 @@ return {
             filetype = { "^git.*", "fugitive" },
           })
         end,
-        FileType, Space, HelpFileName, Align
+        FileType, Space, HelpFileName, Align,
+        SearchOrMacro
       }
       local StatusLines = {
         hl = function()

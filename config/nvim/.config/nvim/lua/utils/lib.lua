@@ -1,12 +1,5 @@
 local M = {}
 
---- Covert a bool to a string
----@param bool boolean value
----@return string
-function M.bool2str(bool)
-  return bool and "on" or "off"
-end
-
 --- Merge extended options with a default table of options
 ---@param default? table The default table that you want to merge into
 ---@param opts? table The new options that should be merged with the default table
@@ -18,13 +11,11 @@ end
 
 --- Serve a notification with a title of Nvim
 ---@param msg string The notification body
----@param type number|nil The type of the notification (:help vim.log.levels)
----@param opts? table The vim.notify opts (Unused)
-function M.notify(msg, type, opts)
-  local lvl = vim.g.user_log_level
-  if not lvl or not type or type >= lvl then
+---@param level integer|nil The level of the notification (:help vim.log.levels)
+function M.notify(msg, level)
+  if vim.g.user_log_level == nil or level >= vim.g.user_log_level then
     vim.schedule(function()
-      vim.notify(msg, type, M.extend_tbl({ title = "Nvim" }, opts))
+      vim.notify(msg, level)
     end)
   end
 end
