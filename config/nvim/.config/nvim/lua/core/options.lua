@@ -44,10 +44,8 @@ opt.wildmode = "longest:full,full"
 opt.selection = "old"
 
 -- Timings
-opt.updatetime = 300
 opt.timeout = true
 opt.timeoutlen = 500
-opt.ttimeoutlen = 10
 
 -- Recognize numbered lists when formatting text
 opt.formatoptions:append("n")
@@ -120,5 +118,5 @@ if vim.env.USER_LOG_LEVEL and type(vim.env.USER_LOG_LEVEL) == "string" then
     g.user_log_level = lvl
   end
 else
-  g.user_log_level = vim.log.levels.WARN
+  g.user_log_level = vim.log.levels.INFO
 end

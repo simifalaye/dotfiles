@@ -36,7 +36,7 @@ return {
       highlight = {
         enable = true,
         disable = function(_, _)
-          return vim.b.large_file
+          return vim.b["bigfile"]
         end,
       },
       textobjects = {

@@ -11,6 +11,7 @@ return {
       enabled = vim.fn.executable("make") == 1,
       build = "make",
     },
+    "nvim-tree/nvim-web-devicons",
   },
   cmd = "Telescope",
   keys = {

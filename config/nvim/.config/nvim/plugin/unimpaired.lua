@@ -89,44 +89,44 @@ m.nnoremap("]B", "<cmd>blast<CR>", "Last buffer")
 
 m.nnoremap("[ob", function()
   vim.o.background = "light"
-  lib.ui_notify("Background " .. vim.o.background)
+  lib.notify("Background " .. vim.o.background)
 end, "Background")
 m.nnoremap("]ob", function()
   vim.o.background = "dark"
-  lib.ui_notify("Background " .. vim.o.background)
+  lib.notify("Background " .. vim.o.background)
 end, "Background")
 m.nnoremap("yob", function()
   vim.o.background = vim.o.background == "light" and "dark" or "light"
-  lib.ui_notify("Background " .. vim.o.background)
+  lib.notify("Background " .. vim.o.background)
 end, "Background")
 
 m.nnoremap("[oc", function()
   vim.o.cursorline = true
-  lib.ui_notify("Cursorline " .. opt2str(vim.o.cursorline))
+  lib.notify("Cursorline " .. opt2str(vim.o.cursorline))
 end, "Cursorline")
 m.nnoremap("]oc", function()
   vim.o.cursorline = false
-  lib.ui_notify("Cursorline " .. opt2str(vim.o.cursorline))
+  lib.notify("Cursorline " .. opt2str(vim.o.cursorline))
 end, "Cursorline")
 m.nnoremap("yoc", function()
   vim.o.cursorline = not vim.o.cursorline
-  lib.ui_notify("Cursorline " .. opt2str(vim.o.cursorline))
+  lib.notify("Cursorline " .. opt2str(vim.o.cursorline))
 end, "Cursorline")
 
 m.nnoremap("[od", function()
   vim.g.user_diagnostics_mode = 3
   vim.diagnostic.config(_G.user_diagnostics[vim.g.user_diagnostics_mode])
-  lib.ui_notify("Diagnostic level " .. vim.g.user_diagnostics_mode)
+  lib.notify("Diagnostic level " .. vim.g.user_diagnostics_mode)
 end, "Diagnostics")
 m.nnoremap("]od", function()
   vim.g.user_diagnostics_mode = 0
   vim.diagnostic.config(_G.user_diagnostics[vim.g.user_diagnostics_mode])
-  lib.ui_notify("Diagnostic level " .. vim.g.user_diagnostics_mode)
+  lib.notify("Diagnostic level " .. vim.g.user_diagnostics_mode)
 end, "Diagnostics")
 m.nnoremap("yod", function()
   vim.g.user_diagnostics_mode = (vim.g.user_diagnostics_mode - 1) % 4
   vim.diagnostic.config(_G.user_diagnostics[vim.g.user_diagnostics_mode])
-  lib.ui_notify("Diagnostic level " .. vim.g.user_diagnostics_mode)
+  lib.notify("Diagnostic level " .. vim.g.user_diagnostics_mode)
 end, "Diagnostics")
 
 m.nnoremap("[e", function()
@@ -179,15 +179,15 @@ end, "Next file")
 
 m.nnoremap("[oh", function()
   vim.o.hlsearch = true
-  lib.ui_notify("Hlsearch " .. opt2str(vim.o.hlsearch))
+  lib.notify("Hlsearch " .. opt2str(vim.o.hlsearch))
 end, "Hlsearch")
 m.nnoremap("]oh", function()
   vim.o.hlsearch = false
-  lib.ui_notify("Hlsearch " .. opt2str(vim.o.hlsearch))
+  lib.notify("Hlsearch " .. opt2str(vim.o.hlsearch))
 end, "Hlsearch")
 m.nnoremap("yoh", function()
   vim.o.hlsearch = not vim.o.hlsearch
-  lib.ui_notify("Hlsearch " .. opt2str(vim.o.hlsearch))
+  lib.notify("Hlsearch " .. opt2str(vim.o.hlsearch))
 end, "Hlsearch")
 
 m.nnoremap("[l", function()
@@ -209,45 +209,45 @@ end, "First ll entry next file")
 
 m.nnoremap("[ol", function()
   vim.o.list = true
-  lib.ui_notify("Listchars " .. opt2str(vim.o.list))
+  lib.notify("Listchars " .. opt2str(vim.o.list))
 end, "List chars")
 m.nnoremap("]ol", function()
   vim.o.list = false
-  lib.ui_notify("Listchars " .. opt2str(vim.o.list))
+  lib.notify("Listchars " .. opt2str(vim.o.list))
 end, "List chars")
 m.nnoremap("yol", function()
   vim.o.list = not vim.o.list
-  lib.ui_notify("Listchars " .. opt2str(vim.o.list))
+  lib.notify("Listchars " .. opt2str(vim.o.list))
 end, "List chars")
 
 m.nnoremap("[on", function()
   vim.o.number = true
-  lib.ui_notify("Number " .. opt2str(vim.o.number))
+  lib.notify("Number " .. opt2str(vim.o.number))
 end, "Number")
 m.nnoremap("]on", function()
   vim.o.number = false
-  lib.ui_notify("Number " .. opt2str(vim.o.number))
+  lib.notify("Number " .. opt2str(vim.o.number))
 end, "Number")
 m.nnoremap("yon", function()
   vim.o.number = not vim.o.number
-  lib.ui_notify("Number " .. opt2str(vim.o.number))
+  lib.notify("Number " .. opt2str(vim.o.number))
 end, "Number")
 
 m.nnoremap("[oN", function()
   vim.g.user_notifications_enabled = true
-  lib.ui_notify("Notifications " .. opt2str(vim.g.user_notifications_enabled))
+  lib.notify("Notifications " .. opt2str(vim.g.user_notifications_enabled))
 end, "Notifications")
 m.nnoremap("]oN", function()
-  lib.ui_notify("Notifications " .. opt2str(vim.g.user_notifications_enabled))
+  lib.notify("Notifications " .. opt2str(vim.g.user_notifications_enabled))
   vim.g.user_notifications_enabled = false
 end, "Notifications")
 m.nnoremap("yoN", function()
   if vim.g.user_notifications_enabled then
-    lib.ui_notify("Notifications " .. opt2str(false))
+    lib.notify("Notifications " .. opt2str(false))
     vim.g.user_notifications_enabled = false
   else
     vim.g.user_notifications_enabled = true
-    lib.ui_notify("Notifications " .. opt2str(true))
+    lib.notify("Notifications " .. opt2str(true))
   end
 end, "Notifications")
 
@@ -270,57 +270,57 @@ end, "First qf entry next file")
 
 m.nnoremap("[or", function()
   vim.o.relativenumber = true
-  lib.ui_notify("Relative number " .. opt2str(vim.o.relativenumber))
+  lib.notify("Relative number " .. opt2str(vim.o.relativenumber))
 end, "Relative number")
 m.nnoremap("]or", function()
   vim.o.relativenumber = false
-  lib.ui_notify("Relative number " .. opt2str(vim.o.relativenumber))
+  lib.notify("Relative number " .. opt2str(vim.o.relativenumber))
 end, "Relative number")
 m.nnoremap("yor", function()
   vim.o.relativenumber = not vim.o.relativenumber
-  lib.ui_notify("Relative number " .. opt2str(vim.o.relativenumber))
+  lib.notify("Relative number " .. opt2str(vim.o.relativenumber))
 end, "Relative number")
 
 m.nnoremap("[os", function()
   vim.o.spell = true
-  lib.ui_notify("Spell " .. opt2str(vim.o.spell))
+  lib.notify("Spell " .. opt2str(vim.o.spell))
 end, "Spell")
 m.nnoremap("]os", function()
   vim.o.spell = false
-  lib.ui_notify("Spell " .. opt2str(vim.o.spell))
+  lib.notify("Spell " .. opt2str(vim.o.spell))
 end, "Spell")
 m.nnoremap("yos", function()
   vim.o.spell = not vim.o.spell
-  lib.ui_notify("Spell " .. opt2str(vim.o.spell))
+  lib.notify("Spell " .. opt2str(vim.o.spell))
 end, "Spell")
 
 m.nnoremap("[ov", function()
   vim.o.virtualedit = "all"
-  lib.ui_notify("Virtualedit " .. vim.o.virtualedit)
+  lib.notify("Virtualedit " .. vim.o.virtualedit)
 end, "Virtualedit")
 m.nnoremap("]ov", function()
   vim.o.virtualedit = ""
-  lib.ui_notify("Virtualedit " .. vim.o.virtualedit)
+  lib.notify("Virtualedit " .. vim.o.virtualedit)
 end, "Virtualedit")
 m.nnoremap("yov", function()
   if vim.o.virtualedit then
     vim.o.virtualedit = false
-    lib.ui_notify("Virtualedit on")
+    lib.notify("Virtualedit on")
   else
     vim.o.virtualedit = true
-    lib.ui_notify("Virtualedit off")
+    lib.notify("Virtualedit off")
   end
 end, "Virtualedit")
 
 m.nnoremap("[ow", function()
   vim.o.wrap = true
-  lib.ui_notify("Wrap " .. opt2str(vim.o.wrap))
+  lib.notify("Wrap " .. opt2str(vim.o.wrap))
 end, "Wrap")
 m.nnoremap("]ow", function()
   vim.o.wrap = false
-  lib.ui_notify("Wrap " .. opt2str(vim.o.wrap))
+  lib.notify("Wrap " .. opt2str(vim.o.wrap))
 end, "Wrap")
 m.nnoremap("yow", function()
   vim.o.wrap = not vim.o.wrap
-  lib.ui_notify("Wrap " .. opt2str(vim.o.wrap))
+  lib.notify("Wrap " .. opt2str(vim.o.wrap))
 end, "Wrap")

@@ -9,6 +9,8 @@ local fs = require("utils.fs")
 local json = require("utils.json")
 local lib = require("utils.lib")
 local lsp = require("utils.lsp")
+local default_uid = tonumber(vim.fn.expand("$UID"))
+local default_gid = tonumber(vim.fn.expand("$GID"))
 
 -- Constants
 DOCKER_DEV_FILE = ".docker-dev.json"
@@ -20,6 +22,8 @@ PWD_TEXT_REPL = "{{pwd}}"
 --   "container_workdir": "/src",
 --   "container_setup_cmd": "sudo apt update && sudo apt install -y clangd && wget -O /tmp/bcc.deb https://github.com/kiron1/bazel-compile-commands/releases/download/v0.8.2/bazel-compile-commands_0.8.2_amd64.deb && sudo dpkg -i /tmp/bcc.deb",
 --   "container_ready_cmd": "which clangd",
+--   "container_uid": 0,
+--   "container_gid": 0,
 --   "image_name": "my_cpp_app_image",
 --   "lsp_name": "clangd",
 --   "lsp_server_cmd": "/usr/bin/clangd --log=verbose --background-index --header-insertion=iwyu --offset-encoding=utf-16 --path-mappings {{pwd}}=/src",
@@ -44,6 +48,16 @@ local function validate_conf(conf)
     { name = "container_workdir", type = "string", default = "/app" },
     { name = "container_setup_cmd", type = "string", default = "echo 'Done'" },
     { name = "container_ready_cmd", type = "string", default = "return 0" },
+    {
+      name = "container_uid",
+      type = "number",
+      default = default_uid and default_uid or 0,
+    },
+    {
+      name = "container_gid",
+      type = "number",
+      default = default_gid and default_gid or 0,
+    },
     { name = "image_name", type = "string" },
     { name = "lsp_name", type = "string" },
     { name = "lsp_server_cmd", type = "string", default = "" },
@@ -101,6 +115,8 @@ local function validate_conf(conf)
   return true
 end
 
+--- Replace placeholders in string values with actual values
+---@param conf table
 local function replace_text(conf)
   local function repl(v)
     return v:gsub(PWD_TEXT_REPL, vim.fn.getcwd())
@@ -122,13 +138,10 @@ end
 --- Setup and run the lsp server within the docker container
 ---@param conf table
 local function setup(conf)
-  local uid = vim.fn.expand("$UID")
-  local gid = vim.fn.expand("$GID")
-
   -- Disable lsp autostart since we will be starting the client manually
   lsp.autostart = false
 
-  -- Build mounts options
+  -- ConstrucBuild mounts option
   local mounts = {}
   for _, v in ipairs(conf.mounts) do
     local src, tar = v:match("([^:]+):([^:]+)")
@@ -137,19 +150,20 @@ local function setup(conf)
 
   -- Start container if not started
   if
-    not lsp.dev_container_setup(
-      conf.container_name,
-      conf.image_name,
-      { uid = uid, gid = gid, cmd = conf.container_setup_cmd, mounts = mounts }
-    )
+    not lsp.dev_container_setup(conf.container_name, conf.image_name, {
+      uid = conf.container_uid,
+      gid = conf.container_gid,
+      cmd = conf.container_setup_cmd,
+      mounts = mounts,
+    })
   then
     return
   end
 
   -- Wait till the dev container is ready and then start the lsp client
   lsp.dev_container_wait(conf.container_name, conf.container_ready_cmd, {
-    uid = uid,
-    gid = gid,
+    uid = conf.container_uid,
+    gid = conf.container_gid,
     cb = function()
       local lspconfig = prequire("lspconfig")
       if not lspconfig then
@@ -164,7 +178,7 @@ local function setup(conf)
         conf.container_name,
         conf.container_workdir,
         server_conf.cmd,
-        { uid = uid, gid = gid }
+        { uid = conf.container_uid, gid = conf.container_gid }
       )
 
       -- Register any additional keymaps
@@ -191,7 +205,7 @@ local function setup(conf)
             conf.container_name,
             conf.container_workdir,
             v.cmd,
-            { uid = uid, gid = gid }
+            { uid = conf.container_uid, gid = conf.container_gid }
           )
         end, {
           desc = v.desc,
@@ -205,7 +219,7 @@ end
 --  Main
 --------------------------------------------------------------------------------
 
--- Only load docker desktop if the is a config file within the project
+-- Only load docker desktop if there is a config file within the project
 local root_dir = fs.proj_dir(vim.fn.expand("%:p"), { DOCKER_DEV_FILE })
 if not root_dir then
   return

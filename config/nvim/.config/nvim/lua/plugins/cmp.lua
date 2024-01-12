@@ -36,6 +36,7 @@ return {
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-nvim-lsp",
       "saadparwaiz1/cmp_luasnip",
+      "hrsh7th/cmp-nvim-lsp-signature-help",
     },
     event = { "InsertEnter" },
     config = function()
@@ -58,7 +59,7 @@ return {
       -- Insert mode setup
       cmp.setup({
         enabled = function()
-          return not vim.b.large_file
+          return not vim.b["bigfile"]
         end,
         snippet = {
           expand = luasnip and function(args)
@@ -89,7 +90,7 @@ return {
               spell = "(Spell)",
               rg = "(Rg)",
               git = "(Git)",
-            })[entry.source.name] or "(Unkown)"
+            })[entry.source.name] or "(Unknown)"
             return vim_item
           end,
         },
@@ -142,6 +143,7 @@ return {
         },
         sources = cmp.config.sources({
           { name = "luasnip", max_item_count = 3 },
+          { name = 'nvim_lsp_signature_help' },
           {
             name = "nvim_lsp",
             max_item_count = 20,

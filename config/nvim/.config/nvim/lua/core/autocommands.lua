@@ -38,13 +38,35 @@ augroup("user_file_utilities", {
     desc = "Set settings for large files.",
     event = { "BufReadPre" },
     command = function(info)
-      if vim.b.large_file ~= nil then
+      vim.b["midfile"] = false
+      vim.b["bigfile"] = false
+      local ok,stat = pcall(vim.loop.fs_stat, info.match)
+      if not ok then
         return
       end
-      vim.b.large_file = false
-      local ok, stat = pcall(vim.loop.fs_stat, info.match)
-      if ok and stat and stat.size > 1000000 then
-        vim.b.large_file = true
+      if stat and stat.size > 48000 then
+        vim.b["midfile"] = true
+        vim.api.nvim_create_autocmd("BufReadPost", {
+          buffer = info.buf,
+          once = true,
+          callback = function()
+            vim.schedule(function()
+              pcall(vim.treesitter.stop, info.buf)
+            end)
+          end,
+        })
+        vim.api.nvim_create_autocmd("LspAttach", {
+          buffer = info.buf,
+          once = true,
+          callback = function(args)
+            vim.schedule(function()
+              vim.lsp.buf_detach_client(info.buf, args.data.client_id)
+            end)
+          end,
+        })
+      end
+      if stat and stat.size >1024000 then
+        vim.b["bigfile"] = true
         vim.opt_local.spell = false
         vim.opt_local.swapfile = false
         vim.opt_local.undofile = false

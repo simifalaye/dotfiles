@@ -13,7 +13,7 @@ return {
       ---Override lspconfig manager `_start_new_client()` method to silently
       ---quit if language server is not installed
       ---@param _ integer bufnr, ignored
-      ---@param new_config lspconfig.Config
+      ---@param new_config table
       ---@vararg any
       ---@diagnostic disable-next-line: duplicate-set-field, invisible
       function manager:_start_new_client(_, new_config, ...)

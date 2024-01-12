@@ -25,7 +25,7 @@
         src: "/tmp/eza/eza"
         dest: /usr/local/bin/eza
         mode: '0755'
-    # TODO: Install completions and manpages when shipped with release
+    # TODO: Install completions and manpages when shipped with release (https://github.com/eza-community/eza/issues/471)
     # - name: Install eza bash completion
     #   ansible.builtin.copy:
     #     src: "/tmp/eza/completions/eza.bash"

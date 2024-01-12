@@ -13,18 +13,14 @@ end
 ---@param msg string The notification body
 ---@param level integer|nil The level of the notification (:help vim.log.levels)
 function M.notify(msg, level)
-  if vim.g.user_log_level == nil or level >= vim.g.user_log_level then
+  level = level or vim.log.levels.INFO
+  if
+    vim.g.user_notifications_enabled
+    and (vim.g.user_log_level == nil or level >= vim.g.user_log_level)
+  then
     vim.schedule(function()
       vim.notify(msg, level)
     end)
-  end
-end
-
---- Notify of a ui change
----@param str string message to print
-function M.ui_notify(str)
-  if vim.g.user_notifications_enabled then
-    M.notify(str, vim.log.levels.INFO)
   end
 end
 

@@ -40,11 +40,11 @@ m.nmap("g-", "yyp^v$r-Vk", "Underline -")
 m.nmap("g=", "yyp^v$r=Vk", "Underline =")
 m.nnoremap("g!", ":! chmod +x %<CR>", "Make File Executable")
 m.nnoremap(
-  "g>",
+  "g<",
   [[<cmd>set nomore<bar>40messages<bar>set more<CR>]],
   "Show Message History"
 )
-m.nnoremap("g<", [[<cmd>messages clear<CR>]], "Show Message History")
+m.nnoremap("g>", [[<cmd>messages clear<CR>]], "Show Message History")
 m.nnoremap("gq.", function()
   -- Save state
   local winview = vim.fn.winsaveview()

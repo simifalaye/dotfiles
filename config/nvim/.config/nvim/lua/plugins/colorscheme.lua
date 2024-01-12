@@ -6,7 +6,8 @@ return {
     config = function()
       -- Load base16 with configuration
       require("base16-colorscheme").with_config({
-        telescope = false,
+        telescope = true,
+        telescope_borders = true,
       })
 
       -- Use tinted-theming/base16-shell helpers if installed

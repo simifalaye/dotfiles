@@ -56,6 +56,7 @@ end
 ---@param opt string tmux pane option
 ---@param val string tmux pane option value
 ---@return nil
+---@diagnostic disable-next-line: unused-function, unused-local
 local function tmux_set_pane_opt(opt, val)
   tmux_exec(
     string.format("set -pt %s %s '%s'", vim.env.TMUX_PANE, opt, vim.fn.escape(val, "'\\"))
