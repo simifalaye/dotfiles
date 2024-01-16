@@ -190,7 +190,7 @@ function M.dev_container_wait(name, cmd, opts)
     local _ = vim.fn.jobstart(command, {
       on_exit = function(_, exit_code)
         if exit_code == 0 then
-          lib.notify(string.format("Dev container ready: %s", name), vim.log.levels.INFO)
+          lib.notify(string.format("Dev container ready: %s", name), vim.log.levels.DEBUG)
           opts.cb()
         else
           lib.notify(
@@ -253,6 +253,7 @@ function M.dev_container_run_cmd(name, workdir, cmd, opts)
   opts = lib.extend_tbl({
     uid = 0,
     gid = 0,
+    on_exit = nil,
   }, opts and opts or {})
   vim.cmd("new")
   vim.fn.termopen(
@@ -262,7 +263,8 @@ function M.dev_container_run_cmd(name, workdir, cmd, opts)
       workdir,
       name,
       cmd
-    )
+    ),
+    { on_exit = opts.on_exit }
   )
 end
 

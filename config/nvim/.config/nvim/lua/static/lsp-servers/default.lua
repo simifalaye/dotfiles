@@ -109,8 +109,8 @@ local function on_attach(client, bufnr)
       or client.supports_method("textDocument/semanticTokens/full/delta")
     ) and vim.lsp.semantic_tokens
   then
-    if vim.b.user_semantic_tokens_enabled == nil then
-      vim.b.user_semantic_tokens_enabled = vim.g.user_semantic_tokens_enabled
+    if vim.b["user_semantic_tokens_enabled"] == nil then
+      vim.b["user_semantic_tokens_enabled"] = vim.g.user_semantic_tokens_enabled
     end
     vim.lsp.semantic_tokens[vim.b.user_semantic_tokens_enabled and "start" or "stop"](
       bufnr,

@@ -3,6 +3,9 @@ return {
     "RRethy/nvim-base16",
     lazy = false,
     priority = 1000,
+    init = function ()
+      vim.o.termguicolors = true
+    end,
     config = function()
       -- Load base16 with configuration
       require("base16-colorscheme").with_config({

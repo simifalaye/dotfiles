@@ -22,10 +22,11 @@ end
 --- Open a URL or file with system
 ---@param path string The path to the file or URL
 function M.sys_open(path)
+  local is_wsl = vim.fn.has("wsl") == 1
   local open = function(p)
     local cmd
-    if M.is_wsl or (vim.fn.has("win32") == 1 and vim.fn.executable("explorer") == 1) then
-      cmd = { "explorer.exe" }
+    if is_wsl and vim.fn.executable("explorer") == 1 then
+      cmd = {"explorer.exe"}
     elseif vim.fn.has("unix") == 1 and vim.fn.executable("xdg-open") == 1 then
       cmd = { "xdg-open" }
     elseif
@@ -49,7 +50,7 @@ function M.sys_open(path)
     vim.fn.isdirectory(path) > 0 -- directory
     or vim.fn.filereadable(path) > 0 -- file
   then
-    if M.is_wsl then
+    if is_wsl then
       path = vim.fn.system("wslpath -w " .. path)
     end
     return open(path)

@@ -65,11 +65,10 @@ Thumbs.db
 .cproject
 .project
 .nvim.lua
-.docker-dev.json
+.docker-dev.json*
 tags
 compile_commands.json
 compile_flags.txt
-bazel*
 
 #-
 #  Temp files
@@ -89,7 +88,6 @@ build/
 build_cc/
 *.egg-info/
 htmlcov/
-bazel-tmp/
 .vscode/
 .clangd/
 .ccls*/
