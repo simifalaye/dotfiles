@@ -53,20 +53,6 @@ require("lazy").setup("plugins", {
       },
     },
   },
-  rtp = {
-    disabled_plugins = {
-      "2html_plugin",
-      "gzip",
-      "matchit",
-      "tar",
-      "tarPlugin",
-      "tutor_mode_plugin",
-      "vimball",
-      "vimballPlugin",
-      "zip",
-      "zipPlugin",
-    },
-  },
   change_detection = {
     notify = false,
   },

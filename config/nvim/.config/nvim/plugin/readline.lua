@@ -24,7 +24,7 @@ end
 
 ---Match non-empty string
 ---@param str string
----@vararg vim.regex compiled vim regex
+---@vararg any compiled vim regex
 ---@return string
 local function match_nonempty(str, ...)
   local patterns = { ... }

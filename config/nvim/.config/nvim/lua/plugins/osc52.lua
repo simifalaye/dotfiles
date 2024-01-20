@@ -27,11 +27,11 @@ return {
       require("osc52").setup({
         silent = true,
       })
-      local m = require("utils.map")
+      local map = vim.keymap.set
       local osc52 = require("osc52")
-      m.nnoremap("gy", osc52.copy_operator, "System yank", { expr = true })
-      m.nmap("gyy", "<leader>y_", "System yank line")
-      m.xmap("gy", osc52.copy_visual, "System yank visual")
+      map("n", "gy", osc52.copy_operator, { desc = "System yank", expr = true })
+      map("n", "gyy", "<leader>y_", { desc = "System yank line" })
+      map("x", "gy", osc52.copy_visual, { desc = "System yank visual" })
     end,
   },
 }

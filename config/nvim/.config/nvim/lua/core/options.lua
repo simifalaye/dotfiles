@@ -7,7 +7,7 @@ local opt = vim.opt
 local fn = vim.fn
 
 opt.viewoptions:remove("curdir")
-opt.shortmess:append({ s = true, I = true })
+opt.shortmess:append({ a = true, s = true, I = true })
 opt.backspace:append({ "nostop" })
 if fn.has("nvim-0.9") == 1 then
   opt.diffopt:append("linematch:60")
@@ -21,7 +21,7 @@ opt.mousemoveevent = true
 opt.number = true
 opt.relativenumber = true
 opt.ruler = true
-opt.cmdheight = 0
+opt.cmdheight = 1
 opt.pumheight = 16
 opt.scrolloff = 4
 opt.sidescrolloff = 8
@@ -120,3 +120,21 @@ if vim.env.USER_LOG_LEVEL and type(vim.env.USER_LOG_LEVEL) == "string" then
 else
   g.user_log_level = vim.log.levels.INFO
 end
+
+-- Disable unused builtin plugins
+g.loaded_netrw = true
+g.loaded_netrwPlugin = true
+g.loaded_netrwSettings = true
+g.loaded_netrwFileHandlers = true
+g.loaded_gzip = true
+g.loaded_zip = true
+g.loaded_zipPlugin = true
+g.loaded_tar = true
+g.loaded_tarPlugin = true
+g.loaded_tutor_mode_plugin = true
+g.loaded_getscript = true
+g.loaded_getscriptPlugin = true
+g.loaded_vimball = true
+g.loaded_vimballPlugin = true
+g.loaded_tohtml = true
+g.loaded_2html_plugin = true

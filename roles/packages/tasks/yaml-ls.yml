@@ -1,6 +1,7 @@
 # vim: filetype=yaml.ansible
 
 - name: Install yaml language server
+  become: true
   community.general.npm:
     name: yaml-language-server
     global: true

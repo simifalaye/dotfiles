@@ -9,7 +9,7 @@ M.root_patterns = {
   ".bzr/",
   ".hg/",
   ".project/",
-  ".marksman.toml",
+  ".marksman.toml", -- TODO: Move to markdown ftplugin
   ".pro",
   ".sln",
   ".vcxproj",
@@ -34,7 +34,8 @@ end
 
 --- Get the basename of a file path
 ---@param str string
----@return [TODO:return]
+---@return string
+---@return integer
 function M.basename(str)
   return string.gsub(str, "(.*/)(.*)", "%2")
 end
@@ -130,7 +131,7 @@ local function make_default_error_cb(path, runnable)
 end
 
 ---@class user_fs_watch_opts_t
----@field is_oneshot bool don't reattach after running
+---@field is_oneshot boolean don't reattach after running
 
 --- Watch a file/dir with function callbacks
 ---@param path string

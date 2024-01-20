@@ -36,6 +36,7 @@
         state: absent
 
 - name: Install neovim for nodejs
+  become: true
   community.general.npm:
     name: neovim
     global: true

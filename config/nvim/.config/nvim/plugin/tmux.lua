@@ -66,6 +66,7 @@ end
 ---Unset a tmux pane option
 ---@param opt string tmux pane option
 ---@return nil
+---@diagnostic disable-next-line: unused-local, unused-function
 local function tmux_unset_pane_opt(opt)
   tmux_exec(
     string.format("set -put %s '%s'", vim.env.TMUX_PANE, vim.fn.escape(opt, "'\\"))
@@ -167,33 +168,33 @@ end
 --  Main
 --------------------------------------------------------------------------------
 
-local m = require("utils.map")
+local map = vim.keymap.set
 
-m.map({ "n", "x", "t" }, "<A-h>", navigate_wrap("h"), "Goto left window")
-m.map({ "n", "x", "t" }, "<A-j>", navigate_wrap("j"), "Goto down window")
-m.map({ "n", "x", "t" }, "<A-k>", navigate_wrap("k"), "Goto up window")
-m.map({ "n", "x", "t" }, "<A-l>", navigate_wrap("l"), "Goto right window")
-m.map(
+map({ "n", "x", "t" }, "<A-h>", navigate_wrap("h"), { desc = "Goto left window" })
+map({ "n", "x", "t" }, "<A-j>", navigate_wrap("j"), { desc = "Goto down window" })
+map({ "n", "x", "t" }, "<A-k>", navigate_wrap("k"), { desc = "Goto up window" })
+map({ "n", "x", "t" }, "<A-l>", navigate_wrap("l"), { desc = "Goto right window" })
+map(
   { "n", "x", "t" },
   "<A-C-h>",
   tmux_exec_wrap("resize-pane -L 4"),
-  "Resize window left"
+  { desc = "Resize window left" }
 )
-m.map(
+map(
   { "n", "x", "t" },
   "<A-C-j>",
   tmux_exec_wrap("resize-pane -D 4"),
-  "Resize window down"
+  { desc = "Resize window down" }
 )
-m.map(
+map(
   { "n", "x", "t" },
   "<A-C-k>",
   tmux_exec_wrap("resize-pane -U 4"),
-  "Resize window up"
+  { desc = "Resize window up" }
 )
-m.map(
+map(
   { "n", "x", "t" },
   "<A-C-l>",
   tmux_exec_wrap("resize-pane -R 4"),
-  "Resize window right"
+  { desc = "Resize window right" }
 )

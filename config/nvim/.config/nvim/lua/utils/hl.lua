@@ -1,22 +1,22 @@
-local function dec2hex(decimal)
-  if not decimal then
-    return nil
-  end
+local M = {}
+
+--- Convert decimal to hex number
+---@param decimal number
+---@return string
+function M.dec2hex(decimal)
   return string.format("#%X", decimal)
 end
 
-local function hex2dec(hex)
-  if not hex then
-    return nil
-  end
+--- Convert hex to decimal number
+---@param hex string "#XXXXXX"
+---@return number
+function M.hex2dec(hex)
   -- Check if the string starts with "#" and remove it
   if string.sub(hex, 1, 1) == "#" then
     hex = string.sub(hex, 2)
   end
   return tonumber(hex, 16)
 end
-
-local M = {}
 
 --- Wrapper of nvim_get_hl(), but does not create a cleared highlight group
 ---if it doesn't exist
@@ -76,32 +76,37 @@ function M.merge(...)
   return vim.tbl_extend("force", unpack(hl_attr))
 end
 
----@param attr_type 'fg'|'bg'
----@param fbg? table<string|integer>|string|integer
----@param default? string
----@return string|nil
+---Convert all color attributes to valid color value
+---1. integer within range (when cterm)
+---2. hexadecimal color code
+---3. convert hl group names to color codes
+---@param attr_type 'fg'|'bg'|'ctermfg'|'ctermbg'
+---@param fbg? string|integer
+---@param default? integer
+---@return integer|string|nil
 function M.normalize_fg_or_bg(attr_type, fbg, default)
   if not fbg then
     return default
   end
-  if type(fbg) ~= "table" then
-    fbg = { fbg }
-  end
-  for _, v in ipairs(fbg) do
-    local data_type = type(v)
-    if data_type == "number" then
-      return dec2hex(v)
+  local data_type = type(fbg)
+  if data_type == "number" then
+    if attr_type:match("^cterm") then
+      return fbg >= 0 and fbg <= 255 and fbg or default
     end
-    if data_type == "string" then
-      if vim.fn.hlexists(v) == 1 then
-        return dec2hex(vim.api.nvim_get_hl(0, {
-          name = v,
-          link = false,
-        })[attr_type])
+    return fbg
+  end
+  if data_type == "string" then
+    if vim.fn.hlexists(fbg) == 1 then
+      return M.get(0, {
+        name = fbg,
+        link = false,
+      })[attr_type]
+    end
+    if fbg:match("^#%x%x%x%x%x%x$") then
+      if attr_type:match("^cterm") then
+        return default
       end
-      if v:match("^#%x%x%x%x%x%x$") then
-        return v
-      end
+      return fbg
     end
   end
   return default
@@ -124,13 +129,21 @@ function M.normalize(attr)
     end
     attr.fg = M.normalize_fg_or_bg("fg", attr.fg)
     attr.bg = M.normalize_fg_or_bg("bg", attr.bg)
-    attr =
-      vim.tbl_extend("force", M.get(0, { name = attr.link, link = false }) or {}, attr)
+    attr = vim.tbl_extend("force", M.get(0, {
+      name = attr.link,
+      link = false,
+    }) or {}, attr)
     attr.link = nil
     return attr
   end
-  attr.fg = M.normalize_fg_or_bg("fg", attr.fg)
-  attr.bg = M.normalize_fg_or_bg("bg", attr.bg)
+  local fg = attr.fg
+  local bg = attr.bg
+  local ctermfg = attr.ctermfg
+  local ctermbg = attr.ctermbg
+  attr.fg = M.normalize_fg_or_bg("fg", fg)
+  attr.bg = M.normalize_fg_or_bg("bg", bg)
+  attr.ctermfg = M.normalize_fg_or_bg("ctermfg", ctermfg or fg)
+  attr.ctermbg = M.normalize_fg_or_bg("ctermbg", ctermbg or bg)
   return attr
 end
 
@@ -140,16 +153,6 @@ end
 ---@param attr table<string, any> highlight attributes
 ---@return nil
 function M.set(ns_id, name, attr)
-  return vim.api.nvim_set_hl(ns_id, name, M.normalize(attr))
-end
-
----Set default highlight attributes, normalize highlight attributes before setting
----@param ns_id integer namespace id
----@param name string
----@param attr table<string, any> highlight attributes
----@return nil
-function M.set_default(ns_id, name, attr)
-  attr.default = true
   return vim.api.nvim_set_hl(ns_id, name, M.normalize(attr))
 end
 

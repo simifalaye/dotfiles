@@ -1,5 +1,3 @@
-local prequire = require("utils.prequire")
-
 local kind_icons = {
   Text = "",
   Method = "",
@@ -34,14 +32,24 @@ return {
     dependencies = {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
-      "hrsh7th/cmp-nvim-lsp",
+      {
+        "hrsh7th/cmp-nvim-lsp",
+        lazy = false,
+        init = function()
+          -- Setup lsp capabilities
+          require("utils.lsp").register_capabilities(
+            require("cmp_nvim_lsp").default_capabilities(),
+            10
+          )
+        end,
+      },
       "saadparwaiz1/cmp_luasnip",
       "hrsh7th/cmp-nvim-lsp-signature-help",
     },
     event = { "InsertEnter" },
     config = function()
       local cmp = require("cmp")
-      local luasnip = prequire("luasnip")
+      local luasnip_ok, luasnip = pcall(require, "luasnip")
       local border_opts = {
         border = "single",
         winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:Visual,Search:None",
@@ -62,7 +70,7 @@ return {
           return not vim.b["bigfile"]
         end,
         snippet = {
-          expand = luasnip and function(args)
+          expand = luasnip_ok and function(args)
             luasnip.lsp_expand(args.body)
           end or nil,
         },
@@ -143,7 +151,7 @@ return {
         },
         sources = cmp.config.sources({
           { name = "luasnip", max_item_count = 3 },
-          { name = 'nvim_lsp_signature_help' },
+          { name = "nvim_lsp_signature_help" },
           {
             name = "nvim_lsp",
             max_item_count = 20,

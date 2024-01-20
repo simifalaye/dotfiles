@@ -1,7 +1,7 @@
 --[[
 
 Neovim inint file
-Nvim version: 0.8.0+
+Nvim version: 0.9.0+
 Maintainer: simifalaye
 
 --]]
@@ -27,6 +27,7 @@ for _, source in ipairs({
   "core.autocommands",
   "core.commands",
   "core.keymaps",
+  "core.diagnostics",
 }) do
   local status_ok, fault = pcall(require, source)
   if not status_ok then

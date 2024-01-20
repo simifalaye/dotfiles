@@ -22,6 +22,7 @@
   become: true
   block:
     - name: Install 'n' node version manager
+      become: true
       community.general.npm:
         name: n # Used for installing newer node versions
         global: true

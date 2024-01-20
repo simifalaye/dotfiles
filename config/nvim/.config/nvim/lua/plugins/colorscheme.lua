@@ -3,7 +3,7 @@ return {
     "RRethy/nvim-base16",
     lazy = false,
     priority = 1000,
-    init = function ()
+    init = function()
       vim.o.termguicolors = true
     end,
     config = function()

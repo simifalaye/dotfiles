@@ -1,15 +1,18 @@
-local utils = require("utils")
-
 --- Common lsp attach handler
 ---@param client lsp.Client
 ---@param bufnr integer
 local function on_attach(client, bufnr)
-  local map = utils.map
+  local lsp = require("utils.lsp")
   -- Enable completion triggered by <c-x><c-o>
   vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
 
   -- Setup main keymaps
-  map.group("<localleader>w", "+workspace", "n", true)
+  vim.keymap.set(
+    "n",
+    "<localleader>w",
+    "<localleader>w",
+    { buffer = true, desc = "+workspace" }
+  )
   local keys = {
     { "]d", vim.diagnostic.goto_next, desc = "Diagnostic (lsp)" },
     { "[d", vim.diagnostic.goto_prev, desc = "Diagnostic (lsp)" },
@@ -81,26 +84,26 @@ local function on_attach(client, bufnr)
   }
 
   -- Register lsp keys
-  utils.lsp.register_keys(client, bufnr, keys)
+  lsp.register_keys(client, bufnr, keys)
 
   -- Setup autocmds
   if client.supports_method("textDocument/codeLens") and vim.g.user_codelens_enabled then
     vim.lsp.codelens.refresh()
-    utils.augroup("user_lsp_codelens_refresh", {
-      {
-        desc = "Refresh codelens",
-        event = { "InsertLeave", "BufEnter" },
-        buffer = bufnr,
-        command = function()
-          if not utils.lsp.has_capability("textDocument/codeLens", { bufnr = bufnr }) then
-            vim.api.nvim_del_augroup_by_name("user_lsp_codelens_refresh")
-            return
-          end
-          if vim.g.user_codelens_enabled then
-            vim.lsp.codelens.refresh()
-          end
-        end,
-      },
+    local user_lsp_codelens_refresh_grp_id =
+      vim.api.nvim_create_augroup("user_lsp_codelens_refresh", {})
+    vim.api.nvim_create_autocmd({ "InsertLeave", "BufEnter" }, {
+      desc = "Refresh codelens",
+      group = user_lsp_codelens_refresh_grp_id,
+      buffer = bufnr,
+      callback = function()
+        if not lsp.has_capability("textDocument/codeLens", { bufnr = bufnr }) then
+          vim.api.nvim_del_augroup_by_name("user_lsp_codelens_refresh")
+          return
+        end
+        if vim.g.user_codelens_enabled then
+          vim.lsp.codelens.refresh()
+        end
+      end,
     })
   end
   if
@@ -118,86 +121,34 @@ local function on_attach(client, bufnr)
     )
   end
   if client.supports_method("textDocument/documentHighlight") then
-    utils.augroup("user_lsp_document_highlight", {
-      {
-        desc = "highlight references when cursor holds",
-        event = { "CursorHold", "CursorHoldI" },
-        buffer = bufnr,
-        command = function()
-          if
-            not utils.lsp.has_capability(
-              "textDocument/documentHighlight",
-              { bufnr = bufnr }
-            )
-          then
-            vim.api.nvim_del_augroup_by_name("user_lsp_document_highlight")
-            return
-          end
-          vim.lsp.buf.document_highlight()
-        end,
-      },
-      {
-        desc = "Clear references when cursor moves",
-        event = { "CursorMoved", "CursorMovedI" },
-        buffer = bufnr,
-        command = function()
-          vim.lsp.buf.clear_references()
-        end,
-      },
+    local user_lsp_document_highlight_grp_id =
+      vim.api.nvim_create_augroup("user_lsp_document_highlight", {})
+    vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+      desc = "highlight references when cursor holds",
+      group = user_lsp_document_highlight_grp_id,
+      buffer = bufnr,
+      callback = function()
+        if
+          not lsp.has_capability("textDocument/documentHighlight", { bufnr = bufnr })
+        then
+          vim.api.nvim_del_augroup_by_name("user_lsp_document_highlight")
+          return
+        end
+        vim.lsp.buf.document_highlight()
+      end,
     })
-  end
-
-  -- Call additional attach handlers
-  for _, h in ipairs(require("utils.lsp").attach_handlers) do
-    h(client, bufnr)
+    vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+      desc = "Clear references when cursor moves",
+      group = user_lsp_document_highlight_grp_id,
+      buffer = bufnr,
+      callback = function()
+        vim.lsp.buf.clear_references()
+      end,
+    })
   end
 end
 
-local default_capabilities = vim.lsp.protocol.make_client_capabilities()
-local capabilities = vim.tbl_deep_extend("force", default_capabilities, {
-  textDocument = {
-    completion = {
-      dynamicRegistration = false,
-      completionItem = {
-        snippetSupport = true,
-        commitCharactersSupport = true,
-        deprecatedSupport = true,
-        preselectSupport = true,
-        tagSupport = {
-          valueSet = {
-            1, -- Deprecated
-          },
-        },
-        insertReplaceSupport = true,
-        resolveSupport = {
-          properties = {
-            "documentation",
-            "detail",
-            "additionalTextEdits",
-          },
-        },
-        insertTextModeSupport = {
-          valueSet = {
-            1, -- asIs
-            2, -- adjustIndentation
-          },
-        },
-        labelDetailsSupport = true,
-      },
-      contextSupport = true,
-      insertTextMode = 1,
-      completionList = {
-        itemDefaults = {
-          "commitCharacters",
-          "editRange",
-          "insertTextFormat",
-          "insertTextMode",
-          "data",
-        },
-      },
-    },
-  },
-})
+local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 local flags = {
   debounce_text_changes = 150,

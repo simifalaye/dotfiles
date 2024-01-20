@@ -1,23 +1,43 @@
-local m = require("utils.map")
+local map = vim.keymap.set
 
 --------------------------------------------------------------------------------
 --  Multi mode
 --------------------------------------------------------------------------------
 
 -- Move up/down by visual line
-m.noremap({ "n", "x" }, "j", [[v:count == 0 ? 'gj' : 'j']], { expr = true })
-m.noremap({ "n", "x" }, "k", [[v:count == 0 ? 'gk' : 'k']], { expr = true })
+map({ "n", "x" }, "j", [[v:count == 0 ? 'gj' : 'j']], { expr = true })
+map({ "n", "x" }, "k", [[v:count == 0 ? 'gk' : 'k']], { expr = true })
 
 -- Fast window navigation
 if not vim.g.loaded_user_plugin_tmux then
-  m.map({ "n", "x", "t" }, "<A-h>", "<C-w>h", "Goto left window")
-  m.map({ "n", "x", "t" }, "<A-j>", "<C-w>j", "Goto down window")
-  m.map({ "n", "x", "t" }, "<A-k>", "<C-w>k", "Goto up window")
-  m.map({ "n", "x", "t" }, "<A-l>", "<C-w>l", "Goto right window")
-  m.map({ "n", "x", "t" }, "<A-C-h>", "<cmd>ResizeWindow l<CR>", "Resize window left")
-  m.map({ "n", "x", "t" }, "<A-C-j>", "<cmd>ResizeWindow d<CR>", "Resize window down")
-  m.map({ "n", "x", "t" }, "<A-C-k>", "<cmd>ResizeWindow u<CR>", "Resize window up")
-  m.map({ "n", "x", "t" }, "<A-C-l>", "<cmd>ResizeWindow r<CR>", "Resize window right")
+  map({ "n", "x", "t" }, "<A-h>", "<C-w>h", { desc = "Goto left window" })
+  map({ "n", "x", "t" }, "<A-j>", "<C-w>j", { desc = "Goto down window" })
+  map({ "n", "x", "t" }, "<A-k>", "<C-w>k", { desc = "Goto up window" })
+  map({ "n", "x", "t" }, "<A-l>", "<C-w>l", { desc = "Goto right window" })
+  map(
+    { "n", "x", "t" },
+    "<A-C-h>",
+    "<cmd>ResizeWindow l<CR>",
+    { desc = "Resize window left" }
+  )
+  map(
+    { "n", "x", "t" },
+    "<A-C-j>",
+    "<cmd>ResizeWindow d<CR>",
+    { desc = "Resize window down" }
+  )
+  map(
+    { "n", "x", "t" },
+    "<A-C-k>",
+    "<cmd>ResizeWindow u<CR>",
+    { desc = "Resize window up" }
+  )
+  map(
+    { "n", "x", "t" },
+    "<A-C-l>",
+    "<cmd>ResizeWindow r<CR>",
+    { desc = "Resize window right" }
+  )
 end
 
 --------------------------------------------------------------------------------
@@ -25,117 +45,118 @@ end
 --------------------------------------------------------------------------------
 
 -- Remaps
-m.nnoremap("<Esc>", ":noh<CR><Esc>")
-m.nnoremap("/", "ms/\\v", { silent = false })
-m.nnoremap("?", "ms?\\v", { silent = false })
-m.nnoremap("n", "nzzzv")
-m.nnoremap("N", "Nzzzv")
-m.nnoremap("p", "p`[v`]=", "Paste & Format")
-m.nnoremap("Q", "@q", "Run q Macro")
-m.nnoremap("q:", "<nop>")
+map("n", "<Esc>", ":noh<CR><Esc>", { silent = true })
+map("n", "/", "ms/\\v", { silent = false })
+map("n", "?", "ms?\\v", { silent = false })
+map("n", "n", "nzzzv")
+map("n", "N", "Nzzzv")
+map("n", "p", "p`[v`]=", { desc = "Paste & Format" })
+map("n", "Q", "@q", { desc = "Run q Macro" })
+map("n", "q:", "<nop>")
 
 -- (g) namespace
-m.group("g", "+goto")
-m.nmap("g-", "yyp^v$r-Vk", "Underline -")
-m.nmap("g=", "yyp^v$r=Vk", "Underline =")
-m.nnoremap("g!", ":! chmod +x %<CR>", "Make File Executable")
-m.nnoremap(
+map("n", "g-", "yyp^v$r-Vk", { noremap = false, desc = "Underline -" })
+map("n", "g=", "yyp^v$r=Vk", { noremap = false, desc = "Underline =" })
+map("n", "g!", ":! chmod +x %<CR>", { desc = "Make File Executable" })
+map(
+  "n",
   "g<",
   [[<cmd>set nomore<bar>40messages<bar>set more<CR>]],
-  "Show Message History"
+  { desc = "Show Message History" }
 )
-m.nnoremap("g>", [[<cmd>messages clear<CR>]], "Show Message History")
-m.nnoremap("gq.", function()
+map("n", "g>", [[<cmd>messages clear<CR>]], { desc = "Show Message History" })
+map("n", "gq.", function()
   -- Save state
   local winview = vim.fn.winsaveview()
   -- Run 'gq' to format the entire document
   vim.cmd([[normal! ggVGgq]])
   -- Restore state
   vim.fn.winrestview(winview)
-end, "Format Document")
-m.nnoremap(
+end, { desc = "Format Document" })
+map(
+  "n",
   "gv",
   "'`[' . strpart(getregtype(), 0, 1) . '`]'",
-  "Select Last Changed Text",
-  { expr = true }
+  { expr = true, desc = "Select Last Changed Text" }
 )
-m.nnoremap("gx", ":SystemOpen<CR>", "System Open")
+map("n", "gx", ":SystemOpen<CR>", { desc = "System Open" })
 
 -- Toggle windows
-m.nnoremap("<F3>", ":ToggleList c<CR>", "Toggle Quickfix")
-m.nnoremap("<F4>", ":ToggleList l<CR>", "Toggle Loclist")
+map("n", "<F3>", ":ToggleList c<CR>", { silent = true, desc = "Toggle Quickfix" })
+map("n", "<F4>", ":ToggleList l<CR>", { silent = true, desc = "Toggle Loclist" })
 
 -- Leader
-m.group("<leader>p", "+plugins")
-m.nnoremap("<leader>x", "<cmd>bd<CR>", "E[x]it Buf")
-m.nnoremap("<leader>X", "<cmd>bd!<CR>", "E[x]it Buf!")
-m.nnoremap("<leader>pp", ":Lazy<CR>", "Open")
-m.nnoremap("<leader>pc", ":Lazy clean<CR>", "Clean")
-m.nnoremap("<leader>ph", ":Lazy health<CR>", "Health")
-m.nnoremap("<leader>pi", ":Lazy install<CR>", "Install")
-m.nnoremap("<leader>ps", ":Lazy sync<CR>", "Sync")
+map("n", "<leader>p", "<leader>p", { desc = "+plugins" })
+map("n", "<leader>x", "<cmd>bd<CR>", { desc = "E[x]it Buf" })
+map("n", "<leader>X", "<cmd>bd!<CR>", { desc = "E[x]it Buf!" })
+map("n", "<leader>pp", ":Lazy<CR>", { desc = "Open" })
+map("n", "<leader>pc", ":Lazy clean<CR>", { desc = "Clean" })
+map("n", "<leader>ph", ":Lazy health<CR>", { desc = "Health" })
+map("n", "<leader>pi", ":Lazy install<CR>", { desc = "Install" })
+map("n", "<leader>ps", ":Lazy sync<CR>", { desc = "Sync" })
 
 --------------------------------------------------------------------------------
 --  Visual/select/operator mode
 --------------------------------------------------------------------------------
 
 -- Remaps
-m.vnoremap(".", ":norm.<CR>") -- visual dot repeat
-m.vnoremap("$", "g_")
-m.vnoremap("<", "<gv")
-m.vnoremap(">", ">gv")
-m.xnoremap("*", [[y/\V<C-R>=escape(@", '/\')<CR><CR>]]) -- visual search
-m.xnoremap("#", [[y?\V<C-R>=escape(@", '?\')<CR><CR>]]) -- visual search
-m.vnoremap("Q", ":norm @q<CR>", "Run Q silent", { silent = false })
+map("v", ".", ":norm.<CR>") -- visual dot repeat
+map("v", "$", "g_")
+map("v", "<", "<gv")
+map("v", ">", ">gv")
+map("x", "*", [[y/\V<C-R>=escape(@", '/\')<CR><CR>]]) -- visual search
+map("x", "#", [[y?\V<C-R>=escape(@", '?\')<CR><CR>]]) -- visual search
+map("v", "Q", ":norm @q<CR>", { silent = false, desc = "Run Q" })
 vim.cmd([[
   function! ExecuteMacroOverVisualRange()
     echo "@".getcmdline()
     execute ":'<,'>normal @".nr2char(getchar())
   endfunction
 ]])
-m.xnoremap(
+map(
+  "x",
   "@",
   ":<C-u>call ExecuteMacroOverVisualRange()<CR>",
-  "Q macro over range",
-  { silent = false }
+  { desc = "Q macro over range", silent = false }
 )
 
 -- Text objects
-m.xnoremap("al", "$o0", "A line")
-m.onoremap("al", "<cmd>normal val<CR>", "A line")
-m.xnoremap("il", [[<Esc>^vg_]], "In line")
-m.onoremap("il", [[<cmd>normal! ^vg_<CR>]], "In line")
-m.xnoremap("ie", [[gg0oG$]], "In entire buf")
-m.onoremap(
+map("x", "al", "$o0", { desc = "A line" })
+map("o", "al", "<cmd>normal val<CR>", { desc = "A line" })
+map("x", "il", [[<Esc>^vg_]], { desc = "In line" })
+map("o", "il", [[<cmd>normal! ^vg_<CR>]], { desc = "In line" })
+map("x", "ie", [[gg0oG$]], { desc = "In entire buf" })
+map(
+  "o",
   "ie",
   [[<cmd>execute "normal! m`"<Bar>keepjumps normal! ggVG<CR>]],
-  "In entire buf"
+  { desc = "In entire buf" }
 )
 
 --------------------------------------------------------------------------------
 --  Insert mode
 --------------------------------------------------------------------------------
 
-m.inoremap(",", ",<c-g>u")
-m.inoremap(".", ".<c-g>u")
-m.inoremap(";", ";<c-g>u")
+map("i", ",", ",<c-g>u")
+map("i", ".", ".<c-g>u")
+map("i", ";", ";<c-g>u")
 
 --------------------------------------------------------------------------------
 --  Command mode
 --------------------------------------------------------------------------------
 
 -- File/dir name accessors
-m.cnoremap(
+map(
+  "c",
   "<M-,>",
   "<C-r>=fnameescape(expand('%:p:h'))<cr>/",
-  "Insert Dir Path",
-  { silent = false }
+  { desc = "Insert Dir Path", silent = false }
 )
-m.cnoremap(
+map(
+  "c",
   "<M-.>",
   "<C-r>=fnameescape(expand('%'))<cr>",
-  "Insert File Path",
-  { silent = false }
+  { desc = "Insert File Path", silent = false }
 )
 
 --------------------------------------------------------------------------------

@@ -1,6 +1,7 @@
-local reqcall = require("utils.reqcall")
-local oil = reqcall("oil") ---@module 'oil'
+local oil = require("utils.lib").reqcall("oil") ---@module 'oil'
 local fs = require("utils.fs")
+local augroup = vim.api.nvim_create_augroup
+local autocmd = vim.api.nvim_create_autocmd
 
 local permission_hlgroups = setmetatable({
   ["-"] = "OilPermissionNone",
@@ -25,6 +26,8 @@ local type_hlgroups = setmetatable({
   end,
 })
 
+local user_plugin_oil_grp_id = 0
+
 return {
   {
     "stevearc/oil.nvim",
@@ -44,6 +47,25 @@ return {
         desc = "Open root directory",
       },
     },
+    init = function()
+      -- Setup autocommands
+      user_plugin_oil_grp_id = augroup("user_plugin_oil", {})
+      autocmd("VimEnter", {
+        desc = "Start oil.nvim when a directory is given",
+        group = user_plugin_oil_grp_id,
+        pattern = "*",
+        callback = function()
+          local arg = vim.fn.argv()[1]
+          if
+            vim.fn.argc() == 1
+            and vim.fn.isdirectory(arg) == 1
+            and vim.fn.exists("s:std_in") ~= 1
+          then
+            vim.cmd("Oil " .. fs.proj_dir())
+          end
+        end,
+      })
+    end,
     opts = {
       columns = {
         {
@@ -103,7 +125,6 @@ return {
         ["<C-p>"] = "actions.preview",
         ["<C-c>"] = "actions.close",
         ["<C-l>"] = "actions.refresh",
-        ["-"] = "actions.parent",
         ["_"] = "actions.open_cwd",
         ["`"] = "actions.cd",
         ["~"] = "actions.tcd",
@@ -112,8 +133,9 @@ return {
         ["g."] = "actions.toggle_hidden",
         ["g\\"] = "actions.toggle_trash",
         -- Custom
-        ["Q"] = "q",
-        ["q"] = "actions.close",
+        ["-"] = "actions.close",
+        ["l"] = "actions.select",
+        ["h"] = "actions.parent",
         ["gy"] = {
           mode = "n",
           buffer = true,
@@ -140,46 +162,8 @@ return {
       },
     },
     config = function(_, opts)
-      local augroup = require("utils.augroup")
-
       -- Setup plugin
       oil.setup(opts)
-
-      -- Setup auto change cwd autocommands
-      augroup("user_oil_sync_cwd", {
-        {
-          event = { "BufEnter", "TextChanged" },
-          desc = "Set cwd to follow directory shown in oil buffers.",
-          pattern = "oil:///*",
-          command = function(info)
-            if vim.bo[info.buf].filetype == "oil" then
-              local cwd = vim.fs.normalize(vim.fn.getcwd(vim.fn.winnr()))
-              local oildir = vim.fs.normalize(oil.get_current_dir())
-              if cwd ~= oildir and vim.loop.fs_stat(oildir) then
-                local ok = pcall(vim.cmd.lcd, oildir)
-                if not ok then
-                  vim.notify("[oil.nvim] failed to cd to " .. oildir, vim.log.levels.WARN)
-                end
-              end
-            end
-          end,
-        },
-        {
-          event = "DirChanged",
-          desc = "Let oil buffers follow cwd.",
-          command = function(info)
-            if vim.bo[info.buf].filetype == "oil" then
-              vim.defer_fn(function()
-                local cwd = vim.fs.normalize(vim.fn.getcwd(vim.fn.winnr()))
-                local oildir = vim.fs.normalize(oil.get_current_dir() or "")
-                if cwd ~= oildir then
-                  oil.open(cwd)
-                end
-              end, 100)
-            end
-          end,
-        },
-      })
 
       ---Set some default hlgroups for oil
       local function oil_sethl()
@@ -205,13 +189,44 @@ return {
       end
       oil_sethl()
 
+      -- Setup auto change cwd autocommands
+      autocmd({ "BufEnter", "TextChanged" }, {
+        desc = "Set cwd to follow directory shown in oil buffers.",
+        group = user_plugin_oil_grp_id,
+        pattern = "oil:///*",
+        callback = function(info)
+          if vim.bo[info.buf].filetype == "oil" then
+            local cwd = vim.fs.normalize(vim.fn.getcwd(vim.fn.winnr()))
+            local oildir = vim.fs.normalize(oil.get_current_dir())
+            if cwd ~= oildir and vim.loop.fs_stat(oildir) then
+              local ok = pcall(vim.cmd.lcd, oildir)
+              if not ok then
+                vim.notify("[oil.nvim] failed to cd to " .. oildir, vim.log.levels.WARN)
+              end
+            end
+          end
+        end,
+      })
+      autocmd("DirChanged", {
+        desc = "Let oil buffers follow cwd.",
+        group = user_plugin_oil_grp_id,
+        callback = function(info)
+          if vim.bo[info.buf].filetype == "oil" then
+            vim.defer_fn(function()
+              local cwd = vim.fs.normalize(vim.fn.getcwd(vim.fn.winnr()))
+              local oildir = vim.fs.normalize(oil.get_current_dir() or "")
+              if cwd ~= oildir then
+                oil.open(cwd)
+              end
+            end, 100)
+          end
+        end,
+      })
       -- Setup auto refresh higlights on colorscheme change
-      augroup("user_oil_set_hl_groups", {
-        {
-          event = "Colorscheme",
-          desc = "Refresh hl groups for oil on colorscheme change",
-          command = oil_sethl,
-        },
+      autocmd("Colorscheme", {
+        desc = "Refresh hl groups for oil on colorscheme change",
+        group = user_plugin_oil_grp_id,
+        callback = oil_sethl,
       })
     end,
   },

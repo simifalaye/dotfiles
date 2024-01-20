@@ -25,9 +25,9 @@ function M.sys_open(path)
   local is_wsl = vim.fn.has("wsl") == 1
   local open = function(p)
     local cmd
-    if is_wsl and vim.fn.executable("explorer") == 1 then
-      cmd = {"explorer.exe"}
-    elseif vim.fn.has("unix") == 1 and vim.fn.executable("xdg-open") == 1 then
+    if is_wsl and vim.fn.executable("wslview") > 0 then
+      cmd = {"wslview"}
+    elseif vim.fn.has("unix") == 1 and vim.fn.executable("xdg-open") > 0 then
       cmd = { "xdg-open" }
     elseif
       (vim.fn.has("mac") == 1 or vim.fn.has("unix") == 1)
@@ -38,6 +38,7 @@ function M.sys_open(path)
     if not cmd then
       M.notify("Available system opening tool not found!", vim.log.levels.ERROR)
     end
+    P(cmd, p)
     vim.fn.jobstart(vim.fn.extend(cmd, { p }), { detach = true })
   end
 

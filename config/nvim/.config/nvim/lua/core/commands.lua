@@ -102,3 +102,35 @@ end, {
   desc = "Resize window in direction (l,d,u,r)",
   nargs = 1, -- {direction(l,d,u,r)}
 })
+
+vim.api.nvim_create_user_command("LspClients", function()
+  local clients = require("utils.lsp").get_attached_clients()
+  if next(clients) == nil then
+    require("utils.lib").notify("No attached LSP servers", vim.log.levels.ERROR)
+  end
+
+  local lines = {}
+  for s in vim.inspect(clients):gmatch("[^\r\n]+") do
+    table.insert(lines, s)
+  end
+
+  -- Show content in a reusable buffer
+  local buf_id
+  for _, id in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.bo[id].filetype == "user-lsp-clients-info" then
+      buf_id = id
+    end
+  end
+  if buf_id == nil then
+    buf_id = vim.api.nvim_create_buf(true, true)
+    vim.bo[buf_id].filetype = "user-lsp-clients-info"
+  end
+  -- Clear the buffer content
+  vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, {})
+  -- Append new text to the buffer
+  vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, lines)
+  -- Open buffer in this window
+  vim.api.nvim_win_set_buf(0, buf_id)
+end, {
+  desc = "Display attached lsp clients",
+})
