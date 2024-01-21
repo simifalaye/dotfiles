@@ -16,9 +16,11 @@ return {
         symbol = "┆",
         options = { try_as_border = true },
       })
-      -- Disable for certain filetypes
+
+      local groupid = vim.api.nvim_create_augroup("user_plugin_mini_indentscope", {})
       vim.api.nvim_create_autocmd("FileType", {
         desc = "Highlight window when focused",
+        group = groupid,
         pattern = {
           "help",
           "alpha",
@@ -34,8 +36,16 @@ return {
           "minifiles",
         },
         callback = function()
-          ---@diagnostic disable-next-line: inject-field
-          vim.b.miniindentscope_disable = true
+          vim.b["miniindentscope_disable"] = true
+        end,
+      })
+      vim.api.nvim_create_autocmd("BufReadPre", {
+        desc = "Highlight window when focused",
+        group = groupid,
+        callback = function()
+          if vim.b["bigfile"] then
+            vim.b["miniindentscope_disable"] = true
+          end
         end,
       })
     end,

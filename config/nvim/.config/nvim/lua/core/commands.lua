@@ -1,4 +1,5 @@
 local fn = vim.fn
+local lib = require("utils.lib")
 
 vim.api.nvim_create_user_command(
   "Todo",
@@ -68,7 +69,6 @@ end, {
   nargs = "?", -- {path?}
 })
 
--- Change working directory
 vim.api.nvim_create_user_command("Cwd", function()
   vim.cmd(":cd %:p:h")
   vim.cmd(":pwd")
@@ -103,13 +103,25 @@ end, {
   nargs = 1, -- {direction(l,d,u,r)}
 })
 
-vim.api.nvim_create_user_command("LspClients", function()
+vim.api.nvim_create_user_command("LspInfo", function()
   local clients = require("utils.lsp").get_attached_clients()
-  if next(clients) == nil then
-    require("utils.lib").notify("No attached LSP servers", vim.log.levels.ERROR)
+  if vim.tbl_isempty(clients) then
+    lib.notify("No attached LSP servers", vim.log.levels.ERROR)
+    return
   end
 
   local lines = {}
+  for _, c in pairs(clients) do
+    table.insert(lines, "Name: " .. c.name)
+    table.insert(lines, "Cmd: " .. table.concat(c.config.cmd, " "))
+    table.insert(lines, "Root Directory: " .. (c.config.root_dir or ""))
+    table.insert(
+      lines,
+      "Root Patterns: " .. (table.concat(c.config.root_pattern or {}, ","))
+    )
+    table.insert(lines, "Is Active: " .. tostring(not c.is_stopped()))
+    table.insert(lines, "")
+  end
   for s in vim.inspect(clients):gmatch("[^\r\n]+") do
     table.insert(lines, s)
   end
@@ -133,4 +145,50 @@ vim.api.nvim_create_user_command("LspClients", function()
   vim.api.nvim_win_set_buf(0, buf_id)
 end, {
   desc = "Display attached lsp clients",
+})
+
+vim.api.nvim_create_user_command("LspRestart", function(info)
+  local name = info.args
+  local clients = require("utils.lsp").get_attached_clients()
+  if vim.tbl_isempty(clients) then
+    lib.notify("No attached LSP servers", vim.log.levels.ERROR)
+  end
+
+  local completed = false
+  for _, c in pairs(clients) do
+    if name == "" or name == c.name then
+      require("utils.lsp").restart(c)
+      lib.notify("Restarted " .. c.name)
+      completed = true
+    end
+  end
+  if not completed then
+    lib.notify("No client named: " .. name, vim.log.levels.ERROR)
+  end
+end, {
+  desc = "Restart lsp client attached to buffer by name or empty for all",
+  nargs = "?", -- {client_name}
+})
+
+vim.api.nvim_create_user_command("LspStop", function(info)
+  local name = info.args
+  local clients = require("utils.lsp").get_attached_clients()
+  if vim.tbl_isempty(clients) then
+    lib.notify("No attached LSP servers", vim.log.levels.ERROR)
+  end
+
+  local completed = false
+  for _, c in pairs(clients) do
+    if name == "" or name == c.name then
+      require("utils.lsp").stop(c)
+      lib.notify("Stopped " .. c.name)
+      completed = true
+    end
+  end
+  if not completed then
+    lib.notify("No client named: " .. name, vim.log.levels.ERROR)
+  end
+end, {
+  desc = "Stop lsp client attached to buffer by name or empty for all",
+  nargs = "?", -- {client_name}
 })

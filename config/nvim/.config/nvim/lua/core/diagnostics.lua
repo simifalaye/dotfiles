@@ -1,4 +1,3 @@
-local lib = require("utils.lib")
 local icons = require("static.icons")
 
 local signs = {
@@ -24,6 +23,7 @@ local default_diagnostics = {
     prefix = "",
   },
 }
+
 _G.user_diagnostics = {
   -- diagnostics off
   [0] = vim.tbl_deep_extend("force", default_diagnostics, {
@@ -50,4 +50,5 @@ for _, sign in ipairs(signs) do
 end
 
 -- Set diagnotics based on mode
+vim.g.user_diagnostics_mode = vim.g.user_diagnostics_mode or 2
 vim.diagnostic.config(_G.user_diagnostics[vim.g.user_diagnostics_mode])

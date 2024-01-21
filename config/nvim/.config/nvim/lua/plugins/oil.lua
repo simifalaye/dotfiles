@@ -26,7 +26,7 @@ local type_hlgroups = setmetatable({
   end,
 })
 
-local user_plugin_oil_grp_id = 0
+local groupid = 0
 
 return {
   {
@@ -49,10 +49,10 @@ return {
     },
     init = function()
       -- Setup autocommands
-      user_plugin_oil_grp_id = augroup("user_plugin_oil", {})
+      groupid = augroup("user_plugin_oil", {})
       autocmd("VimEnter", {
         desc = "Start oil.nvim when a directory is given",
-        group = user_plugin_oil_grp_id,
+        group = groupid,
         pattern = "*",
         callback = function()
           local arg = vim.fn.argv()[1]
@@ -133,7 +133,6 @@ return {
         ["g."] = "actions.toggle_hidden",
         ["g\\"] = "actions.toggle_trash",
         -- Custom
-        ["-"] = "actions.close",
         ["l"] = "actions.select",
         ["h"] = "actions.parent",
         ["gy"] = {
@@ -192,7 +191,7 @@ return {
       -- Setup auto change cwd autocommands
       autocmd({ "BufEnter", "TextChanged" }, {
         desc = "Set cwd to follow directory shown in oil buffers.",
-        group = user_plugin_oil_grp_id,
+        group = groupid,
         pattern = "oil:///*",
         callback = function(info)
           if vim.bo[info.buf].filetype == "oil" then
@@ -209,7 +208,7 @@ return {
       })
       autocmd("DirChanged", {
         desc = "Let oil buffers follow cwd.",
-        group = user_plugin_oil_grp_id,
+        group = groupid,
         callback = function(info)
           if vim.bo[info.buf].filetype == "oil" then
             vim.defer_fn(function()
@@ -225,7 +224,7 @@ return {
       -- Setup auto refresh higlights on colorscheme change
       autocmd("Colorscheme", {
         desc = "Refresh hl groups for oil on colorscheme change",
-        group = user_plugin_oil_grp_id,
+        group = groupid,
         callback = oil_sethl,
       })
     end,

@@ -46,8 +46,6 @@ end
 
 -- Remaps
 map("n", "<Esc>", ":noh<CR><Esc>", { silent = true })
-map("n", "/", "ms/\\v", { silent = false })
-map("n", "?", "ms?\\v", { silent = false })
 map("n", "n", "nzzzv")
 map("n", "N", "Nzzzv")
 map("n", "p", "p`[v`]=", { desc = "Paste & Format" })
@@ -86,14 +84,16 @@ map("n", "<F3>", ":ToggleList c<CR>", { silent = true, desc = "Toggle Quickfix" 
 map("n", "<F4>", ":ToggleList l<CR>", { silent = true, desc = "Toggle Loclist" })
 
 -- Leader
+map("n", "<leader>w", "<cmd>update<CR>", { desc = "Write Buffer" })
+map("n", "<leader>q", "<cmd>confirm quit<CR>", { desc = "Quit" })
 map("n", "<leader>p", "<leader>p", { desc = "+plugins" })
 map("n", "<leader>x", "<cmd>bd<CR>", { desc = "E[x]it Buf" })
 map("n", "<leader>X", "<cmd>bd!<CR>", { desc = "E[x]it Buf!" })
-map("n", "<leader>pp", ":Lazy<CR>", { desc = "Open" })
-map("n", "<leader>pc", ":Lazy clean<CR>", { desc = "Clean" })
-map("n", "<leader>ph", ":Lazy health<CR>", { desc = "Health" })
-map("n", "<leader>pi", ":Lazy install<CR>", { desc = "Install" })
-map("n", "<leader>ps", ":Lazy sync<CR>", { desc = "Sync" })
+map("n", "<leader>pp", "<cmd>Lazy<CR>", { desc = "Open" })
+map("n", "<leader>pc", "<cmd>Lazy clean<CR>", { desc = "Clean" })
+map("n", "<leader>ph", "<cmd>Lazy health<CR>", { desc = "Health" })
+map("n", "<leader>pi", "<cmd>Lazy install<CR>", { desc = "Install" })
+map("n", "<leader>ps", "<cmd>Lazy sync<CR>", { desc = "Sync" })
 
 --------------------------------------------------------------------------------
 --  Visual/select/operator mode

@@ -11,17 +11,17 @@ return {
       local icons = require("static.icons")
 
       local nut = {
-        mode = require("plugins.nougat.mode"),
+        mode = require("plugins.nougat.nut.mode"),
         spacer = require("nougat.nut.spacer"),
         truncation_point = require("nougat.nut.truncation_point"),
         diagnostic_count = require("nougat.nut.buf.diagnostic_count"),
-        filename = require("plugins.nougat.filename"),
+        filename = require("plugins.nougat.nut.filename"),
         filestatus = require("nougat.nut.buf.filestatus"),
         filetype = require("nougat.nut.buf.filetype"),
         gitbranch = require("nougat.nut.git.branch"),
         gitstatus = require("nougat.nut.git.status"),
-        lsp_servers = require("plugins.nougat.lsp_servers"),
-        search_or_macro = require("plugins.nougat.search_or_macro"),
+        lsp_servers = require("plugins.nougat.nut.lsp_servers"),
+        search_or_macro = require("plugins.nougat.nut.search_or_macro"),
       }
 
       local color = require("nougat.color").get() ---@module 'nougat.color'
@@ -30,6 +30,7 @@ return {
       local mode = stl:add_item(nut.mode.create({
         prefix = " ",
         suffix = " ",
+        priority = 9,
       }))
       local filename = stl:add_item(nut.filename.create({
         hl = { bg = color.bg1, fg = color.fg2 },
@@ -39,6 +40,7 @@ return {
           modifier = ":t",
           alt_buf_modifier = ":.",
         },
+        priority = 10,
       }))
       local filestatus = stl:add_item(nut.filestatus.create({
         hl = { bg = color.bg1, fg = color.fg2 },
@@ -49,12 +51,14 @@ return {
           readonly = "[x]",
           sep = "",
         },
+        priority = 8,
       }))
       local filetype = nut.filetype.create({
         hl = { bg = color.bg1, fg = color.fg2 },
         hidden = function(_, _)
           return vim.bo.buftype ~= ""
         end,
+        priority = 9,
       })
       local gitbranch = nut.gitbranch.create({
         hl = { bg = color.bg1, fg = color.fg2 },
@@ -66,6 +70,7 @@ return {
           return file == "" or not require("utils.fs").proj_dir(file, { ".git/" })
         end,
         prefix = "  ",
+        priority = 0,
       })
       local gitstatus = nut.gitstatus.create({
         hl = { bg = color.bg1, fg = color.fg2 },
@@ -83,15 +88,14 @@ return {
             prefix = " -",
           }),
         },
+        priority = 0,
       })
       stl:add_item(Item({
-        hidden = function(self, ctx)
-          for _, v in ipairs(self.content) do
-            if not v:hidden(ctx) then
-              return false
-            end
+        hidden = function(_, ctx)
+          if (filetype:hidden(ctx)) then
+            return true
           end
-          return true
+          return gitbranch:hidden(ctx)
         end,
         prefix = "(",
         content = {
@@ -104,11 +108,13 @@ return {
           gitstatus,
         },
         suffix = ")",
+        priority = 8,
       }))
       stl:add_item(nut.spacer.create())
       stl:add_item(nut.truncation_point.create())
       stl:add_item(nut.search_or_macro.create({
         hl = { bg = color.bg1, fg = color.fg2 },
+        priority = 2,
       }))
       stl:add_item(nut.diagnostic_count.create({
         hidden = false,
@@ -138,9 +144,11 @@ return {
           },
           severity = vim.diagnostic.severity.COMBINED,
         },
+        priority = 5,
       }))
       stl:add_item(nut.lsp_servers.create({
         hl = { bg = color.bg1, fg = color.fg2 },
+        priority = 1,
       }))
       stl:add_item(Item({
         hl = { bg = color.bg1, fg = color.fg2 },
@@ -151,6 +159,7 @@ return {
           core.code("c"),
         }),
         suffix = " ",
+        priority = 9,
       }))
 
       local stl_inactive = Bar("statusline")

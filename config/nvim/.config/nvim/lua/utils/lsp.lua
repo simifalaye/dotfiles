@@ -71,18 +71,25 @@ end
 ---the current buffer
 ---@param config lsp_client_config_t|lsp.ClientConfig
 ---@param opts table?
+---@param supports_docker_dev boolean?
 ---@return integer? client_id id of attached client or nil if failed
-function M.start(config, opts)
+function M.start(config, opts, supports_docker_dev)
   if vim.bo.bt == "nofile" then
     return
   end
+  supports_docker_dev = supports_docker_dev or true
 
   -- Setup config
   config = config or {}
   config.root_patterns = vim.tbl_extend("force", config.root_patterns or {}, { ".git/" })
   config.root_dir = fs.proj_dir(vim.api.nvim_buf_get_name(0), config.root_patterns)
   -- Try loading docker dev all requirements are met
-  if config.root_dir and _G.DockerDev and _G.DockerDev.start(config, opts) then
+  if
+    supports_docker_dev
+    and config.root_dir
+    and _G.DockerDev
+    and _G.DockerDev.start(config, opts)
+  then
     return
   end
   -- Quit silently if command not installed
@@ -261,6 +268,14 @@ function M.generate_config(base, override)
   local capabilities = config.capabilities
   return vim.tbl_deep_extend("force", config, {
     on_attach = function(client, bufnr)
+      -- Detach of larger files
+      if vim.b["midfile"] then
+        vim.defer_fn(function()
+          vim.lsp.buf_detach_client(bufnr, client.id)
+        end, 100)
+        return
+      end
+      -- Call config attach handler
       if on_attach then
         on_attach(client, bufnr)
       end

@@ -25,7 +25,7 @@ function M.create(opts)
     suffix = opts.suffix,
     sep_right = opts.sep_right,
     config = vim.tbl_extend("force", {
-      modifier = ":.",
+      modifier = ":t",
       alt_buf_modifier = ":.",
       format = nil,
       unnamed = "[No Name]",

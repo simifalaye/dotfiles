@@ -70,11 +70,11 @@ bind -n -N 'Resize right' 'M-C-l' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M
 bind -n -N 'Zoom the current pane' 'M-z' resize-pane -Z
 
 # See: https://www.reddit.com/r/tmux/comments/j7fcr7/tiling_in_tmux_as_in_bspwm/
-bind -n -N 'New pane' 'M-;' if-shell \
+bind -n -N 'New pane' 'M-Enter' if-shell \
        "[ $(($(tmux display -p '8*#{pane_width}-20*#{pane_height}'))) -lt 0 ]" "splitw -v -c '#{pane_current_path}'" "splitw -h -c '#{pane_current_path}' "
 
 # Toggle scratchpad
-bind-key -N 'Toggle scratch window' -n "M-'" if-shell -F '#{==:#{session_name},scratch}' {
+bind-key -N 'Toggle scratch window' -n "M-;" if-shell -F '#{==:#{session_name},scratch}' {
   detach-client
 } {
   display-popup -d "#{pane_current_path}" -xC -yC -w 80% -h 75% -E 'tmux new-session -A -s scratch'

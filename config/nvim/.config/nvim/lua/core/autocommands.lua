@@ -3,10 +3,10 @@ local timer = vim.loop.new_timer()
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
-local user_file_utilities_grp_id = augroup("user_file_utilities", {})
+local file_utilities_groupid = augroup("user_file_utilities", {})
 autocmd("BufWritePre", {
   desc = "Remove trailing whitespace on save",
-  group = user_file_utilities_grp_id,
+  group = file_utilities_groupid,
   pattern = "*",
   callback = function()
     local ft = vim.bo.filetype
@@ -21,7 +21,7 @@ autocmd("BufWritePre", {
 })
 autocmd("BufReadPost", {
   desc = "Jump to last known position and center buffer around cursor",
-  group = user_file_utilities_grp_id,
+  group = file_utilities_groupid,
   pattern = "*",
   callback = function()
     if vim.bo.ft ~= "gitcommit" and vim.fn.win_gettype() ~= "popup" then
@@ -35,9 +35,9 @@ autocmd("BufReadPost", {
     end
   end,
 })
-autocmd("BufWritePre", {
+autocmd("BufReadPre", {
   desc = "Set settings for large files.",
-  group = user_file_utilities_grp_id,
+  group = file_utilities_groupid,
   callback = function(info)
     vim.b["midfile"] = false
     vim.b["bigfile"] = false
@@ -47,24 +47,6 @@ autocmd("BufWritePre", {
     end
     if stat and stat.size > 48000 then
       vim.b["midfile"] = true
-      vim.api.nvim_create_autocmd("BufReadPost", {
-        buffer = info.buf,
-        once = true,
-        callback = function()
-          vim.schedule(function()
-            pcall(vim.treesitter.stop, info.buf)
-          end)
-        end,
-      })
-      vim.api.nvim_create_autocmd("LspAttach", {
-        buffer = info.buf,
-        once = true,
-        callback = function(args)
-          vim.schedule(function()
-            vim.lsp.buf_detach_client(info.buf, args.data.client_id)
-          end)
-        end,
-      })
     end
     if stat and stat.size > 1024000 then
       vim.b["bigfile"] = true
@@ -89,30 +71,30 @@ autocmd("BufWritePre", {
   end,
 })
 
-local user_window_behaviours_grp_id = augroup("user_window_behaviours", {})
+local window_behaviours_groupid = augroup("user_window_behaviours", {})
 autocmd("VimResized", {
   desc = "Auto-resize splits",
-  group = user_window_behaviours_grp_id,
+  group = window_behaviours_groupid,
   pattern = { "*" },
   command = "tabdo wincmd =",
 })
 autocmd("WinEnter", {
   desc = "Show cursorline when focused",
-  group = user_window_behaviours_grp_id,
+  group = window_behaviours_groupid,
   callback = function()
     vim.wo.cursorline = true
   end,
 })
 autocmd("WinLeave", {
   desc = "Hide cursorline when un-focused",
-  group = user_window_behaviours_grp_id,
+  group = window_behaviours_groupid,
   callback = function()
     vim.wo.cursorline = false
   end,
 })
 autocmd({ "CursorMoved", "CursorMovedI" }, {
   desc = "Show cursorline when cursor is not moved for some time",
-  group = user_window_behaviours_grp_id,
+  group = window_behaviours_groupid,
   callback = function()
     if not timer then
       return
@@ -128,10 +110,10 @@ autocmd({ "CursorMoved", "CursorMovedI" }, {
   end,
 })
 
-local user_yank_text_grp_id = augroup("user_yank_text", {})
+local yank_text_groupid = augroup("user_yank_text", {})
 autocmd({ "VimEnter", "CursorMoved" }, {
   desc = "Save cursor position whenever it moves",
-  group = user_yank_text_grp_id,
+  group = yank_text_groupid,
   pattern = "*",
   callback = function()
     vim.g.user_cursor_pos = vim.fn.getpos(".")
@@ -139,14 +121,14 @@ autocmd({ "VimEnter", "CursorMoved" }, {
 })
 autocmd("TextYankPost", {
   desc = "Highlight yanked text",
-  group = user_yank_text_grp_id,
+  group = yank_text_groupid,
   callback = function()
     vim.highlight.on_yank({ timeout = 200, higroup = "IncSearch" })
   end,
 })
 autocmd("TextYankPost", {
   desc = "Restore cursor position after yank",
-  group = user_yank_text_grp_id,
+  group = yank_text_groupid,
   pattern = "*",
   callback = function()
     if vim.v.event.operator == "y" then

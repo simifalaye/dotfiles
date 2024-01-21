@@ -25,6 +25,14 @@ local function on_attach(client, bufnr)
     },
     { "<localleader>d", vim.diagnostic.open_float, desc = "Line Diagnostics (lsp)" },
     { "<localleader>D", vim.diagnostic.setloclist, desc = "Doc Diagnostics (lsp)" },
+    {
+      "<localleader>f",
+      function()
+        vim.lsp.buf.format({ async = true })
+      end,
+      mode = { "n", "v" },
+      desc = "Format Doc (lsp)",
+    },
     { "<localleader>r", vim.lsp.buf.rename, desc = "Rename (lsp)", has = "rename" },
     {
       "<localleader>l",
@@ -89,11 +97,11 @@ local function on_attach(client, bufnr)
   -- Setup autocmds
   if client.supports_method("textDocument/codeLens") and vim.g.user_codelens_enabled then
     vim.lsp.codelens.refresh()
-    local user_lsp_codelens_refresh_grp_id =
+    local codelens_groupid =
       vim.api.nvim_create_augroup("user_lsp_codelens_refresh", {})
     vim.api.nvim_create_autocmd({ "InsertLeave", "BufEnter" }, {
       desc = "Refresh codelens",
-      group = user_lsp_codelens_refresh_grp_id,
+      group = codelens_groupid,
       buffer = bufnr,
       callback = function()
         if not lsp.has_capability("textDocument/codeLens", { bufnr = bufnr }) then
@@ -121,11 +129,11 @@ local function on_attach(client, bufnr)
     )
   end
   if client.supports_method("textDocument/documentHighlight") then
-    local user_lsp_document_highlight_grp_id =
+    local highlight_groupid =
       vim.api.nvim_create_augroup("user_lsp_document_highlight", {})
     vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
       desc = "highlight references when cursor holds",
-      group = user_lsp_document_highlight_grp_id,
+      group = highlight_groupid,
       buffer = bufnr,
       callback = function()
         if
@@ -139,7 +147,7 @@ local function on_attach(client, bufnr)
     })
     vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
       desc = "Clear references when cursor moves",
-      group = user_lsp_document_highlight_grp_id,
+      group = highlight_groupid,
       buffer = bufnr,
       callback = function()
         vim.lsp.buf.clear_references()

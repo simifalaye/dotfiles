@@ -1,5 +1,6 @@
 local lsp = require("utils.lsp")
-lsp.start(lsp.generate_config(require("static.lspconfig"), {
+
+lsp.start(lsp.generate_config(require("static.default_lspconfig"), {
   name = "bash_ls",
   cmd = { "bash-language-server", "start" },
   root_patterns = {},

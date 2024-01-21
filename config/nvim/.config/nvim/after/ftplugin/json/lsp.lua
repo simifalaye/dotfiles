@@ -1,4 +1,7 @@
+local lsp = require("utils.lsp")
+
 local jsonls_settings = {}
+
 local schemastore_ok, schemastore = pcall(require, "schemastore")
 if schemastore_ok then
   jsonls_settings["json"] = {
@@ -7,8 +10,7 @@ if schemastore_ok then
   }
 end
 
-local lsp = require("utils.lsp")
-lsp.start(lsp.generate_config(require("static.lspconfig"), {
+lsp.start(lsp.generate_config(require("static.default_lspconfig"), {
   name = "jsonls",
   cmd = { "vscode-json-languageserver", "--stdio" },
   root_patterns = {},

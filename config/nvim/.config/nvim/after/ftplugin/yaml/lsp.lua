@@ -1,4 +1,6 @@
 local lsp = require("utils.lsp")
+local config = require("static.default_lspconfig")
+
 local ansiblels_root_patterns = { "ansible.cfg", ".ansible-lint" }
 
 if
@@ -6,7 +8,7 @@ if
   ~= require("utils.fs").proj_dir(vim.api.nvim_buf_get_name(0), ansiblels_root_patterns)
 then
   vim.bo.filetype = "yaml.ansible"
-  lsp.start(lsp.generate_config(require("static.lspconfig"), {
+  lsp.start(lsp.generate_config(config, {
     name = "ansiblels",
     cmd = { "ansible-language-server", "--stdio" },
     root_patterns = ansiblels_root_patterns,
@@ -52,7 +54,7 @@ if schemastore_ok then
   }
 end
 
-lsp.start(lsp.generate_config(require("static.lspconfig"), {
+lsp.start(lsp.generate_config(config, {
   name = "yamlls",
   cmd = { "yaml-language-server", "--stdio" },
   root_patterns = {},

@@ -64,6 +64,7 @@
     - clang-format.yml
     - clangd-ls.yml
     - cpplint.yml
+    - efm_ls.yml
     - elinks.yml
     - eza.yml
     - fd.yml
