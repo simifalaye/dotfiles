@@ -46,6 +46,9 @@ return {
           { mode = "x", keys = "[" },
           { mode = "x", keys = "]" },
           { mode = "x", keys = "y" },
+
+          -- plugin.substitute
+          { mode = "n", keys = "s" },
         },
 
         clues = {

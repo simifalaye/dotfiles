@@ -268,13 +268,6 @@ function M.generate_config(base, override)
   local capabilities = config.capabilities
   return vim.tbl_deep_extend("force", config, {
     on_attach = function(client, bufnr)
-      -- Detach of larger files
-      if vim.b["midfile"] then
-        vim.defer_fn(function()
-          vim.lsp.buf_detach_client(bufnr, client.id)
-        end, 100)
-        return
-      end
       -- Call config attach handler
       if on_attach then
         on_attach(client, bufnr)

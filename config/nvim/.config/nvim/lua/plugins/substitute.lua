@@ -1,48 +1,32 @@
+local substitute = require("utils.lib").reqcall("substitute") ---@module 'substitute'
+local exchange = require("utils.lib").reqcall("substitute.exchange") ---@module 'substitute.exchange'
+
 return {
   {
     "gbprod/substitute.nvim",
     keys = {
+      { "s", substitute.operator, desc = "Substitute" },
+      { "ss", substitute.line, desc = "Substitute Line" },
+      { "S", substitute.eol, desc = "Substitute Eol" },
       {
-        "S",
-        function()
-          require("substitute").visual()
-        end,
+        "s",
+        substitute.visual,
         mode = "x",
         desc = "Substitute",
       },
-      {
-        "S",
-        function()
-          require("substitute").operator()
-        end,
-        mode = "n",
-        desc = "Substitute",
-      },
+      { "sx", exchange.operator, desc = "Exchange" },
+      { "sxx", exchange.line, desc = "Exchange line" },
+      { "sxc", exchange.cancel, desc = "Exchange cancel" },
       {
         "X",
-        function()
-          require("substitute.exchange").operator()
-        end,
-        mode = "n",
-        desc = "eXchange",
-      },
-      {
-        "X",
-        function()
-          require("substitute.exchange").visual()
-        end,
+        exchange.visual,
         mode = "x",
-        desc = "eXchange",
-      },
-      {
-        "Xc",
-        function()
-          require("substitute.exchange").cancel()
-        end,
-        mode = { "n", "x" },
-        desc = "eXchange Cancel",
+        desc = "Exchange",
       },
     },
+    init = function()
+      vim.keymap.set("n", "s", "s", { desc = "+sub/xchange" })
+    end,
     config = true,
   },
 }

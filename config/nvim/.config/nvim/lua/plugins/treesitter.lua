@@ -1,7 +1,7 @@
 ---@param buf integer buffer handler
 ---@return boolean
 local function buf_is_large(_, buf)
-  return vim.b[buf].large_file == true
+  return vim.b["midfile"]
 end
 
 return {
@@ -35,27 +35,25 @@ return {
       ignore_install = { "perl", "wgsl", "wgsl_bevy" },
       highlight = {
         enable = true,
-        disable = function(_, _)
-          return vim.b["midfile"]
-        end,
+        disable = buf_is_large
       },
       textobjects = {
         select = {
           enable = true,
           lookahead = true,
           keymaps = {
-            ["am"] = { query = "@function.outer", desc = "A method" },
-            ["im"] = { query = "@function.inner", desc = "In method" },
-            -- ["al"] = {query = "@loop.outer", desc = "A loop"},
-            -- ["il"] = {query = "@loop.inner", desc = "In loop"},
+            ["ak"] = { query = "@block.outer", desc = "A block" },
+            ["ik"] = { query = "@block.inner", desc = "In block" },
             ["ac"] = { query = "@class.outer", desc = "A class" },
             ["ic"] = { query = "@class.inner", desc = "In class" },
-            ["aa"] = { query = "@parameter.outer", desc = "A argument" },
-            ["ia"] = { query = "@parameter.inner", desc = "In argument" },
-            ["a/"] = { query = "@comment.outer", desc = "A comment" },
-            ["a*"] = { query = "@comment.outer", desc = "A comment" },
-            ["ao"] = { query = "@block.outer", desc = "A block" },
-            ["io"] = { query = "@block.inner", desc = "In block" },
+            ["a?"] = { query = "@conditional.outer", desc = "A conditional" },
+            ["i?"] = { query = "@conditional.inner", desc = "In conditional" },
+            ["am"] = { query = "@function.outer", desc = "A method" },
+            ["im"] = { query = "@function.inner", desc = "In method" },
+            ["al"] = { query = "@loop.outer", desc = "A loop" },
+            ["il"] = { query = "@loop.inner", desc = "In loop" },
+            ["aa"] = { query = "@parameter.outer", desc = "A arg" },
+            ["ia"] = { query = "@parameter.inner", desc = "In arg" },
           },
         },
         move = {
@@ -63,36 +61,42 @@ return {
           disable = buf_is_large,
           set_jumps = true, -- whether to set jumps in the jumplist
           goto_next_start = {
+            ["]k"] = { query = "@block.outer", desc = "Next block start" },
             ["]m"] = { query = "@function.outer", desc = "Next method start" },
-            ["]]"] = { query = "@class.outer", desc = "Next class start" },
-            ["]a"] = { query = "@parameter.outer", desc = "Next arg start" },
+            ["]c"] = { query = "@class.outer", desc = "Next class start" },
+            ["]a"] = { query = "@parameter.inner", desc = "Next arg start" },
           },
           goto_next_end = {
+            ["]K"] = { query = "@block.outer", desc = "Next block end" },
             ["]M"] = { query = "@function.outer", desc = "Next method end" },
-            ["]["] = { query = "@class.outer", desc = "Next class end" },
-            ["]A"] = { query = "@parameter.outer", desc = "Next arg end" },
-            ["]c"] = { query = "@comment.outer", desc = "Next comment end" },
+            ["]C"] = { query = "@class.outer", desc = "Next class end" },
+            ["]A"] = { query = "@parameter.inner", desc = "Next arg end" },
           },
           goto_previous_start = {
+            ["[k"] = { query = "@block.outer", desc = "Prev block start" },
             ["[m"] = { query = "@function.outer", desc = "Prev method start" },
-            ["[["] = { query = "@class.outer", desc = "Prev class start" },
-            ["[a"] = { query = "@parameter.outer", desc = "Prev arg start" },
+            ["[c"] = { query = "@class.outer", desc = "Prev class start" },
+            ["[a"] = { query = "@parameter.inner", desc = "Prev arg start" },
           },
           goto_previous_end = {
+            ["[K"] = { query = "@block.outer", desc = "Prev block end" },
             ["[M"] = { query = "@function.outer", desc = "Prev method end" },
-            ["[]"] = { query = "@class.outer", desc = "Prev class end" },
-            ["[A"] = { query = "@parameter.outer", desc = "Prev arg end" },
-            ["[c"] = { query = "@comment.outer", desc = "Prev comment end" },
+            ["[C"] = { query = "@class.outer", desc = "Prev class end" },
+            ["[A"] = { query = "@parameter.inner", desc = "Prev arg end" },
           },
         },
         swap = {
           enable = true,
           disable = buf_is_large,
           swap_next = {
-            ["g}"] = { query = "@parameter.inner", desc = "Swap next arg" },
+            [">K"] = { query = "@block.outer", desc = "Swap next block" },
+            [">m"] = { query = "@function.outer", desc = "Swap next method" },
+            [">A"] = { query = "@parameter.inner", desc = "Swap next arg" },
           },
           swap_previous = {
-            ["g{"] = { query = "@parameter.inner", desc = "Swap prev arg" },
+            ["<K"] = { query = "@block.outer", desc = "Swap previous block" },
+            ["<m"] = { query = "@function.outer", desc = "Swap previous method" },
+            ["<A"] = { query = "@parameter.inner", desc = "Swap previous arg" },
           },
         },
       },

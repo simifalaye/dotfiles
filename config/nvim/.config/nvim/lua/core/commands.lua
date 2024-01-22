@@ -192,3 +192,14 @@ end, {
   desc = "Stop lsp client attached to buffer by name or empty for all",
   nargs = "?", -- {client_name}
 })
+
+vim.api.nvim_create_user_command("LspLog", function()
+  local fs = require("utils.fs")
+  local log = fs.join_paths(vim.env.HOME, ".local/state/nvim/lsp.log")
+  if not require("utils.fs").file_exists(log) then
+    lib.notify("No lsp log file found at " .. log, vim.log.levels.ERROR)
+  end
+  vim.cmd("e " .. log)
+end, {
+  desc = "Open lsp log file",
+})

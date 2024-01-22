@@ -47,6 +47,23 @@ autocmd("BufReadPre", {
     end
     if stat and stat.size > 48000 then
       vim.b["midfile"] = true
+      vim.api.nvim_create_autocmd("BufReadPost", {
+        buffer = info.buf,
+        once = true,
+        callback = function()
+          vim.schedule(function()
+            pcall(vim.treesitter.stop, info.buf)
+          end)
+        end,
+      })
+      vim.api.nvim_create_autocmd("LspAttach", {
+        buffer = info.buf,
+        callback = function(args)
+          vim.schedule(function()
+            vim.lsp.buf_detach_client(info.buf, args.data.client_id)
+          end)
+        end,
+      })
     end
     if stat and stat.size > 1024000 then
       vim.b["bigfile"] = true
