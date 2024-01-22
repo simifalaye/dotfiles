@@ -1,12 +1,14 @@
 # vim: filetype=yaml.ansible
 
 - name: Get currently installed zsh path
+  tags: [shell]
   ansible.builtin.command: "which zsh"
   register: zsh_path
   ignore_errors: true
   changed_when: false
 
 - name: Set default shell to zsh if not set or not using the latest zsh
+  tags: [shell]
   become: true
   ansible.builtin.shell: chsh -s "$(which zsh)" "{{ ansible_env.USER }}"
   register: chsh_result
@@ -16,6 +18,7 @@
   changed_when: "chsh_result.rc == 0"
 
 - name: Create the ansible config file
+  tags: [shell]
   ansible.builtin.copy:
     dest: "{{ ansible_env.HOME }}/.ansible.cfg"
     content: |

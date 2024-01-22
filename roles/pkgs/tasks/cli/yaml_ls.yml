@@ -1,0 +1,9 @@
+# vim: filetype=yaml.ansible
+
+- name: Install yaml language server
+  become: true
+  tags: [pkgs, pkgs_cli, pkgs_lsp]
+  community.general.npm:
+    name: yaml-language-server
+    global: true
+    state: present

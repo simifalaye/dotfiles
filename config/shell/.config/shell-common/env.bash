@@ -113,6 +113,14 @@ export NPM_CONFIG_PREFIX="${XDG_DATA_HOME}/npm"
 export NODE_REPL_HISTORY="${XDG_STATE_HOME}/node/repl_history" && \
   mkdir -p "${NODE_REPL_HISTORY}"
 
+
+#-
+#  App: Nvim/bob
+#-
+
+[[ "${PATH}" =~ ${XDG_DATA_HOME}/bob/nvim-bin ]] || \
+  export PATH="${XDG_DATA_HOME}/bob/nvim-bin:${PATH}"
+
 #-
 #  Python
 #-

@@ -38,7 +38,6 @@ function M.sys_open(path)
     if not cmd then
       M.notify("Available system opening tool not found!", vim.log.levels.ERROR)
     end
-    P(cmd, p)
     vim.fn.jobstart(vim.fn.extend(cmd, { p }), { detach = true })
   end
 

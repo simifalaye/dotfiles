@@ -1,6 +1,7 @@
 # vim: filetype=yaml.ansible
 
 - name: Update font cache
+  tags: [fonts]
   ansible.builtin.command:
     cmd: fc-cache -v
   changed_when: false

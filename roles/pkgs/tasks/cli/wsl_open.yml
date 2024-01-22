@@ -1,0 +1,10 @@
+# vim: filetype=yaml.ansible
+
+- name: Install wsl-open only on WSL machines
+  become: true
+  tags: [pkgs, pkgs_cli]
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/4U6U57/wsl-open/master/wsl-open.sh
+    dest: /usr/local/bin/wsl-open
+    mode: '0755'
+  when: "ansible_env.WSLENV is defined and not ('wsl-open' | is_installed)"

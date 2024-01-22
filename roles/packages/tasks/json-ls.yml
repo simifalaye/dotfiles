@@ -1,8 +1,0 @@
-# vim: filetype=yaml.ansible
-
-- name: Install json language server
-  become: true
-  community.general.npm:
-    name: vscode-json-languageserver
-    global: true
-    state: present

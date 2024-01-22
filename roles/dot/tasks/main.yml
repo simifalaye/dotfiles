@@ -1,6 +1,7 @@
 # vim: filetype=yaml.ansible
 
 - name: Set ~/.stowrc contents
+  tags: [dot]
   ansible.builtin.copy:
     dest: "{{ ansible_env.HOME }}/.stowrc"
     content: |
@@ -10,6 +11,7 @@
     mode: '0644'
 
 - name: Clean up home
+  tags: [dot]
   vars:
     remove_list:
       - "{{ ansible_env.HOME }}/.lesshst"
@@ -54,6 +56,7 @@
       changed_when: backup_results.results | selectattr("rc", "eq", 0) | list | length > 0
 
 - name: Build directories list
+  tags: [dot]
   ansible.builtin.find:
     paths: [config]
     recurse: false
@@ -61,6 +64,7 @@
   register: dotfiles
 
 - name: Deploy dotfiles!
+  tags: [dot]
   with_items: '{{ dotfiles.files }}'
   ansible.builtin.shell: |
     PKG={{ item.path | replace("config/", "") }}

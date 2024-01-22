@@ -50,7 +50,6 @@ map("n", "n", "nzzzv")
 map("n", "N", "Nzzzv")
 map("n", "p", "p`[v`]=", { desc = "Paste & Format" })
 map("n", "Q", "@q", { desc = "Run q Macro" })
-map("n", "q:", "<nop>")
 
 -- (g) namespace
 map("n", "g-", "yyp^v$r-Vk", { noremap = false, desc = "Underline -" })

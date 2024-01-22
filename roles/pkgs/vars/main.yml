@@ -1,0 +1,11 @@
+# vim: filetype=yaml.ansible
+
+#
+# General
+#
+
+pkgs_bash_comp_dir: /etc/bash_completion.d
+pkgs_zsh_comp_dir: /usr/local/share/zsh/site-functions
+pkgs_man_dir: /usr/local/share/man/man1
+
+pkgs_user_bin_dir: ~/.local/bin

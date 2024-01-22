@@ -69,6 +69,7 @@ Thumbs.db
 tags
 compile_commands.json
 compile_flags.txt
+__pycache__
 
 #-
 #  Temp files

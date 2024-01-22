@@ -1,0 +1,9 @@
+# vim: filetype=yaml.ansible
+
+- name: Install cpplint linter
+  become: true
+  tags: [pkgs, pkgs_cli]
+  ansible.builtin.pip:
+    name:
+      - cpplint
+    state: present

@@ -1,12 +1,14 @@
 # vim: filetype=yaml.ansible
 
 - name: Create directory {{ item }}
+  tags: [fonts]
   ansible.builtin.file:
     path: ~/.local/share/fonts/{{ item }}
     state: directory
     mode: '0755'
 
 - name: Installing {{ item }}
+  tags: [fonts]
   ansible.builtin.unarchive:
     src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/{{ item }}.zip
     dest: ~/.local/share/fonts/{{ item }}
@@ -15,6 +17,7 @@
   notify: Update font cache
 
 - name: Installed {{ item }}
+  tags: [fonts]
   ansible.builtin.copy:
     dest: ~/.local/share/fonts/{{ item }}/done
     content: ""

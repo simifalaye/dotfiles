@@ -1,0 +1,16 @@
+# vim: filetype=yaml.ansible
+
+- name: Download and install Marksman languague server
+  tags: [pkgs, pkgs_cli, pkgs_lsp]
+  when: "not ('marksman' | is_installed)"
+  block:
+    - name: Get latest version of marksman
+      get_latest_github_tag:
+        owner: artempyanykh
+        repo: marksman
+      register: gh_tag
+    - name: Download & install marksman binary
+      ansible.builtin.get_url:
+        url: "https://github.com/artempyanykh/marksman/releases/download/{{ gh_tag.latest }}/marksman-linux-x64"
+        dest: "{{ pkgs_user_bin_dir }}/marksman"
+        mode: "0755"

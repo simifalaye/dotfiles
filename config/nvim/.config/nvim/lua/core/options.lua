@@ -106,7 +106,11 @@ g.user_codelens_enabled = true
 g.user_diagnostics_mode = 2
 
 -- enable LSP semantic tokens on startup
-g.user_semantic_tokens_enabled = true
+if vim.fn.has("nvim-0.10") == 1 then
+  g.user_semantic_tokens_enabled = true
+else
+  g.user_semantic_tokens_enabled = false
+end
 
 -- enable notifications
 g.user_notifications_enabled = true

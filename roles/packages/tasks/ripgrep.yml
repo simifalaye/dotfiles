@@ -1,8 +1,0 @@
-# vim: filetype=yaml.ansible
-
-- name: Install ripgrep
-  become: true
-  ansible.builtin.package:
-    name:
-      - ripgrep
-    state: present

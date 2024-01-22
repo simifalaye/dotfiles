@@ -1,6 +1,7 @@
 # vim: filetype=yaml.ansible
 
 - name: Download Nerd Fonts
+  tags: [fonts]
   ansible.builtin.include_tasks: download.yml
   loop:
     - FiraCode

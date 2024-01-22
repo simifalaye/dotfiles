@@ -3,7 +3,7 @@
 - name: Setup Workstation
   hosts: local
   roles:
-    - packages
+    - pkgs
     - fonts
     - dot
     - shell

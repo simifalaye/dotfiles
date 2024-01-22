@@ -1,5 +1,0 @@
-# vim: filetype=yaml.ansible
-
-# Packages
-
-packages_fd_name: fd-find

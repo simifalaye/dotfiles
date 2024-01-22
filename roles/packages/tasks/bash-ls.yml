@@ -1,8 +1,0 @@
-# vim: filetype=yaml.ansible
-
-- name: Install bash language server
-  become: true
-  community.general.npm:
-    name: "bash-language-server"
-    global: true
-    state: present

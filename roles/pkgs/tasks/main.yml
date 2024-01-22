@@ -1,0 +1,61 @@
+# vim: filetype=yaml.ansible
+
+- name: Override some variables based on distribution
+  tags: [pkgs]
+  when: item is file
+  ansible.builtin.include_vars: "{{ item }}"
+  with_fileglob:
+    - "../vars/{{ ansible_distribution }}.yml"
+    - "../vars/{{ ansible_distribution }}-{{ ansible_distribution_major_version | int }}.yml"
+
+- name: Install python and nodejs
+  become: true
+  tags: [pkgs]
+  ansible.builtin.package:
+    name:
+      - "{{ 'python' if 'arch' in ansible_distribution.lower() else 'python3' }}"
+      - "{{ 'python-pip' if 'arch' in ansible_distribution.lower() else 'python3-pip' }}"
+      - nodejs
+      - npm
+    state: present
+
+- name: Setup nodejs to use lts version
+  become: true
+  tags: [pkgs]
+  block:
+    - name: Install 'n' node version manager
+      become: true
+      community.general.npm:
+        name: n # Used for installing newer node versions
+        global: true
+        state: present
+    - name: Set node/npm versions to lts
+      become: true
+      ansible.builtin.shell: |
+        node_ver="$(node --version)"
+        node_ver="${node_ver#v}"
+        lts_ver="$(sudo n --lts)"
+        if [[ "${node_ver}" != "${lts_ver}" ]]; then
+          sudo n lts
+          echo "NODE_VER_EQ"
+        fi
+      args:
+        executable: /bin/bash
+      register: node_ver_check
+      changed_when: '"NODE_VER_EQ" in node_ver_check.stdout'
+
+- name: Install python requests package (required for get_latest_github custom module)
+  become: true
+  tags: [pkgs]
+  ansible.builtin.pip:
+    name:
+      - requests
+    state: present
+
+- name: Install cli applications
+  tags: [pkgs, pkgs_cli, pkgs_lsp, debug]
+  ansible.builtin.include_tasks: "{{ outer_item }}"
+  loop_control:
+    loop_var: outer_item
+  with_fileglob:
+    - cli/*.yml

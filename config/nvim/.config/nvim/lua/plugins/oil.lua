@@ -133,6 +133,8 @@ return {
         ["g."] = "actions.toggle_hidden",
         ["g\\"] = "actions.toggle_trash",
         -- Custom
+        ["Q"] = "q",
+        ["q"] = "actions.close",
         ["l"] = "actions.select",
         ["h"] = "actions.parent",
         ["gy"] = {

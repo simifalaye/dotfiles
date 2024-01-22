@@ -177,10 +177,10 @@ bind -T window_mode -N 'Rename' 'r' command-prompt -I "#W" { rename-window "%%" 
 bind -T window_mode -N 'Kill' 'x' confirm-before -p "kill-window #W? (y/n)" kill-window
 bind -T window_mode -N 'Select last' 'w' last-window
 bind -T window_mode -N 'Select interactively' 'Space' choose-tree -Zw
-bind -T window_mode -N 'Layout: even-horizontal' '\' select-layout even-horizontal
-bind -T window_mode -N 'Layout: even-vertical' '-' select-layout even-vertical
-bind -T window_mode -N 'Layout: main-horizontal' '|' select-layout main-horizontal
-bind -T window_mode -N 'Layout: main-vertical' '_' select-layout main-vertical
+bind -T window_mode -N 'Layout: even side-by-side' '\' select-layout even-horizontal
+bind -T window_mode -N 'Layout: main side-by-side' '|' select-layout main-vertical
+bind -T window_mode -N 'Layout: even top-down' '-' select-layout even-vertical
+bind -T window_mode -N 'Layout: main top-down' '_' select-layout main-horizontal
 bind -T window_mode -N 'Layout: tiled' '+' select-layout tiled
 bind -T window_mode -N 'Layout: even spread' '=' select-layout -E
 bind -T window_mode -N 'Toggle activity monitoring' 'm' {
