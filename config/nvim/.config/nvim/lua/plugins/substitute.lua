@@ -24,9 +24,6 @@ return {
         desc = "Exchange",
       },
     },
-    init = function()
-      vim.keymap.set("n", "s", "s", { desc = "+sub/xchange" })
-    end,
     config = true,
   },
 }
