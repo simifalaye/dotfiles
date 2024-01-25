@@ -5,7 +5,7 @@
   when: "not ('efm-langserver' | is_installed)"
   vars:
     arch_str: >-
-      {{ 'arm64' if 'arm' in ansible_architecture or 'aarch' in ansible_architecture else 'x86_64' }}
+      {{ 'arm64' if 'arm' in ansible_architecture or 'aarch' in ansible_architecture else 'amd64' }}
   block:
     - name: Get latest version of efm
       get_latest_github_tag:
