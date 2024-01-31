@@ -1,0 +1,9 @@
+# vim: filetype=yaml.ansible
+
+- name: Install pyright static type checker lsp
+  become: true
+  tags: [pkgs, pkgs_cli, pkgs_lsp]
+  ansible.builtin.pip:
+    name:
+      - pyright
+    state: present

@@ -79,4 +79,4 @@ if ! has curl stow ansible; then
 fi
 
 # Run Ansible
-ansible-playbook -i ./hosts ./playbook.yml --ask-become-pass
+ansible-playbook -i ./hosts ./playbook.yml --ask-become-pass "$@"

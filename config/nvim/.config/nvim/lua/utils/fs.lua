@@ -9,7 +9,6 @@ M.root_patterns = {
   ".bzr/",
   ".hg/",
   ".project/",
-  ".marksman.toml", -- TODO: Move to markdown ftplugin
   ".pro",
   ".sln",
   ".vcxproj",

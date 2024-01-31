@@ -103,7 +103,7 @@ g.maplocalleader = "\\" -- set default local leader key
 g.user_codelens_enabled = true
 
 -- set the visibility of diagnostics in the UI (0=off,1=status,2=virtual,3=all)
-g.user_diagnostics_mode = 2
+g.user_diagnostics_mode = 3
 
 -- enable LSP semantic tokens on startup
 if vim.fn.has("nvim-0.10") == 1 then

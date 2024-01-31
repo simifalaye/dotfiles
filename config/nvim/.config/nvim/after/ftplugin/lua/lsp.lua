@@ -7,9 +7,10 @@ if neodev_lsp_ok then
   before_init = neodev_lsp.before_init
 end
 
-if vim.fn.executable("stylua") == 1 then
-  local stylua_root_patterns = { "stylua.toml", ".stylua.toml" }
-  lsp.start(
+local stylua_root_patterns = { "stylua.toml", ".stylua.toml" }
+
+local efm = vim.fn.executable("stylua") == 1
+  and lsp.start(
     lsp.generate_config(config, {
       cmd = { "efm-langserver" },
       name = "stylua",
@@ -34,14 +35,6 @@ if vim.fn.executable("stylua") == 1 then
     nil,
     false
   )
-  lsp.register_attach_handler(function(client, _)
-    -- Disable lua_ls formatter and only use efm
-    if client.name == "luals" then
-      client.server_capabilities.documentFormattingProvider = false
-      client.server_capabilities.documentRangeFormattingProvider = false
-    end
-  end)
-end
 
 lsp.start(lsp.generate_config(config, {
   name = "luals",
@@ -55,6 +48,10 @@ lsp.start(lsp.generate_config(config, {
     "selene.toml",
     "selene.yml",
   },
+  on_attach = efm and function(client, _)
+    client.server_capabilities.documentFormattingProvider = false
+    client.server_capabilities.documentRangeFormattingProvider = false
+  end or nil,
   init_options = {
     documentFormatting = true,
     documentRangeFormatting = true,

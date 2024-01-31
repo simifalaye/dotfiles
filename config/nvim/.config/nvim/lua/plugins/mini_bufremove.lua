@@ -23,7 +23,7 @@ return {
             bd(0)
           end
         end,
-        desc = "Delete Buffer",
+        desc = "E[x]it Buf",
       },
       {
         "<leader>X",

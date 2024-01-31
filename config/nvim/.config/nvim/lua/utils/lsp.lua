@@ -263,14 +263,18 @@ end
 ---@param override lsp.ClientConfig?
 ---@return lsp.ClientConfig
 function M.generate_config(base, override)
+  local base_on_attach = base and base.on_attach
+  local override_on_attach = override and override.on_attach
   local config = vim.tbl_deep_extend("force", base or {}, override or {})
-  local on_attach = config.on_attach
   local capabilities = config.capabilities
   return vim.tbl_deep_extend("force", config, {
     on_attach = function(client, bufnr)
       -- Call config attach handler
-      if on_attach then
-        on_attach(client, bufnr)
+      if base_on_attach then
+        base_on_attach(client, bufnr)
+      end
+      if override_on_attach then
+        override_on_attach(client, bufnr)
       end
       -- Call additional attach handlers
       for _, v in ipairs(M.attach_handlers) do
