@@ -1,1 +1,0 @@
-config/nvim/.config/nvim/after/ftplugin/sh/lsp.lua

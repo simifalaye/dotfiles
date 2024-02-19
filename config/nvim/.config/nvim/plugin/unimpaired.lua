@@ -65,11 +65,16 @@ end
 local lib = require("utils.lib")
 local map = vim.keymap.set
 
-vim.keymap.set("n", "[", "[", { desc = "+prev" })
-vim.keymap.set("n", "]", "]", { desc = "+next" })
-vim.keymap.set("n", "[o", "[o", { desc = "+enable" })
-vim.keymap.set("n", "]o", "]o", { desc = "+disable" })
-vim.keymap.set("n", "yo", "yo", { desc = "+toggle" })
+local wk_ok, wk = pcall(require, "which-key")
+if wk_ok then
+  wk.register({
+    ["["] = { name = "+prev" },
+    ["]"] = { name = "+next" },
+    ["[o"] = { name = "+enable" },
+    ["]o"] = { name = "+disable" },
+    ["yo"] = { name = "+toggle" },
+  })
+end
 
 map("n", "[<space>", function()
   vim.cmd("put! =repeat(nr2char(10), v:count1)|silent ']+")

@@ -66,6 +66,7 @@ Thumbs.db
 .project
 .nvim.lua
 .docker-dev.json*
+.nlsp.json*
 tags
 compile_commands.json
 compile_flags.txt

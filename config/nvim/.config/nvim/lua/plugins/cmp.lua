@@ -50,16 +50,7 @@ return {
       "saadparwaiz1/cmp_luasnip",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
-      {
-        "hrsh7th/cmp-nvim-lsp",
-        init = function()
-          -- Setup lsp capabilities
-          require("utils.lsp").register_capabilities(
-            require("cmp_nvim_lsp").default_capabilities(),
-            10
-          )
-        end,
-      },
+      "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-nvim-lsp-signature-help",
       {
         "hrsh7th/cmp-cmdline",
@@ -121,6 +112,7 @@ return {
             })[entry.source.name] or "(Unknown)"
             return vim_item
           end,
+          expandable_indicator = true,
         },
         mapping = {
           ["<PageUp>"] = cmp.mapping.select_prev_item({
@@ -174,7 +166,7 @@ return {
           { name = "path" },
         }),
         sorting = {
-          ---@type table[]|function[]
+          priority_weight = 1.5,
           comparators = {
             cmp.config.compare.kind,
             cmp.config.compare.locality,

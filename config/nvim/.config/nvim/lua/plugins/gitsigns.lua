@@ -16,7 +16,6 @@ return {
       },
       { "]h", gitsigns.next_hunk, desc = "Next Git Hunk" },
       { "[h", gitsigns.prev_hunk, desc = "Prev Git Hunk" },
-      { "<leader>g", "<leader>g", desc = "+git" },
       { "<leader>gb", gitsigns.blame_line, { full = true }, desc = "Blame Line" },
       { "<leader>gd", gitsigns.diffthis, desc = "Diff" },
       {
@@ -34,6 +33,10 @@ return {
       { "<leader>gS", gitsigns.stage_buffer, desc = "Stage Buff" },
     },
     init = function()
+      local wk_ok, wk = pcall(require, "which-key")
+      if wk_ok then
+        wk.register({ ["<leader>g"] = { name = "+git" } })
+      end
       -- Load gitsigns only when a git file is opened
       local id = 0
       id = vim.api.nvim_create_autocmd("BufRead", {

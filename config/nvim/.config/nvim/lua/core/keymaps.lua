@@ -83,9 +83,6 @@ map("n", "<F3>", ":ToggleList c<CR>", { silent = true, desc = "Toggle Quickfix" 
 map("n", "<F4>", ":ToggleList l<CR>", { silent = true, desc = "Toggle Loclist" })
 
 -- Leader
-map("n", "<leader>w", "<cmd>update<CR>", { desc = "Write Buffer" })
-map("n", "<leader>q", "<cmd>confirm quit<CR>", { desc = "Quit" })
-map("n", "<leader>p", "<leader>p", { desc = "+plugins" })
 map("n", "<leader>x", "<cmd>bd<CR>", { desc = "E[x]it Buf" })
 map("n", "<leader>X", "<cmd>bd!<CR>", { desc = "E[x]it Buf!" })
 map("n", "<leader>pp", "<cmd>Lazy<CR>", { desc = "Open" })

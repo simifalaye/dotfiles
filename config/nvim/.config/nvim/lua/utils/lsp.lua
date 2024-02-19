@@ -1,34 +1,7 @@
 local fs = require("utils.fs")
 local map = vim.keymap.set
 
---- Insert into a table of values by a priority number
----@param tbl table(priority: number, value: any) destination
----@param new_tbl table(priority: number, value: any)
-local function insert_by_priority(tbl, new_tbl)
-  local inserted = false
-  for i, v in ipairs(tbl) do
-    if new_tbl.priority < v.priority then
-      table.insert(tbl, i, new_tbl)
-      inserted = true
-      break
-    end
-  end
-  if not inserted then
-    table.insert(tbl, new_tbl)
-  end
-end
-
 local M = {}
-
--- Store of additional attach handlers for the lsp 'on_attach' event
-M.attach_handlers = {
-  -- { priority = 0, value = nil },
-}
-
--- Store of additional lsp capabilities
-M.capabilities = {
-  -- { priority = 0, value = nil },
-}
 
 --- Get the lsp clients on a specific buffer
 ---@param bufnr number? or current bufnr if not provided
@@ -83,15 +56,6 @@ function M.start(config, opts, supports_docker_dev)
   config = config or {}
   config.root_patterns = vim.tbl_extend("force", config.root_patterns or {}, { ".git/" })
   config.root_dir = fs.proj_dir(vim.api.nvim_buf_get_name(0), config.root_patterns)
-  -- Try loading docker dev all requirements are met
-  if
-    supports_docker_dev
-    and config.root_dir
-    and _G.DockerDev
-    and _G.DockerDev.start(config, opts)
-  then
-    return
-  end
   -- Quit silently if command not installed
   if type(config.cmd) == "table" then
     if not config.cmd[1] or vim.fn.executable(config.cmd[1]) <= 0 then
@@ -180,28 +144,6 @@ function M.has_capability(capability, filter)
   return false
 end
 
---- Add an attach handler to the default on_attach function
----@param handler fun(client: lsp.Client, bufnr: integer)
----@param priority number?
-function M.register_attach_handler(handler, priority)
-  priority = priority or 5
-  insert_by_priority(M.attach_handlers, { priority = priority, value = handler })
-  local bufnr = vim.api.nvim_get_current_buf()
-  local clients = M.get_attached_clients(bufnr)
-  -- Run the handler immediately if there is already a client attached
-  for _, client in pairs(clients) do
-    handler(client, bufnr)
-  end
-end
-
---- Add a capabilities to the default lsp capabilities
----@param capabilities table
----@param priority number?
-function M.register_capabilities(capabilities, priority)
-  priority = priority or 5
-  insert_by_priority(M.capabilities, { priority = priority, value = capabilities })
-end
-
 ---@class UserLspKeys
 ---@field [1] string lhs
 ---@field [2] string|fun()|false rhs
@@ -255,44 +197,6 @@ function M.on_rename(from, to)
       end
     end
   end
-end
-
----Generate a new lsp config by using a base configuration and overriding it.
----Then append additional attach handlers and capabilities that were registered
----@param base lsp.ClientConfig?
----@param override lsp.ClientConfig?
----@return lsp.ClientConfig
-function M.generate_config(base, override)
-  local base_on_attach = base and base.on_attach
-  local override_on_attach = override and override.on_attach
-  local config = vim.tbl_deep_extend("force", base or {}, override or {})
-  local capabilities = config.capabilities
-  return vim.tbl_deep_extend("force", config, {
-    on_attach = function(client, bufnr)
-      -- Call config attach handler
-      if base_on_attach then
-        base_on_attach(client, bufnr)
-      end
-      if override_on_attach then
-        override_on_attach(client, bufnr)
-      end
-      -- Call additional attach handlers
-      for _, v in ipairs(M.attach_handlers) do
-        if v.value and type(v.value) == "function" then
-          v.value(client, bufnr)
-        end
-      end
-    end,
-    capabilities = (function()
-      local ret = capabilities
-      for _, v in pairs(M.capabilities) do
-        if v.value and type(v.value) == "table" then
-          ret = vim.tbl_extend("force", ret, v.value)
-        end
-      end
-      return ret
-    end)(),
-  })
 end
 
 return M
