@@ -75,10 +75,11 @@ return {
       },
       mappings = {
         i = {
-          ["<C-j>"] = actions.cycle_history_next,
-          ["<C-k>"] = actions.cycle_history_prev,
           ["<ESC>"] = actions.close,
           ["<C-c>"] = false,
+          ["<C-j>"] = actions.cycle_history_next,
+          ["<C-k>"] = actions.cycle_history_prev,
+          ["<C-s>"] = actions.select_horizontal,
         },
         n = { ["q"] = actions.close },
       },
@@ -89,6 +90,15 @@ return {
         override_generic_sorter = true,
         override_file_sorter = true,
         case_mode = "smart_case",
+      },
+    },
+    pickers = {
+      buffers = {
+        mappings = {
+          i = {
+            ["<c-x>"] = actions.delete_buffer,
+          },
+        },
       },
     },
   },

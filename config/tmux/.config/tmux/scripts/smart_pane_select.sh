@@ -16,9 +16,13 @@ dir="${2}"
 if in_vim; then
   # Send keys as they are
   tmux send-keys "${keys}"
-elif [ $(tmux display-message -p "#{window_zoomed_flag}") = 1 ]; then
+elif [ "$(tmux display-message -p '#{window_zoomed_flag}')" = 1 ]; then
   # If zoomed, goto next pane and keep zoomed
-  tmux select-pane -t :.+ -Z
+  if [ "${dir}" == "D" ] || [ "${dir}" == "L" ]; then
+    tmux select-pane -t :.+ -Z
+  else
+    tmux select-pane -t :.- -Z
+  fi
 else
   # Go to pane in direction
   tmux select-pane -"${dir}"

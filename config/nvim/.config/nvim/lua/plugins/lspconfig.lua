@@ -7,7 +7,8 @@ _G.NLsp.root_configs = _G.NLsp.root_configs or {}
 --- TODO: Check whether neoconf adds support for overriding 'cmd' in the future
 ---@param new_config table the configuration object to modify
 ---@param new_root_dir string the root dir of the project
-local function on_new_config(new_config, new_root_dir)
+local function default_on_new_config(new_config, new_root_dir)
+  -- Load local conf from cache or file
   local conf = _G.NLsp.root_configs[new_root_dir]
   if not conf then
     local fs = require("utils.fs")
@@ -18,12 +19,30 @@ local function on_new_config(new_config, new_root_dir)
     conf = require("utils.json").read(conf_path)
     _G.NLsp.root_configs[new_root_dir] = conf
   end
-
+  -- Merge local conf with base conf
   local server_name = new_config.name
-  if conf[server_name] then
+  if conf and conf[server_name] then
     -- Required to ensure original table variable is actually modified
     for k, v in pairs(vim.tbl_deep_extend("force", new_config, conf[server_name])) do
       new_config[k] = v
+    end
+  end
+end
+
+-- List of efm formatters that are installed (Used to handle the lsp format filter)
+local efm_formatters = {}
+
+--- Got through an efm languages table to and add installed formatters to the list of formatters
+---@param t table The efm languages table from the lsp settings
+---@param ft? string The filetype (used for recursion)
+local function find_efm_format_cmds(t, ft)
+  for k, v in pairs(t) do
+    if type(v) == "table" then
+      find_efm_format_cmds(v, ft and ft or k) -- Recursively search nested tables
+    elseif type(k) == "string" and k == "formatCommand" then
+      if ft and vim.fn.executable(string.match(v, "%S+")) == 1 then
+        efm_formatters[ft] = v
+      end
     end
   end
 end
@@ -33,9 +52,19 @@ local M = { "neovim/nvim-lspconfig" }
 M.event = "BufReadPre"
 
 M.dependencies = {
-  { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
-  { "folke/neodev.nvim", config = true },
+  {
+    "folke/neodev.nvim",
+    opts = {
+      override = function(root_dir, options)
+        if string.find(root_dir, "%.config%/nvim") ~= nil then
+          options.enabled = true
+          options.plugins = true
+        end
+      end,
+    },
+  },
   { "j-hui/fidget.nvim", config = true },
+  { "creativenull/efmls-configs-nvim", version = "v1.x.x" },
   "b0o/schemastore.nvim",
 }
 
@@ -52,13 +81,13 @@ M.config = function()
     local conf = server_configs[name]
     local keys = conf.keys
     local cmd = conf.cmd or lspconfig[name].document_config.default_config.cmd
-    local def_on_new_config = conf.on_new_config
+    local on_new_config = conf.on_new_config
     -- Override conf
     conf.on_new_config = function(new_config, new_root_dir)
-      if def_on_new_config then
-        def_on_new_config(new_config, new_root_dir)
+      if on_new_config ~= nil then
+        on_new_config(new_config, new_root_dir)
       end
-      on_new_config(new_config, new_root_dir)
+      default_on_new_config(new_config, new_root_dir)
     end
     if cmp_lsp_ok then
       conf.capabilities =
@@ -86,19 +115,52 @@ M.config = function()
     lspconfig[name].setup(conf)
   end
 
-  -- Configure all lsp servers that have a config file
-  for _, file in
-    ipairs(
-      vim.fn.readdir(
-        vim.fn.stdpath("config") .. "/lua/static/lsp_server_config",
-        [[v:val =~ '\.lua$']]
+  -- Configure servers (use mason if available)
+  local mason_lspconfig_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
+  if mason_lspconfig_ok then
+    mason_lspconfig.setup_handlers({
+      function(name) -- default handler
+        configure_server(name)
+      end,
+    })
+  else
+    for _, file in
+      ipairs(
+        vim.fn.readdir(
+          vim.fn.stdpath("config") .. "/lua/static/lsp_server_config",
+          [[v:val =~ '\.lua$']]
+        )
       )
-    )
-  do
-    local name = file:gsub("%.lua$", "")
-    if name ~= "init" then
-      configure_server(name)
+    do
+      local name = file:gsub("%.lua$", "")
+      if name ~= "init" then
+        configure_server(name)
+      end
     end
+  end
+
+  -- Setup efm
+  configure_server("efm")
+  if
+    server_configs.efm
+    and server_configs.efm.settings
+    and server_configs.efm.settings.languages
+  then
+    find_efm_format_cmds(server_configs.efm.settings.languages)
+  end
+
+  local format_filter = function(cli)
+    -- Enable efm formatter if formatter for the filetype is installed
+    if cli.name == "efm" then
+      return efm_formatters[vim.bo.filetype] ~= nil and true or false
+    end
+    -- If another lsp client, disable if efm is present and has a valid formatter
+    for _, c in pairs(lsp.get_attached_clients()) do
+      if c.name == "efm" and efm_formatters[vim.bo.filetype] ~= nil then
+        return false
+      end
+    end
+    return true
   end
 
   -- Setup main lsp attach handler for common config
@@ -118,7 +180,7 @@ M.config = function()
         wk.register({ ["<localleader>w"] = { name = "+workspace" } }, { buffer = bufnr })
       end
       local keys = {
-        { "]d", vim.diagnostic.goto_next, desc = "Diagnostic (lsp)" },
+        { "d", vim.diagnostic.goto_next, desc = "Diagnostic (lsp)" },
         { "[d", vim.diagnostic.goto_prev, desc = "Diagnostic (lsp)" },
         {
           "<localleader>a",
@@ -140,20 +202,20 @@ M.config = function()
         {
           "<localleader>f",
           function()
-            vim.lsp.buf.format({ async = true })
+            vim.lsp.buf.format({ async = true, filter = format_filter })
           end,
           mode = "n",
           desc = "Format Doc (lsp)",
-          has = "formatting",
+          has = "documentFormatting",
         },
         {
           "<localleader>f",
           function()
-            vim.lsp.buf.format({ async = true })
+            vim.lsp.buf.format({ async = true, filter = format_filter })
           end,
           mode = "v",
           desc = "Format Doc (lsp)",
-          has = "rangeFormatting",
+          has = "documentRangeFormatting",
         },
         {
           "<localleader>r",

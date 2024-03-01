@@ -1,35 +1,35 @@
 # vim: filetype=yaml.ansible
 
-- name: Install efm language server
-  tags: [pkgs, pkgs_cli, pkgs_lsp]
-  when: "not ('efm-langserver' | is_installed)"
-  vars:
-    arch_str: >-
-      {{ 'arm64' if 'arm' in ansible_architecture or 'aarch' in ansible_architecture else 'amd64' }}
-  block:
-    - name: Get latest version of efm
-      get_latest_github_tag:
-        owner: mattn
-        repo: efm-langserver
-      register: gh_tag
-    - name: Create efm tmp dir
-      ansible.builtin.file:
-        path: /tmp/efm
-        state: directory
-        mode: '0755'
-    - name: Extract efm archive
-      ansible.builtin.unarchive:
-        src: >
-          https://github.com/mattn/efm-langserver/releases/download/{{ gh_tag.latest }}/efm-langserver_{{ gh_tag.latest }}_linux_{{ arch_str }}.tar.gz
-        dest: /tmp/efm
-        remote_src: true
-        extra_opts: [--strip-components=1]
-    - name: Install efm bin
-      ansible.builtin.copy:
-        src: "/tmp/efm/efm-langserver"
-        dest: "{{ pkgs_user_bin_dir }}"
-        mode: '0755'
-    - name: Remove efm temporary files
-      ansible.builtin.file:
-        path: /tmp/efm
-        state: absent
+# - name: Install efm language server
+#   tags: [pkgs, pkgs_cli, pkgs_lsp]
+#   when: "not ('efm-langserver' | is_installed)"
+#   vars:
+#     arch_str: >-
+#       {{ 'arm64' if 'arm' in ansible_architecture or 'aarch' in ansible_architecture else 'amd64' }}
+#   block:
+#     - name: Get latest version of efm
+#       get_latest_github_tag:
+#         owner: mattn
+#         repo: efm-langserver
+#       register: gh_tag
+#     - name: Create efm tmp dir
+#       ansible.builtin.file:
+#         path: /tmp/efm
+#         state: directory
+#         mode: '0755'
+#     - name: Extract efm archive
+#       ansible.builtin.unarchive:
+#         src: >
+#           https://github.com/mattn/efm-langserver/releases/download/{{ gh_tag.latest }}/efm-langserver_{{ gh_tag.latest }}_linux_{{ arch_str }}.tar.gz
+#         dest: /tmp/efm
+#         remote_src: true
+#         extra_opts: [--strip-components=1]
+#     - name: Install efm bin
+#       ansible.builtin.copy:
+#         src: "/tmp/efm/efm-langserver"
+#         dest: "{{ pkgs_user_bin_dir }}"
+#         mode: '0755'
+#     - name: Remove efm temporary files
+#       ansible.builtin.file:
+#         path: /tmp/efm
+#         state: absent

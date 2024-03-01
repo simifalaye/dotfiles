@@ -1,6 +1,9 @@
 local linters_by_ft = {
   cpp = { "cpplint" },
   zsh = { "zsh" },
+  javascript = { "eslint" },
+  typescript = { "eslint" },
+  vue = { "eslint" },
 }
 
 local user_plugin_nvim_lint_grp_id
@@ -8,6 +11,7 @@ local user_plugin_nvim_lint_grp_id
 return {
   {
     "mfussenegger/nvim-lint",
+    enabled = false,
     init = function()
       user_plugin_nvim_lint_grp_id =
         vim.api.nvim_create_augroup("user_plugin_nvim_lint", {})

@@ -20,15 +20,17 @@ M.root_patterns = {
 }
 
 --- Check if file exists
---- @param name string
-function M.file_exists(name)
-  local f = io.open(name, "r")
-  if f ~= nil then
-    io.close(f)
-    return true
-  else
-    return false
-  end
+--- @param path string
+function M.file_exists(path)
+  local stat = vim.loop.fs_stat(path)
+  return stat and stat.type == "file" or false
+end
+
+--- Check if directory exists
+--- @param path string
+function M.dir_exists(path)
+  local stat = vim.loop.fs_stat(path)
+  return stat and stat.type == "directory" or false
 end
 
 --- Get the basename of a file path

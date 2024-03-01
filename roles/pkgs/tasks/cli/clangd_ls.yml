@@ -1,9 +1,9 @@
 # vim: filetype=yaml.ansible
 
-- name: Install clangd language server
-  become: true
-  tags: [pkgs, pkgs_cli, pkgs_lsp]
-  ansible.builtin.package:
-    name:
-      - clangd
-    state: present
+# - name: Install clangd language server
+#   become: true
+#   tags: [pkgs, pkgs_cli, pkgs_lsp]
+#   ansible.builtin.package:
+#     name:
+#       - clangd
+#     state: present
