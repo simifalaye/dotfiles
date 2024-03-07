@@ -1,2 +1,4 @@
+# Theme (MUST run `bat cache --build`)
+--theme="Catppuccin Mocha"
 # Never wrap and let the pager do its job.
 --wrap=never

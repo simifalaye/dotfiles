@@ -2,6 +2,9 @@
 # Base16-shell terminal colors
 #
 
+# TODO: Potentially remove, using terminal colors
+return 0
+
 # Set default theme
 export BASE16_THEME_DEFAULT="gruvbox-dark-hard"
 

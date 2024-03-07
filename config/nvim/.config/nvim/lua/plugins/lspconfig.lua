@@ -63,7 +63,16 @@ M.dependencies = {
       end,
     },
   },
-  { "j-hui/fidget.nvim", config = true },
+  {
+    "j-hui/fidget.nvim",
+    opts = {
+      notification = {
+        window = {
+          winblend = 0,
+        },
+      },
+    },
+  },
   { "creativenull/efmls-configs-nvim", version = "v1.x.x" },
   "b0o/schemastore.nvim",
 }
@@ -180,7 +189,7 @@ M.config = function()
         wk.register({ ["<localleader>w"] = { name = "+workspace" } }, { buffer = bufnr })
       end
       local keys = {
-        { "d", vim.diagnostic.goto_next, desc = "Diagnostic (lsp)" },
+        { "]d", vim.diagnostic.goto_next, desc = "Diagnostic (lsp)" },
         { "[d", vim.diagnostic.goto_prev, desc = "Diagnostic (lsp)" },
         {
           "<localleader>a",

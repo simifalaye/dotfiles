@@ -1,40 +1,58 @@
 return {
   {
-    "RRethy/nvim-base16",
+    "catppuccin/nvim",
+    enabled = true,
     lazy = false,
     priority = 1000,
     init = function()
       vim.o.termguicolors = true
     end,
-    config = function()
-      -- Load base16 with configuration
-      require("base16-colorscheme").with_config({
-        telescope = true,
-        telescope_borders = true,
-      })
-
-      -- Use tinted-theming/base16-shell helpers if installed
-      local set_theme_path = vim.env.HOME .. "/.config/tinted-theming/set_theme.lua"
-      if vim.fn.filereadable(set_theme_path) == 1 then
-        vim.cmd("source " .. set_theme_path)
-        -- Autoload new theme if updated
-        require("utils.fs").watch(set_theme_path, {
-          on_event = function()
-            vim.schedule(function()
-              if vim.fn.filereadable(set_theme_path) == 1 then
-                vim.cmd("source " .. set_theme_path)
-              end
-            end)
-          end,
-        })
-      else
-        -- Fallback to using base16 env
-        if vim.env.BASE16_THEME then
-          vim.cmd("colorscheme base16_" .. vim.env.BASE16_THEME)
-        else
-          vim.cmd("colorscheme base16_default-dark")
-        end
-      end
+    opts = {
+      flavour = "mocha",
+      background = {
+        light = "latte",
+        dark = "mocha",
+      },
+      term_colors = true,
+      dim_inactive = {
+        enabled = true, -- dims the background color of inactive window
+        shade = "dark",
+        percentage = 0.15, -- percentage of the shade to apply to the inactive window
+      },
+      integrations = {
+        alpha = true,
+        barbecue = {
+          dim_dirname = true,
+          bold_basename = true,
+          dim_context = false,
+          alt_background = false,
+        },
+        cmp = true,
+        fidget = true,
+        gitsigns = true,
+        headlines = true,
+        markdown = true,
+        mason = true,
+        mini = {
+          enabled = true,
+        },
+        neogit = true,
+        notify = true,
+        nvimtree = false,
+        overseer = true,
+        telescope = {
+          enabled = true,
+          -- style = "nvchad"
+        },
+        treesitter = true,
+        treesitter_context = true,
+        which_key = true,
+        -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+      },
+    },
+    config = function(_, opts)
+      require("catppuccin").setup(opts)
+      vim.cmd.colorscheme("catppuccin")
     end,
   },
 }

@@ -1,6 +1,7 @@
 return {
   {
     "epwalsh/obsidian.nvim",
+    enabled = false,
     version = "*",
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -66,10 +67,6 @@ return {
               alias_format = "%B %-d, %Y",
               template = "daily.md"
             },
-            completion = {
-              preferred_link_style = "wiki",
-              new_notes_location = "notes_subdir",
-            },
             attachments = {
               img_folder = "assets",
             },
@@ -83,6 +80,8 @@ return {
           },
         },
       },
+      new_notes_location = "notes_subdir",
+      preferred_link_style = "wiki",
       mappings = {
         ["gf"] = {
           action = function()
