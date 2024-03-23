@@ -1,0 +1,21 @@
+# vim: filetype=yaml.ansible
+
+- name: Update/upgrade apt package manager
+  ansible.builtin.import_tasks: debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Clean up home
+  vars:
+    remove_list:
+      - "{{ ansible_env.HOME }}/.lesshst"
+      - "{{ ansible_env.HOME }}/.lesskey"
+      - "{{ ansible_env.HOME }}/.viminfo"
+      - "{{ ansible_env.HOME }}/.tig_history"
+      - "{{ ansible_env.HOME }}/.calc_history"
+      - "{{ ansible_env.HOME }}/.zcompdump"
+  block:
+    - name: Remove unwanted dotfiles
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop: "{{ remove_list }}"

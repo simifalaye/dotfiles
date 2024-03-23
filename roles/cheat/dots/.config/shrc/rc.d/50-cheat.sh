@@ -1,0 +1,1 @@
+alias ch='cht.sh'

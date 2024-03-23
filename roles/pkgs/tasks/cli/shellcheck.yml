@@ -1,9 +1,0 @@
-# vim: filetype=yaml.ansible
-
-- name: Install shellcheck
-  become: true
-  tags: [pkgs, pkgs_cli]
-  ansible.builtin.package:
-    name:
-      - shellcheck
-    state: present

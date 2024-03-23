@@ -1,0 +1,14 @@
+# vim: filetype=yaml.ansible
+
+- name: Install elinks
+  become: true
+  tags: [pkgs]
+  ansible.builtin.package:
+    name:
+      - elinks
+    state: present
+
+- name: Install elinks dotfiles
+  tags: [dots]
+  link_dotfiles:
+    src_dir: "{{ role_path }}/dots"

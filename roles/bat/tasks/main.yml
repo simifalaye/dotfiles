@@ -1,0 +1,11 @@
+# vim: filetype=yaml.ansible
+
+- name: Install bat for a debian-like machine
+  ansible.builtin.import_tasks: debian.yml
+  tags: [pkgs]
+  when: ansible_os_family == "Debian"
+
+- name: Install bat dotfiles
+  tags: [dots]
+  link_dotfiles:
+    src_dir: "{{ role_path }}/dots"

@@ -1,5 +1,5 @@
 <h1 align="center">Dotfiles</h1>
-<p align="center">My dotfiles managed by Ansible and Gnu stow</p>
+<p align="center">My dotfiles managed by Ansible</p>
 <p align="center">
   <img src="https://img.shields.io/badge/OS-ubuntu_22.04-orange.svg" />
   <img src="https://img.shields.io/badge/Editor-vim-brightgreen.svg" />
@@ -19,27 +19,6 @@ git clone https://github.com/simifalaye/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ./install
 ```
-
-# Graphical Applications
-
-- [arandr](https://christian.amsuess.com/tools/arandr/) - Gui for xrandr
-- [autorandr](https://github.com/phillipberndt/autorandr) - Display config manager
-- [dunst](https://github.com/dunst-project/dunst) - Better notification daemon
-- [nitrogen](https://wiki.archlinux.org/index.php/nitrogen) - Wallpaper config
-- [papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme) - Icon theme
-- [peek](https://github.com/phw/peek) - Screen recorder
-- [redshift](http://jonls.dk/redshift/) - Blue light filter
-- [rofi](https://github.com/davatorium/rofi) - Application launcher
-- [screenkey](https://gitlab.com/screenkey/screenkey) - Show keys
-- [scrot](https://github.com/dreamer/scrot) - Screenshoot tool
-- [suckless-tools](https://tools.suckless.org/) - Tools that suck less
-- [sxiv](https://github.com/muennich/sxiv) - Terminal image viewer
-- [trayer](https://github.com/sargon/trayer-srg) - System tray
-- [xautolock](_blank) - Auto locker tool
-- [xcompmgr](https://wiki.archlinux.org/title/xcompmgr) - X compositor
-- [xmobar](https://github.com/jaor/xmobar) - X bar
-- [xmonad](https://xmonad.org/) - X window manager
-- [zathura](https://pwmt.org) - Terminal pdf reader
 
 # Terminal Applications
 

@@ -1,0 +1,14 @@
+# vim: filetype=yaml.ansible
+
+- name: Install ripgrep
+  become: true
+  tags: [pkgs]
+  ansible.builtin.package:
+    name:
+      - ripgrep
+    state: present
+
+- name: Install ripgrep dotfiles
+  tags: [dots]
+  link_dotfiles:
+    src_dir: "{{ role_path }}/dots"

@@ -1,0 +1,14 @@
+# vim: filetype=yaml.ansible
+
+- name: Install btop
+  become: true
+  tags: [pkgs]
+  ansible.builtin.package:
+    name:
+      - btop
+    state: present
+
+- name: Install btop dotfiles
+  tags: [dots]
+  link_dotfiles:
+    src_dir: "{{ role_path }}/dots"

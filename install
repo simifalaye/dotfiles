@@ -11,7 +11,6 @@ function has {
 
 # - Installs core dependencies:
 #   - curl
-#   - gnu-stow
 #   - ansible
 function install_deps {
   echo "### Installing dependencies"
@@ -28,21 +27,21 @@ function install_deps {
         if grep -q -E '(debian|ubuntu|linuxmint)' /etc/os-release; then
           echo "Detected Debian/Ubuntu/Linux Mint"
           sudo apt-get update
-          sudo apt-get install -y curl stow python3 python3-pip
+          sudo apt-get install -y curl python3 python3-pip
         elif grep -q -E '(centos|rhel|fedora)' /etc/os-release; then
           echo "Detected CentOS/RHEL/Fedora"
           if [ -f /etc/centos-release ]; then
             sudo yum update
             sudo yum install -y epel-release
           fi
-          sudo yum install -y curl stow python3 python3-pip
+          sudo yum install -y curl python3 python3-pip
         elif grep -q -E '(arch)' /etc/os-release; then
           echo "Detected Arch"
-          sudo pacman -Syyu --noconfirm curl stow python python-pip
+          sudo pacman -Syyu --noconfirm curl python python-pip
         elif grep -q -E '(opensuse)' /etc/os-release; then
           echo "Detected openSUSE"
           sudo zypper update
-          sudo zypper install -y curl stow python3 python3-pip
+          sudo zypper install -y curl python3 python3-pip
         else
           echo "Unsupported Linux distribution"
           exit 1
@@ -71,7 +70,7 @@ function install_deps {
 #-
 
 # Install deps if not installed
-if ! has curl stow ansible; then
+if ! has curl ansible; then
   if ! install_deps; then
     echo "### Failed to install dependencies"
     exit 0
@@ -79,4 +78,4 @@ if ! has curl stow ansible; then
 fi
 
 # Run Ansible
-ansible-playbook -i ./hosts ./playbook.yml --ask-become-pass "$@"
+ansible-playbook -i ./hosts ./local-dev-env.yml --ask-become-pass "$@"

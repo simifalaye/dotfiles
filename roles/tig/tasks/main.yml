@@ -1,0 +1,14 @@
+# vim: filetype=yaml.ansible
+
+- name: Install tig
+  become: true
+  tags: [pkgs]
+  ansible.builtin.package:
+    name:
+      - tig
+    state: present
+
+- name: Install tig dotfiles
+  tags: [dots]
+  link_dotfiles:
+    src_dir: "{{ role_path }}/dots"

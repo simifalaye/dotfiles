@@ -1,0 +1,56 @@
+# vim: filetype=yaml.ansible
+
+- name: Install latest release of zellij-org/zellij
+  tags: [pkgs]
+  become: true
+  when: "not ('zellij' | is_installed)"
+  block:
+    - name: Get latest release tag of a zellij
+      community.general.github_release:
+        user: zellij-org
+        repo: zellij
+        action: latest_release
+      register: zellij_latest
+    - name: Create zellij tmp dir
+      ansible.builtin.file:
+        path: /tmp/zellij
+        state: directory
+        mode: '0755'
+    - name: Extract zellij archive
+      ansible.builtin.unarchive:
+        src: >-
+          https://github.com/zellij-org/zellij/releases/download/{{ zellij_latest['tag'] }}/zellij-x86_64-unknown-linux-musl.tar.gz
+        dest: /tmp/zellij
+        remote_src: true
+    - name: Install zellij bin
+      ansible.builtin.copy:
+        src: "/tmp/zellij/zellij"
+        dest: /usr/local/bin/zellij
+        mode: '0755'
+    - name: Remove zellij temporary files
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "/tmp/zellij"
+
+- name: Create zellij bash completion file if not existing
+  become: true
+  ansible.builtin.shell: >-
+    /usr/local/bin/zellij setup --generate-completion bash > /etc/bash_completion.d/zellij
+  args:
+    chdir: "/etc/bash_completion.d"
+    creates: "/etc/bash_completion.d/zellij"
+
+- name: Create zellij zsh completion file if not existing
+  become: true
+  ansible.builtin.shell: >-
+    /usr/local/bin/zellij setup --generate-completion zsh > /usr/local/share/zsh/site-functions/_zellij
+  args:
+    chdir: "/usr/local/share/zsh/site-functions"
+    creates: "/usr/local/share/zsh/site-functions/_zellij"
+
+- name: Install zellij dotfiles
+  tags: [dots]
+  link_dotfiles:
+    src_dir: "{{ role_path }}/dots"

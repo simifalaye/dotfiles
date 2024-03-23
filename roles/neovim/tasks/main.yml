@@ -1,0 +1,45 @@
+# vim: filetype=yaml.ansible
+
+- name: Check if neovim is installed
+  ansible.builtin.stat:
+    path: /opt/nvim/bin/nvim
+  register: neovim_bin
+
+- name: Install neovim
+  become: true
+  when: not neovim_bin.stat.exists
+  block:
+    - name: Remove existing neovim installation if it exists
+      ansible.builtin.file:
+        path: "/opt/nvim"
+        state: absent
+    - name: Create neovim installation dir
+      ansible.builtin.file:
+        path: /opt/nvim
+        state: directory
+        mode: '0755'
+    - name: Download and extract neovim archive
+      ansible.builtin.unarchive:
+        src: "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
+        dest: /opt/nvim
+        remote_src: true
+        extra_opts: [--strip-components=1]
+
+- name: Install neovim for nodejs
+  become: true
+  community.general.npm:
+    name: neovim
+    global: true
+    state: present
+
+- name: Install neovim for python
+  become: true
+  ansible.builtin.pip:
+    name:
+      - pynvim
+    state: present
+
+- name: Install neovim dotfiles
+  tags: [dots]
+  link_dotfiles:
+    src_dir: "{{ role_path }}/dots"

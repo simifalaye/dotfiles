@@ -1,0 +1,14 @@
+# vim: filetype=yaml.ansible
+
+- name: Install trash-cli
+  become: true
+  tags: [pkgs]
+  ansible.builtin.pip:
+    name:
+      - trash-cli
+    state: present
+
+- name: Install trash dotfiles
+  tags: [dots]
+  link_dotfiles:
+    src_dir: "{{ role_path }}/dots"

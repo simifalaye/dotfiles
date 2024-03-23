@@ -1,0 +1,14 @@
+# vim: filetype=yaml.ansible
+
+- name: Install tmux
+  become: true
+  tags: [pkgs]
+  ansible.builtin.package:
+    name:
+      - tmux
+    state: present
+
+- name: Install tmux dotfiles
+  tags: [dots]
+  link_dotfiles:
+    src_dir: "{{ role_path }}/dots"

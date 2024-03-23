@@ -1,0 +1,31 @@
+# vim: filetype=yaml.ansible
+
+- name: Set up local development environment
+  hosts: local
+  roles:
+    - {role: git, tags: ['git', 'bootstrap']}
+    - {role: system, tags: ['system', 'bootstrap']}
+    - {role: node, tags: ['node', 'bootstrap']}
+    - {role: python, tags: ['python', 'bootstrap']}
+    - {role: sh, tags: ['sh', 'bootstrap']}
+    - {role: atool, tags: ['atool']}
+    - {role: bat, tags: ['bat']}
+    - {role: bitwise, tags: ['bitwise']}
+    - {role: btop, tags: ['btop']}
+    - {role: calc, tags: ['calc']}
+    - {role: cheat, tags: ['cheat']}
+    - {role: delta, tags: ['delta']}
+    - {role: elinks, tags: ['elinks']}
+    - {role: eza, tags: ['eza']}
+    - {role: fd, tags: ['fd']}
+    - {role: fzf, tags: ['fzf']}
+    - {role: kubernetes, tags: ['kubernetes']}
+    - {role: neovim, tags: ['neovim']}
+    - {role: ripgrep, tags: ['ripgrep']}
+    - {role: rsync, tags: ['rsync']}
+    - {role: tig, tags: ['tig']}
+    - {role: tmux, tags: ['tmux']}
+    - {role: trash, tags: ['trash']}
+    - {role: unison, tags: ['unison']}
+    - {role: wslopen, tags: ['wslopen']}
+    - {role: zellij, tags: ['zellij']}

@@ -1,0 +1,6 @@
+# vim: filetype=yaml.ansible
+
+- name: Install kubernetes dotfiles
+  tags: [dots]
+  link_dotfiles:
+    src_dir: "{{ role_path }}/dots"

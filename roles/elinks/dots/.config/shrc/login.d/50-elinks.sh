@@ -1,0 +1,1 @@
+export ELINKS_CONFDIR="${XDG_CONFIG_HOME}/elinks"
