@@ -9,6 +9,6 @@
     state: present
 
 - name: Install ripgrep dotfiles
-  tags: [dots]
+  tags: [dots, ripgrep-dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"

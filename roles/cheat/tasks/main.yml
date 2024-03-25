@@ -10,6 +10,6 @@
   when: "not ('cht.sh' | is_installed)"
 
 - name: Install cheat dotfiles
-  tags: [dots]
+  tags: [dots, cheat-dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"

@@ -9,6 +9,6 @@
     state: present
 
 - name: Install tmux dotfiles
-  tags: [dots]
+  tags: [dots, tmux-dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"

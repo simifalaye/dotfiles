@@ -14,6 +14,6 @@
   notify: "zellij_installed"
 
 - name: Install zellij dotfiles
-  tags: [dots]
+  tags: [dots, zellij-dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"

@@ -9,6 +9,6 @@
     state: present
 
 - name: Install fzf dotfiles
-  tags: [dots]
+  tags: [dots, fzf-dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"

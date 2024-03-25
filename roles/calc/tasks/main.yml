@@ -9,6 +9,6 @@
     state: present
 
 - name: Install calc dotfiles
-  tags: [dots]
+  tags: [dots, calc-dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"

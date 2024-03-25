@@ -39,6 +39,6 @@
     state: present
 
 - name: Install neovim dotfiles
-  tags: [dots]
+  tags: [dots, neovim-dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"

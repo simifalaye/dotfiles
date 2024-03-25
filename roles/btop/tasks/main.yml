@@ -9,6 +9,6 @@
     state: present
 
 - name: Install btop dotfiles
-  tags: [dots]
+  tags: [dots, btop-dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"

@@ -77,5 +77,10 @@ if ! has curl ansible; then
   fi
 fi
 
+# Prompt sudo so we don't have to ask-become-pass
+sudo echo ""
+
 # Run Ansible
-ansible-playbook -i ./hosts ./local-dev-env.yml --ask-become-pass "$@"
+ansible-playbook -i ./hosts ./local-dev-env.yml "$@"
+
+# ansible-playbook --ask-become-pass -i ./hosts ./local-dev-env.yml "$@"

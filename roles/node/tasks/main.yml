@@ -35,6 +35,6 @@
       changed_when: '"NODE_VER_EQ" in node_ver_check.stdout'
 
 - name: Install node dotfiles
-  tags: [dots]
+  tags: [dots, node-dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"

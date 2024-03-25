@@ -21,6 +21,7 @@ if [ -d "${HOME}/.config/shrc/login.d" ]; then
   done
 fi
 
+# Load interactive config if this is an interactive shell
 if [[ $- == *i* ]]; then
   # Load common shell interactive config
   if [ -d "${HOME}/.config/shrc/rc.d" ]; then

@@ -17,6 +17,6 @@
         dst: "/usr/local/share/zsh/site-functions/_bat"
 
 - name: Install bat dotfiles
-  tags: [dots]
+  tags: [dots, bat-dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"

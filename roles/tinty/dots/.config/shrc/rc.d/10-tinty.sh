@@ -20,11 +20,8 @@ tinty_source_shell_theme() {
   unset subcommand
 }
 
-# Only run for interactive shells
-if [[ $- == *i* ]]; then
-  if command -v tinty >/dev/null; then
-    tinty_source_shell_theme "init"
+if command -v tinty >/dev/null; then
+  tinty_source_shell_theme "init"
 
-    alias tinty=tinty_source_shell_theme
-  fi
+  alias tinty=tinty_source_shell_theme
 fi

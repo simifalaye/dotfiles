@@ -14,6 +14,6 @@
   notify: "tinty_installed"
 
 - name: Install tinty dotfiles
-  tags: [dots]
+  tags: [dots, tinty-dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"

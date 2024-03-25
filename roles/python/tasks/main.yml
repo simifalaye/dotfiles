@@ -18,6 +18,6 @@
     state: present
 
 - name: Install python dotfiles
-  tags: [dots]
+  tags: [dots, python-dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"

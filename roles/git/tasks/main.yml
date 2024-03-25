@@ -9,6 +9,6 @@
     state: present
 
 - name: Install git dotfiles
-  tags: [dots]
+  tags: [dots, git-dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"

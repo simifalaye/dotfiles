@@ -10,7 +10,7 @@
     state: present
 
 - name: Install shell dotfiles
-  tags: [dots]
+  tags: [dots, sh-dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"
 

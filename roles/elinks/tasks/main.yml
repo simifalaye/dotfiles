@@ -9,6 +9,6 @@
     state: present
 
 - name: Install elinks dotfiles
-  tags: [dots]
+  tags: [dots, elinks-dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"

@@ -13,6 +13,6 @@
         dst: "/usr/local/bin"
 
 - name: Install eza dotfiles
-  tags: [dots]
+  tags: [dots, eza-dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"
