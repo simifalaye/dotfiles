@@ -5,6 +5,7 @@
   when: ansible_os_family == "Debian"
 
 - name: Clean up home
+  tags: [clean]
   vars:
     remove_list:
       - "{{ ansible_env.HOME }}/.lesshst"
@@ -19,3 +20,23 @@
         path: "{{ item }}"
         state: absent
       loop: "{{ remove_list }}"
+
+- name: Clean dead symlinks in $HOME
+  tags: [clean]
+  ansible.builtin.shell:
+    cmd: |
+      find {{ ansible_env.HOME }} -maxdepth 1 -xtype l -delete
+    executable: /bin/bash
+  changed_when: false
+
+- name: Clean dead symlinks in XDG_DIRS
+  tags: [clean]
+  ansible.builtin.shell:
+    cmd: |
+      find {{ item }} -xtype l -delete
+    executable: /bin/bash
+  changed_when: false
+  loop:
+    - "{{ ansible_env.HOME }}/.config"
+    - "{{ ansible_env.HOME }}/.local"
+    - "{{ ansible_env.HOME }}/.cache"

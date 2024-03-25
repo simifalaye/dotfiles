@@ -12,17 +12,3 @@
   ansible.builtin.apt:
     upgrade: true
   when: system_package_upgrade
-
-- name: Clean dead symlinks in $HOME
-  ansible.builtin.shell:
-    cmd: |
-      find {{ ansible_env.HOME }} -maxdepth 1 -xtype l -delete
-    executable: /bin/bash
-  changed_when: false
-
-- name: Clean dead symlinks in $HOME/.config
-  ansible.builtin.shell:
-    cmd: |
-      find {{ ansible_env.HOME }}/.config -xtype l -delete
-    executable: /bin/bash
-  changed_when: false
