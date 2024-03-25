@@ -51,7 +51,7 @@ def link_files(src_dir, base_dir):
 def main():
     module_args = dict(
         src_dir=dict(type="str", required=True),
-        base_dir=dict(type="str", default=os.environ.get('HOME', '')),
+        base_dir=dict(type="str", default=os.environ.get("HOME", "")),
     )
     module = AnsibleModule(argument_spec=module_args, supports_check_mode=True)
     src_dir = module.params["src_dir"]

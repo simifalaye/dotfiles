@@ -1,26 +1,26 @@
 # vim: filetype=yaml.ansible
 
-- name: Get nvim version
-  ansible.builtin.shell:
-    cmd: |
-      set -o pipefail
-      nvim --version | head -n 1
-    executable: /bin/bash
-  register: nvim_version
-  changed_when: false
-
 - name: Download nvim
   tags: [pkgs]
-  become: true
-  quera.github.install_from_github:
-    repo: neovim/neovim
-    tag: latest
-    asset_regex: nvim-.*\.tar\.gz
-    version_command: echo {{ nvim_version.stdout }}
-    move_rules:
-      - src_regex: nvim-.*/bin/nvim
-        dst: "/tmp/nvim-dl"
-  notify: "nvim_downloaded"
+  block:
+    - name: Get nvim version
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          nvim --version | head -n 1
+        executable: /bin/bash
+      register: nvim_version
+      changed_when: false
+    - name: Get nvim package
+      quera.github.install_from_github:
+        repo: neovim/neovim
+        tag: latest
+        asset_regex: nvim-.*\.tar\.gz
+        version_command: echo {{ nvim_version.stdout }}
+        move_rules:
+          - src_regex: .*
+            dst: "/tmp/nvim"
+      notify: "nvim_downloaded"
 
 - name: Install neovim for nodejs
   tags: ["pkgs"]
