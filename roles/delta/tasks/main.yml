@@ -2,36 +2,12 @@
 
 - name: Install delta-git
   tags: [pkgs]
-  when: "not ('delta' | is_installed)"
-  vars:
-    arch_str: >-
-      {{ 'aarch64' if 'arm' in ansible_architecture or 'aarch' in ansible_architecture else 'x86_64' }}
-  block:
-    - name: Get latest release tag of a delta
-      community.general.github_release:
-        user: dandavison
-        repo: delta
-        action: latest_release
-      register: delta_latest
-    - name: Create delta tmp dir
-      ansible.builtin.file:
-        path: /tmp/delta
-        state: directory
-        mode: '0755'
-    - name: Extract delta archive
-      ansible.builtin.unarchive:
-        src:
-          "https://github.com/dandavison/delta/releases/download/\
-           {{ delta_latest['tag'] }}/delta-{{ delta_latest['tag'] }}-{{ arch_str }}-unknown-linux-gnu.tar.gz"
-        dest: /tmp/delta
-        remote_src: true
-        extra_opts: [--strip-components=1]
-    - name: Install delta bin
-      ansible.builtin.copy:
-        src: "/tmp/delta/delta"
-        dest: "{{ pkgs_user_bin_dir }}"
-        mode: '0755'
-    - name: Remove delta temporary files
-      ansible.builtin.file:
-        path: /tmp/delta
-        state: absent
+  become: true
+  quera.github.install_from_github:
+    repo: dandavison/delta
+    tag: latest
+    asset_regex: delta.*(?<!musl)\.tar\.gz
+    version_command: delta --version | grep -oE '\b[0-9]+\.[0-9]+\.[0-9]+\b'
+    move_rules:
+      - src_regex: delta-.*/delta
+        dst: "/usr/local/bin"

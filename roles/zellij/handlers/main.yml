@@ -1,0 +1,21 @@
+# vim: filetype=yaml.ansible
+
+- name: Create zellij bash completion
+  tags: [pkgs]
+  listen: "zellij_installed"
+  become: true
+  ansible.builtin.shell: >-
+    /usr/local/bin/zellij setup --generate-completion bash > /usr/share/bash-completion/completions/zellij
+  args:
+    chdir: "/usr/share/bash-completion/completions"
+    creates: "/usr/share/bash-completion/completions/zellij"
+
+- name: Create zellij zsh completion
+  listen: "zellij_installed"
+  tags: [pkgs]
+  become: true
+  ansible.builtin.shell: >-
+    /usr/local/bin/zellij setup --generate-completion zsh > /usr/local/share/zsh/site-functions/_zellij
+  args:
+    chdir: "/usr/local/share/zsh/site-functions"
+    creates: "/usr/local/share/zsh/site-functions/_zellij"

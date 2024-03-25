@@ -19,7 +19,6 @@ set -g @tpm_plugins '                \
   tmux-plugins/tpm                   \
   tmux-plugins/tmux-logging          \
   tmux-plugins/tmux-resurrect        \
-  tmux-plugins/tmux-yank             \
   fcsonline/tmux-thumbs              \
 '
 
@@ -74,15 +73,6 @@ set -g @resurrect-hook-post-restore-all '
   # This is the reason for the sensibly high delay.
   { sleep 15; tmux set -g monitor-activity on; } &
 '
-
-#-
-#  tmux-yank
-#-
-
-# Override copy to use osc52 in SSH
-if-shell -b '[ -n "${SSH_TTY}" ]' {
-  set -g @override_copy_command "tmux load-buffer -w -"
-}
 
 #-
 #  tmux-thumbs

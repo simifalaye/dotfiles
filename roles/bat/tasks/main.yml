@@ -1,9 +1,20 @@
 # vim: filetype=yaml.ansible
 
-- name: Install bat for a debian-like machine
-  ansible.builtin.import_tasks: debian.yml
+- name: Install bat
   tags: [pkgs]
-  when: ansible_os_family == "Debian"
+  become: true
+  quera.github.install_from_github:
+    repo: sharkdp/bat
+    tag: latest
+    asset_regex: bat-.*(?<!musl)\.tar\.gz
+    version_command: bat --version | grep -oE '\b[0-9]+\.[0-9]+\.[0-9]+\b'
+    move_rules:
+      - src_regex: bat-.*/bat
+        dst: "/usr/local/bin"
+      - src_regex: bat-.*/autocomplete/bat.bash
+        dst: "/usr/share/bash-completion/completions/bat"
+      - src_regex: bat-.*/autocomplete/bat.zsh
+        dst: "/usr/local/share/zsh/site-functions/_bat"
 
 - name: Install bat dotfiles
   tags: [dots]

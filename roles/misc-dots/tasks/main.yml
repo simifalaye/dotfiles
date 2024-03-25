@@ -1,0 +1,6 @@
+# vim: filetype=yaml.ansible
+
+- name: Install misc dotfiles
+  tags: [dots]
+  link_dotfiles:
+    src_dir: "{{ role_path }}/dots"

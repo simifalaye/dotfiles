@@ -20,10 +20,12 @@
     - {role: fd, tags: ['fd']}
     - {role: fzf, tags: ['fzf']}
     - {role: kubernetes, tags: ['kubernetes']}
+    - {role: misc-dots, tags: ['misc-dots']}
     - {role: neovim, tags: ['neovim']}
     - {role: ripgrep, tags: ['ripgrep']}
     - {role: rsync, tags: ['rsync']}
     - {role: tig, tags: ['tig']}
+    - {role: tinty, tags: ['tinty']}
     - {role: tmux, tags: ['tmux']}
     - {role: trash, tags: ['trash']}
     - {role: unison, tags: ['unison']}

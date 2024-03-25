@@ -1,31 +1,29 @@
 # vim: filetype=yaml.ansible
 
-- name: Check if neovim is installed
-  ansible.builtin.stat:
-    path: /opt/nvim/bin/nvim
-  register: neovim_bin
+- name: Get nvim version
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      nvim --version | head -n 1
+    executable: /bin/bash
+  register: nvim_version
+  changed_when: false
 
-- name: Install neovim
+- name: Download nvim
+  tags: [pkgs]
   become: true
-  when: not neovim_bin.stat.exists
-  block:
-    - name: Remove existing neovim installation if it exists
-      ansible.builtin.file:
-        path: "/opt/nvim"
-        state: absent
-    - name: Create neovim installation dir
-      ansible.builtin.file:
-        path: /opt/nvim
-        state: directory
-        mode: '0755'
-    - name: Download and extract neovim archive
-      ansible.builtin.unarchive:
-        src: "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
-        dest: /opt/nvim
-        remote_src: true
-        extra_opts: [--strip-components=1]
+  quera.github.install_from_github:
+    repo: neovim/neovim
+    tag: latest
+    asset_regex: nvim-.*\.tar\.gz
+    version_command: echo {{ nvim_version.stdout }}
+    move_rules:
+      - src_regex: nvim-.*/bin/nvim
+        dst: "/tmp/nvim-dl"
+  notify: "nvim_downloaded"
 
 - name: Install neovim for nodejs
+  tags: ["pkgs"]
   become: true
   community.general.npm:
     name: neovim
@@ -33,6 +31,7 @@
     state: present
 
 - name: Install neovim for python
+  tags: ["pkgs"]
   become: true
   ansible.builtin.pip:
     name:

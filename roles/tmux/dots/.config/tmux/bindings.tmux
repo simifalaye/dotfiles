@@ -70,15 +70,8 @@ bind -n -N 'Resize right' 'M-C-l' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M
 bind -n -N 'Zoom the current pane' 'M-z' resize-pane -Z
 
 # See: https://www.reddit.com/r/tmux/comments/j7fcr7/tiling_in_tmux_as_in_bspwm/
-bind -n -N 'New pane' 'M-Enter' if-shell \
+bind -n -N 'New pane' 'M-/' if-shell \
        "[ $(($(tmux display -p '8*#{pane_width}-20*#{pane_height}'))) -lt 0 ]" "splitw -v -c '#{pane_current_path}'" "splitw -h -c '#{pane_current_path}' "
-
-# Toggle scratchpad
-bind-key -N 'Toggle scratch window' -n "M-;" if-shell -F '#{==:#{session_name},scratch}' {
-  detach-client
-} {
-  display-popup -d "#{pane_current_path}" -xC -yC -w 80% -h 75% -E 'tmux new-session -A -s scratch'
-}
 
 #-
 #  Mouse
@@ -155,10 +148,13 @@ bind -T root 'C-DoubleClick1Pane' resize-pane -Zt=
 
 bind -n -N '-- Mode: Pane (help = M-p + ?)' 'M-p' switch-client -T pane_mode
 
-bind -T pane_mode -N 'New (left)' 'h' split-window -hb -c "#{pane_current_path}"
-bind -T pane_mode -N 'New (below)' 'j' split-window -v -c "#{pane_current_path}"
-bind -T pane_mode -N 'New (up)' 'k' split-window -vb -c "#{pane_current_path}"
-bind -T pane_mode -N 'New (right)' 'l' split-window -h -c "#{pane_current_path}"
+bind -T pane_mode -N 'Split below' 's' split-window -v -c "#{pane_current_path}"
+bind -T pane_mode -N 'Slit right' 'v' split-window -h -c "#{pane_current_path}"
+bind -T pane_mode -N 'Select left' 'h' select-pane -L
+bind -T pane_mode -N 'Select down' 'j' select-pane -D
+bind -T pane_mode -N 'Select up' 'k' select-pane -U
+bind -T pane_mode -N 'Select Right' 'l' select-pane -R
+bind -T pane_mode -N 'Select last' 'p' last-pane
 bind -T pane_mode -N 'Mark' 'm' select-pane -m
 bind -T pane_mode -N 'Clear mark' 'M' select-pane -M
 bind -T pane_mode -N 'Break to new window' 'b' break-pane
@@ -209,7 +205,7 @@ bind -T window_mode -N 'List key bindings' '?' display-popup -w80 -h90% -E "tmux
 #  Session mode
 #-
 
-bind -n -N '-- Mode: Session (help = M-o + ?)' 'M-o' switch-client -T session_mode
+bind -n -N '-- Mode: Session (help = M-s + ?)' 'M-s' switch-client -T session_mode
 
 bind -T session_mode -N 'Detach' 'd' detach-client
 bind -T session_mode -N 'Kill' 'x' confirm-before -p "kill-session #S? (y/n)" kill-session
@@ -229,9 +225,8 @@ bind -T session_mode -N 'List key bindings' '?' display-popup -w80 -h90% -E "tmu
 unbind -a -T prefix
 
 # Set the prefix key
-unbind 'C-b'
-set -g prefix 'M-s'
-bind 'M-s' send-prefix
+set -g prefix 'M-;'
+bind 'M-;' send-prefix
 bind -n 'M-a' send-prefix # Nested session prefix
 
 # Config

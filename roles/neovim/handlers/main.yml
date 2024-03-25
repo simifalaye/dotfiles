@@ -1,0 +1,12 @@
+# vim: filetype=yaml.ansible
+
+- name: Install nvim download dir
+  tags: [pkgs]
+  listen: "nvim_downloaded"
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      test -d /opt/nvim && rm -rf /opt/nvim
+      mv /tmp/nvim /opt/nvim
+  register: install_result
+  changed_when: "install_result.rc == 0"

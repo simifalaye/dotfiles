@@ -1,0 +1,7 @@
+---
+collections:
+  # Install a collection from Ansible Galaxy.
+  - name: community.general
+    version: ">=7.0.0"
+    source: https://galaxy.ansible.com
+  - name: git+https://github.com/QueraTeam/ansible-github.git

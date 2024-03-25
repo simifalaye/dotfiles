@@ -65,14 +65,14 @@ return {
         "hrsh7th/cmp-cmdline",
         event = "CmdlineEnter",
       },
-      {
-        "Exafunction/codeium.nvim",
-        dependencies = {
-          "nvim-lua/plenary.nvim",
-          "hrsh7th/nvim-cmp",
-        },
-        config = true,
-      },
+      -- {
+      --   "Exafunction/codeium.nvim",
+      --   dependencies = {
+      --     "nvim-lua/plenary.nvim",
+      --     "hrsh7th/nvim-cmp",
+      --   },
+      --   config = true,
+      -- },
     },
     event = { "InsertEnter" },
     config = function()
@@ -129,7 +129,7 @@ return {
               spell = "(Spell)",
               rg = "(Rg)",
               git = "(Git)",
-              codeium = "(AI)",
+              -- codeium = "(AI)",
             })[entry.source.name] or "(Unknown)"
             return vim_item
           end,
@@ -177,7 +177,7 @@ return {
           end, { "i", "s" }),
         },
         sources = cmp.config.sources({
-          { name = "codeium" },
+          -- { name = "codeium" },
           { name = "luasnip", max_item_count = 3 },
           { name = "nvim_lsp_signature_help" },
           {

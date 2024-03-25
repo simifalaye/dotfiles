@@ -1,18 +1,19 @@
 # vim: filetype=yaml.ansible
 
-- name: Install eza
+- name: Install tinty
   tags: [pkgs]
   become: true
   quera.github.install_from_github:
-    repo: eza-community/eza
+    repo: tinted-theming/tinty
     tag: latest
-    asset_regex: eza.*(?<!musl)\.tar\.gz
-    version_command: eza --version | grep -o 'v[0-9]\+\.[0-9]\+\.[0-9]\+'
+    asset_regex: tinty--.*\.tar\.gz
+    version_command: tinty --version
     move_rules:
-      - src_regex: eza
+      - src_regex: tinty
         dst: "/usr/local/bin"
+  notify: "tinty_installed"
 
-- name: Install eza dotfiles
+- name: Install tinty dotfiles
   tags: [dots]
   link_dotfiles:
     src_dir: "{{ role_path }}/dots"

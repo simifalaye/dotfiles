@@ -44,10 +44,6 @@ export LESS='-QRSMi -#.25 --no-histdups'
 export SYSTEMD_LESS="$LESS"
 mkdir -p "${XDG_STATE_HOME}/less" # Create less dir if not created
 
-# Wget config
-export WGETRC="${XDG_CONFIG_HOME}/wget/config"
-mkdir -p "${XDG_CONFIG_HOME}/wget"
-
 # Wsl2
 if grep -iq microsoft /proc/version; then
   export LS_COLORS="ow=01;36;40"

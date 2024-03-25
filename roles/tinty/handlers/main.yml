@@ -1,0 +1,10 @@
+# vim: filetype=yaml.ansible
+
+- name: Setup tinty
+  tags: [pkgs]
+  listen: "tinty_installed"
+  ansible.builtin.shell:
+    cmd: |
+      tinty --config ~/.config/tinty/config.toml install
+  register: install_result
+  changed_when: true

@@ -60,9 +60,9 @@ function install_deps {
   # Ensure PATH for new python executable locations
   export PATH=${HOME}/.local/share/python/bin:${PATH}
 
-  # Install ansible and community modules
+  # Install ansible and required modules
   pip install ansible
-  ansible-galaxy collection install community.general
+  ansible-galaxy install -r requirements.yml
 }
 
 #-
