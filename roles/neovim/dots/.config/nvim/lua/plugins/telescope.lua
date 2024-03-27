@@ -61,6 +61,14 @@ return {
     if wk_ok then
       wk.register({ ["<leader>f"] = { name = "+find" } })
     end
+
+    local old_ui_select = vim.ui["select"]
+    ---@diagnostic disable-next-line: duplicate-set-field
+    vim.ui["select"] = function(...)
+      vim.ui["select"] = old_ui_select
+      require("lazy").load({ plugins = { "telescope.nvim" } })
+      vim.ui["select"](...)
+    end
   end,
   config = function()
     local telescope = require("telescope")

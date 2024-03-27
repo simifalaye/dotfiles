@@ -6,7 +6,7 @@ local function lsp_clients()
       str = str .. v.name .. ", "
     end
   end
-  return (string.len(str) > 0 and " " or "") .. str:sub(1, -3)
+  return str:sub(1, -3)
 end
 
 return {
@@ -16,7 +16,23 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       options = {
-        theme = "auto",
+        theme = function()
+          local hl = require("utils.hl")
+          local group = hl.get(0, { name = "Normal" })
+          local basic = {
+            bg = group["fg"] and hl.dec2hex(group["fg"]),
+            fg = group["bg"] and hl.dec2hex(group["bg"]),
+          }
+          local slcolor = { a = basic, b = basic, c = basic }
+          return {
+            normal = slcolor,
+            insert = slcolor,
+            visual = slcolor,
+            replace = slcolor,
+            command = slcolor,
+            inactive = slcolor,
+          }
+        end,
         section_separators = "",
         component_separators = "",
         disabled_filetypes = { statusline = { "dashboard", "alpha", "starter" } },
@@ -26,20 +42,24 @@ return {
           {
             "mode",
             fmt = function(str)
-              return str:sub(1, 1)
+              return str:sub(1, 3)
             end,
           },
         },
-        lualine_b = { "branch", "diff", "diagnostics" },
+        lualine_b = {
+          "branch",
+          { "diff", colored = false },
+          { "diagnostics", colored = false },
+        },
         lualine_c = { { "filename", path = 1, shorting_target = 60 } },
-        lualine_x = { { lsp_clients }, "filetype", "progress" },
+        lualine_x = { { lsp_clients }, { "filetype", colored = false } },
         lualine_y = {},
         lualine_z = { { "%l:%c" } },
       },
       inactive_sections = {
         lualine_a = {},
         lualine_b = {},
-        lualine_c = { "filename" },
+        lualine_c = { { "filename", path = 1, shorting_target = 60 } },
         lualine_x = { "location" },
         lualine_y = {},
         lualine_z = {},

@@ -17,7 +17,7 @@ return {
 
       -- Use tinty helper if installed
       local set_theme_path = vim.env.HOME
-      .. "/.local/share/tinted-theming/tinty/current_scheme"
+        .. "/.local/share/tinted-theming/tinty/current_scheme"
       if vim.fn.filereadable(set_theme_path) == 1 then
         vim.cmd("colorscheme " .. fs.read_file(set_theme_path))
         -- Autoload new theme if updated

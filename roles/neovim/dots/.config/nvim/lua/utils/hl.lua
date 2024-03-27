@@ -1,10 +1,11 @@
 local M = {}
 
---- Convert decimal to hex number
----@param decimal number
----@return string
-function M.dec2hex(decimal)
-  return string.format("#%X", decimal)
+---Convert an integer from decimal to hexadecimal
+---@param int integer
+---@param n_digits integer? number of digits used for the hex code
+---@return string hex
+function M.dec2hex(int, n_digits)
+  return string.format("%0" .. (n_digits or 6) .. "x", int)
 end
 
 --- Convert hex to decimal number
@@ -97,10 +98,11 @@ function M.normalize_fg_or_bg(attr_type, fbg, default)
   end
   if data_type == "string" then
     if vim.fn.hlexists(fbg) == 1 then
-      return M.get(0, {
+      local val = M.get(0, {
         name = fbg,
         link = false,
       })[attr_type]
+      return type(default) == "string" and M.dec2hex(val) or val
     end
     if fbg:match("^#%x%x%x%x%x%x$") then
       if attr_type:match("^cterm") then
