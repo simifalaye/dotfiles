@@ -17,4 +17,5 @@ return {
       desc = "Alt file (lsp)",
     },
   },
+  filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
 }

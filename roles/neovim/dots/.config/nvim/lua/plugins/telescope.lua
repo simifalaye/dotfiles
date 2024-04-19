@@ -12,6 +12,7 @@ return {
       build = "make",
     },
     { "nvim-telescope/telescope-ui-select.nvim" },
+    { "nvim-telescope/telescope-symbols.nvim" },
   },
   cmd = "Telescope",
   keys = {
@@ -53,6 +54,7 @@ return {
     { "<leader>fm", "<cmd>Telescope man_pages<CR>", desc = "Manpages" },
     { "<leader>fq", "<cmd>Telescope quickfix<CR>", desc = "Quickfix" },
     { "<leader>fs", "<cmd>Telescope spell_suggest<CR>", desc = "Spell" },
+    { "<leader>fS", "<cmd>Telescope symbols<CR>", desc = "Symbols" },
     { "<leader>fo", "<cmd>Telescope oldfiles<CR>", desc = "Oldfiles" },
     { "<leader>fO", "<cmd>Telescope vim_options<CR>", desc = "Options" },
   },

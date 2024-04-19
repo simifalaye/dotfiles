@@ -7,7 +7,7 @@
     repo: zellij-org/zellij
     tag: latest
     asset_regex: zellij-.*\.tar\.gz
-    version_command: zellij --version | grep -oE '\b[0-9]+\.[0-9]+\.[0-9]+\b'
+    version_command: zellij --version
     move_rules:
       - src_regex: zellij
         dst: "/usr/local/bin"

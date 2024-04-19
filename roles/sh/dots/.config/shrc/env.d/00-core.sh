@@ -10,7 +10,7 @@ export XDG_CONFIG_HOME="${HOME}/.config" && mkdir -p "${XDG_CONFIG_HOME}"
 export XDG_CACHE_HOME="${HOME}/.cache" && mkdir -p "${XDG_CACHE_HOME}"
 export XDG_DATA_HOME="${HOME}/.local/share" && mkdir -p "${XDG_DATA_HOME}"
 export XDG_STATE_HOME="${HOME}/.local/state" && mkdir -p "${XDG_STATE_HOME}"
-uid="$(id -u)" && export XDG_RUNTIME_DIR="/run/user/${uid}"
+export XDG_RUNTIME_DIR="/tmp/runtimedir/${UID}" && mkdir -p "${XDG_RUNTIME_DIR}"
 
 # System directories
 export XDG_CONFIG_DIRS="/etc/xdg" && mkdir -p "${XDG_CONFIG_DIRS}"
@@ -49,7 +49,6 @@ if grep -iq microsoft /proc/version; then
   export LS_COLORS="ow=01;36;40"
   export LIBGL_ALWAYS_INDIRECT=1
   # pam_env
-  export XDG_RUNTIME_DIR=/tmp/runtimedir
   export RUNLEVEL=3
   # Use explorer.exe for browser
   export BROWSER="/mnt/c/Windows/explorer.exe"

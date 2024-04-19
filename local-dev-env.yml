@@ -20,6 +20,7 @@
     - {role: fd, tags: ['fd']}
     - {role: fzf, tags: ['fzf']}
     - {role: kubernetes, tags: ['kubernetes']}
+    - {role: lazygit, tags: ['lazygit']}
     - {role: misc-dots, tags: ['misc-dots']}
     - {role: neovim, tags: ['neovim']}
     - {role: ripgrep, tags: ['ripgrep']}

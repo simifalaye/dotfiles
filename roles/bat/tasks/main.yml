@@ -7,7 +7,7 @@
     repo: sharkdp/bat
     tag: latest
     asset_regex: bat-.*(?<!musl)\.tar\.gz
-    version_command: bat --version | grep -oE '\b[0-9]+\.[0-9]+\.[0-9]+\b'
+    version_command: bat --version
     move_rules:
       - src_regex: bat-.*/bat
         dst: "/usr/local/bin"

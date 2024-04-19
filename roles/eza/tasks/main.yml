@@ -7,7 +7,7 @@
     repo: eza-community/eza
     tag: latest
     asset_regex: eza.*(?<!musl)\.tar\.gz
-    version_command: eza --version | grep -o 'v[0-9]\+\.[0-9]\+\.[0-9]\+'
+    version_command: eza --version
     move_rules:
       - src_regex: eza
         dst: "/usr/local/bin"
