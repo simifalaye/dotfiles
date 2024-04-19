@@ -19,6 +19,7 @@
     - {role: eza, tags: ['eza']}
     - {role: fd, tags: ['fd']}
     - {role: fzf, tags: ['fzf']}
+    - {role: github, tags: ['github']}
     - {role: kubernetes, tags: ['kubernetes']}
     - {role: lazygit, tags: ['lazygit']}
     - {role: misc-dots, tags: ['misc-dots']}
