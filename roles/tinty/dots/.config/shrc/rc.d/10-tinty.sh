@@ -20,7 +20,7 @@ tinty_source_shell_theme() {
   unset subcommand
 }
 
-if command -v tinty >/dev/null; then
+if command -v tinty >/dev/null && ((SHLVL == 1)); then
   tinty_source_shell_theme "init"
 
   alias tinty=tinty_source_shell_theme

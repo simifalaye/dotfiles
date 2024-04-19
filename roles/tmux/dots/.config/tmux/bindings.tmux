@@ -210,8 +210,8 @@ bind -n -N '-- Mode: Session (help = M-s + ?)' 'M-s' switch-client -T session_mo
 bind -T session_mode -N 'Detach' 'd' detach-client
 bind -T session_mode -N 'Kill' 'x' confirm-before -p "kill-session #S? (y/n)" kill-session
 bind -T session_mode -N 'Select last' 'o' switch-client -l
-bind -T session_mode -N 'Select next' -r 'n' switch-client -n
-bind -T session_mode -N 'Select prev' -r 'p' switch-client -p
+bind -T session_mode -N 'Select next' -r 'l' switch-client -n
+bind -T session_mode -N 'Select prev' -r 'h' switch-client -p
 bind -T session_mode -N 'Select interactively' 'Space' choose-tree -Zs
 bind -T session_mode -N 'Create a new session' 'n' command-prompt { new-session -s "%%" }
 bind -T session_mode -N 'Rename the current session' 'r' command-prompt -I "#S" { rename-session "%%" }
