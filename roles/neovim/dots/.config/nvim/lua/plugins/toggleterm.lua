@@ -56,7 +56,7 @@ return {
             local o = { buffer = 0 }
             vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], o)
             vim.keymap.set("t", "<C-w>", [[<C-\><C-n><C-w>]], o)
-            vim.keymap.set("t", "<C->", function()
+            vim.keymap.set("t", "<C-]>", function()
               curr_term_dir = curr_term_dir >= #term_dirs and 1 or curr_term_dir + 1
               vim.cmd("ToggleTerm")
               vim.cmd("ToggleTerm direction=" .. term_dirs[curr_term_dir])

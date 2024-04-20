@@ -209,7 +209,8 @@ bind -n -N '-- Mode: Session (help = M-s + ?)' 'M-s' switch-client -T session_mo
 
 bind -T session_mode -N 'Detach' 'd' detach-client
 bind -T session_mode -N 'Kill' 'x' confirm-before -p "kill-session #S? (y/n)" kill-session
-bind -T session_mode -N 'Select last' 'o' switch-client -l
+bind -T session_mode -N 'Select last' 's' switch-client -l
+bind -T session_mode -N 'Select last' 'M-s' switch-client -l
 bind -T session_mode -N 'Select next' -r 'l' switch-client -n
 bind -T session_mode -N 'Select prev' -r 'h' switch-client -p
 bind -T session_mode -N 'Select interactively' 'Space' choose-tree -Zs
