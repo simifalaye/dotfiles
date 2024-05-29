@@ -36,19 +36,4 @@ function M.event(event)
   end)
 end
 
---- Convert a list or map into a value by transforming each field using a cb
----@generic T : table
----@param callback function(T, T, key: string | number): T
----@param list T[]
----@param accum T?
----@return T
-function M.fold(callback, list, accum)
-  accum = accum or {}
-  for k, v in pairs(list) do
-    accum = callback(accum, v, k)
-    assert(accum ~= nil, "The accumulator must be returned on each iteration")
-  end
-  return accum
-end
-
 return M

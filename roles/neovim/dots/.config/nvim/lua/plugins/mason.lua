@@ -25,7 +25,6 @@ return {
           "clangd",
           "cpplint",
           "clang-format",
-          "efm",
           "lua-language-server",
           "marksman",
           "prettier",

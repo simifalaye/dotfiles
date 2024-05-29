@@ -98,7 +98,7 @@ opt.spelloptions = "camel"
 opt.spellsuggest = "best,9"
 
 -- Preview substitutions live, as you type!
-vim.opt.inccommand = 'split'
+vim.opt.inccommand = "split"
 
 g.mapleader = " " -- set leader key
 g.maplocalleader = "\\" -- set default local leader key
@@ -110,11 +110,10 @@ g.user_codelens_enabled = true
 g.user_diagnostics_mode = 3
 
 -- enable LSP semantic tokens on startup
-if vim.fn.has("nvim-0.10") == 1 then
-  g.user_semantic_tokens_enabled = true
-else
-  g.user_semantic_tokens_enabled = false
-end
+g.user_semantic_tokens_enabled = true
+
+-- enable or disable inlay hints
+g.user_inlay_hints_enabled = true
 
 -- enable notifications
 g.user_notifications_enabled = true

@@ -42,7 +42,7 @@ return {
       {
         "_",
         function()
-          vim.cmd("Oil " .. fs.proj_dir())
+          vim.cmd("Oil " .. fs.root())
         end,
         desc = "Open root directory",
       },
@@ -61,7 +61,7 @@ return {
             and vim.fn.isdirectory(arg) == 1
             and vim.fn.exists("s:std_in") ~= 1
           then
-            vim.cmd("Oil " .. fs.proj_dir())
+            vim.cmd("Oil " .. fs.root())
           end
         end,
       })

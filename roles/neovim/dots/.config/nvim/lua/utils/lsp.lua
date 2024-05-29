@@ -55,7 +55,7 @@ function M.start(config, opts, supports_docker_dev)
   -- Setup config
   config = config or {}
   config.root_patterns = vim.tbl_extend("force", config.root_patterns or {}, { ".git/" })
-  config.root_dir = fs.proj_dir(vim.api.nvim_buf_get_name(0), config.root_patterns)
+  config.root_dir = fs.root(vim.api.nvim_buf_get_name(0), config.root_patterns)
   -- Quit silently if command not installed
   if type(config.cmd) == "table" then
     if not config.cmd[1] or vim.fn.executable(config.cmd[1]) <= 0 then
@@ -156,7 +156,7 @@ end
 ---@field has string? map only if the client has a specific capability
 
 --- Register lsp keys for the current buffer
----@param client lsp.Client
+---@param client vim.lsp.Client
 ---@param bufnr integer
 ---@param keys UserLspKeys[]
 function M.register_keys(client, bufnr, keys)

@@ -1,5 +1,5 @@
 _G.NLsp = _G.NLsp or {}
-_G.NLsp.root_configs = _G.NLsp.root_configs or {}
+_G.NLsp.root_configs_cache = _G.NLsp.root_configs_cache or {}
 
 --- A lspconfig on_new_config handler to allow for overriding default server
 --- config with project-local config (including things like cmd) since neoconf
@@ -9,7 +9,7 @@ _G.NLsp.root_configs = _G.NLsp.root_configs or {}
 ---@param new_root_dir string the root dir of the project
 local function default_on_new_config(new_config, new_root_dir)
   -- Load local conf from cache or file
-  local conf = _G.NLsp.root_configs[new_root_dir]
+  local conf = _G.NLsp.root_configs_cache[new_root_dir]
   if not conf then
     local fs = require("utils.fs")
     local conf_path = fs.join_paths(new_root_dir, ".nlsp.json")
@@ -17,7 +17,7 @@ local function default_on_new_config(new_config, new_root_dir)
       return
     end
     conf = require("utils.json").read(conf_path)
-    _G.NLsp.root_configs[new_root_dir] = conf
+    _G.NLsp.root_configs_cache[new_root_dir] = conf
   end
   -- Merge local conf with base conf
   local server_name = new_config.name
@@ -25,24 +25,6 @@ local function default_on_new_config(new_config, new_root_dir)
     -- Required to ensure original table variable is actually modified
     for k, v in pairs(vim.tbl_deep_extend("force", new_config, conf[server_name])) do
       new_config[k] = v
-    end
-  end
-end
-
--- List of efm formatters that are installed (Used to handle the lsp format filter)
-local efm_formatters = {}
-
---- Got through an efm languages table to and add installed formatters to the list of formatters
----@param t table The efm languages table from the lsp settings
----@param ft? string The filetype (used for recursion)
-local function find_efm_format_cmds(t, ft)
-  for k, v in pairs(t) do
-    if type(v) == "table" then
-      find_efm_format_cmds(v, ft and ft or k) -- Recursively search nested tables
-    elseif type(k) == "string" and k == "formatCommand" then
-      if ft and vim.fn.executable(string.match(v, "%S+")) == 1 then
-        efm_formatters[ft] = v
-      end
     end
   end
 end
@@ -73,7 +55,6 @@ M.dependencies = {
       },
     },
   },
-  { "creativenull/efmls-configs-nvim", version = "v1.x.x" },
   "b0o/schemastore.nvim",
 }
 
@@ -113,7 +94,7 @@ M.config = function()
         callback = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           local bufnr = args.buf
-          if client.name == name then
+          if client and client.name == name then
             lsp.register_keys(client, bufnr, keys)
           end
         end,
@@ -148,30 +129,6 @@ M.config = function()
     end
   end
 
-  -- Setup efm
-  configure_server("efm")
-  if
-    server_configs.efm
-    and server_configs.efm.settings
-    and server_configs.efm.settings.languages
-  then
-    find_efm_format_cmds(server_configs.efm.settings.languages)
-  end
-
-  local format_filter = function(cli)
-    -- Enable efm formatter if formatter for the filetype is installed
-    if cli.name == "efm" then
-      return efm_formatters[vim.bo.filetype] ~= nil and true or false
-    end
-    -- If another lsp client, disable if efm is present and has a valid formatter
-    for _, c in pairs(lsp.get_attached_clients()) do
-      if c.name == "efm" and efm_formatters[vim.bo.filetype] ~= nil then
-        return false
-      end
-    end
-    return true
-  end
-
   -- Setup main lsp attach handler for common config
   vim.api.nvim_create_autocmd("LspAttach", {
     desc = "Setup common lsp configuration on lsp attach",
@@ -179,6 +136,9 @@ M.config = function()
     callback = function(args)
       local bufnr = args.buf
       local client = vim.lsp.get_client_by_id(args.data.client_id)
+      if not client then
+        return
+      end
 
       -- Enable completion triggered by <c-x><c-o>
       vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
@@ -189,8 +149,6 @@ M.config = function()
         wk.register({ ["<localleader>w"] = { name = "+workspace" } }, { buffer = bufnr })
       end
       local keys = {
-        { "]d", vim.diagnostic.goto_next, desc = "Diagnostic (lsp)" },
-        { "[d", vim.diagnostic.goto_prev, desc = "Diagnostic (lsp)" },
         {
           "<localleader>a",
           vim.lsp.buf.code_action,
@@ -211,7 +169,7 @@ M.config = function()
         {
           "<localleader>f",
           function()
-            vim.lsp.buf.format({ async = true, filter = format_filter })
+            vim.lsp.buf.format({ async = true })
           end,
           mode = "n",
           desc = "Format Doc (lsp)",
@@ -220,11 +178,22 @@ M.config = function()
         {
           "<localleader>f",
           function()
-            vim.lsp.buf.format({ async = true, filter = format_filter })
+            vim.lsp.buf.format({ async = true })
           end,
           mode = "v",
           desc = "Format Doc (lsp)",
           has = "documentRangeFormatting",
+        },
+        {
+          "<localleader>i",
+          function()
+            vim.lsp.inlay_hint.enable(
+              not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }),
+              { bufnr = bufnr }
+            )
+          end,
+          desc = "Toggle inlay hints (lsp)",
+          has = "inlayHint",
         },
         {
           "<localleader>r",
@@ -291,7 +260,6 @@ M.config = function()
           desc = "Goto Type (lsp)",
           has = "typeDefinition",
         },
-        { "K", vim.lsp.buf.hover, desc = "Hover (lsp)", has = "hover" },
       }
 
       -- Register lsp keys
@@ -359,6 +327,14 @@ M.config = function()
             vim.lsp.buf.clear_references()
           end,
         })
+      end
+      if client.supports_method("textDocument/inlayHint") and vim.lsp.inlay_hint then
+        if vim.b.user_inlay_hints_enabled == nil then
+          vim.b.user_inlay_hints_enabled = vim.g.user_inlay_hints_enabled
+        end
+        if vim.b.user_inlay_hints_enabled then
+          vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+        end
       end
     end,
   })

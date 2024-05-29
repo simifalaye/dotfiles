@@ -27,7 +27,6 @@ return {
     dependencies = {
       "windwp/nvim-ts-autotag",
       "nvim-treesitter/nvim-treesitter-textobjects",
-      "JoosepAlviste/nvim-ts-context-commentstring",
     },
     opts = {
       ensure_installed = "all",

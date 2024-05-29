@@ -87,6 +87,15 @@ autocmd("BufReadPre", {
     end
   end,
 })
+autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
+  desc = "Check if we need to reload the file when it changed",
+  group = file_utilities_groupid,
+  callback = function()
+    if vim.o.buftype ~= "nofile" then
+      vim.cmd("checktime")
+    end
+  end,
+})
 
 local window_behaviours_groupid = augroup("user_window_behaviours", {})
 autocmd("VimResized", {
@@ -168,8 +177,7 @@ autocmd({ "BufWinEnter", "FileChangedShellPost" }, {
         return
       end
       local current_dir = vim.fn.getcwd(0)
-      local target_dir = require("utils.fs").proj_dir(info.file)
-        or vim.fs.dirname(info.file)
+      local target_dir = require("utils.fs").root(info.file) or vim.fs.dirname(info.file)
       local stat = target_dir and vim.loop.fs_stat(target_dir)
       -- Prevent unnecessary directory change, which triggers
       -- DirChanged autocmds that may update winbar unexpectedly
