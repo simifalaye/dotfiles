@@ -1,64 +1,35 @@
 _G.NLsp = _G.NLsp or {}
 _G.NLsp.root_configs_cache = _G.NLsp.root_configs_cache or {}
 
---- A lspconfig on_new_config handler to allow for overriding default server
---- config with project-local config (including things like cmd) since neoconf
---- only allows for replacing config in the "settings".
---- TODO: Check whether neoconf adds support for overriding 'cmd' in the future
----@param new_config table the configuration object to modify
----@param new_root_dir string the root dir of the project
-local function default_on_new_config(new_config, new_root_dir)
-  -- Load local conf from cache or file
-  local conf = _G.NLsp.root_configs_cache[new_root_dir]
-  if not conf then
-    local fs = require("utils.fs")
-    local conf_path = fs.join_paths(new_root_dir, ".nlsp.json")
-    if not fs.file_exists(conf_path) then
-      return
+local function init()
+  --- A lspconfig on_new_config handler to allow for overriding default server
+  --- config with project-local config (including things like cmd) since neoconf
+  --- only allows for replacing config in the "settings".
+  --- TODO: Check whether neoconf adds support for overriding 'cmd' in the future
+  ---@param new_config table the configuration object to modify
+  ---@param new_root_dir string the root dir of the project
+  local function default_on_new_config(new_config, new_root_dir)
+    -- Load local conf from cache or file
+    local conf = _G.NLsp.root_configs_cache[new_root_dir]
+    if not conf then
+      local fs = require("utils.fs")
+      local conf_path = vim.fs.joinpath(new_root_dir, ".nlsp.json")
+      if not fs.file_exists(conf_path) then
+        return
+      end
+      conf = require("utils.json").read(conf_path)
+      _G.NLsp.root_configs_cache[new_root_dir] = conf
     end
-    conf = require("utils.json").read(conf_path)
-    _G.NLsp.root_configs_cache[new_root_dir] = conf
-  end
-  -- Merge local conf with base conf
-  local server_name = new_config.name
-  if conf and conf[server_name] then
-    -- Required to ensure original table variable is actually modified
-    for k, v in pairs(vim.tbl_deep_extend("force", new_config, conf[server_name])) do
-      new_config[k] = v
+    -- Merge local conf with base conf
+    local server_name = new_config.name
+    if conf and conf[server_name] then
+      -- Required to ensure original table variable is actually modified
+      for k, v in pairs(vim.tbl_deep_extend("force", new_config, conf[server_name])) do
+        new_config[k] = v
+      end
     end
   end
-end
 
-local M = { "neovim/nvim-lspconfig" }
-
-M.event = "BufReadPre"
-
-M.dependencies = {
-  {
-    "folke/neodev.nvim",
-    opts = {
-      override = function(root_dir, options)
-        if string.find(root_dir, "%.config%/nvim") ~= nil then
-          options.enabled = true
-          options.plugins = true
-        end
-      end,
-    },
-  },
-  {
-    "j-hui/fidget.nvim",
-    opts = {
-      notification = {
-        window = {
-          winblend = 0,
-        },
-      },
-    },
-  },
-  "b0o/schemastore.nvim",
-}
-
-M.config = function()
   local lsp = require("utils.lsp")
   local lspconfig = require("lspconfig")
   local server_configs = require("static.lsp_server_config")
@@ -104,6 +75,15 @@ M.config = function()
     -- Register server
     lspconfig[name].setup(conf)
   end
+
+  -- Setup lazydev
+  require("lazydev").setup({
+    library = {
+      -- See the configuration section for more details
+      -- Load luvit types when the `vim.uv` word is found
+      { path = "luvit-meta/library", words = { "vim%.uv" } },
+    },
+  })
 
   -- Configure servers (use mason if available)
   local mason_lspconfig_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
@@ -340,4 +320,10 @@ M.config = function()
   })
 end
 
-return M
+vim.api.nvim_create_autocmd("BufReadPre", {
+  desc = "Load lspconfig",
+  once = true,
+  callback = function()
+    init()
+  end,
+})

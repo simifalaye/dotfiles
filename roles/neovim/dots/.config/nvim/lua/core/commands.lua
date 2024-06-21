@@ -1,5 +1,4 @@
 local fn = vim.fn
-local lib = require("utils.lib")
 
 vim.api.nvim_create_user_command(
   "Todo",
@@ -47,7 +46,7 @@ vim.api.nvim_create_user_command("ToggleList", function(args)
     end
   end
   if prefix == "l" and vim.tbl_isempty(fn.getloclist(0)) then
-    require("utils.lib").notify("Location List is Empty.", vim.log.levels.ERROR)
+    vim.notify("Location List is Empty.", vim.log.levels.ERROR)
     return
   end
 
@@ -102,105 +101,3 @@ end, {
   desc = "Resize window in direction (l,d,u,r)",
   nargs = 1, -- {direction(l,d,u,r)}
 })
-
--- vim.api.nvim_create_user_command("LspInfo", function()
---   local clients = require("utils.lsp").get_attached_clients()
---   if vim.tbl_isempty(clients) then
---     lib.notify("No attached LSP servers", vim.log.levels.ERROR)
---     return
---   end
---
---   local lines = {}
---   for _, c in pairs(clients) do
---     table.insert(lines, "Name: " .. c.name)
---     table.insert(lines, "Id: " .. c.id)
---     table.insert(lines, "Cmd: " .. table.concat(c.config.cmd, " "))
---     table.insert(lines, "Root Directory: " .. (c.config.root_dir or ""))
---     table.insert(
---       lines,
---       "Root Patterns: " .. (table.concat(c.config.root_pattern or {}, ","))
---     )
---     table.insert(lines, "Is Active: " .. tostring(not c.is_stopped()))
---     table.insert(lines, "")
---   end
---   for s in vim.inspect(clients):gmatch("[^\r\n]+") do
---     table.insert(lines, s)
---   end
---
---   -- Show content in a reusable buffer
---   local buf_id
---   for _, id in ipairs(vim.api.nvim_list_bufs()) do
---     if vim.bo[id].filetype == "user-lsp-clients-info" then
---       buf_id = id
---     end
---   end
---   if buf_id == nil then
---     buf_id = vim.api.nvim_create_buf(true, true)
---     vim.bo[buf_id].filetype = "user-lsp-clients-info"
---   end
---   -- Clear the buffer content
---   vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, {})
---   -- Append new text to the buffer
---   vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, lines)
---   -- Open buffer in this window
---   vim.api.nvim_win_set_buf(0, buf_id)
--- end, {
---   desc = "Display attached lsp clients",
--- })
---
--- vim.api.nvim_create_user_command("LspRestart", function(info)
---   local name = info.args
---   local clients = require("utils.lsp").get_attached_clients()
---   if vim.tbl_isempty(clients) then
---     lib.notify("No attached LSP servers", vim.log.levels.ERROR)
---   end
---
---   local completed = false
---   for _, c in pairs(clients) do
---     if name == "" or name == c.name then
---       require("utils.lsp").restart(c)
---       lib.notify("Restarted " .. c.name)
---       completed = true
---     end
---   end
---   if not completed then
---     lib.notify("No client named: " .. name, vim.log.levels.ERROR)
---   end
--- end, {
---   desc = "Restart lsp client attached to buffer by name or empty for all",
---   nargs = "?", -- {client_name}
--- })
---
--- vim.api.nvim_create_user_command("LspStop", function(info)
---   local name = info.args
---   local clients = require("utils.lsp").get_attached_clients()
---   if vim.tbl_isempty(clients) then
---     lib.notify("No attached LSP servers", vim.log.levels.ERROR)
---   end
---
---   local completed = false
---   for _, c in pairs(clients) do
---     if name == "" or name == c.name then
---       require("utils.lsp").stop(c)
---       lib.notify("Stopped " .. c.name)
---       completed = true
---     end
---   end
---   if not completed then
---     lib.notify("No client named: " .. name, vim.log.levels.ERROR)
---   end
--- end, {
---   desc = "Stop lsp client attached to buffer by name or empty for all",
---   nargs = "?", -- {client_name}
--- })
---
--- vim.api.nvim_create_user_command("LspLog", function()
---   local fs = require("utils.fs")
---   local log = fs.join_paths(vim.env.HOME, ".local/state/nvim/lsp.log")
---   if not require("utils.fs").file_exists(log) then
---     lib.notify("No lsp log file found at " .. log, vim.log.levels.ERROR)
---   end
---   vim.cmd("e " .. log)
--- end, {
---   desc = "Open lsp log file",
--- })

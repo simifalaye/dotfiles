@@ -6,6 +6,12 @@ Maintainer: simifalaye
 
 --]]
 
+-- Enable faster lua loader using byte-compilation
+-- https://github.com/neovim/neovim/commit/2257ade3dc2daab5ee12d27807c0b3bcf103cd29
+pcall(function()
+  vim.loader.enable()
+end)
+
 --- Inspect the contents of an object very quickly
 --- ex. P({1,2,3})
 --- @vararg any
@@ -23,17 +29,14 @@ end
 -- Load modules in order
 for _, source in ipairs({
   "core.options",
-  "core.lazy",
   "core.autocommands",
   "core.commands",
-  "core.keymaps",
   "core.diagnostics",
+  "core.rocks",
+  "core.keymaps",
 }) do
   local status_ok, fault = pcall(require, source)
   if not status_ok then
-    require("utils.lib").notify(
-      "Failed to load " .. source .. "\n\n" .. fault,
-      vim.log.levels.ERROR
-    )
+    vim.notify("Failed to load " .. source .. "\n\n" .. fault, vim.log.levels.ERROR)
   end
 end

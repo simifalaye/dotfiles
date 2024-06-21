@@ -23,7 +23,7 @@
       notify: "nvim_downloaded"
 
 - name: Install neovim for nodejs
-  tags: ["pkgs"]
+  tags: [pkgs]
   become: true
   community.general.npm:
     name: neovim
@@ -31,11 +31,19 @@
     state: present
 
 - name: Install neovim for python
-  tags: ["pkgs"]
+  tags: [pkgs]
   become: true
   ansible.builtin.pip:
     name:
       - pynvim
+    state: present
+
+- name: Install lua5.1
+  tags: [pkgs]
+  become: true
+  ansible.builtin.package:
+    name:
+      - lua5.1
     state: present
 
 - name: Install neovim dotfiles

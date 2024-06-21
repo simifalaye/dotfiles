@@ -58,11 +58,22 @@ local function opt2str(val)
   return val and "on" or "off"
 end
 
+-- Dot repetition of a custom mapping breaks as soon as there is a dot repeatable normal
+-- mode command inside the mapping. This function restores the dot repetition of
+-- the mapping while preserving the [count] when called as last statement inside
+-- the custom mapping
+local restore_dot_repetition = function(count)
+  count = count or ""
+  local callback = vim.go.operatorfunc
+  vim.go.operatorfunc = ""
+  vim.cmd("silent! normal " .. count .. "g@l")
+  vim.go.operatorfunc = callback
+end
+
 --------------------------------------------------------------------------------
 --  Main
 --------------------------------------------------------------------------------
 
-local lib = require("utils.lib")
 local map = vim.keymap.set
 
 local wk_ok, wk = pcall(require, "which-key")
@@ -76,11 +87,23 @@ if wk_ok then
   })
 end
 
+_G.user_plugin_unimpaired_blank_above = function()
+  local repeated = vim.fn["repeat"]({ "" }, vim.v.count1)
+  local line = vim.api.nvim_win_get_cursor(0)[1]
+  vim.api.nvim_buf_set_lines(0, line - 1, line - 1, true, repeated)
+end
+_G.user_plugin_unimpaired_blank_below = function()
+  local repeated = vim.fn["repeat"]({ "" }, vim.v.count1)
+  local line = vim.api.nvim_win_get_cursor(0)[1]
+  vim.api.nvim_buf_set_lines(0, line, line, true, repeated)
+end
 map("n", "[<space>", function()
-  vim.cmd("put! =repeat(nr2char(10), v:count1)|silent ']+")
+  vim.go.operatorfunc = "v:lua.user_plugin_unimpaired_blank_above"
+  return "g@l"
 end, { desc = "Add blank line above" })
 map("n", "]<space>", function()
-  vim.cmd("put =repeat(nr2char(10), v:count1)|silent '[-")
+  vim.go.operatorfunc = "v:lua.user_plugin_unimpaired_blank_below"
+  return "g@l"
 end, { desc = "Add blank line below" })
 
 map("n", "[b", function()
@@ -94,66 +117,86 @@ map("n", "]B", "<cmd>blast<CR>", { desc = "Last buffer" })
 
 map("n", "[ob", function()
   vim.o.background = "light"
-  lib.notify("Background " .. vim.o.background)
+  vim.notify("Background " .. vim.o.background)
 end, { desc = "Background" })
 map("n", "]ob", function()
   vim.o.background = "dark"
-  lib.notify("Background " .. vim.o.background)
+  vim.notify("Background " .. vim.o.background)
 end, { desc = "Background" })
 map("n", "yob", function()
   vim.o.background = vim.o.background == "light" and "dark" or "light"
-  lib.notify("Background " .. vim.o.background)
+  vim.notify("Background " .. vim.o.background)
 end, { desc = "Background" })
 
 map("n", "[oc", function()
   vim.o.cursorline = true
-  lib.notify("Cursorline " .. opt2str(vim.o.cursorline))
+  vim.notify("Cursorline " .. opt2str(vim.o.cursorline))
 end, { desc = "Cursorline" })
 map("n", "]oc", function()
   vim.o.cursorline = false
-  lib.notify("Cursorline " .. opt2str(vim.o.cursorline))
+  vim.notify("Cursorline " .. opt2str(vim.o.cursorline))
 end, { desc = "Cursorline" })
 map("n", "yoc", function()
   vim.o.cursorline = not vim.o.cursorline
-  lib.notify("Cursorline " .. opt2str(vim.o.cursorline))
+  vim.notify("Cursorline " .. opt2str(vim.o.cursorline))
 end, { desc = "Cursorline" })
 
 map("n", "[od", function()
   vim.g.user_diagnostics_mode = 3
   vim.diagnostic.config(_G.user_diagnostics[vim.g.user_diagnostics_mode])
-  lib.notify("Diagnostic level " .. vim.g.user_diagnostics_mode)
+  vim.notify("Diagnostic level " .. vim.g.user_diagnostics_mode)
 end, { desc = "Diagnostics" })
 map("n", "]od", function()
   vim.g.user_diagnostics_mode = 0
   vim.diagnostic.config(_G.user_diagnostics[vim.g.user_diagnostics_mode])
-  lib.notify("Diagnostic level " .. vim.g.user_diagnostics_mode)
+  vim.notify("Diagnostic level " .. vim.g.user_diagnostics_mode)
 end, { desc = "Diagnostics" })
 map("n", "yod", function()
   vim.g.user_diagnostics_mode = (vim.g.user_diagnostics_mode - 1) % 4
   vim.diagnostic.config(_G.user_diagnostics[vim.g.user_diagnostics_mode])
-  lib.notify("Diagnostic level " .. vim.g.user_diagnostics_mode)
+  vim.notify("Diagnostic level " .. vim.g.user_diagnostics_mode)
 end, { desc = "Diagnostics" })
 
-map("n", "[e", function()
+_G.user_plugin_unimpaired_exchange_above = function()
   local count = vim.v.count1
   vim.cmd("silent! move --" .. count)
   vim.cmd.normal("==")
-end, { desc = "Exchange above" })
-map("n", "]e", function()
+  restore_dot_repetition(count)
+end
+_G.user_plugin_unimpaired_exchange_below = function()
   local count = vim.v.count1
   vim.cmd("silent! move +" .. count)
   vim.cmd.normal("==")
-end, { desc = "Exchange below" })
-map("v", "[e", function()
+  restore_dot_repetition(count)
+end
+_G.user_plugin_unimpaired_exchange_sec_above = function()
   local count = vim.v.count1
   vim.cmd("silent! '<,'>move '<--" .. count)
   vim.cmd.normal("gv=")
-end, { desc = "Exchange above" })
-map("v", "]e", function()
+  restore_dot_repetition(count)
+end
+_G.user_plugin_unimpaired_exchange_sec_below = function()
   local count = vim.v.count1
   vim.cmd("silent! '<,'>move '>+" .. count)
   vim.cmd.normal("gv=")
-end, { desc = "Exchange below" })
+  restore_dot_repetition(count)
+end
+map("n", "[e", function()
+  vim.go.operatorfunc = "v:lua.user_plugin_unimpaired_exchange_above"
+  return "g@l"
+end, { desc = "Exchange line above", expr = true })
+map("n", "]e", function()
+  vim.go.operatorfunc = "v:lua.user_plugin_unimpaired_exchange_below"
+  return "g@l"
+end, { desc = "Exchange line below", expr = true })
+map("x", "[e", function()
+  vim.go.operatorfunc = "v:lua.user_plugin_unimpaired_exchange_sec_above"
+  return "g@l"
+end, { desc = "Exchange section above", expr = true })
+map("x", "]e", function()
+  vim.go.operatorfunc = "v:lua.user_plugin_unimpaired_exchange_sec_below"
+  return "g@l"
+end, { desc = "Exchange section below", expr = true })
 
 map("n", "[f", function()
   local wininfo = get_current_wininfo()
@@ -184,15 +227,15 @@ end, { desc = "Next file" })
 
 map("n", "[oh", function()
   vim.o.hlsearch = true
-  lib.notify("Hlsearch " .. opt2str(vim.o.hlsearch))
+  vim.notify("Hlsearch " .. opt2str(vim.o.hlsearch))
 end, { desc = "Hlsearch" })
 map("n", "]oh", function()
   vim.o.hlsearch = false
-  lib.notify("Hlsearch " .. opt2str(vim.o.hlsearch))
+  vim.notify("Hlsearch " .. opt2str(vim.o.hlsearch))
 end, { desc = "Hlsearch" })
 map("n", "yoh", function()
   vim.o.hlsearch = not vim.o.hlsearch
-  lib.notify("Hlsearch " .. opt2str(vim.o.hlsearch))
+  vim.notify("Hlsearch " .. opt2str(vim.o.hlsearch))
 end, { desc = "Hlsearch" })
 
 map("n", "[l", function()
@@ -207,52 +250,52 @@ map("n", "[L", "<cmd>lfirst<CR>", { desc = "First ll entry" })
 map("n", "]L", "<cmd>llast<CR>", { desc = "Last ll entry" })
 map("n", "[<C-l>", function()
   vim.cmd("silent! " .. vim.v.count1 .. "lpfile")
-end, { desc = "Last ll entry previous file" })
+end, { desc = "Prev ll file" })
 map("n", "]<C-l>", function()
   vim.cmd("silent! " .. vim.v.count1 .. "lnfile")
-end, { desc = "First ll entry next file" })
+end, { desc = "Next ll file" })
 
 map("n", "[ol", function()
   vim.o.list = true
-  lib.notify("Listchars " .. opt2str(vim.o.list))
+  vim.notify("Listchars " .. opt2str(vim.o.list))
 end, { desc = "List chars" })
 map("n", "]ol", function()
   vim.o.list = false
-  lib.notify("Listchars " .. opt2str(vim.o.list))
+  vim.notify("Listchars " .. opt2str(vim.o.list))
 end, { desc = "List chars" })
 map("n", "yol", function()
   vim.o.list = not vim.o.list
-  lib.notify("Listchars " .. opt2str(vim.o.list))
+  vim.notify("Listchars " .. opt2str(vim.o.list))
 end, { desc = "List chars" })
 
 map("n", "[on", function()
   vim.o.number = true
-  lib.notify("Number " .. opt2str(vim.o.number))
+  vim.notify("Number " .. opt2str(vim.o.number))
 end, { desc = "Number" })
 map("n", "]on", function()
   vim.o.number = false
-  lib.notify("Number " .. opt2str(vim.o.number))
+  vim.notify("Number " .. opt2str(vim.o.number))
 end, { desc = "Number" })
 map("n", "yon", function()
   vim.o.number = not vim.o.number
-  lib.notify("Number " .. opt2str(vim.o.number))
+  vim.notify("Number " .. opt2str(vim.o.number))
 end, { desc = "Number" })
 
 map("n", "[oN", function()
   vim.g.user_notifications_enabled = true
-  lib.notify("Notifications " .. opt2str(vim.g.user_notifications_enabled))
+  vim.notify("Notifications " .. opt2str(vim.g.user_notifications_enabled))
 end, { desc = "Notifications" })
 map("n", "]oN", function()
-  lib.notify("Notifications " .. opt2str(vim.g.user_notifications_enabled))
+  vim.notify("Notifications " .. opt2str(vim.g.user_notifications_enabled))
   vim.g.user_notifications_enabled = false
 end, { desc = "Notifications" })
 map("n", "yoN", function()
   if vim.g.user_notifications_enabled then
-    lib.notify("Notifications " .. opt2str(false))
+    vim.notify("Notifications " .. opt2str(false))
     vim.g.user_notifications_enabled = false
   else
     vim.g.user_notifications_enabled = true
-    lib.notify("Notifications " .. opt2str(true))
+    vim.notify("Notifications " .. opt2str(true))
   end
 end, { desc = "Notifications" })
 
@@ -268,64 +311,64 @@ map("n", "[Q", "<cmd>cfirst<CR>", { desc = "First qf entry" })
 map("n", "]Q", "<cmd>clast<CR>", { desc = "Last qf entry" })
 map("n", "[<C-q>", function()
   vim.cmd("silent! " .. vim.v.count1 .. "cpfile")
-end, { desc = "Last qf entry previous file" })
+end, { desc = "Prev qf file" })
 map("n", "]<C-q>", function()
   vim.cmd("silent! " .. vim.v.count1 .. "cnfile")
-end, { desc = "First qf entry next file" })
+end, { desc = "Next qf file" })
 
 map("n", "[or", function()
   vim.o.relativenumber = true
-  lib.notify("Relative number " .. opt2str(vim.o.relativenumber))
+  vim.notify("Relative number " .. opt2str(vim.o.relativenumber))
 end, { desc = "Relative number" })
 map("n", "]or", function()
   vim.o.relativenumber = false
-  lib.notify("Relative number " .. opt2str(vim.o.relativenumber))
+  vim.notify("Relative number " .. opt2str(vim.o.relativenumber))
 end, { desc = "Relative number" })
 map("n", "yor", function()
   vim.o.relativenumber = not vim.o.relativenumber
-  lib.notify("Relative number " .. opt2str(vim.o.relativenumber))
+  vim.notify("Relative number " .. opt2str(vim.o.relativenumber))
 end, { desc = "Relative number" })
 
 map("n", "[os", function()
   vim.o.spell = true
-  lib.notify("Spell " .. opt2str(vim.o.spell))
+  vim.notify("Spell " .. opt2str(vim.o.spell))
 end, { desc = "Spell" })
 map("n", "]os", function()
   vim.o.spell = false
-  lib.notify("Spell " .. opt2str(vim.o.spell))
+  vim.notify("Spell " .. opt2str(vim.o.spell))
 end, { desc = "Spell" })
 map("n", "yos", function()
   vim.o.spell = not vim.o.spell
-  lib.notify("Spell " .. opt2str(vim.o.spell))
+  vim.notify("Spell " .. opt2str(vim.o.spell))
 end, { desc = "Spell" })
 
 map("n", "[ov", function()
   vim.o.virtualedit = "all"
-  lib.notify("Virtualedit " .. vim.o.virtualedit)
+  vim.notify("Virtualedit " .. vim.o.virtualedit)
 end, { desc = "Virtualedit" })
 map("n", "]ov", function()
   vim.o.virtualedit = ""
-  lib.notify("Virtualedit " .. vim.o.virtualedit)
+  vim.notify("Virtualedit " .. vim.o.virtualedit)
 end, { desc = "Virtualedit" })
 map("n", "yov", function()
   if vim.o.virtualedit then
     vim.o.virtualedit = false
-    lib.notify("Virtualedit on")
+    vim.notify("Virtualedit on")
   else
     vim.o.virtualedit = true
-    lib.notify("Virtualedit off")
+    vim.notify("Virtualedit off")
   end
 end, { desc = "Virtualedit" })
 
 map("n", "[ow", function()
   vim.o.wrap = true
-  lib.notify("Wrap " .. opt2str(vim.o.wrap))
+  vim.notify("Wrap " .. opt2str(vim.o.wrap))
 end, { desc = "Wrap" })
 map("n", "]ow", function()
   vim.o.wrap = false
-  lib.notify("Wrap " .. opt2str(vim.o.wrap))
+  vim.notify("Wrap " .. opt2str(vim.o.wrap))
 end, { desc = "Wrap" })
 map("n", "yow", function()
   vim.o.wrap = not vim.o.wrap
-  lib.notify("Wrap " .. opt2str(vim.o.wrap))
+  vim.notify("Wrap " .. opt2str(vim.o.wrap))
 end, { desc = "Wrap" })

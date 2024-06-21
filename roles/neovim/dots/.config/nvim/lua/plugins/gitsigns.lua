@@ -1,59 +1,74 @@
-local gitsigns = require("utils.lib").reqcall("gitsigns") ---@module 'gitsigns'
-
-return {
-  {
-    "lewis6991/gitsigns.nvim",
-    tag = "release",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    cmd = { "Gitsigns" },
-    ft = { "gitcommit", "diff" },
-    keys = {
-      {
-        "ih",
-        ":<C-U>Gitsigns select_hunk<CR>",
-        mode = { "o", "x" },
-        desc = "In Hunk",
-      },
-      { "]h", gitsigns.next_hunk, desc = "Next Git Hunk" },
-      { "[h", gitsigns.prev_hunk, desc = "Prev Git Hunk" },
-      { "<leader>gb", gitsigns.blame_line, { full = true }, desc = "Blame Line" },
-      { "<leader>gd", gitsigns.diffthis, desc = "Diff" },
-      {
-        "<leader>gD",
-        function()
-          gitsigns.diffthis("~")
-        end,
-        desc = "Diff HEAD",
-      },
-      { "<leader>gp", gitsigns.preview_hunk, desc = "Preview Hunk" },
-      { "<leader>gr", gitsigns.reset_hunk, desc = "Reset Hunk" },
-      { "<leader>gR", gitsigns.reset_buffer, desc = "Reset Buff" },
-      { "<leader>gu", gitsigns.undo_stage_hunk, desc = "Undo Stage" },
-      { "<leader>gs", gitsigns.stage_hunk, desc = "Stage Hunk" },
-      { "<leader>gS", gitsigns.stage_buffer, desc = "Stage Buff" },
-    },
-    init = function()
-      local wk_ok, wk = pcall(require, "which-key")
-      if wk_ok then
-        wk.register({ ["<leader>g"] = { name = "+git" } })
+local function init()
+  local gitsigns = require("gitsigns")
+  gitsigns.setup({
+    on_attach = function(bufnr)
+      local function map(mode, l, r, opts)
+        opts = opts or {}
+        opts.buffer = bufnr
+        vim.keymap.set(mode, l, r, opts)
       end
-      -- Load gitsigns only when a git file is opened
-      local id = 0
-      id = vim.api.nvim_create_autocmd("BufRead", {
-        desc = "Lazy load gitsigns",
-        callback = function()
-          vim.fn.system("git -C " .. '"' .. vim.fn.expand("%:p:h") .. '"' .. " rev-parse")
-          if vim.v.shell_error == 0 then
-            -- Delete autocmd
-            vim.api.nvim_del_autocmd(id)
-            -- Load plugin
-            vim.schedule(function()
-              require("lazy").load({ plugins = { "gitsigns.nvim" } })
-            end)
-          end
-        end,
-      })
+
+      -- Navigation
+      map("n", "]h", function()
+        if vim.wo.diff then
+          vim.cmd.normal({ "]c", bang = true })
+        else
+          gitsigns.nav_hunk("next")
+        end
+      end, { desc = "Next Git Hunk" })
+
+      map("n", "[h", function()
+        if vim.wo.diff then
+          vim.cmd.normal({ "[c", bang = true })
+        else
+          gitsigns.nav_hunk("prev")
+        end
+      end, { desc = "Prev Git Hunk" })
+
+      -- Actions
+      map("n", "<leader>gb", function()
+        gitsigns.blame_line({ full = true })
+      end, { desc = "Blame line" })
+      map("n", "<leader>gd", gitsigns.diffthis, { desc = "Diff" })
+      map("n", "<leader>gD", function()
+        gitsigns.diffthis("~")
+      end, { desc = "Diff HEAD" })
+      map("n", "<leader>gp", gitsigns.preview_hunk, { desc = "Preview Hunk" })
+      map("n", "<leader>gr", gitsigns.reset_hunk, { desc = "Reset Hunk" })
+      map("v", "<leader>gr", function()
+        gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+      end, { desc = "Reset Hunk" })
+      map("n", "<leader>gR", gitsigns.reset_buffer, { desc = "Reset Buffer" })
+      map("n", "<leader>gs", gitsigns.stage_hunk, { desc = "Stage Hunk" })
+      map("v", "<leader>gs", function()
+        gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+      end, { desc = "Stage Hunk" })
+      map("n", "<leader>gS", gitsigns.stage_buffer, { desc = "Stage Buffer" })
+      map("n", "<leader>gu", gitsigns.undo_stage_hunk, { desc = "Undo Stage Hunk" })
+
+      -- Text object
+      map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "In Hunk" })
     end,
-    opts = {},
-  },
-}
+  })
+end
+
+local load_autocmd_id = 0
+load_autocmd_id = vim.api.nvim_create_autocmd({ "BufRead" }, {
+  desc = "Load gitsigns plugin",
+  callback = function()
+    vim.fn.system("git -C " .. '"' .. vim.fn.expand("%:p:h") .. '"' .. " rev-parse")
+    if vim.v.shell_error == 0 then
+      -- Load plugin
+      init()
+      -- Delete autocmd
+      if load_autocmd_id ~= 0 then
+        vim.api.nvim_del_autocmd(load_autocmd_id)
+      end
+    end
+  end,
+})
+
+local wk_ok, wk = pcall(require, "which-key")
+if wk_ok then
+  wk.register({ ["<leader>g"] = { name = "+git" } })
+end

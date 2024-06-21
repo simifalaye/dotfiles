@@ -51,14 +51,6 @@ function M.remove_slash(str)
   end
 end
 
---- Join path segments based on os type
---- @vararg string|string[]
---- @return string
-function M.join_paths(...)
-  local result = table.concat({ ... }, M.path_sep)
-  return result
-end
-
 ---Compute root directory for given path.
 ---@param path string?
 ---@param patterns string[]? root patterns

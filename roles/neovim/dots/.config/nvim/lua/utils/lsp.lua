@@ -1,28 +1,17 @@
-local fs = require("utils.fs")
-local map = vim.keymap.set
-
 local M = {}
 
---- Get the lsp clients on a specific buffer
----@param bufnr number? or current bufnr if not provided
----@return lsp.Client lsp client
-function M.get_attached_clients(bufnr)
-  bufnr = bufnr or vim.api.nvim_get_current_buf()
-  local filename = vim.api.nvim_buf_get_name(bufnr)
-  if vim.bo.buftype ~= "" or filename == "" then
-    return {}
-  end
-  return vim.lsp.get_active_clients({ bufnr = bufnr })
-end
+---@type lsp_client_config_t
+---@diagnostic disable-next-line: missing-fields
+M.default_config = { root_patterns = require("utils.fs").root_patterns }
 
----@class lsp.ClientConfig: lsp_client_config_t
+---@class vim.lsp.ClientConfig: lsp_client_config_t
 ---@class lsp_client_config_t
 ---@field cmd? (string[]|fun(dispatchers: table):table)
 ---@field cmd_cwd? string
 ---@field cmd_env? (table)
 ---@field detached? boolean
 ---@field workspace_folders? (table)
----@field capabilities? table
+---@field capabilities? lsp.ClientCapabilities
 ---@field handlers? table<string,function>
 ---@field settings? table
 ---@field commands? table
@@ -34,7 +23,7 @@ end
 ---@field before_init? function
 ---@field on_init? function
 ---@field on_exit? fun(code: integer, signal: integer, client_id: integer)
----@field on_attach? fun(client: lsp.Client, bufnr: integer)
+---@field on_attach? fun(client: vim.lsp.Client, bufnr: integer)
 ---@field trace? 'off'|'messages'|'verbose'|nil
 ---@field flags? table
 ---@field root_dir? string
@@ -42,41 +31,43 @@ end
 
 ---Wrapper of `vim.lsp.start()`, starts and attaches LSP client for
 ---the current buffer
----@param config lsp_client_config_t|lsp.ClientConfig
+---@param config lsp_client_config_t
 ---@param opts table?
----@param supports_docker_dev boolean?
 ---@return integer? client_id id of attached client or nil if failed
-function M.start(config, opts, supports_docker_dev)
-  if vim.bo.bt == "nofile" then
+function M.start(config, opts)
+  if vim.b.bigfile or vim.bo.bt == "nofile" then
     return
   end
-  supports_docker_dev = supports_docker_dev or true
-
-  -- Setup config
-  config = config or {}
-  config.root_patterns = vim.tbl_extend("force", config.root_patterns or {}, { ".git/" })
-  config.root_dir = fs.root(vim.api.nvim_buf_get_name(0), config.root_patterns)
   -- Quit silently if command not installed
-  if type(config.cmd) == "table" then
-    if not config.cmd[1] or vim.fn.executable(config.cmd[1]) <= 0 then
-      return 0
-    end
-    config.name = config.name or config.cmd[1]
+  local cmd_type = type(config.cmd)
+  local cmd_exec = cmd_type == "table" and config.cmd[1]
+  if cmd_type == "table" and vim.fn.executable(cmd_exec or "") == 0 then
+    return
   end
-  return vim.lsp.start(config, opts)
+  -- Start client
+  return vim.lsp.start(
+    vim.tbl_deep_extend("keep", config or {}, {
+      name = config.name or cmd_exec,
+      root_dir = require("utils.fs").root(
+        vim.api.nvim_buf_get_name(0),
+        vim.list_extend(config.root_patterns or {}, M.default_config.root_patterns or {})
+      ),
+    }, M.default_config) --[[@as vim.lsp.ClientConfig]],
+    opts
+  )
 end
 
 ---@class lsp_stop_opts_t
 ---@field retry integer?
 ---@field interval integer?
----@field on_close fun(client: lsp.Client)
+---@field on_close fun(client: vim.lsp.Client)
 
 ---Stop LSP client with retries
----@param client_or_id integer|lsp.Client
+---@param client_or_id integer|vim.lsp.Client
 ---@param opts lsp_stop_opts_t?
 function M.stop(client_or_id, opts)
   local client = type(client_or_id) == "number" and vim.lsp.get_client_by_id(client_or_id)
-    or client_or_id --[[@as lsp.Client]]
+    or client_or_id --[[@as vim.lsp.Client]]
   if not client then
     return
   end
@@ -103,14 +94,14 @@ function M.stop(client_or_id, opts)
 end
 
 ---Restart and reattach LSP client
----@param client_or_id integer|lsp.Client
+---@param client_or_id integer|vim.lsp.Client
 function M.restart(client_or_id)
   local client = type(client_or_id) == "number" and vim.lsp.get_client_by_id(client_or_id)
-    or client_or_id --[[@as lsp.Client]]
+    or client_or_id --[[@as vim.lsp.Client]]
   if not client then
     return
   end
-  local config = client.config --[[@as lsp.ClientConfig]]
+  local config = client.config --[[@as vim.lsp.ClientConfig]]
   local attached_buffers = client.attached_buffers
   M.stop(client, {
     on_close = function()
@@ -128,7 +119,7 @@ end
 
 --- Helper function to check if any active LSP clients given a filter provide a specific capability
 ---@param capability string The server capability to check for (example: "documentFormattingProvider")
----@param filter vim.lsp.get_active_clients.filter|nil (table|nil) A table with
+---@param filter vim.lsp.get_clients.Filter|nil (table|nil) A table with
 ---              key-value pairs used to filter the returned clients.
 ---              The available keys are:
 ---               - id (number): Only return clients with the given id
@@ -136,7 +127,7 @@ end
 ---               - name (string): Only return clients with the given name
 ---@return boolean # Whether or not any of the clients provide the capability
 function M.has_capability(capability, filter)
-  for _, client in ipairs(vim.lsp.get_active_clients(filter)) do
+  for _, client in ipairs(vim.lsp.get_clients(filter)) do
     if client.supports_method(capability) then
       return true
     end
@@ -171,7 +162,7 @@ function M.register_keys(client, bufnr, keys)
       opts.has = nil
       opts.silent = opts.silent ~= false
       opts.buffer = bufnr
-      map(key.mode or "n", key[1], key[2], opts)
+      vim.keymap.set(key.mode or "n", key[1], key[2], opts)
     end
   end
 end

@@ -1,9 +1,9 @@
 local function init()
-  require("nvim-surround").setup({})
+  require("ts-comments").setup({})
 end
 
 vim.api.nvim_create_autocmd("BufRead", {
-  desc = "Load nvim-surround",
+  desc = "Load cmp",
   once = true,
   callback = function()
     init()

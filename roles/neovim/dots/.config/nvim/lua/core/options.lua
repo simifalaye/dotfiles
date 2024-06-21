@@ -1,13 +1,9 @@
--- Enable faster lua loader using byte-compilation
--- https://github.com/neovim/neovim/commit/2257ade3dc2daab5ee12d27807c0b3bcf103cd29
-vim.loader.enable()
-
 local g = vim.g
 local opt = vim.opt
 local fn = vim.fn
 
 opt.viewoptions:remove("curdir")
-opt.shortmess:append({ a = true, s = true, I = true })
+opt.shortmess:append({ a = true, s = true })
 opt.backspace:append({ "nostop" })
 if fn.has("nvim-0.9") == 1 then
   opt.diffopt:append("linematch:60")
@@ -20,7 +16,7 @@ opt.showmode = false
 opt.mousemoveevent = true
 opt.number = true
 opt.relativenumber = true
-opt.ruler = true
+opt.ruler = false
 opt.cmdheight = 1
 opt.pumheight = 16
 opt.scrolloff = 10
@@ -32,7 +28,9 @@ opt.splitbelow = true
 opt.swapfile = false
 opt.termguicolors = true
 opt.undofile = true
-opt.undodir = { require("utils.fs").join_paths(vim.fn.stdpath("data"), "undodir") }
+opt.undodir = {
+  vim.fs.joinpath(vim.fn.stdpath("data") --[[@as string]], "undodir"),
+}
 opt.wrap = false
 opt.linebreak = true
 opt.breakindent = true
@@ -59,7 +57,7 @@ opt.guifont = "MesloLGS NerdFont:h13"
 opt.diffopt:append("algorithm:histogram")
 
 -- Use system clipboard
-opt.clipboard = "unnamedplus"
+-- opt.clipboard = "unnamedplus"
 
 -- Allow local project config
 opt.exrc = true
@@ -98,10 +96,56 @@ opt.spelloptions = "camel"
 opt.spellsuggest = "best,9"
 
 -- Preview substitutions live, as you type!
-vim.opt.inccommand = "split"
+opt.inccommand = "split"
 
-g.mapleader = " " -- set leader key
-g.maplocalleader = "\\" -- set default local leader key
+---Restore 'shada' option and read from shada once
+---@return true
+local function _rshada()
+  vim.cmd.set("shada&")
+  vim.cmd.rshada()
+  return true
+end
+opt.shada = ""
+vim.defer_fn(_rshada, 100)
+vim.api.nvim_create_autocmd("BufReadPre", { once = true, callback = _rshada })
+
+-- Configure global clipboard
+if vim.env.SSH_TTY then
+  -- Use osc52 when over ssh
+  vim.g.clipboard = {
+    name = "OSC 52",
+    copy = {
+      ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+      ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+    },
+    paste = {
+      ["+"] = require("vim.ui.clipboard.osc52").paste("+"),
+      ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+    },
+  }
+elseif
+  vim.fn.has("wsl") == 1
+  and vim.fn.executable("clip.exe") > 0
+  and vim.fn.executable("powershell.exe") > 0
+then
+  -- Use clip.exe/powershell.exe when in wsl
+  vim.g.clipboard = {
+    name = "WslClipboard",
+    copy = {
+      ["+"] = "clip.exe",
+      ["*"] = "clip.exe",
+    },
+    paste = {
+      ["+"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+      ["*"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    },
+    cache_enabled = 0,
+  }
+end
+
+-- Set leader keys
+g.mapleader = " "
+g.maplocalleader = "\\"
 
 -- enable or disable automatic codelens refreshing for lsp that support it
 g.user_codelens_enabled = true

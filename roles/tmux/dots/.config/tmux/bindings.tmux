@@ -219,6 +219,18 @@ bind -T session_mode -N 'Rename the current session' 'r' command-prompt -I "#S" 
 bind -T session_mode -N 'List key bindings' '?' display-popup -w80 -h90% -E "tmux list-keys -N -T session_mode | $PAGER"
 
 #-
+#  Resize mode
+#-
+
+bind -n -N '-- Mode: Resize (help = M-r + ?)' 'M-r' switch-client -T resize_mode
+
+bind -T resize_mode -N 'Left' 'h' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M-C-h L 3'\; switch-client -T resize_mode
+bind -T resize_mode -N 'Down' 'j' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M-C-j D 3'\; switch-client -T resize_mode
+bind -T resize_mode -N 'Up' 'k' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M-C-k U 3'\; switch-client -T resize_mode
+bind -T resize_mode -N 'Right' 'l' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M-C-l R 3'\; switch-client -T resize_mode
+bind -T resize_mode -N 'List key bindings' '?' display-popup -w80 -h90% -E "tmux list-keys -N -T resize_mode | $PAGER"
+
+#-
 #  Prefix mode
 #-
 

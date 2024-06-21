@@ -78,19 +78,23 @@ map("n", "gq.", function()
   -- Restore state
   vim.fn.winrestview(winview)
 end, { desc = "Format Document" })
-map(
-  "n",
-  "gv",
-  "'`[' . strpart(getregtype(), 0, 1) . '`]'",
-  { expr = true, desc = "Select Last Changed Text" }
-)
 map("n", "gx", ":SystemOpen<CR>", { desc = "System Open" })
+map("n", "gy", '"+y', { desc = "Yank to system" })
+map("n", "gY", '"+Y', { desc = "Yank to system" })
+map("n", "gp", '"+p', { desc = "Paste from system" })
+map("n", "gP", '"+P', { desc = "Paste from system" })
 
 -- Toggle windows
 map("n", "<F3>", ":ToggleList c<CR>", { silent = true, desc = "Toggle Quickfix" })
 map("n", "<F4>", ":ToggleList l<CR>", { silent = true, desc = "Toggle Loclist" })
 
 -- Leader
+local wk_ok, wk = pcall(require, "which-key")
+if wk_ok then
+  wk.register({
+    ["<leader>p"] = { name = "+plugins" },
+  })
+end
 map("n", "<leader>x", "<cmd>bd<CR>", { desc = "E[x]it Buf" })
 map("n", "<leader>X", "<cmd>bd!<CR>", { desc = "E[x]it Buf!" })
 map("n", "<leader>pp", "<cmd>Lazy<CR>", { desc = "Open" })
@@ -124,21 +128,14 @@ map(
   { desc = "Q macro over range", silent = false }
 )
 
--- Text objects
-map("x", "al", "$o0", { desc = "A line" })
-map("o", "al", "<cmd>normal val<CR>", { desc = "A line" })
-map("x", "il", [[<Esc>^vg_]], { desc = "In line" })
-map("o", "il", [[<cmd>normal! ^vg_<CR>]], { desc = "In line" })
-map("x", "ie", [[gg0oG$]], { desc = "In entire buf" })
-map(
-  "o",
-  "ie",
-  [[<cmd>execute "normal! m`"<Bar>keepjumps normal! ggVG<CR>]],
-  { desc = "In entire buf" }
-)
+-- (g) namespace
+map("x", "gy", '"+y', { desc = "Yank to system" })
+map("x", "gY", '"+Y', { desc = "Yank to system" })
+map("x", "gp", '"+p', { desc = "Paste from system" })
+map("x", "gP", '"+p', { desc = "Paste from system" })
 
 ---
---  Inser mode
+--  Insert mode
 ---
 
 map("i", ",", ",<c-g>u")
@@ -149,7 +146,6 @@ map("i", ";", ";<c-g>u")
 --  Command mode
 ---
 
--- File/dir name accessors
 map(
   "c",
   "<M-,>",
