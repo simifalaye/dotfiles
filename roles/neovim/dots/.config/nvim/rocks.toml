@@ -5,19 +5,18 @@
 # List of Neovim plugins to install alongside their versions.
 # If the plugin name contains a dot then you must add quotes to the key name!
 [plugins]
-"rocks.nvim" = "2.31.3"
-"rocks-git.nvim" = "1.5.1"
-"rocks-config.nvim" = "2.0.0"
+"rocks.nvim" = "2.35.2"
+"rocks-git.nvim" = "2.0.0"
+"rocks-config.nvim" = "2.1.4"
 "rocks-treesitter.nvim" = "scm"
-"conform.nvim" = "5.9.0"
+"conform.nvim" = "6.0.0"
 "guess-indent.nvim" = "scm"
 nvim-lint = "scm"
 "schemastore.nvim" = "0.2.0"
 nvim-lspconfig = "0.1.8"
 "lualine.nvim" = "scm"
-"oil.nvim" = "2.10.0"
+"oil.nvim" = "2.11.0"
 neogen = "2.17.1"
-"toggleterm.nvim" = "2.11.0"
 tree-sitter-cpp = "scm"
 tree-sitter-perl = "scm"
 tree-sitter-toml = "scm"
@@ -28,13 +27,32 @@ tree-sitter-tmux = "scm"
 nvim-autopairs = "scm"
 "bufdelete.nvim" = "scm"
 "fidget.nvim" = "1.4.1"
-"indent-blankline.nvim" = "3.6.2"
+"indent-blankline.nvim" = "3.7.1"
 nvim-surround = "2.1.5"
 tree-sitter-make = "scm"
 nvim-various-textobjs = "scm"
 nvim-treesitter-context = "scm"
-"which-key.nvim" = "2.1.0"
+"which-key.nvim" = "3.4.0"
 tree-sitter-cmake = "scm"
+tree-sitter-git_rebase = "scm"
+"telescope-ui-select.nvim"= "scm"
+tree-sitter-diff = "scm"
+tree-sitter-starlark = "scm"
+tree-sitter-gitcommit = "scm"
+tree-sitter-proto = "scm"
+tree-sitter-git_config = "scm"
+"lazydev.nvim" = "1.7.0"
+"ts-comments.nvim" = "1.4.0"
+nvim-snippets = "scm"
+"tmux.nvim" = "scm"
+friendly-snippets = "scm"
+tree-sitter-json = "scm"
+neogit = "scm"
+tree-sitter-ssh_config = "scm"
+"obsidian.nvim" = "3.9.0"
+"lspkind.nvim" = "scm"
+"telescope-fzf-native.nvim" = "scm"
+tree-sitter-properties = "scm"
 
 [plugins."mason.nvim"]
 version = "1.10.0"
@@ -54,57 +72,35 @@ opt = true
 
 [plugins.nvim-cmp]
 git = "hrsh7th/nvim-cmp"
+rev = "v0.0.1"
 
 [plugins.cmp-buffer]
 git = "hrsh7th/cmp-buffer"
+rev = "3022dbc9166796b644a841a02de8dd1cc1d311fa"
 
 [plugins.cmp-path]
 git = "hrsh7th/cmp-path"
+rev = "91ff86cd9c29299a64f968ebb45846c485725f23"
 
 [plugins.cmp-nvim-lsp]
 git = "hrsh7th/cmp-nvim-lsp"
+rev = "39e2eda76828d88b773cc27a3f61d2ad782c922d"
 
 [plugins.cmp-nvim-lsp-signature-help]
 git = "hrsh7th/cmp-nvim-lsp-signature-help"
+rev = "031e6ba70b0ad5eee49fd2120ff7a2e325b17fa7"
 
 [plugins.cmp-cmdline]
 git = "hrsh7th/cmp-cmdline"
-
-[plugins.friendly-snippets]
-git = "rafamadriz/friendly-snippets"
-
-[plugins.nvim-snippets]
-git = "garymjr/nvim-snippets"
-rev = "v1.0.0"
+rev = "d250c63aa13ead745e3a40f61fdd3470efde3923"
 
 [plugins."gitsigns.nvim"]
 git = "lewis6991/gitsigns.nvim"
-
-[plugins."lazydev.nvim"]
-git = "folke/lazydev.nvim"
-rev = "v1.6.0"
-
-[plugins.luvit-meta]
-git = "Bilal2453/luvit-meta"
+rev = "v0.9.0"
 
 [plugins."markdown.nvim"]
 git = "MeanderingProgrammer/markdown.nvim"
-rev = "v3.1.0^{}"
-
-[plugins."ts-comments.nvim"]
-git = "folke/ts-comments.nvim"
-rev = "v1.2.0"
-
-[plugins."telescope-fzf-native.nvim"]
-git = "nvim-telescope/telescope-fzf-native.nvim"
-build = "make"
-
-[plugins."telescope-ui-select.nvim"]
-git = "nvim-telescope/telescope-ui-select.nvim"
-
-[plugins."unimpaired.nvim"]
-git = "tummetott/unimpaired.nvim"
-rev = "v0.2.0"
+rev = "v4.1.0^{}"
 
 [config]
 plugins_dir = "plugins/"
@@ -127,13 +123,12 @@ items = [
   "cmp-nvim-lsp-signature-help",
   "cmp-cmdline",
   "friendly-snippets",
+  "lspkind.nvim",
   "nvim-snippets"
 ]
 
 [bundles.lsp]
 items = [
-  "luvit-meta",
-  "lazydev.nvim",
   "schemastore.nvim",
   "nvim-lspconfig"
 ]

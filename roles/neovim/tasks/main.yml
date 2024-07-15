@@ -38,12 +38,12 @@
       - pynvim
     state: present
 
-- name: Install lua5.1
+- name: Install luarocks
   tags: [pkgs]
   become: true
   ansible.builtin.package:
     name:
-      - lua5.1
+      - luarocks
     state: present
 
 - name: Install neovim dotfiles

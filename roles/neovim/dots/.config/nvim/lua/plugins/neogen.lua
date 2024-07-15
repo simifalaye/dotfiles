@@ -1,15 +1,9 @@
-local function init()
+local lz = require("utils.lazy").new("neogen", function()
   require("neogen").setup({
     snippet_engine = "nvim",
   })
-
-  vim.keymap.set("n", "g.", "<cmd>Neogen<CR>", { desc = "Generate Annotation" })
-end
-
-vim.api.nvim_create_autocmd("BufRead", {
-  desc = "Load neogen",
-  once = true,
-  callback = function()
-    init()
-  end,
-})
+  return true
+end)
+lz:autocmds({ "BufRead" })
+lz:cmds({ "Neogen" })
+lz:key("n", "g.", "<cmd>Neogen<CR>", { desc = "Generate Annotation" })

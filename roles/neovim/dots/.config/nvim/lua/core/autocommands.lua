@@ -183,7 +183,7 @@ autocmd({ "BufWinEnter", "FileChangedShellPost" }, {
       end
       vim.api.nvim_win_call(win, function()
         local current_dir = vim.fn.getcwd(0)
-        local target_dir = require("utils.fs").root(info.file)
+        local target_dir = vim.fs.root(info.file, require("utils.fs").root_patterns)
           or vim.fs.dirname(info.file)
         local stat = target_dir and vim.uv.fs_stat(target_dir)
         -- Prevent unnecessary directory change, which triggers

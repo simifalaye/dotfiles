@@ -1,12 +1,16 @@
 # vim: filetype=yaml.ansible
 
 - name: Install fzf
-  become: true
   tags: [pkgs]
-  ansible.builtin.package:
-    name:
-      - fzf
-    state: present
+  become: true
+  quera.github.install_from_github:
+    repo: junegunn/fzf
+    tag: latest
+    asset_regex: fzf-.*\.tar\.gz
+    version_command: fzf --version
+    move_rules:
+      - src_regex: fzf
+        dst: "/usr/local/bin"
 
 - name: Install fzf dotfiles
   tags: [dots, fzf-dots]

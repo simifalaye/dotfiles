@@ -11,7 +11,6 @@ alias -- -='cd -'
 alias reload='exec $SHELL -l' # reload the current shell configuration
 alias sudo='sudo '            # preserve aliases when running sudo
 alias su='su -l'              # safer, simulate a real login
-alias c='clear && pwd'
 
 # Human readable output.
 alias ls='ls --color=auto'

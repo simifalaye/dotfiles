@@ -12,24 +12,28 @@ M.root_patterns = {
   ".pro",
   ".sln",
   ".vcxproj",
-  -- "Makefile",
-  -- "makefile",
-  -- "MAKEFILE",
   ".gitignore",
   ".editorconfig",
+  ".obsidian/",
 }
+
+if not vim.g.fs_ignore_make then
+  table.insert(M.root_patterns, "Makefile")
+  table.insert(M.root_patterns, "makefile")
+  table.insert(M.root_patterns, "MAKEFILE")
+end
 
 --- Check if file exists
 --- @param path string
 function M.file_exists(path)
-  local stat = vim.loop.fs_stat(path)
+  local stat = vim.uv.fs_stat(path)
   return stat and stat.type == "file" or false
 end
 
 --- Check if directory exists
 --- @param path string
 function M.dir_exists(path)
-  local stat = vim.loop.fs_stat(path)
+  local stat = vim.uv.fs_stat(path)
   return stat and stat.type == "directory" or false
 end
 
@@ -49,14 +53,6 @@ function M.remove_slash(str)
   else
     return str
   end
-end
-
----Compute root directory for given path.
----@param path string?
----@param patterns string[]? root patterns
----@return string?
-function M.root(path, patterns)
-  return vim.fs.root(path or 0, patterns or M.root_patterns)
 end
 
 ---Read file contents

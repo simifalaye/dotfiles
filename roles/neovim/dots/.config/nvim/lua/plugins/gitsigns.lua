@@ -1,4 +1,9 @@
-local function init()
+local wk_ok, wk = pcall(require, "which-key")
+if wk_ok then
+  wk.add({ { "<leader>g", group = "+git" } })
+end
+
+local lz = require("utils.lazy").new("gitsigns", function()
   local gitsigns = require("gitsigns")
   gitsigns.setup({
     on_attach = function(bufnr)
@@ -50,7 +55,9 @@ local function init()
       map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "In Hunk" })
     end,
   })
-end
+  return true
+end)
+lz:cmds({ "GitSigns" })
 
 local load_autocmd_id = 0
 load_autocmd_id = vim.api.nvim_create_autocmd({ "BufRead" }, {
@@ -58,8 +65,7 @@ load_autocmd_id = vim.api.nvim_create_autocmd({ "BufRead" }, {
   callback = function()
     vim.fn.system("git -C " .. '"' .. vim.fn.expand("%:p:h") .. '"' .. " rev-parse")
     if vim.v.shell_error == 0 then
-      -- Load plugin
-      init()
+      lz:load()
       -- Delete autocmd
       if load_autocmd_id ~= 0 then
         vim.api.nvim_del_autocmd(load_autocmd_id)
@@ -67,8 +73,3 @@ load_autocmd_id = vim.api.nvim_create_autocmd({ "BufRead" }, {
     end
   end,
 })
-
-local wk_ok, wk = pcall(require, "which-key")
-if wk_ok then
-  wk.register({ ["<leader>g"] = { name = "+git" } })
-end

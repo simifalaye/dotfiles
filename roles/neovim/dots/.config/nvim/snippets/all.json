@@ -1,0 +1,40 @@
+{
+  "header": {
+    "prefix": "hr",
+    "body": [
+      "$LINE_COMMENT",
+      "$LINE_COMMENT ${1:title}",
+      "$LINE_COMMENT",
+      "$0"
+    ],
+    "description": "Comment header"
+  },
+  "todo": {
+    "prefix": "td",
+    "body": [
+      "$LINE_COMMENT TODO: $0"
+    ],
+    "description": "TODO comment"
+  },
+  "fixme": {
+    "prefix": "fm",
+    "body": [
+      "$LINE_COMMENT FIXME: $0"
+    ],
+    "description": "FIXME comment"
+  },
+  "hack": {
+    "prefix": "hk",
+    "body": [
+      "$LINE_COMMENT HACK: $0"
+    ],
+    "description": "HACK comment"
+  },
+  "bug": {
+    "prefix": "bg",
+    "body": [
+      "$LINE_COMMENT BUG: $0"
+    ],
+    "description": "BUG comment"
+  }
+}

@@ -1,13 +1,13 @@
 vim.keymap.set(
   { "o", "x" },
   "ai",
-  '<cmd>lua require("various-textobjs").indentation("outer")<CR>',
+  '<cmd>lua require("various-textobjs").indentation("outer", "outer")<CR>',
   { desc = "A Indent" }
 )
 vim.keymap.set(
   { "o", "x" },
   "ii",
-  '<cmd>lua require("various-textobjs").indentation("inner")<CR>',
+  '<cmd>lua require("various-textobjs").indentation("inner", "inner")<CR>',
   { desc = "Inner Indent" }
 )
 vim.keymap.set(

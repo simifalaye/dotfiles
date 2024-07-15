@@ -1,32 +1,4 @@
-local function init()
-  local kind_icons = {
-    Text = "",
-    Method = "󰆧",
-    Function = "󰊕",
-    Constructor = "",
-    Field = "󰇽",
-    Variable = "󰂡",
-    Class = "󰠱",
-    Interface = "",
-    Module = "",
-    Property = "󰜢",
-    Unit = "",
-    Value = "󰎠",
-    Enum = "",
-    Keyword = "󰌋",
-    Snippet = "",
-    Color = "󰏘",
-    File = "󰈙",
-    Reference = "",
-    Folder = "󰉋",
-    EnumMember = "",
-    Constant = "󰏿",
-    Struct = "",
-    Event = "",
-    Operator = "󰆕",
-    TypeParameter = "󰅲",
-  }
-
+local lz = require("utils.lazy").new("cmp", function()
   local cmp = require("cmp")
   local border_opts = {
     border = "single",
@@ -44,19 +16,22 @@ local function init()
 
   -- Setup nvim-snippets/friendly-snippets
   local friendly_path = nil
-  for _, path in ipairs(vim.api.nvim_get_runtime_file("snippets/*.json", true)) do
-    -- Find the friendly snippets path in the runtimepath
-    local pos = string.find(path, "friendly%-snippets/snippets")
-    if pos then
-      friendly_path = string.sub(path, 1, pos + #"friendly-snippets/snippets" - 1)
-      break
+  for _, path in ipairs(vim.api.nvim_list_runtime_paths()) do
+    if string.match(path, "friendly.snippets") then
+      friendly_path = vim.fs.joinpath(path, "snippets")
     end
   end
   require("snippets").setup({
-    friendly_snippets = true,
+    create_autocmd = true,
     search_paths = {
       vim.fs.joinpath(vim.fn.stdpath("config") --[[@as string]], "snippets"),
       friendly_path,
+    },
+    extended_filetypes = {
+      bash = { "shell" },
+      cpp = { "c" },
+      sh = { "shell" },
+      zsh = { "shell" },
     },
   })
 
@@ -84,11 +59,9 @@ local function init()
     },
     formatting = {
       fields = { "kind", "abbr", "menu" },
-      format = function(entry, vim_item)
-        -- Kind icons
-        vim_item.kind = kind_icons[vim_item.kind]
-        -- Source
-        vim_item.menu = ({
+      format = require("lspkind").cmp_format({
+        mode = "symbol",
+        menu = {
           nvim_lsp = "(Lsp)",
           nvim_lua = "(Lua)",
           path = "(Path)",
@@ -98,9 +71,8 @@ local function init()
           rg = "(Rg)",
           git = "(Git)",
           -- codeium = "(AI)",
-        })[entry.source.name] or "(Unknown)"
-        return vim_item
-      end,
+        },
+      }),
       expandable_indicator = true,
     },
     mapping = {
@@ -219,12 +191,6 @@ local function init()
       },
     }),
   })
-end
-
-vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
-  desc = "Load cmp",
-  once = true,
-  callback = function()
-    init()
-  end,
-})
+  return true
+end)
+lz:autocmds({ "InsertEnter", "CmdlineEnter" })

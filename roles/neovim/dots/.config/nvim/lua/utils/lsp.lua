@@ -48,7 +48,7 @@ function M.start(config, opts)
   return vim.lsp.start(
     vim.tbl_deep_extend("keep", config or {}, {
       name = config.name or cmd_exec,
-      root_dir = require("utils.fs").root(
+      root_dir = vim.fs.root(
         vim.api.nvim_buf_get_name(0),
         vim.list_extend(config.root_patterns or {}, M.default_config.root_patterns or {})
       ),

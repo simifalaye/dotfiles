@@ -1,7 +1,7 @@
 _G.NLsp = _G.NLsp or {}
 _G.NLsp.root_configs_cache = _G.NLsp.root_configs_cache or {}
 
-local function init()
+local lz = require("utils.lazy").new("lsp", function()
   --- A lspconfig on_new_config handler to allow for overriding default server
   --- config with project-local config (including things like cmd) since neoconf
   --- only allows for replacing config in the "settings".
@@ -76,15 +76,6 @@ local function init()
     lspconfig[name].setup(conf)
   end
 
-  -- Setup lazydev
-  require("lazydev").setup({
-    library = {
-      -- See the configuration section for more details
-      -- Load luvit types when the `vim.uv` word is found
-      { path = "luvit-meta/library", words = { "vim%.uv" } },
-    },
-  })
-
   -- Configure servers (use mason if available)
   local mason_lspconfig_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
   if mason_lspconfig_ok then
@@ -126,7 +117,7 @@ local function init()
       -- Setup main keymaps
       local wk_ok, wk = pcall(require, "which-key")
       if wk_ok then
-        wk.register({ ["<localleader>w"] = { name = "+workspace" } }, { buffer = bufnr })
+        wk.add({ { "<localleader>w", group = "+workspace" } }, { buffer = bufnr })
       end
       local keys = {
         {
@@ -318,12 +309,6 @@ local function init()
       end
     end,
   })
-end
-
-vim.api.nvim_create_autocmd("BufReadPre", {
-  desc = "Load lspconfig",
-  once = true,
-  callback = function()
-    init()
-  end,
-})
+  return true
+end)
+lz:autocmds({ "BufReadPre" })

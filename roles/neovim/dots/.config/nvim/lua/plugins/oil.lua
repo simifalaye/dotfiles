@@ -184,5 +184,5 @@ vim.api.nvim_create_autocmd("Colorscheme", {
 -- Setup keymaps
 vim.keymap.set("n", "-", "<cmd>Oil<CR>", { desc = "Open parent directory" })
 vim.keymap.set("n", "_", function()
-  vim.cmd("Oil " .. require("utils.fs").root())
+  vim.cmd("Oil " .. vim.fs.root(0, require("utils.fs")))
 end, { desc = "Open root directory" })

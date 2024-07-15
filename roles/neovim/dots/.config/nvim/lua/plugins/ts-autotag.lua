@@ -1,1 +1,5 @@
-require("nvim-ts-autotag").setup({})
+local lz = require("utils.lazy").new("ts-autotag", function()
+  require("nvim-ts-autotag").setup({})
+  return true
+end)
+lz:autocmds({ "BufRead" })

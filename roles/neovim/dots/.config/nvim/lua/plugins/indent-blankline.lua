@@ -1,4 +1,4 @@
-local function init()
+local lz = require("utils.lazy").new("indent-blankline", function()
   require("ibl").setup({
     indent = { char = "▏" },
     scope = { show_start = false, show_end = false },
@@ -26,12 +26,6 @@ local function init()
       },
     },
   })
-end
-
-vim.api.nvim_create_autocmd("BufRead", {
-  desc = "Load indent-blankline plugin",
-  once = true,
-  callback = function()
-    init()
-  end,
-})
+  return true
+end)
+lz:autocmds({ "BufRead" })

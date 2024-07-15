@@ -5,28 +5,17 @@
 # highlighting is updated when the plugin updates the editor buffer.
 #
 
-#-
-#  Plugin: zsh-history-substring-search
-#-
+[[ -o interactive ]] || return 0
 
-# Abort if requirements are not met
-(( $+functions[zcompile-many] )) || return 1
-[[ -o interactive ]] || return 1
+#
+# zsh-history-substring-search plugin
+#
 
 # Half case-sensitive: lower matches upper, upper does not match lower.
 HISTORY_SUBSTRING_SEARCH_GLOBBING_FLAGS=l
 
 # Load plugin
-plugin_dir=${ZPLUGDIR}/zsh-history-substring-search
-if [[ ! -e ${plugin_dir} ]]; then
-  git clone --depth=1 https://github.com/zsh-users/zsh-history-substring-search.git ${plugin_dir}
-  zcompile-many ${plugin_dir}/zsh-history-substring-search.plugin.zsh
-fi
-source ${plugin_dir}/zsh-history-substring-search.plugin.zsh
-
-#-
-#  Keybinds
-#-
+znap source zsh-users/zsh-history-substring-search
 
 # Rebind up/down keys to use the loaded widgets.
 if typeset -p key_info > /dev/null 2>&1; then

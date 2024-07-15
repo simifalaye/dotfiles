@@ -1,4 +1,4 @@
-local function init()
+local lz = require("utils.lazy").new("lualine", function()
   local function lsp_clients()
     local clients = vim.lsp.get_clients({ bufnr = 0 })
     local str = ""
@@ -61,12 +61,6 @@ local function init()
       lualine_z = {},
     },
   })
-end
-
-vim.api.nvim_create_autocmd("VimEnter", {
-  desc = "Load lualine",
-  once = true,
-  callback = function()
-    init()
-  end,
-})
+  return true
+end)
+lz:autocmds({ "VimEnter" })

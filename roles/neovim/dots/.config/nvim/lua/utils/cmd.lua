@@ -19,6 +19,18 @@ function M.run(cmd, show_error)
   return success and result:gsub("[\27\155][][()#;?%d]*[A-PRZcf-ntqry=><~]", "") or nil
 end
 
+local function get_cfile_under_cursor()
+  if vim.bo.filetype ~= "markdown" then
+    return vim.fn.expand("<cfile>")
+  end
+  local WORD = vim.fn.expand("<cWORD>")
+  local desc, link = string.match(WORD, "%[(.-)%]%((.-)%)")
+  if desc and link then
+    return link
+  end
+  return vim.fn.expand("<cfile>")
+end
+
 --- Open a URL or file with system
 ---@param path string The path to the file or URL
 function M.sys_open(path)
@@ -26,7 +38,7 @@ function M.sys_open(path)
   local open = function(p)
     local cmd
     if is_wsl and vim.fn.executable("wslview") > 0 then
-      cmd = {"wslview"}
+      cmd = { "wslview" }
     elseif vim.fn.has("unix") == 1 and vim.fn.executable("xdg-open") > 0 then
       cmd = { "xdg-open" }
     elseif
@@ -41,7 +53,7 @@ function M.sys_open(path)
     vim.fn.jobstart(vim.fn.extend(cmd, { p }), { detach = true })
   end
 
-  path = path ~= "" and path or vim.fn.expand("<cfile>")
+  path = path ~= "" and path or get_cfile_under_cursor()
   if not path then
     return
   end

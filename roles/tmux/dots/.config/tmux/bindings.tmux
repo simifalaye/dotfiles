@@ -3,8 +3,6 @@
 # Configuration of tmux key bindings.
 #
 
-TMUX_SCRIPT_DIR="${TMUX_CONFIG_DIR}/scripts"
-
 if-shell -b '[ "$(echo "$TMUX_VERSION >= 3.1" | bc)" = 1 ]' { # Require for '-N' flag
 
 #-
@@ -23,16 +21,16 @@ bind -T off -N 'Unlock keys' 'M-g' \
   refresh-client -S
 
 # Bind window selection
-bind -n -N 'Select window 1' 'M-1' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 1'
-bind -n -N 'Select window 2' 'M-2' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 2'
-bind -n -N 'Select window 3' 'M-3' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 3'
-bind -n -N 'Select window 4' 'M-4' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 4'
-bind -n -N 'Select window 5' 'M-5' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 5'
-bind -n -N 'Select window 6' 'M-6' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 6'
-bind -n -N 'Select window 7' 'M-7' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 7'
-bind -n -N 'Select window 8' 'M-8' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 8'
-bind -n -N 'Select window 9' 'M-9' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 9'
-bind -n -N 'Select window 10' 'M-0' run '${TMUX_SCRIPT_DIR}/smart_window_select.sh 10'
+bind -n -N 'Select window 1' 'M-1' select-window -t :1
+bind -n -N 'Select window 2' 'M-2' select-window -t :2
+bind -n -N 'Select window 3' 'M-3' select-window -t :3
+bind -n -N 'Select window 4' 'M-4' select-window -t :4
+bind -n -N 'Select window 5' 'M-5' select-window -t :5
+bind -n -N 'Select window 6' 'M-6' select-window -t :6
+bind -n -N 'Select window 7' 'M-7' select-window -t :7
+bind -n -N 'Select window 8' 'M-8' select-window -t :8
+bind -n -N 'Select window 9' 'M-9' select-window -t :9
+bind -n -N 'Select window 10' 'M-0' select-window -t :10
 bind -n -N 'Select the next window' 'M-]' next-window
 bind -n -N 'Select the previous window' 'M-[' previous-window
 
@@ -40,45 +38,32 @@ bind -n -N 'Select the previous window' 'M-[' previous-window
 bind -n -N 'Swap window right' 'M-{' swap-window -d -t -1
 bind -n -N 'Swap window left' 'M-}' swap-window -d -t +1
 
-# Bind pane selection
-bind -n -N 'Select pane left' 'M-h' run '${TMUX_SCRIPT_DIR}/smart_pane_select.sh M-h L'
-bind -n -N 'Select pane down' 'M-j' run '${TMUX_SCRIPT_DIR}/smart_pane_select.sh M-j D'
-bind -n -N 'Select pane up' 'M-k' run '${TMUX_SCRIPT_DIR}/smart_pane_select.sh M-k U'
-bind -n -N 'Select pane right' 'M-l' run '${TMUX_SCRIPT_DIR}/smart_pane_select.sh M-l R'
-
 # Bind pane movement
-bind -n -N 'Move pane 1' 'M-!' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 1'
-bind -n -N 'Move pane 2' 'M-@' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 2'
-bind -n -N 'Move pane 3' 'M-#' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 3'
-bind -n -N 'Move pane 4' 'M-$' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 4'
-bind -n -N 'Move pane 5' 'M-%' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 5'
-bind -n -N 'Move pane 6' 'M-^' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 6'
-bind -n -N 'Move pane 7' 'M-&' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 7'
-bind -n -N 'Move pane 8' 'M-*' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 8'
-bind -n -N 'Move pane 9' 'M-(' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 9'
-bind -n -N 'Move pane 10' 'M-)' run '${TMUX_SCRIPT_DIR}/smart_pane_move.sh 10'
+bind -n -N 'Move pane 1' 'M-!' join-pane -t :1
+bind -n -N 'Move pane 2' 'M-@' join-pane -t :2
+bind -n -N 'Move pane 3' 'M-#' join-pane -t :3
+bind -n -N 'Move pane 4' 'M-$' join-pane -t :4
+bind -n -N 'Move pane 5' 'M-%' join-pane -t :5
+bind -n -N 'Move pane 6' 'M-^' join-pane -t :6
+bind -n -N 'Move pane 7' 'M-&' join-pane -t :7
+bind -n -N 'Move pane 8' 'M-*' join-pane -t :8
+bind -n -N 'Move pane 9' 'M-(' join-pane -t :9
+bind -n -N 'Move pane 10' 'M-)' join-pane -t :10
 bind -n -N 'Move pane left' 'M-H' swap-pane -s '{left-of}'
 bind -n -N 'Move pane down' 'M-J' swap-pane -s '{down-of}'
 bind -n -N 'Move pane up' 'M-K' swap-pane -s '{up-of}'
 bind -n -N 'Move pane right' 'M-L' swap-pane -s '{right-of}'
 
-# Bind pane resizing
-bind -n -N 'Resize left' 'M-C-h' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M-C-h L 3'
-bind -n -N 'Resize down' 'M-C-j' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M-C-j D 3'
-bind -n -N 'Resize up' 'M-C-k' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M-C-k U 3'
-bind -n -N 'Resize right' 'M-C-l' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M-C-l R 3'
+# Bind pane zoom
 bind -n -N 'Zoom the current pane' 'M-z' resize-pane -Z
 
 # See: https://www.reddit.com/r/tmux/comments/j7fcr7/tiling_in_tmux_as_in_bspwm/
-bind -n -N 'New pane' 'M-/' if-shell \
+bind -n -N 'New pane' 'M-Enter' if-shell \
        "[ $(($(tmux display -p '8*#{pane_width}-20*#{pane_height}'))) -lt 0 ]" "splitw -v -c '#{pane_current_path}'" "splitw -h -c '#{pane_current_path}' "
 
 #-
 #  Mouse
 #-
-
-# Enable mouse support by default.
-set -g mouse on
 
 # Prevent status line scrolling from switching windows.
 unbind -T root 'WheelUpStatus'
@@ -173,10 +158,10 @@ bind -T window_mode -N 'Rename' 'r' command-prompt -I "#W" { rename-window "%%" 
 bind -T window_mode -N 'Kill' 'x' confirm-before -p "kill-window #W? (y/n)" kill-window
 bind -T window_mode -N 'Select last' 'w' last-window
 bind -T window_mode -N 'Select interactively' 'Space' choose-tree -Zw
-bind -T window_mode -N 'Layout: even side-by-side' '\' select-layout even-horizontal
-bind -T window_mode -N 'Layout: main side-by-side' '|' select-layout main-vertical
-bind -T window_mode -N 'Layout: even top-down' '-' select-layout even-vertical
-bind -T window_mode -N 'Layout: main top-down' '_' select-layout main-horizontal
+bind -T window_mode -N 'Layout: even side-by-side' '|' select-layout even-horizontal
+bind -T window_mode -N 'Layout: main side-by-side' '\' select-layout main-vertical
+bind -T window_mode -N 'Layout: even top-down' '_' select-layout even-vertical
+bind -T window_mode -N 'Layout: main top-down' '-' select-layout main-horizontal
 bind -T window_mode -N 'Layout: tiled' '+' select-layout tiled
 bind -T window_mode -N 'Layout: even spread' '=' select-layout -E
 bind -T window_mode -N 'Toggle activity monitoring' 'm' {
@@ -224,10 +209,10 @@ bind -T session_mode -N 'List key bindings' '?' display-popup -w80 -h90% -E "tmu
 
 bind -n -N '-- Mode: Resize (help = M-r + ?)' 'M-r' switch-client -T resize_mode
 
-bind -T resize_mode -N 'Left' 'h' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M-C-h L 3'\; switch-client -T resize_mode
-bind -T resize_mode -N 'Down' 'j' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M-C-j D 3'\; switch-client -T resize_mode
-bind -T resize_mode -N 'Up' 'k' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M-C-k U 3'\; switch-client -T resize_mode
-bind -T resize_mode -N 'Right' 'l' run '${TMUX_SCRIPT_DIR}/smart_pane_resize.sh M-C-l R 3'\; switch-client -T resize_mode
+bind -T resize_mode -N 'Left' 'h' resize-pane -L 5 \; switch-client -T resize_mode
+bind -T resize_mode -N 'Down' 'j' resize-pane -D 5 \; switch-client -T resize_mode
+bind -T resize_mode -N 'Up' 'k' resize-pane -U 5 \; switch-client -T resize_mode
+bind -T resize_mode -N 'Right' 'l' resize-pane -R 5 \; switch-client -T resize_mode
 bind -T resize_mode -N 'List key bindings' '?' display-popup -w80 -h90% -E "tmux list-keys -N -T resize_mode | $PAGER"
 
 #-
@@ -238,9 +223,9 @@ bind -T resize_mode -N 'List key bindings' '?' display-popup -w80 -h90% -E "tmux
 unbind -a -T prefix
 
 # Set the prefix key
-set -g prefix 'M-;'
-bind 'M-;' send-prefix
-bind -n 'M-a' send-prefix # Nested session prefix
+set -g prefix 'M-a'
+bind 'M-a' send-prefix
+bind -n 'M-;' send-prefix # Nested session prefix
 
 # Config
 bind -N 'Edit tmux configuration' 'e' run-shell \
@@ -269,11 +254,32 @@ bind -N 'Enter copy mode' 'Enter' copy-mode
 #  Copy mode
 #-
 
-# Pane selection with awareness of Vim splits.
-# See: https://github.com/mrjones2014/smart-splits.nvim
-bind-key -T copy-mode-vi 'M-h' select-pane -L
-bind-key -T copy-mode-vi 'M-j' select-pane -D
-bind-key -T copy-mode-vi 'M-k' select-pane -U
-bind-key -T copy-mode-vi 'M-l' select-pane -R
+# Copy the current selection/line to a new buffer.
+bind -T copy-mode-vi 'Enter' send -X copy-pipe-and-cancel
+bind -T copy-mode-vi 'y' send -X copy-pipe
+bind -T copy-mode-vi 'Y' send -X copy-pipe-end-of-line \; display 'Copied: end-of-line'
+bind -T copy-mode-vi 'M-y' send -X copy-pipe-line \; display 'Copied: line'
+
+# Toggle selection mode.
+bind -T copy-mode-vi 'v' {
+  if -F '#{||:#{selection_active},#{search_present}}' {
+    send -X clear-selection
+  } {
+    send -X begin-selection
+  }
+}
+bind -T copy-mode-vi 'V' send -X select-line
+bind -T copy-mode-vi 'C-v' send -X rectangle-toggle
+bind -T copy-mode-vi 'C-g' send -X clear-selection
+bind -T copy-mode-vi 'o' send -X other-end
+
+# Clear the current selection or exit copy mode if none is active.
+bind -T copy-mode-vi 'Escape' {
+  if -F '#{||:#{selection_active},#{search_present}}' {
+    send -X clear-selection
+  } {
+    send -X cancel
+  }
+}
 
 } # Version >= 3.1

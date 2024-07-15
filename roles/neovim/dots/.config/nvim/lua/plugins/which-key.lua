@@ -1,23 +1,15 @@
-vim.o.timeout = true
-vim.o.timeoutlen = 300
-
-local function init()
+local lz = require("utils.lazy").new("which-key", function()
   require("which-key").setup({
-    plugins = { spelling = true },
-    window = {
-      border = "single",
-    },
-    layout = {
-      align = "left",
+    preset = "helix",
+    icons = {
+      rules = false,
     },
     disable = { filetypes = { "TelescopePrompt" } },
   })
-end
+  return true
+end)
+lz:autocmds({ "VimEnter" })
 
-vim.api.nvim_create_autocmd("VimEnter", {
-  desc = "Load cmp",
-  once = true,
-  callback = function()
-    init()
-  end,
-})
+lz:key("n", "<leader>?", function()
+  require("which-key").show({ global = false })
+end, { desc = "Show Buffer-local Keys" })

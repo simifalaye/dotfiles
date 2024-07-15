@@ -20,7 +20,6 @@
     - {role: fd, tags: ['fd']}
     - {role: fzf, tags: ['fzf']}
     - {role: github, tags: ['github']}
-    - {role: kubernetes, tags: ['kubernetes']}
     - {role: lazygit, tags: ['lazygit']}
     - {role: misc-dots, tags: ['misc-dots']}
     - {role: neovim, tags: ['neovim']}
@@ -32,4 +31,6 @@
     - {role: trash, tags: ['trash']}
     - {role: unison, tags: ['unison']}
     - {role: wslopen, tags: ['wslopen']}
+    - {role: wslu, tags: ['wslu']}
     - {role: zellij, tags: ['zellij']}
+    - {role: zoxide, tags: ['zoxide']}

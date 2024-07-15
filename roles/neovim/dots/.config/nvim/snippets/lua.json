@@ -1,0 +1,15 @@
+{
+  "module": {
+    "prefix": "mod",
+    "body": [
+      "local M = {}",
+      "",
+      "function M.init()",
+      "$0",
+      "end",
+      "",
+      "return M"
+    ],
+    "description": "Define module"
+  }
+}

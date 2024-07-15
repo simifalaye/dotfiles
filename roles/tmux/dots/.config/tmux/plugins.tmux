@@ -20,6 +20,7 @@ set -g @tpm_plugins '                \
   tmux-plugins/tmux-logging          \
   tmux-plugins/tmux-resurrect        \
   fcsonline/tmux-thumbs              \
+  aserowy/tmux.nvim                  \
 '
 
 #-
@@ -89,6 +90,27 @@ if-shell -b '[ -n "${SSH_TTY}" ]' {
 if-shell "test -f ${TMUX_PLUGIN_MANAGER_PATH}/tmux-thumbs/tmux-thumbs.tmux" {
   run-shell "${TMUX_PLUGIN_MANAGER_PATH}/tmux-thumbs/tmux-thumbs.tmux"
 }
+
+#-
+#  tmux.nvim
+#-
+
+# navigation
+set -g @tmux-nvim-navigation true
+set -g @tmux-nvim-navigation-cycle true
+set -g @tmux-nvim-navigation-keybinding-left 'M-h'
+set -g @tmux-nvim-navigation-keybinding-down 'M-j'
+set -g @tmux-nvim-navigation-keybinding-up 'M-k'
+set -g @tmux-nvim-navigation-keybinding-right 'M-l'
+
+# resize
+set -g @tmux-nvim-resize true
+set -g @tmux-nvim-resize-step-x 3
+set -g @tmux-nvim-resize-step-y 3
+set -g @tmux-nvim-resize-keybinding-left 'M-C-h'
+set -g @tmux-nvim-resize-keybinding-down 'M-C-j'
+set -g @tmux-nvim-resize-keybinding-up 'M-C-k'
+set -g @tmux-nvim-resize-keybinding-right 'M-C-l'
 
 #-
 #  Load plugins

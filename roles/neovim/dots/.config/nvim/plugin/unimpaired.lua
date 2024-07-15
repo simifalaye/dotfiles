@@ -78,12 +78,12 @@ local map = vim.keymap.set
 
 local wk_ok, wk = pcall(require, "which-key")
 if wk_ok then
-  wk.register({
-    ["["] = { name = "+prev" },
-    ["]"] = { name = "+next" },
-    ["[o"] = { name = "+enable" },
-    ["]o"] = { name = "+disable" },
-    ["yo"] = { name = "+toggle" },
+  wk.add({
+    { "[", group = "+prev" },
+    { "]", group = "+next" },
+    { "[o", group = "+enable" },
+    { "]o", group = "+disable" },
+    { "yo", group = "+toggle" },
   })
 end
 

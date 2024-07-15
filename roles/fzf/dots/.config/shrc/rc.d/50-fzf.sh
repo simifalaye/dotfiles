@@ -1,27 +1,14 @@
-# Use tmux if inside
-export FZF_TMUX_OPTS='-p80%,60%'
-
 # Setup basic options
 export FZF_DEFAULT_OPTS='
 --reverse
 --no-mouse
 --cycle
---bind change:top
---bind ctrl-space:toggle+down
---bind alt-s:toggle-sort
---bind alt-p:toggle-preview
---bind alt-a:toggle-all
---bind alt-g:top
---bind ctrl-f:page-down
---bind ctrl-b:page-up
---bind ctrl-d:half-page-down
---bind ctrl-u:half-page-up
---bind shift-down:preview-down
---bind shift-up:preview-up
---bind alt-j:preview-down
---bind alt-k:preview-up
---bind alt-J:preview-page-down
---bind alt-K:preview-page-up'
+--layout=default
+--bind ctrl-h:backward-kill-word
+--bind ctrl-u:clear-query
+--bind ctrl-k:kill-line
+--bind ctrl-space:toggle-out
+--bind ctrl-a:toggle-all'
 
 # Use fd if available
 if command -v fd >/dev/null; then

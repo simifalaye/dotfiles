@@ -10,21 +10,17 @@ if [ -d "${HOME}/.config/shrc/env.d" ]; then
   done
 fi
 
-# Move zsh config files to XDG base dir
+# ZSH config path
 export ZDOTDIR="${HOME}"
 
 # XDG paths for zsh.
 export ZDATADIR=${ZDATADIR:-${XDG_DATA_HOME:-$HOME/.local/share}/zsh} && mkdir -p ${ZDATADIR}
 export ZCACHEDIR=${ZCACHEDIR:-${XDG_CACHE_HOME:-$HOME/.cache}/zsh} && mkdir -p ${ZCACHEDIR}
 
-# Setup location to store plugins
-export ZPLUGDIR="${ZDATADIR}/plugins" && mkdir -p ${ZPLUGDIR}
-
 # Add your functions to your $fpath, so you can autoload them.
 fpath=(
   ${HOME}/.config/shrc/zshrc.d/functions
   $fpath
-  ${ZDATADIR}/site-functions
 )
 
 # Ensure that path arrays do not contain duplicates.

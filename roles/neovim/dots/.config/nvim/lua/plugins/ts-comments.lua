@@ -1,11 +1,5 @@
-local function init()
+local lz = require("utils.lazy").new("ts-comments", function()
   require("ts-comments").setup({})
-end
-
-vim.api.nvim_create_autocmd("BufRead", {
-  desc = "Load cmp",
-  once = true,
-  callback = function()
-    init()
-  end,
-})
+  return true
+end)
+lz:autocmds({ "BufRead" })

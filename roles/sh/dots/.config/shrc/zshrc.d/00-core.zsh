@@ -1,6 +1,6 @@
-#-
-#  General
-#-
+#
+# General
+#
 
 # Autoload all module functions (Using lambda for local vars).
 () {
@@ -15,9 +15,9 @@
   done
 }
 
-#-
-#  History Options
-#-
+#
+# History Options
+#
 
 # Tell zsh where to store history.
 # := assigns the variable and then substitutes the expression with its value.
@@ -60,9 +60,9 @@ setopt INC_APPEND_HISTORY
 # Share history among all sessions
 setopt SHARE_HISTORY
 
-#-
-#  CD options
-#-
+#
+# CD options
+#
 
 # Perform cd to a directory if the typed command is invalid, but is a directory.
 setopt AUTO_CD
@@ -81,9 +81,9 @@ setopt PUSHD_IGNORE_DUPS
 # Don't print the directory stack after pushd or popd.
 setopt PUSHD_SILENT
 
-#-
-#  Named directories
-#-
+#
+# Named directories
+#
 
 # Create shortcuts for your favorite directories.
 # Set these early, because it affects how dirs are displayed and printed.
@@ -96,12 +96,8 @@ hash -d dot="${HOME}/.dotfiles"
 hash -d cfg="${XDG_CONFIG_HOME}"
 hash -d data="${XDG_DATA_HOME}"
 
-#-
-#  Aliases
-#-
-
 #
-# Zsh aliases
+# Aliases
 #
 
 # Global aliases
@@ -116,3 +112,19 @@ alias -g LL="2>&1 | less"
 alias -g CA="2>&1 | cat -A"
 alias -g NE="2> /dev/null"
 alias -g NUL="> /dev/null 2>&1"
+
+#
+# Plugin manager
+#
+
+# Download Znap, if it's not there yet
+[[ -r "${ZDATADIR}"/znap/znap.zsh ]] ||
+    git clone --depth 1 -- \
+        https://github.com/marlonrichert/zsh-snap.git "${ZDATADIR}"/znap
+
+# Configure Znap
+zstyle ':znap:*' repos-dir "${ZDATADIR}"/plugins
+zstyle '*:compinit' arguments -d "${ZCACHEDIR}/zcompdump"
+
+# Load Znap
+source "${ZDATADIR}"/znap/znap.zsh

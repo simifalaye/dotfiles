@@ -1,4 +1,4 @@
-local function init()
+local lz = require("utils.lazy").new("autopairs", function()
   require("nvim-autopairs").setup({
     check_ts = true,
     ts_config = { java = false },
@@ -14,12 +14,6 @@ local function init()
       highlight_grey = "LineNr",
     },
   })
-end
-
-vim.api.nvim_create_autocmd("InsertEnter", {
-  desc = "Load nvim-autopairs plugin",
-  once = true,
-  callback = function()
-    init()
-  end,
-})
+  return true
+end)
+lz:autocmds({ "InsertEnter" })

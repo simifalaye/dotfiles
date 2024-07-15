@@ -91,17 +91,17 @@ map("n", "<F4>", ":ToggleList l<CR>", { silent = true, desc = "Toggle Loclist" }
 -- Leader
 local wk_ok, wk = pcall(require, "which-key")
 if wk_ok then
-  wk.register({
-    ["<leader>p"] = { name = "+plugins" },
+  wk.add({
+    { "<leader>p", group = "plugins" },
   })
 end
 map("n", "<leader>x", "<cmd>bd<CR>", { desc = "E[x]it Buf" })
 map("n", "<leader>X", "<cmd>bd!<CR>", { desc = "E[x]it Buf!" })
-map("n", "<leader>pp", "<cmd>Lazy<CR>", { desc = "Open" })
-map("n", "<leader>pc", "<cmd>Lazy clean<CR>", { desc = "Clean" })
-map("n", "<leader>ph", "<cmd>Lazy health<CR>", { desc = "Health" })
-map("n", "<leader>pi", "<cmd>Lazy install<CR>", { desc = "Install" })
-map("n", "<leader>ps", "<cmd>Lazy sync<CR>", { desc = "Sync" })
+map("n", "<leader>pe", "<cmd>Rocks edit<CR>", { desc = "Edit" })
+map("n", "<leader>pi", "<cmd>Rocks install", { desc = "Install" })
+map("n", "<leader>pl", "<cmd>Rocks log<CR>", { desc = "Log" })
+map("n", "<leader>pp", "<cmd>Rocks prune", { desc = "Prune" })
+map("n", "<leader>pu", "<cmd>Rocks update<CR>", { desc = "Update" })
 
 ---
 --  Visual/select/operator mode
