@@ -6,7 +6,7 @@
   quera.github.install_from_github:
     repo: tinted-theming/tinty
     tag: latest
-    asset_regex: tinty--.*(?<!musl)\.tar\.gz
+    asset_regex: tinty-.*(?<!musl)\.tar\.gz
     version_command: tinty --version
     move_rules:
       - src_regex: tinty
