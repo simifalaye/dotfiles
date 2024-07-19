@@ -3,7 +3,7 @@ local lz = require("utils.lazy").new("lualine", function()
     local clients = vim.lsp.get_clients({ bufnr = 0 })
     local str = ""
     for _, v in pairs(clients) do
-      if v.name and v.name ~= "efm" then
+      if v.name then
         str = str .. v.name .. ", "
       end
     end

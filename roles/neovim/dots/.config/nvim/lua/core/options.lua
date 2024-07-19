@@ -10,7 +10,6 @@ if fn.has("nvim-0.9") == 1 then
 end
 
 opt.cursorline = true
-opt.foldlevelstart = 99
 opt.helpheight = 10
 opt.showmode = false
 opt.mousemoveevent = true
@@ -40,6 +39,14 @@ opt.virtualedit = "block"
 opt.completeopt = { "menu", "menuone", "noselect" }
 opt.wildmode = "longest:full,full"
 opt.selection = "old"
+
+-- Folds
+opt.foldcolumn = "0"
+opt.foldenable = true
+opt.foldlevel = 99
+opt.foldlevelstart = 99
+opt.foldmethod = "expr"
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
 -- Timings
 opt.updatetime = 250

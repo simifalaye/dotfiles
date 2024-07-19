@@ -15,6 +15,7 @@
     - {role: calc, tags: ['calc']}
     - {role: cheat, tags: ['cheat']}
     - {role: delta, tags: ['delta']}
+    - {role: editor-tools, tags: ['editor-tools']}
     - {role: elinks, tags: ['elinks']}
     - {role: eza, tags: ['eza']}
     - {role: fd, tags: ['fd']}

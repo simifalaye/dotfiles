@@ -78,7 +78,7 @@ end
 lz:key("n", "<leader>nf", "<cmd>ObsidianQuickSwitch<CR>", { desc = "Find" })
 lz:key("n", "<leader>ng", "<cmd>ObsidianSearch<CR>", { desc = "Grep" })
 lz:key("n", "<leader>nn", "<cmd>ObsidianNew<CR>", { desc = "New" })
-lz:key("n", "<leader>nn", "<cmd>ObsidianNewFromTemplate<CR>", { desc = "New (Template)" })
+lz:key("n", "<leader>nN", "<cmd>ObsidianNewFromTemplate<CR>", { desc = "New (Template)" })
 lz:key("n", "<leader>no", "<cmd>ObsidianOpen<CR>", { desc = "Open" })
 lz:key("n", "<leader>nt", "<cmd>ObsidianTags<CR>", { desc = "Tags" })
 

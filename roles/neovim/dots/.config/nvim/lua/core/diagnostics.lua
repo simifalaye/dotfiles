@@ -49,6 +49,10 @@ for _, sign in ipairs(signs) do
   vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
 end
 
--- Set diagnotics based on mode
-vim.g.user_diagnostics_mode = vim.g.user_diagnostics_mode or 2
-vim.diagnostic.config(_G.user_diagnostics[vim.g.user_diagnostics_mode])
+_G.set_diagnostic_mode = function(mode)
+  -- Set diagnotics based on mode
+  vim.g.user_diagnostics_mode = mode
+  vim.diagnostic.config(_G.user_diagnostics[vim.g.user_diagnostics_mode])
+end
+
+_G.set_diagnostic_mode(vim.g.user_diagnostics_mode or 2)

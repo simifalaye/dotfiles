@@ -2,7 +2,7 @@
 # Completion configuration module for zsh.
 #
 
-[[ ${TERM} != dumb ]] && return
+[[ ${TERM} == dumb ]] && return
 
 #
 # Completion configuration module for zsh.

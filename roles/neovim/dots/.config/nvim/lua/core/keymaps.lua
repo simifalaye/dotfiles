@@ -1,44 +1,42 @@
 local map = vim.keymap.set
 
----
---  Multi mode
----
+--
+-- Multi-mode
+--
 
 -- Move up/down by visual line
 map({ "n", "x" }, "j", [[v:count == 0 ? 'gj' : 'j']], { expr = true })
 map({ "n", "x" }, "k", [[v:count == 0 ? 'gk' : 'k']], { expr = true })
 
 -- Fast window navigation
-if not vim.g.loaded_user_plugin_tmux then
-  map({ "n", "x", "t" }, "<A-h>", "<C-w>h", { desc = "Goto left window" })
-  map({ "n", "x", "t" }, "<A-j>", "<C-w>j", { desc = "Goto down window" })
-  map({ "n", "x", "t" }, "<A-k>", "<C-w>k", { desc = "Goto up window" })
-  map({ "n", "x", "t" }, "<A-l>", "<C-w>l", { desc = "Goto right window" })
-  map(
-    { "n", "x", "t" },
-    "<A-C-h>",
-    "<cmd>ResizeWindow l<CR>",
-    { desc = "Resize window left" }
-  )
-  map(
-    { "n", "x", "t" },
-    "<A-C-j>",
-    "<cmd>ResizeWindow d<CR>",
-    { desc = "Resize window down" }
-  )
-  map(
-    { "n", "x", "t" },
-    "<A-C-k>",
-    "<cmd>ResizeWindow u<CR>",
-    { desc = "Resize window up" }
-  )
-  map(
-    { "n", "x", "t" },
-    "<A-C-l>",
-    "<cmd>ResizeWindow r<CR>",
-    { desc = "Resize window right" }
-  )
-end
+map({ "n", "x", "t" }, "<A-h>", "<C-w>h", { desc = "Goto left window" })
+map({ "n", "x", "t" }, "<A-j>", "<C-w>j", { desc = "Goto down window" })
+map({ "n", "x", "t" }, "<A-k>", "<C-w>k", { desc = "Goto up window" })
+map({ "n", "x", "t" }, "<A-l>", "<C-w>l", { desc = "Goto right window" })
+map(
+  { "n", "x", "t" },
+  "<A-C-h>",
+  "<cmd>ResizeWindow l<CR>",
+  { desc = "Resize window left" }
+)
+map(
+  { "n", "x", "t" },
+  "<A-C-j>",
+  "<cmd>ResizeWindow d<CR>",
+  { desc = "Resize window down" }
+)
+map(
+  { "n", "x", "t" },
+  "<A-C-k>",
+  "<cmd>ResizeWindow u<CR>",
+  { desc = "Resize window up" }
+)
+map(
+  { "n", "x", "t" },
+  "<A-C-l>",
+  "<cmd>ResizeWindow r<CR>",
+  { desc = "Resize window right" }
+)
 
 -- Save
 map(
@@ -48,11 +46,11 @@ map(
   { desc = "Save Buffer" }
 )
 
----
---  Normal mode
----
+--
+-- Normal mode
+--
 
--- Remaps
+-- General
 map("n", "<Esc>", ":noh<CR><Esc>", { silent = true })
 map("n", "n", "nzzzv")
 map("n", "N", "Nzzzv")
@@ -81,15 +79,97 @@ end, { desc = "Format Document" })
 map("n", "gx", ":SystemOpen<CR>", { desc = "System Open" })
 map("n", "gy", '"+y', { desc = "Yank to system" })
 map("n", "gY", '"+Y', { desc = "Yank to system" })
+map(
+  "n",
+  "go",
+  [[:<C-u>put =repeat(nr2char(10),v:count)<Bar>execute "'[-1"<CR>]],
+  { silent = true, desc = "Insert Line Below" }
+)
+map(
+  "n",
+  "gO",
+  [[:<C-u>put!=repeat(nr2char(10),v:count)<Bar>execute "']+1"<CR>]],
+  { silent = true, desc = "Insert Line Above" }
+)
 map("n", "gp", '"+p', { desc = "Paste from system" })
 map("n", "gP", '"+P', { desc = "Paste from system" })
 
--- Toggle windows
-map("n", "<F3>", ":ToggleList c<CR>", { silent = true, desc = "Toggle Quickfix" })
-map("n", "<F4>", ":ToggleList l<CR>", { silent = true, desc = "Toggle Loclist" })
+-- ([/]) namespace
+local wk_ok, wk = pcall(require, "which-key")
+if wk_ok then
+  wk.add({
+    { "[", group = "+prev" },
+    { "]", group = "+next" },
+  })
+end
+map("n", "[b", function()
+  vim.cmd(vim.v.count1 .. "bprevious")
+end, { desc = "Prev buffer" })
+map("n", "]b", function()
+  vim.cmd(vim.v.count1 .. "bnext")
+end, { desc = "Next buffer" })
+map("n", "[B", "<cmd>bfirst<CR>", { desc = "First buffer" })
+map("n", "]B", "<cmd>blast<CR>", { desc = "Last buffer" })
+map("n", "[f", function()
+  local wininfo = vim.fn.getwininfo(vim.fn.win_getid())[1]
+  if wininfo.loclist == 1 then
+    vim.cmd("silent! lolder " .. vim.v.count1)
+  elseif wininfo.quickfix == 1 then
+    vim.cmd("silent! colder " .. vim.v.count1)
+  else
+    local file = require("utils.fs").file_by_offset(-vim.v.count1)
+    if file then
+      vim.cmd("edit " .. file)
+    end
+  end
+end, { desc = "Prev file" })
+map("n", "]f", function()
+  local wininfo = vim.fn.getwininfo(vim.fn.win_getid())[1]
+  if wininfo.loclist == 1 then
+    vim.cmd("silent! lnewer " .. vim.v.count1)
+  elseif wininfo.quickfix == 1 then
+    vim.cmd("silent! cnewer " .. vim.v.count1)
+  else
+    local file = require("utils.fs").file_by_offset(vim.v.count1)
+    if file then
+      vim.cmd("edit " .. file)
+    end
+  end
+end, { desc = "Next file" })
+map("n", "[l", function()
+  vim.cmd("silent! " .. vim.v.count1 .. "lprevious")
+  vim.cmd.normal("zv")
+end, { desc = "Prev ll entry" })
+map("n", "]l", function()
+  vim.cmd("silent! " .. vim.v.count1 .. "lnext")
+  vim.cmd.normal("zv")
+end, { desc = "Next ll entry" })
+map("n", "[L", "<cmd>lfirst<CR>", { desc = "First ll entry" })
+map("n", "]L", "<cmd>llast<CR>", { desc = "Last ll entry" })
+map("n", "[<C-l>", function()
+  vim.cmd("silent! " .. vim.v.count1 .. "lpfile")
+end, { desc = "Prev ll file" })
+map("n", "]<C-l>", function()
+  vim.cmd("silent! " .. vim.v.count1 .. "lnfile")
+end, { desc = "Next ll file" })
+map("n", "[q", function()
+  vim.cmd("silent! " .. vim.v.count1 .. "cprevious")
+  vim.cmd.normal("zv")
+end, { desc = "Prev qf entry" })
+map("n", "]q", function()
+  vim.cmd("silent! " .. vim.v.count1 .. "cnext")
+  vim.cmd.normal("zv")
+end, { desc = "Next qf entry" })
+map("n", "[Q", "<cmd>cfirst<CR>", { desc = "First qf entry" })
+map("n", "]Q", "<cmd>clast<CR>", { desc = "Last qf entry" })
+map("n", "[<C-q>", function()
+  vim.cmd("silent! " .. vim.v.count1 .. "cpfile")
+end, { desc = "Prev qf file" })
+map("n", "]<C-q>", function()
+  vim.cmd("silent! " .. vim.v.count1 .. "cnfile")
+end, { desc = "Next qf file" })
 
 -- Leader
-local wk_ok, wk = pcall(require, "which-key")
 if wk_ok then
   wk.add({
     { "<leader>p", group = "plugins" },
@@ -97,17 +177,18 @@ if wk_ok then
 end
 map("n", "<leader>x", "<cmd>bd<CR>", { desc = "E[x]it Buf" })
 map("n", "<leader>X", "<cmd>bd!<CR>", { desc = "E[x]it Buf!" })
-map("n", "<leader>pe", "<cmd>Rocks edit<CR>", { desc = "Edit" })
-map("n", "<leader>pi", "<cmd>Rocks install", { desc = "Install" })
-map("n", "<leader>pl", "<cmd>Rocks log<CR>", { desc = "Log" })
-map("n", "<leader>pp", "<cmd>Rocks prune", { desc = "Prune" })
-map("n", "<leader>pu", "<cmd>Rocks update<CR>", { desc = "Update" })
+map("n", "<leader>pe", ":Rocks edit<CR>", { desc = "Edit" })
+map("n", "<leader>pi", ":Rocks install ", { desc = "Install" })
+map("n", "<leader>pl", ":Rocks log<CR>", { desc = "Log" })
+map("n", "<leader>pp", ":Rocks prune ", { desc = "Prune" })
+map("n", "<leader>ps", ":Rocks sync<CR>", { desc = "Sync" })
+map("n", "<leader>pu", ":Rocks update<CR>", { desc = "Update" })
 
----
---  Visual/select/operator mode
----
+--
+-- Visual/Select/Operator mode
+--
 
--- Remaps
+-- General
 map("v", ".", ":norm.<CR>") -- visual dot repeat
 map("v", "$", "g_")
 map("v", "<", "<gv")
@@ -134,18 +215,20 @@ map("x", "gY", '"+Y', { desc = "Yank to system" })
 map("x", "gp", '"+p', { desc = "Paste from system" })
 map("x", "gP", '"+p', { desc = "Paste from system" })
 
----
---  Insert mode
----
+--
+-- Inser mode
+--
 
+-- General
 map("i", ",", ",<c-g>u")
 map("i", ".", ".<c-g>u")
 map("i", ";", ";<c-g>u")
 
----
---  Command mode
----
+--
+-- Command mode
+--
 
+-- General
 map(
   "c",
   "<M-,>",
@@ -159,9 +242,9 @@ map(
   { desc = "Insert File Path", silent = false }
 )
 
----
---  Abbreviations
----
+--
+-- Abbreviations
+--
 
 vim.cmd('iab <expr> dts strftime("%F %b %T")')
 vim.cmd("cnoreabbrev W! w!")

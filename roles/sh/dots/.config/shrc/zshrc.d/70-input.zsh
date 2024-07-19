@@ -7,7 +7,7 @@
 # latter, see the definition of _rebind_compsys_widgets below.
 #
 
-[[ ${TERM} != dumb ]] && return
+[[ ${TERM} == dumb ]] && return
 
 #-
 #  Options
@@ -62,9 +62,12 @@ key_info=(
 )
 
 # Add basic shell keymaps
-local key
-for key (${(s: :)key_info[CtrlLeft]}) bindkey ${key} backward-word
-for key (${(s: :)key_info[CtrlRight]}) bindkey ${key} forward-word
+for key in ${(s: :)key_info[CtrlLeft]}; do
+  bindkey ${key} backward-word
+done
+for key in ${(s: :)key_info[CtrlRight]}; do
+  bindkey ${key} forward-word
+done
 bindkey ${key_info[Backspace]} backward-delete-char
 bindkey ${key_info[Delete]} delete-char
 if [[ -n ${key_info[Home]} ]] bindkey ${key_info[Home]} beginning-of-line
@@ -149,21 +152,20 @@ if ! is-at-least 5.3; then
   bindkey "${key_info[Ctrl]}I" expand-or-complete-with-redisplay
 fi
 
-if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
-  # Enable application mode when zle is active
-  start-application-mode() {
+# Enables terminal application mode when the editor starts,
+# so that $terminfo values are valid.
+function zle-line-init {
+  if (( $+terminfo[smkx] )); then
     echoti smkx
-  }
-  stop-application-mode() {
-    echoti rmkx
-  }
-
-  if is-at-least 5.3; then
-    autoload -Uz add-zle-hook-widget && \
-        add-zle-hook-widget -Uz line-init start-application-mode && \
-        add-zle-hook-widget -Uz line-finish stop-application-mode
-  else
-    zle -N zle-line-init start-application-mode
-    zle -N zle-line-finish stop-application-mode
   fi
-fi
+}
+zle -N zle-line-init
+
+# Disables terminal application mode when the editor exits,
+# so that other applications behave normally.
+function zle-line-finish {
+  if (( $+terminfo[rmkx] )); then
+    echoti rmkx
+  fi
+}
+zle -N zle-line-finish

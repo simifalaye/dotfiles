@@ -82,5 +82,3 @@ sudo echo ""
 
 # Run Ansible
 ansible-playbook -i ./hosts ./local-dev-env.yml "$@"
-
-# ansible-playbook --ask-become-pass -i ./hosts ./local-dev-env.yml "$@"

@@ -65,9 +65,6 @@ if not pcall(require, "rocks") then
   vim.fn.delete(rocks_location, "rf")
 else
   vim.cmd([[packadd base16-nvim]])
-  vim.cmd([[packadd mason.nvim]])
-  vim.cmd([[packadd mason-tool-installer.nvim]])
-  vim.cmd([[packadd mason-lspconfig.nvim]])
 end
 
 vim.g.rocks_nvim = {

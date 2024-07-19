@@ -1,0 +1,174 @@
+# vim: filetype=yaml.ansible
+
+- name: Install ansible language server
+  become: true
+  tags: [pkgs]
+  community.general.npm:
+    name: "@ansible/ansible-language-server"
+    global: true
+    state: present
+
+- name: Install ansible-lint for ansible-ls
+  become: true
+  tags: [pkgs]
+  ansible.builtin.pip:
+    name:
+      - ansible-lint
+    state: present
+
+- name: Install bash language server
+  become: true
+  tags: [pkgs]
+  community.general.npm:
+    name: "bash-language-server"
+    global: true
+    state: present
+
+- name: Install black python code formatter
+  become: true
+  tags: [pkgs]
+  ansible.builtin.pip:
+    name:
+      - black
+    state: present
+
+- name: Install clang-format formatter
+  become: true
+  tags: [pkgs]
+  ansible.builtin.package:
+    name:
+      - clang-format
+    state: present
+
+- name: Install clangd language server
+  become: true
+  tags: [pkgs]
+  ansible.builtin.package:
+    name:
+      - clangd
+    state: present
+
+- name: Install cpplint linter
+  become: true
+  tags: [pkgs]
+  ansible.builtin.pip:
+    name:
+      - cpplint
+    state: present
+
+- name: Install efm languague server
+  become: true
+  tags: [pkgs, efm]
+  when: "not ('efm-langserver' | is_installed)"
+  quera.github.install_from_github:
+    repo: mattn/efm-langserver
+    tag: latest
+    asset_regex: efm-langserver.*\.tar\.gz
+    version_command: efm-langserver --version
+    move_rules:
+      - src_regex: efm-langserver.*/efm-langserver
+        dst: /usr/local/bin/efm-langserver
+        mode: '0755'
+
+- name: Install json language server
+  become: true
+  tags: [pkgs]
+  community.general.npm:
+    name: vscode-json-languageserver
+    global: true
+    state: present
+
+- name: Install lua language server
+  tags: [pkgs]
+  when: "not ('lua-language-server' | is_installed)"
+  block:
+    - name: Create lua-language-server directory
+      ansible.builtin.file:
+        path: ~/.local/share/lua-language-server
+        state: directory
+        mode: '0775'
+    - name: Download and install lua-language-server directory
+      quera.github.install_from_github:
+        repo: LuaLS/lua-language-server
+        tag: latest
+        asset_regex: lua-language-server-.*(?<!musl)\.tar\.gz
+        asset_arch_mapping:
+          x86_64: "x64"
+        version_command: lua-language-server --version
+        move_rules:
+          - src_regex: .*
+            dst: ~/.local/share/lua-language-server
+    - name: Symlink lua-language-server binary
+      ansible.builtin.file:
+        src: ~/.local/share/lua-language-server/bin/lua-language-server
+        dest: ~/.local/bin/lua-language-server
+        state: link
+
+- name: Install marksman languague server
+  become: true
+  tags: [pkgs]
+  when: "not ('marksman' | is_installed)"
+  quera.github.install_from_github:
+    repo: artempyanykh/marksman
+    tag: latest
+    asset_regex: marksman-.*
+    asset_arch_mapping:
+      x86_64: "x64"
+    version_command: marksman --version
+    move_rules:
+      - src_regex: .*
+        dst: /usr/local/bin/marksman
+        mode: '0755'
+
+- name: Install prettierd formatter
+  become: true
+  tags: [pkgs, prettierd]
+  community.general.npm:
+    name: "@fsouza/prettierd"
+    global: true
+    state: present
+
+- name: Install pyright static type checker lsp
+  become: true
+  tags: [pkgs]
+  ansible.builtin.pip:
+    name:
+      - pyright
+    state: present
+
+- name: Install shellcheck
+  become: true
+  tags: [pkgs]
+  ansible.builtin.package:
+    name:
+      - shellcheck
+    state: present
+
+- name: Install shfmt
+  become: true
+  tags: [pkgs]
+  ansible.builtin.package:
+    name:
+      - shfmt
+    state: present
+
+- name: Install Stylua formatter
+  become: true
+  tags: [pkgs]
+  quera.github.install_from_github:
+    repo: JohnnyMorganz/StyLua
+    tag: latest
+    asset_regex: stylua-.*(?<!musl)\.zip
+    version_command: stylua --version
+    move_rules:
+      - src_regex: .*
+        dst: /usr/local/bin/stylua
+        mode: '0755'
+
+- name: Install yaml language server
+  become: true
+  tags: [pkgs]
+  community.general.npm:
+    name: yaml-language-server
+    global: true
+    state: present

@@ -5,6 +5,12 @@ local lz = require("utils.lazy").new("which-key", function()
       rules = false,
     },
     disable = { filetypes = { "TelescopePrompt" } },
+    plugins = {
+      presets = {
+        nav = false,
+        g = false,
+      }
+    }
   })
   return true
 end)
