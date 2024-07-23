@@ -194,3 +194,11 @@ local lz = require("utils.lazy").new("cmp", function()
   return true
 end)
 lz:autocmds({ "InsertEnter", "CmdlineEnter" })
+
+-- Setup default lsp capabilities
+local lsp = require("utils.lsp")
+lsp.default_config.capabilities = vim.tbl_deep_extend(
+  "keep",
+  lsp.default_config.capabilities or {},
+  require("cmp_nvim_lsp").default_capabilities()
+)

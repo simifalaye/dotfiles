@@ -63,8 +63,22 @@ opt.guifont = "MesloLGS NerdFont:h13"
 -- situations where two lines are swapped
 opt.diffopt:append("algorithm:histogram")
 
--- Use system clipboard
--- opt.clipboard = "unnamedplus"
+-- Use system clipboard and use osc52 when in SSH
+opt.clipboard = "unnamedplus"
+if vim.env.SSH_TTY then
+  -- Use osc52 when over ssh
+  vim.g.clipboard = {
+    name = "OSC 52",
+    copy = {
+      ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+      ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+    },
+    paste = {
+      ["+"] = require("vim.ui.clipboard.osc52").paste("+"),
+      ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+    },
+  }
+end
 
 -- Allow local project config
 opt.exrc = true
@@ -116,40 +130,6 @@ opt.shada = ""
 vim.defer_fn(_rshada, 100)
 vim.api.nvim_create_autocmd("BufReadPre", { once = true, callback = _rshada })
 
--- Configure global clipboard
-if vim.env.SSH_TTY then
-  -- Use osc52 when over ssh
-  vim.g.clipboard = {
-    name = "OSC 52",
-    copy = {
-      ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
-      ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
-    },
-    paste = {
-      ["+"] = require("vim.ui.clipboard.osc52").paste("+"),
-      ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
-    },
-  }
-elseif
-  vim.fn.has("wsl") == 1
-  and vim.fn.executable("clip.exe") > 0
-  and vim.fn.executable("powershell.exe") > 0
-then
-  -- Use clip.exe/powershell.exe when in wsl
-  vim.g.clipboard = {
-    name = "WslClipboard",
-    copy = {
-      ["+"] = "clip.exe",
-      ["*"] = "clip.exe",
-    },
-    paste = {
-      ["+"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-      ["*"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-    },
-    cache_enabled = 0,
-  }
-end
-
 -- Set leader keys
 g.mapleader = " "
 g.maplocalleader = "\\"
@@ -165,9 +145,6 @@ g.user_semantic_tokens_enabled = true
 
 -- enable or disable inlay hints
 g.user_inlay_hints_enabled = true
-
--- enable notifications
-g.user_notifications_enabled = true
 
 -- Process the log level environment variable if set
 if vim.env.USER_LOG_LEVEL and type(vim.env.USER_LOG_LEVEL) == "string" then

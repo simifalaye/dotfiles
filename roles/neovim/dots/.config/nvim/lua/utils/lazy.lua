@@ -80,7 +80,6 @@ function LazyMod:fts(fts)
 end
 
 function LazyMod:cmds(cmds)
-  substr = substr or false
   for _, cmd in pairs(cmds) do
     vim.api.nvim_create_user_command(cmd, function(event)
       local command = {

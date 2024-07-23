@@ -44,7 +44,7 @@ local lz = require("utils.lazy").new("nvim-telescope", function()
     },
   })
   -- Enable Telescope extensions if they are installed
-  pcall(telescope.load_extension, "fzf")
+  pcall(telescope.load_extension, "zf-native")
   pcall(telescope.load_extension, "ui-select")
   return true
 end, { "telescope" })

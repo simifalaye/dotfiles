@@ -9,48 +9,46 @@
 "rocks-git.nvim" = "2.0.1"
 "rocks-config.nvim" = "2.1.4"
 "guess-indent.nvim" = "scm"
-"schemastore.nvim" = "0.2.0"
-nvim-lspconfig = "0.1.8"
 "lualine.nvim" = "scm"
 "oil.nvim" = "2.11.0"
 neogen = "2.17.1"
-tree-sitter-cpp = "0.0.1"
-tree-sitter-perl = "0.0.1"
-tree-sitter-toml = "0.0.1"
+tree-sitter-cpp = "0.0.3"
+tree-sitter-perl = "0.0.2"
+tree-sitter-toml = "0.0.2"
 nvim-ts-autotag = "scm"
-tree-sitter-yaml = "0.0.1"
-tree-sitter-tmux = "0.0.1"
+tree-sitter-yaml = "0.0.2"
+tree-sitter-tmux = "0.0.2"
 "telescope.nvim" = "scm"
 nvim-autopairs = "scm"
 "bufdelete.nvim" = "scm"
 "fidget.nvim" = "1.4.1"
 "indent-blankline.nvim" = "3.7.1"
 nvim-surround = "2.1.5"
-tree-sitter-make = "0.0.1"
+tree-sitter-make = "0.0.2"
 nvim-various-textobjs = "scm"
 nvim-treesitter-context = "scm"
-"which-key.nvim" = "3.10.0"
-tree-sitter-cmake = "0.0.1"
-tree-sitter-git_rebase = "0.0.1"
+"which-key.nvim" = "3.12.0"
+tree-sitter-cmake = "0.0.2"
+tree-sitter-git_rebase = "0.0.2"
 "telescope-ui-select.nvim"= "scm"
-tree-sitter-diff = "0.0.1"
-tree-sitter-starlark = "0.0.1"
-tree-sitter-gitcommit = "0.0.1"
-tree-sitter-proto = "0.0.1"
-tree-sitter-git_config = "0.0.1"
-"lazydev.nvim" = "1.7.0"
+tree-sitter-diff = "0.0.2"
+tree-sitter-starlark = "0.0.2"
+tree-sitter-gitcommit = "0.0.2"
+tree-sitter-proto = "0.0.2"
+tree-sitter-git_config = "0.0.2"
 "ts-comments.nvim" = "1.4.0"
 nvim-snippets = "scm"
 "tmux.nvim" = "scm"
 friendly-snippets = "scm"
-tree-sitter-json = "0.0.1"
+tree-sitter-json = "0.0.2"
 neogit = "scm"
-tree-sitter-ssh_config = "0.0.1"
+tree-sitter-ssh_config = "0.0.2"
 "obsidian.nvim" = "3.9.0"
 "lspkind.nvim" = "scm"
-"telescope-fzf-native.nvim" = "scm"
-tree-sitter-properties = "0.0.1"
+tree-sitter-properties = "0.0.2"
 "rocks-treesitter.nvim" = "1.0.2"
+"schemastore.nvim" = "0.2.0"
+"telescope-zf-native.nvim" = "1.0.0"
 
 [plugins.base16-nvim]
 version = "scm"
@@ -88,10 +86,6 @@ rev = "v0.9.0"
 git = "MeanderingProgrammer/markdown.nvim"
 rev = "v4.1.0^{}"
 
-[plugins.efmls-configs-nvim]
-git = "creativenull/efmls-configs-nvim"
-rev = "v1.7.0"
-
 [config]
 plugins_dir = "plugins/"
 auto_setup = false
@@ -110,16 +104,9 @@ items = [
   "nvim-snippets"
 ]
 
-[bundles.lspconfig]
-items = [
-  "efmls-configs-nvim",
-  "schemastore.nvim",
-  "nvim-lspconfig"
-]
-
 [bundles.telescope]
 items = [
-  "telescope-fzf-native.nvim",
+  "telescope-zf-native.nvim",
   "telescope-ui-select.nvim",
   "telescope.nvim"
 ]

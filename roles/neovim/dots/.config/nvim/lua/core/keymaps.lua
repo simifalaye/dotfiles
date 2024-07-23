@@ -77,8 +77,6 @@ map("n", "gq.", function()
   vim.fn.winrestview(winview)
 end, { desc = "Format Document" })
 map("n", "gx", ":SystemOpen<CR>", { desc = "System Open" })
-map("n", "gy", '"+y', { desc = "Yank to system" })
-map("n", "gY", '"+Y', { desc = "Yank to system" })
 map(
   "n",
   "go",
@@ -91,8 +89,6 @@ map(
   [[:<C-u>put!=repeat(nr2char(10),v:count)<Bar>execute "']+1"<CR>]],
   { silent = true, desc = "Insert Line Above" }
 )
-map("n", "gp", '"+p', { desc = "Paste from system" })
-map("n", "gP", '"+P', { desc = "Paste from system" })
 
 -- ([/]) namespace
 local wk_ok, wk = pcall(require, "which-key")
@@ -209,14 +205,8 @@ map(
   { desc = "Q macro over range", silent = false }
 )
 
--- (g) namespace
-map("x", "gy", '"+y', { desc = "Yank to system" })
-map("x", "gY", '"+Y', { desc = "Yank to system" })
-map("x", "gp", '"+p', { desc = "Paste from system" })
-map("x", "gP", '"+p', { desc = "Paste from system" })
-
 --
--- Inser mode
+-- Insert mode
 --
 
 -- General
