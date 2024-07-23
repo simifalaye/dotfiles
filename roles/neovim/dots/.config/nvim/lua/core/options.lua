@@ -156,6 +156,60 @@ else
   g.user_log_level = vim.log.levels.INFO
 end
 
+-- Set diagnostic signs
+local icons = require("static.icons")
+local signs = {
+  { name = "DiagnosticSignError", text = icons.font.error },
+  { name = "DiagnosticSignWarn", text = icons.font.warn },
+  { name = "DiagnosticSignHint", text = icons.font.hint },
+  { name = "DiagnosticSignInfo", text = icons.font.info },
+}
+for _, sign in ipairs(signs) do
+  vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
+end
+
+-- Diagnostics
+local default_diagnostics = {
+  virtual_text = true,
+  signs = { active = signs },
+  update_in_insert = true,
+  underline = true,
+  severity_sort = true,
+  float = {
+    focused = false,
+    style = "minimal",
+    border = "rounded",
+    source = "always",
+    header = "",
+    prefix = "",
+  },
+}
+_G.user_diagnostics = {
+  -- diagnostics off
+  [0] = vim.tbl_deep_extend("force", default_diagnostics, {
+    underline = false,
+    virtual_text = false,
+    signs = false,
+    update_in_insert = false,
+  }),
+  -- status only
+  vim.tbl_deep_extend(
+    "force",
+    default_diagnostics,
+    { virtual_text = false, signs = false }
+  ),
+  -- virtual text off, signs on
+  vim.tbl_deep_extend("force", default_diagnostics, { virtual_text = false }),
+  -- all diagnostics on
+  default_diagnostics,
+}
+_G.set_diagnostic_mode = function(mode)
+  -- Set diagnotics based on mode
+  vim.g.user_diagnostics_mode = mode
+  vim.diagnostic.config(_G.user_diagnostics[vim.g.user_diagnostics_mode])
+end
+_G.set_diagnostic_mode(vim.g.user_diagnostics_mode or 2)
+
 -- Disable unused builtin plugins
 g.loaded_netrw = true
 g.loaded_netrwPlugin = true

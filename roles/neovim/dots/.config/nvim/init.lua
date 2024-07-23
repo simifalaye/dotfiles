@@ -31,7 +31,6 @@ for _, source in ipairs({
   "core.options",
   "core.autocommands",
   "core.commands",
-  "core.diagnostics",
   "core.rocks",
   "core.keymaps",
 }) do
