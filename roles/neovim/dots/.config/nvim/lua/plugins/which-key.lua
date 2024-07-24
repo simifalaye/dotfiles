@@ -9,8 +9,8 @@ local lz = require("utils.lazy").new("which-key", function()
       presets = {
         nav = false,
         g = false,
-      }
-    }
+      },
+    },
   })
   return true
 end)

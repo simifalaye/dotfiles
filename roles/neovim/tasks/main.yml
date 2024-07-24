@@ -3,20 +3,15 @@
 - name: Download nvim
   tags: [pkgs]
   block:
-    - name: Get nvim version
-      ansible.builtin.shell:
-        cmd: |
-          set -o pipefail
-          nvim --version | head -n 1
-        executable: /bin/bash
-      register: nvim_version
-      changed_when: false
     - name: Get nvim package
       quera.github.install_from_github:
         repo: neovim/neovim
         tag: latest
-        asset_regex: nvim-.*\.tar\.gz
-        version_command: echo {{ nvim_version.stdout }}
+        asset_regex: >-
+          nvim-{{ 'linux' if ansible_system == 'Linux' else 'macos' if
+          ansible_system == 'Darwin' else 'win' if ansible_system == 'Windows'
+          else 'unknown' }}.*\.tar\.gz
+        version_command: nvim --version | head -n 1
         move_rules:
           - src_regex: .*
             dst: "/tmp/nvim"

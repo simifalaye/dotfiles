@@ -49,6 +49,7 @@ tree-sitter-properties = "0.0.2"
 "rocks-treesitter.nvim" = "1.0.2"
 "schemastore.nvim" = "0.2.0"
 "telescope-zf-native.nvim" = "1.0.0"
+tree-sitter-python = "0.0.2"
 
 [plugins.base16-nvim]
 version = "scm"
