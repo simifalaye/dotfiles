@@ -119,7 +119,7 @@ local lz = require("utils.lazy").new("cmp", function()
     sources = cmp.config.sources({
       -- { name = "codeium" },
       { name = "snippets", max_item_count = 3 },
-      { name = "nvim_lsp_signature_help" },
+      -- { name = "nvim_lsp_signature_help" },
       {
         name = "nvim_lsp",
         max_item_count = 20,
@@ -193,7 +193,7 @@ local lz = require("utils.lazy").new("cmp", function()
   })
   return true
 end)
-lz:autocmds({ "InsertEnter", "CmdlineEnter" })
+lz:events({ "InsertEnter", "CmdlineEnter" })
 
 -- Setup default lsp capabilities
 local lsp = require("utils.lsp")

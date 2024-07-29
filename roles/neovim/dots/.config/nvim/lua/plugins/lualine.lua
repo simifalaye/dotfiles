@@ -63,4 +63,4 @@ local lz = require("utils.lazy").new("lualine", function()
   })
   return true
 end)
-lz:autocmds({ "VimEnter" })
+lz:events({ "VimEnter" })

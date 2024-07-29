@@ -195,25 +195,3 @@ autocmd({ "BufWinEnter", "FileChangedShellPost" }, {
     end)
   end,
 })
-
--- -- Disable clipboard on WSL and manually copy to system clipboard
--- -- win32yank is very slow for pasting
--- if vim.fn.has("wsl") == 1 and vim.fn.executable("clip.exe") > 0 then
---   vim.opt.clipboard = ""
---   vim.g.loaded_clipboard_provider = true
---   autocmd("TextYankPost", {
---     desc = "Automatically yank text to wsl clipboard also",
---     callback = function(_)
---       vim.schedule(function()
---         local reg = "0"
---         for _, value in pairs(vim.opt.clipboard:get()) do
---           if value == "unnamedplus" then
---             reg = "+"
---             break
---           end
---         end
---         vim.fn.system("clip.exe", vim.fn.getreg(reg))
---       end)
---     end,
---   })
--- end

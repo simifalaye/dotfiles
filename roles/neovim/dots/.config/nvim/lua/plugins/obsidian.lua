@@ -4,6 +4,7 @@ if not require("utils.fs").dir_exists(vault_path) then
 end
 
 local lz = require("utils.lazy").new("obsidian", function()
+  require("utils.lazy").ensure_module("telescope")
   require("obsidian").setup({
     workspaces = {
       {
@@ -68,7 +69,7 @@ local lz = require("utils.lazy").new("obsidian", function()
   })
   return true
 end)
-lz:autocmds({ "BufReadPre", "BufNewFile" }, vim.fs.joinpath(vault_path .. "/**.md"))
+lz:events({ "BufReadPre", "BufNewFile" }, vim.fs.joinpath(vault_path .. "/**.md"))
 
 -- Keymaps
 local wk_ok, wk = pcall(require, "which-key")

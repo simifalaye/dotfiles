@@ -16,4 +16,4 @@ local lz = require("utils.lazy").new("autopairs", function()
   })
   return true
 end)
-lz:autocmds({ "InsertEnter" })
+lz:events({ "InsertEnter" })

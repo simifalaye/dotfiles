@@ -5,4 +5,4 @@ local lz = require("utils.lazy").new("guess-indent", function()
   })
   return true
 end)
-lz:autocmds({ "BufReadPre" })
+lz:events({ "BufReadPre" })

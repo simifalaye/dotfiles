@@ -12,6 +12,17 @@ pcall(function()
   vim.loader.enable()
 end)
 
+---Restore 'shada' option and read from shada once
+---@return true
+local function _rshada()
+  vim.cmd.set("shada&")
+  vim.cmd.rshada()
+  return true
+end
+vim.opt.shada = ""
+vim.defer_fn(_rshada, 100)
+vim.api.nvim_create_autocmd("BufReadPre", { once = true, callback = _rshada })
+
 --- Inspect the contents of an object very quickly
 --- ex. P({1,2,3})
 --- @vararg any

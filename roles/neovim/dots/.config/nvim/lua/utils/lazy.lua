@@ -1,35 +1,19 @@
+---@class LazyMod
 local LazyMod = {}
 LazyMod.__index = LazyMod
 
 local lazy_modules = {}
-local is_lazy_requiring = false
-local old_require = require
-require = function(name)
-  if not is_lazy_requiring and lazy_modules[name] then
-    is_lazy_requiring = true
-    lazy_modules[name]()
-    is_lazy_requiring = false
-  end
-  return old_require(name)
-end
 
-function LazyMod.load_mod(name)
-  if lazy_modules[name] and lazy_modules[name]() then
-    vim.notify("Loaded module: " .. name)
-    return
-  end
-  vim.notify("Faild to load module: " .. name, vim.log.levels.ERROR)
-end
-
-function LazyMod.new(name, loader, mods)
+--- Create lazy module
+---@param name string
+---@param loader fun():boolean method to load the module
+---@return LazyMod
+function LazyMod.new(name, loader)
+  ---@class LazyMod
   local self = setmetatable({}, LazyMod)
-  name = name or ""
-  loader = loader or function()
-    return true
-  end
   self.name = name
   self.loaded = false
-  self.loader = function()
+  self.load = function()
     if self.loaded then
       return true
     end
@@ -39,20 +23,27 @@ function LazyMod.new(name, loader, mods)
     end
     return false
   end
-  -- Add lazy module loading
-  if mods then
-    for _, mod in pairs(mods) do
-      lazy_modules[mod] = self.loader
-    end
-  end
+  lazy_modules[name] = self.load
+
   return self
 end
 
-function LazyMod:load()
-  return self.loader()
+--- Ensure a module is loaded
+--- (used when you have a dependency on another module which could be lazy-loaded)
+---@param name string
+---@return boolean true if module loaded successfully, is loaded, or a is not a lazy module
+function LazyMod.ensure_module(name)
+  if not lazy_modules[name] then
+    return true
+  end
+  return lazy_modules[name]()
 end
 
-function LazyMod:autocmds(events, pattern, cond)
+--- Load module on neovim events
+---@param events string[]
+---@param pattern? string autocmd pattern string to use
+---@param cond? fun():boolean conditional load on event
+function LazyMod:events(events, pattern, cond)
   cond = cond ~= nil and cond or function()
     return true
   end
@@ -62,23 +53,27 @@ function LazyMod:autocmds(events, pattern, cond)
     once = true,
     callback = function()
       if cond() then
-        self:load()
+        self.load()
       end
     end,
   })
 end
 
+--- Load module on ft events for specific filetypes
+---@param fts string[]
 function LazyMod:fts(fts)
   vim.api.nvim_create_autocmd("FileType", {
     desc = "Lazy-load " .. self.name,
     pattern = fts,
     once = true,
     callback = function()
-      self:load()
+      self.load()
     end,
   })
 end
 
+--- Load module on commands
+---@param cmds string[]
 function LazyMod:cmds(cmds)
   for _, cmd in pairs(cmds) do
     vim.api.nvim_create_user_command(cmd, function(event)
@@ -96,7 +91,7 @@ function LazyMod:cmds(cmds)
         command.range = { event.line1, event.line2 }
       end
 
-      self:load()
+      self.load()
 
       local info = vim.api.nvim_get_commands({})[cmd]
         or vim.api.nvim_buf_get_commands(0, {})[cmd]
@@ -120,9 +115,7 @@ function LazyMod:cmds(cmds)
       range = true,
       nargs = "*",
       complete = function(_, line)
-        if not self.loaded and self.loader() then
-          self.loaded = true
-        end
+        self.load()
         -- NOTE: return the newly loaded command completion
         return vim.fn.getcompletion(line, "cmdline")
       end,
@@ -130,12 +123,17 @@ function LazyMod:cmds(cmds)
   end
 end
 
+--- Load module on keymaps
+---@param mode string|string[]
+---@param lhs string
+---@param rhs string|fun()
+---@param opts table keymap options
 function LazyMod:key(mode, lhs, rhs, opts)
   opts = opts or {}
   vim.keymap.set(mode, lhs, function()
     pcall(vim.keymap.del, mode, rhs, opts)
 
-    self:load()
+    self.load()
 
     if type(rhs) == "string" then
       vim.api.nvim_feedkeys(
@@ -146,7 +144,7 @@ function LazyMod:key(mode, lhs, rhs, opts)
     elseif type(rhs) == "function" then
       rhs()
     elseif rhs == nil then
-      if mode:sub(-1) == "a" then
+      if type(mode) == "string" and mode:sub(-1) == "a" then
         lhs = lhs .. "<C-]>"
       end
       local feed = vim.api.nvim_replace_termcodes("<Ignore>" .. lhs, true, true, true)

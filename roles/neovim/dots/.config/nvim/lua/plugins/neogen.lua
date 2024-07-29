@@ -4,6 +4,6 @@ local lz = require("utils.lazy").new("neogen", function()
   })
   return true
 end)
-lz:autocmds({ "BufRead" })
+lz:events({ "BufRead" })
 lz:cmds({ "Neogen" })
 lz:key("n", "g.", "<cmd>Neogen<CR>", { desc = "Generate Annotation" })

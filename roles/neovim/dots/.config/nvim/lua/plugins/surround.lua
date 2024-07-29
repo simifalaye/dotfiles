@@ -1,5 +1,5 @@
-local lz = require("utils.lazy").new("nvim-surround", function()
+local lz = require("utils.lazy").new("surround", function()
   require("nvim-surround").setup({})
   return true
 end)
-lz:autocmds({ "BufRead" })
+lz:events({ "BufRead" })
