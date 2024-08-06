@@ -188,25 +188,15 @@ M.default_config = {
       )
     end
     if client.supports_method("textDocument/documentHighlight") then
-      local highlight_groupid =
-        vim.api.nvim_create_augroup("user_lsp_document_highlight", {})
       vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
         desc = "highlight references when cursor holds",
-        group = highlight_groupid,
         buffer = bufnr,
         callback = function()
-          if
-            not M.has_capability("textDocument/documentHighlight", { bufnr = bufnr })
-          then
-            vim.api.nvim_del_augroup_by_name("user_lsp_document_highlight")
-            return
-          end
           vim.lsp.buf.document_highlight()
         end,
       })
       vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
         desc = "Clear references when cursor moves",
-        group = highlight_groupid,
         buffer = bufnr,
         callback = function()
           vim.lsp.buf.clear_references()
