@@ -7,18 +7,17 @@
 [plugins]
 "rocks.nvim" = "2.36.1"
 "rocks-git.nvim" = "2.0.1"
-"rocks-config.nvim" = "2.1.5"
+"rocks-config.nvim" = "2.2.0"
 "guess-indent.nvim" = "scm"
 "lualine.nvim" = "scm"
 "oil.nvim" = "2.11.0"
-neogen = "2.19.0"
+neogen = "2.19.3"
 tree-sitter-cpp = "0.0.3"
-tree-sitter-perl = "0.0.3"
+tree-sitter-perl = "0.0.4"
 tree-sitter-toml = "0.0.2"
 nvim-ts-autotag = "scm"
 tree-sitter-yaml = "0.0.2"
-tree-sitter-tmux = "0.0.2"
-"telescope.nvim" = "scm"
+tree-sitter-tmux = "0.0.3"
 nvim-autopairs = "scm"
 "fidget.nvim" = "1.4.1"
 nvim-surround = "2.1.5"
@@ -28,7 +27,6 @@ nvim-treesitter-context = "scm"
 "which-key.nvim" = "3.13.2"
 tree-sitter-cmake = "0.0.2"
 tree-sitter-git_rebase = "0.0.3"
-"telescope-ui-select.nvim"= "scm"
 tree-sitter-diff = "0.0.2"
 tree-sitter-starlark = "0.0.2"
 tree-sitter-gitcommit = "0.0.2"
@@ -43,23 +41,29 @@ tree-sitter-ssh_config = "0.0.2"
 "obsidian.nvim" = "3.9.0"
 "lspkind.nvim" = "scm"
 tree-sitter-properties = "0.0.2"
-"rocks-treesitter.nvim" = "1.0.2"
+"rocks-treesitter.nvim" = "1.0.3"
 "schemastore.nvim" = "0.2.0"
-"telescope-zf-native.nvim" = "1.0.0"
 tree-sitter-python = "0.0.2"
 tree-sitter-bash = "0.0.2"
-"mini.diff" = "0.13.0"
-"mini.bufremove" = "0.9.0"
-"mini.indentscope" = "0.9.0"
 nvim-cmp = "scm"
 cmp-buffer = "scm"
 cmp-path = "scm"
 cmp-nvim-lsp = "scm"
 cmp-cmdline = "scm"
-"markdown.nvim" = "5.0.0"
+tree-sitter-csv = "0.0.2"
+"indent-blankline.nvim" = "3.7.1"
+"bufdelete.nvim" = "scm"
+"render-markdown.nvim" = "6.0.0"
+fzf-lua = "0.0.1414"
 
-[plugins.base16-nvim]
-version = "scm"
+[plugins."gitsigns.nvim"]
+git = "lewis6991/gitsigns.nvim"
+rev = "0ed466953fe5885166e0d60799172a8b1f752d16"
+pin = true
+
+[plugins.base16-vim]
+git = "tinted-theming/base16-vim"
+rev = "5a200412c9856085ce726beb4c14c47326c19700"
 opt = true
 
 [config]
@@ -77,11 +81,4 @@ items = [
   "friendly-snippets",
   "lspkind.nvim",
   "nvim-snippets"
-]
-
-[bundles.telescope]
-items = [
-  "telescope-zf-native.nvim",
-  "telescope-ui-select.nvim",
-  "telescope.nvim"
 ]

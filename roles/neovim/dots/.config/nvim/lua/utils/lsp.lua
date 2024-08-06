@@ -32,6 +32,7 @@ local M = {}
 ---@diagnostic disable-next-line: missing-fields
 M.default_config = {
   root_patterns = require("utils.fs").root_patterns,
+  capabilities = {},
   on_attach = function(client, bufnr)
     -- Enable lsp omnifunc and tagfunc for completion and goto def
     if client.server_capabilities.completionProvider then
@@ -157,7 +158,7 @@ M.default_config = {
     -- Register lsp keys
     M.register_keys(client, bufnr, keys)
 
-    -- Setup autocmds
+    -- Configure additional client functions
     if
       client.supports_method("textDocument/codeLens")
       and vim.g.user_codelens_enabled

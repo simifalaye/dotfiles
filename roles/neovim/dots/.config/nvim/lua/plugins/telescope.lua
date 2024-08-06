@@ -1,42 +1,68 @@
-local wk_ok, wk = pcall(require, "which-key")
-if wk_ok then
-  wk.add({ { "<leader>f", group = "+find" } })
-  wk.add({ { "<leader>fg", group = "+git" } })
+if true then
+  return
 end
-
 local lz = require("utils.lazy").new("telescope", function()
   local telescope = require("telescope")
   local actions = require("telescope.actions") ---@module 'telescope.actions'
   local themes = require("telescope.themes") ---@module 'telescope.themes'
-  local git_layout_config = {
-    initial_mode = "normal",
-    layout_strategy = "vertical",
-    layout_config = {
-      preview_cutoff = 0,
-      height = 0.99,
-      width = 0.99,
-    },
-  }
+  local function find_command()
+    if 1 == vim.fn.executable("rg") then
+      return { "rg", "--files", "--color", "never", "-g", "!.git" }
+    elseif 1 == vim.fn.executable("fd") then
+      return { "fd", "--type", "f", "--color", "never", "-E", ".git" }
+    elseif 1 == vim.fn.executable("fdfind") then
+      return { "fdfind", "--type", "f", "--color", "never", "-E", ".git" }
+    elseif 1 == vim.fn.executable("find") and vim.fn.has("win32") == 0 then
+      return { "find", ".", "-type", "f" }
+    elseif 1 == vim.fn.executable("where") then
+      return { "where", "/r", ".", "*" }
+    end
+  end
   -- Setup plugin
   telescope.setup({
-    defaults = vim.tbl_deep_extend("force", themes.get_ivy(), {
+    defaults = {
+      prompt_prefix = " ",
+      selection_caret = " ",
       path_display = { "truncate" },
+      layout_strategy = "flex",
+      layout_config = {
+        horizontal = { prompt_position = "top", preview_width = 0.55 },
+        vertical = { prompt_position = "top", mirror = false },
+        flex = { prompt_position = "top" },
+        width = 0.87,
+        height = 0.80,
+      },
+      sorting_strategy = "ascending",
       mappings = {
         i = {
+          ["<Esc>"] = actions.close,
           ["<C-j>"] = actions.cycle_history_next,
           ["<C-k>"] = actions.cycle_history_prev,
           ["<C-s>"] = actions.select_horizontal,
           ["<c-x>"] = false,
         },
         n = {
-          ["<C-c>"] = actions.close,
+          ["<Esc>"] = actions.close,
           ["<C-j>"] = actions.cycle_history_next,
           ["<C-k>"] = actions.cycle_history_prev,
           ["<C-s>"] = actions.select_horizontal,
           ["<c-x>"] = false,
         },
       },
-    }),
+      -- open files in the first window that is an actual file.
+      -- use the current window if no other window is available.
+      get_selection_window = function()
+        local wins = vim.api.nvim_list_wins()
+        table.insert(wins, 1, vim.api.nvim_get_current_win())
+        for _, win in ipairs(wins) do
+          local buf = vim.api.nvim_win_get_buf(win)
+          if vim.bo[buf].buftype == "" then
+            return win
+          end
+        end
+        return 0
+      end,
+    },
     extensions = {
       ["ui-select"] = {
         themes.get_dropdown(),
@@ -49,6 +75,10 @@ local lz = require("utils.lazy").new("telescope", function()
       },
     },
     pickers = {
+      find_files = {
+        find_command = find_command,
+        hidden = true,
+      },
       buffers = {
         mappings = {
           i = {
@@ -59,11 +89,6 @@ local lz = require("utils.lazy").new("telescope", function()
           },
         },
       },
-      git_branches = git_layout_config,
-      git_bcommits = git_layout_config,
-      git_commits = git_layout_config,
-      git_status = git_layout_config,
-      git_stash = git_layout_config,
     },
   })
   -- Enable Telescope extensions if they are installed
@@ -71,69 +96,67 @@ local lz = require("utils.lazy").new("telescope", function()
   pcall(telescope.load_extension, "ui-select")
   return true
 end)
+
+-- Commands
 lz:cmds({ "Telescope" })
+
 -- Keymaps
 lz:key(
   "n",
-  "<leader><leader>",
+  "<leader>b",
   "<cmd>Telescope buffers sort_mru=true<CR>",
-  { desc = "Show Buffers" }
+  { desc = "Open Buffer Picker" }
 )
-lz:key("n", "<leader>f;", "<cmd>Telescope commands<CR>", { desc = "Commands" })
+lz:key("n", "<leader>f", "<cmd>Telescope find_files<CR>", { desc = "Open File Picker" })
 lz:key(
   "n",
-  "<leader>f:",
+  "<leader>d",
+  "<cmd>Telescope diagnostics<CR>",
+  { desc = "Open Diagnostics Picker" }
+)
+lz:key("n", "<leader>q", "<cmd>Telescope quickfix<CR>", { desc = "Open Quickfix Picker" })
+lz:key(
+  "n",
+  "<leader>s",
+  "<cmd>Telescope lsp_document_symbols<CR>",
+  { desc = "Open Symbol Picker (Document)" }
+)
+lz:key(
+  "n",
+  "<leader>S",
+  "<cmd>Telescope lsp_workspace_symbols<CR>",
+  { desc = "Open Symbol Picker (Workspace)" }
+)
+lz:key(
+  "n",
+  "<leader>;",
   "<cmd>Telescope command_history<CR>",
-  { desc = "Command History" }
+  { desc = "Open Command History Picker" }
 )
-lz:key("n", "<leader>f'", "<cmd>Telescope marks<CR>", { desc = "Marks" })
-lz:key("n", '<leader>f"', "<cmd>Telescope registers<CR>", { desc = "Registers" })
-lz:key("n", "<leader>f.", "<cmd>Telescope resume<CR>", { desc = "Resume" })
+lz:key("n", "<leader>:", "<cmd>Telescope commands<CR>", { desc = "Open Commands Picker" })
+lz:key("n", "<leader>'", "<cmd>Telescope marks<CR>", { desc = "Open Marks Picker" })
 lz:key(
   "n",
-  "<leader>f/",
-  "<cmd>Telescope search_history<CR>",
-  { desc = "Search History" }
-)
-lz:key("n", "<leader>f?", "<cmd>Telescope builtin<CR>", { desc = "Builtin" })
-lz:key(
-  "n",
-  "<leader>fb",
-  "<cmd>Telescope buffers sort_mru=true<CR>",
-  { desc = "Buffers" }
+  '<leader>"',
+  "<cmd>Telescope registers<CR>",
+  { desc = "Open Registers Picker" }
 )
 lz:key(
   "n",
-  "<leader>fB",
-  "<cmd>Telescope current_buffer_fuzzy_find<CR>",
-  { desc = "Current Buffer" }
+  "<leader><CR>",
+  "<cmd>Telescope builtin<CR>",
+  { desc = "Open Picker Command Palette" }
 )
-lz:key("n", "<leader>fc", "<cmd>Telescope colorscheme<CR>", { desc = "Colorscheme" })
-lz:key("n", "<leader>ff", "<cmd>Telescope find_files<CR>", { desc = "Files" })
-lz:key("n", "<leader>fd", "<cmd>Telescope diagnostics<CR>", { desc = "Diagnostics" })
-lz:key("n", "<leader>fgb", "<cmd>Telescope git_branches<CR>", { desc = "Branches" })
-lz:key("n", "<leader>fgc", "<cmd>Telescope git_bcommits<CR>", { desc = "Commits (buf)" })
-lz:key("n", "<leader>fgC", "<cmd>Telescope git_commits<CR>", { desc = "Commits" })
-lz:key("n", "<leader>fgf", "<cmd>Telescope git_files<CR>", { desc = "Files" })
-lz:key("n", "<leader>fgs", "<cmd>Telescope git_status<CR>", { desc = "Status" })
-lz:key("n", "<leader>fgS", "<cmd>Telescope git_stash<CR>", { desc = "Stash" })
-lz:key("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "Help" })
-lz:key("n", "<leader>fH", "<cmd>Telescope highlights<CR>", { desc = "Highlights" })
-lz:key("n", "<leader>fk", "<cmd>Telescope keymaps<CR>", { desc = "Keymaps" })
-lz:key("n", "<leader>fm", "<cmd>Telescope man_pages<CR>", { desc = "Manpages" })
-lz:key("n", "<leader>fq", "<cmd>Telescope quickfix<CR>", { desc = "Quickfix" })
 lz:key(
   "n",
-  "<leader>fr",
+  "<leader>,",
   "<cmd>Telescope oldfiles cwd_only=true<CR>",
-  { desc = "Recent (cwd)" }
+  { desc = "Open Recents Picker (cwd)" }
 )
-lz:key("n", "<leader>fR", "<cmd>Telescope oldfiles<CR>", { desc = "Recent" })
-lz:key("n", "<leader>fs", "<cmd>Telescope spell_suggest<CR>", { desc = "Spell" })
-lz:key("n", "<leader>fS", "<cmd>Telescope symbols<CR>", { desc = "Symbols" })
-lz:key("n", "<leader>ft", "<cmd>Telescope live_grep<CR>", { desc = "Text (live)" })
-lz:key("n", "<leader>fT", "<cmd>Telescope grep_string<CR>", { desc = "Text" })
-lz:key("n", "<leader>fo", "<cmd>Telescope vim_options<CR>", { desc = "Options" })
+lz:key("n", "<leader><", "<cmd>Telescope oldfiles<CR>", { desc = "Open Recents Picker" })
+lz:key("n", "<leader>.", "<cmd>Telescope resume<CR>", { desc = "Picker Resume" })
+lz:key("n", "<leader>/", "<cmd>Telescope live_grep<CR>", { desc = "Global Search" })
+lz:key("n", "<leader>?", "<cmd>Telescope help_tags<CR>", { desc = "Open Help Picker" })
 
 local old_ui_select = vim.ui["select"]
 ---@diagnostic disable-next-line: duplicate-set-field

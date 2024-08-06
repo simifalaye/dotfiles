@@ -107,7 +107,7 @@ end
 ---@param on_event function(filename: string, events: table, unwatch_cb: function)
 ---@param on_error function(error: string, unwatch_cb: function?)?
 ---@param opts user_fs_watch_opts_t?
----@return uv_fs_event_t?
+---@return uv.uv_fs_event_t?
 function M.watch_with_function(path, on_event, on_error, opts)
   local handle = uv.new_fs_event()
   if not handle then
@@ -147,7 +147,7 @@ end
 ---@param path string
 ---@param string string: vim command
 ---@param opts user_fs_watch_opts_t?
----@return uv_fs_event_t?
+---@return uv.uv_fs_event_t?
 function M.watch_with_string(path, string, opts)
   local on_event = function(_, _)
     vim.schedule(function()

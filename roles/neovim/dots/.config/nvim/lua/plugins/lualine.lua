@@ -10,6 +10,10 @@ local lz = require("utils.lazy").new("lualine", function()
     return str:sub(1, -3)
   end
 
+  local diag_icons = require("static.icons").font.diagnostics
+  local spaced = function(icon)
+    return icon .. " "
+  end
   require("lualine").setup({
     options = {
       theme = function()
@@ -44,8 +48,17 @@ local lz = require("utils.lazy").new("lualine", function()
       },
       lualine_b = {
         "branch",
-        { "diff", colored = false },
-        { "diagnostics", colored = false },
+        -- { "diff", colored = false },
+        {
+          "diagnostics",
+          symbols = {
+            error = spaced(diag_icons.error),
+            warn = spaced(diag_icons.warn),
+            info = spaced(diag_icons.info),
+            hint = spaced(diag_icons.hint),
+          },
+          colored = true,
+        },
       },
       lualine_c = { { "filename", path = 1, shorting_target = 60 } },
       lualine_x = { { lsp_clients }, { "filetype", colored = false } },

@@ -64,7 +64,7 @@ if not pcall(require, "rocks") then
 
   vim.fn.delete(rocks_location, "rf")
 else
-  vim.cmd([[packadd base16-nvim]])
+  vim.cmd([[packadd base16-vim]])
 end
 
 vim.g.rocks_nvim = {

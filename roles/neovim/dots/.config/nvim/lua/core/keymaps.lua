@@ -171,8 +171,8 @@ if wk_ok then
     { "<leader>p", group = "plugins" },
   })
 end
-map("n", "<leader>x", "<cmd>bd<CR>", { desc = "E[x]it Buf" })
-map("n", "<leader>X", "<cmd>bd!<CR>", { desc = "E[x]it Buf!" })
+map("n", "<leader>x", "<cmd>bd<CR>", { desc = "Buffer Delete" })
+map("n", "<leader>X", "<cmd>bd!<CR>", { desc = "Buffer Wipeout" })
 map("n", "<leader>pe", ":Rocks edit<CR>", { desc = "Edit" })
 map("n", "<leader>pi", ":Rocks install ", { desc = "Install" })
 map("n", "<leader>pl", ":Rocks log<CR>", { desc = "Log" })

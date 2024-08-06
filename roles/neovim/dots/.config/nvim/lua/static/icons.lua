@@ -9,10 +9,16 @@ return {
   },
   font = {
     diagnostics = {
-      error = "",
-      hint = "",
-      info = "",
-      warn = "",
+      error = "●",
+      hint = "●",
+      info = "●",
+      warn = "●",
     },
+    -- diagnostics = {
+    --   error = "",
+    --   hint = "",
+    --   info = "",
+    --   warn = "",
+    -- },
   },
 }

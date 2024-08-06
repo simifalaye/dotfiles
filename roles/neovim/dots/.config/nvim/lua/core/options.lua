@@ -35,10 +35,10 @@ end
 -- Set diagnostic signs
 local icons = require("static.icons")
 local signs = {
-  { name = "DiagnosticSignError", text = icons.font.error },
-  { name = "DiagnosticSignWarn", text = icons.font.warn },
-  { name = "DiagnosticSignHint", text = icons.font.hint },
-  { name = "DiagnosticSignInfo", text = icons.font.info },
+  { name = "DiagnosticSignError", text = icons.font.diagnostics.error },
+  { name = "DiagnosticSignWarn", text = icons.font.diagnostics.warn },
+  { name = "DiagnosticSignHint", text = icons.font.diagnostics.hint },
+  { name = "DiagnosticSignInfo", text = icons.font.diagnostics.info },
 }
 for _, sign in ipairs(signs) do
   vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })

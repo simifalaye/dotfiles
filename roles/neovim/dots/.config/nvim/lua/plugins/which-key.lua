@@ -11,7 +11,3 @@ require("which-key").setup({
     },
   },
 })
-
-vim.keymap.set("n", "<leader>?", function()
-  require("which-key").show({ global = false })
-end, { desc = "Show Buffer-local Keys" })
