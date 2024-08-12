@@ -101,3 +101,24 @@ end, {
   desc = "Resize window in direction (l,d,u,r)",
   nargs = 1, -- {direction(l,d,u,r)}
 })
+
+vim.api.nvim_create_user_command("SetDiagnosticMode", function(args)
+  local mode = tonumber(args.args)
+  if not mode then
+    mode = vim.g.user_diagnostics_mode < #_G.user_diagnostics
+        and vim.g.user_diagnostics_mode + 1
+      or 0
+  elseif mode < 0 or mode > #_G.user_diagnostics then
+    vim.notify(
+      "Provided mode MUST be a number between 0 and " .. #_G.user_diagnostics,
+      vim.log.levels.ERROR
+    )
+    return
+  end
+  -- Set diagnotics based on mode
+  vim.g.user_diagnostics_mode = mode
+  vim.diagnostic.config(_G.user_diagnostics[vim.g.user_diagnostics_mode])
+end, {
+  desc = "Set diagnostic mode (0-3)",
+  nargs = "?", -- {mode(0-3)?}
+})

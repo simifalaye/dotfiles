@@ -166,19 +166,8 @@ map("n", "]<C-q>", function()
 end, { desc = "Next qf file" })
 
 -- Leader
-if wk_ok then
-  wk.add({
-    { "<leader>p", group = "plugins" },
-  })
-end
 map("n", "<leader>x", "<cmd>bd<CR>", { desc = "Buffer Delete" })
 map("n", "<leader>X", "<cmd>bd!<CR>", { desc = "Buffer Wipeout" })
-map("n", "<leader>pe", ":Rocks edit<CR>", { desc = "Edit" })
-map("n", "<leader>pi", ":Rocks install ", { desc = "Install" })
-map("n", "<leader>pl", ":Rocks log<CR>", { desc = "Log" })
-map("n", "<leader>pp", ":Rocks prune ", { desc = "Prune" })
-map("n", "<leader>ps", ":Rocks sync<CR>", { desc = "Sync" })
-map("n", "<leader>pu", ":Rocks update<CR>", { desc = "Update" })
 
 --
 -- Visual/Select/Operator mode

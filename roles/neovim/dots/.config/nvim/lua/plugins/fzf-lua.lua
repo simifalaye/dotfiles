@@ -94,3 +94,24 @@ vim.keymap.set(
   "<cmd>FzfLua helptags<CR>",
   { desc = "Open Help Picker" }
 )
+
+local wk_ok, wk = pcall(require, "which-key")
+if wk_ok then
+  wk.add({ { "<leader>g", group = "+git" } })
+end
+vim.keymap.set("n", "<leader>gb", "<cmd>FzfLua git_branches<CR>", { desc = "Branches" })
+vim.keymap.set(
+  "n",
+  "<leader>gc",
+  "<cmd>FzfLua git_bcommits<CR>",
+  { desc = "Commits (buf)" }
+)
+vim.keymap.set(
+  "n",
+  "<leader>gC",
+  "<cmd>FzfLua git_commits<CR>",
+  { desc = "Commits (repo)" }
+)
+vim.keymap.set("n", "<leader>gf", "<cmd>FzfLua git_files<CR>", { desc = "Files" })
+vim.keymap.set("n", "<leader>gs", "<cmd>FzfLua git_status<CR>", { desc = "Status" })
+vim.keymap.set("n", "<leader>gS", "<cmd>FzfLua git_stash<CR>", { desc = "Stash" })

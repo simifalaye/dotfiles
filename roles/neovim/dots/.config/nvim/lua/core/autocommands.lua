@@ -167,6 +167,9 @@ autocmd({ "BufWinEnter", "FileChangedShellPost" }, {
   desc = "Automatically change local current directory.",
   pattern = "*",
   callback = function(info)
+    if not vim.g.user_rooter_enabled then
+      return
+    end
     if info.file == "" or vim.bo[info.buf].bt ~= "" then
       return
     end

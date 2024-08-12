@@ -51,10 +51,11 @@ cmp-path = "scm"
 cmp-nvim-lsp = "scm"
 cmp-cmdline = "scm"
 tree-sitter-csv = "0.0.2"
-"indent-blankline.nvim" = "3.7.1"
+"indent-blankline.nvim" = "3.7.2"
 "bufdelete.nvim" = "scm"
 "render-markdown.nvim" = "6.0.0"
-fzf-lua = "0.0.1414"
+fzf-lua = "0.0.1415"
+tree-sitter-html = "0.0.2"
 
 [plugins."gitsigns.nvim"]
 git = "lewis6991/gitsigns.nvim"

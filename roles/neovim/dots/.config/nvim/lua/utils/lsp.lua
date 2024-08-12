@@ -32,7 +32,7 @@ local M = {}
 ---@diagnostic disable-next-line: missing-fields
 M.default_config = {
   root_patterns = require("utils.fs").root_patterns,
-  capabilities = {},
+  capabilities = vim.lsp.protocol.make_client_capabilities(),
   on_attach = function(client, bufnr)
     -- Enable lsp omnifunc and tagfunc for completion and goto def
     if client.server_capabilities.completionProvider then

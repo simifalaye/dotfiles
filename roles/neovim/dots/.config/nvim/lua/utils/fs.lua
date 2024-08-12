@@ -15,13 +15,10 @@ M.root_patterns = {
   ".gitignore",
   ".editorconfig",
   ".obsidian/",
+  "makefile",
+  "Makefile",
+  "MAKEFILE",
 }
-
-if not vim.g.fs_ignore_make then
-  table.insert(M.root_patterns, "Makefile")
-  table.insert(M.root_patterns, "makefile")
-  table.insert(M.root_patterns, "MAKEFILE")
-end
 
 --- Check if file exists
 --- @param path string

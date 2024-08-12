@@ -13,14 +13,17 @@ g.maplocalleader = "\\"
 -- enable or disable automatic codelens refreshing for lsp that support it
 g.user_codelens_enabled = true
 
--- set the visibility of diagnostics in the UI (0=off,1=status,2=virtual,3=all)
-g.user_diagnostics_mode = 3
+-- set the visibility of diagnostics in the UI (0=off,1=+status,2=+signs,3=all)
+g.user_diagnostics_mode = 2
 
 -- enable LSP semantic tokens on startup
 g.user_semantic_tokens_enabled = true
 
 -- enable or disable inlay hints
 g.user_inlay_hints_enabled = true
+
+-- enable rooter
+g.user_rooter_enabled = true
 
 -- Process the log level environment variable if set
 if vim.env.USER_LOG_LEVEL and type(vim.env.USER_LOG_LEVEL) == "string" then
@@ -70,21 +73,16 @@ _G.user_diagnostics = {
   }),
   -- status only
   vim.tbl_deep_extend(
-  "force",
-  default_diagnostics,
-  { virtual_text = false, signs = false }
+    "force",
+    default_diagnostics,
+    { virtual_text = false, signs = false }
   ),
   -- virtual text off, signs on
   vim.tbl_deep_extend("force", default_diagnostics, { virtual_text = false }),
   -- all diagnostics on
   default_diagnostics,
 }
-_G.set_diagnostic_mode = function(mode)
-  -- Set diagnotics based on mode
-  vim.g.user_diagnostics_mode = mode
-  vim.diagnostic.config(_G.user_diagnostics[vim.g.user_diagnostics_mode])
-end
-_G.set_diagnostic_mode(vim.g.user_diagnostics_mode or 2)
+vim.diagnostic.config(_G.user_diagnostics[vim.g.user_diagnostics_mode])
 
 -- Use osc52 over SSH
 if vim.env.SSH_TTY then
