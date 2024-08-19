@@ -195,6 +195,8 @@ local function get_files(dir)
   end
 end
 
+--- Get the path to the next/prev file in the same directory
+---@param offset number +/- number of files from current file
 function M.file_by_offset(offset)
   local dir = vim.fn.expand("%:p:h")
   local files = get_files(dir)

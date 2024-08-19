@@ -3,12 +3,6 @@ vim.o.termguicolors = true
 -- Access colors present in 256 colorspace
 vim.g.base16_colorspace = 256
 
--- -- Load base16 with configuration
--- require("base16-colorscheme").with_config({
---   telescope = true,
---   telescope_borders = true,
--- })
-
 -- Use tinty helper if installed
 if vim.fn.filereadable(vim.env.TINTY_SCHEME_FILE) == 1 then
   local fs = require("utils.fs")
