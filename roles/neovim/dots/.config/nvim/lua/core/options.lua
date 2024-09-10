@@ -6,24 +6,28 @@ local fn = vim.fn
 -- Globals
 --
 
+local function set_default_global(key, default)
+  vim.g[key] = vim.g[key] and vim.g[key] or default
+end
+
 -- Set leader keys
 g.mapleader = " "
 g.maplocalleader = "\\"
 
 -- enable or disable automatic codelens refreshing for lsp that support it
-g.user_codelens_enabled = true
+set_default_global("user_codelens_enabled", true)
 
 -- set the visibility of diagnostics in the UI (0=off,1=+status,2=+signs,3=all)
-g.user_diagnostics_mode = 2
+set_default_global("user_diagnostics_mode", 2)
 
 -- enable LSP semantic tokens on startup
-g.user_semantic_tokens_enabled = true
+set_default_global("user_semantic_tokens_enabled", true)
 
 -- enable or disable inlay hints
-g.user_inlay_hints_enabled = true
+set_default_global("user_inlay_hints_enabled", true)
 
 -- enable rooter
-g.user_rooter_enabled = true
+set_default_global("user_rooter_enabled", true)
 
 -- Process the log level environment variable if set
 if vim.env.USER_LOG_LEVEL and type(vim.env.USER_LOG_LEVEL) == "string" then

@@ -5,67 +5,65 @@
 # List of Neovim plugins to install alongside their versions.
 # If the plugin name contains a dot then you must add quotes to the key name!
 [plugins]
-"rocks.nvim" = "2.37.0"
-"rocks-git.nvim" = "2.0.1"
-"rocks-config.nvim" = "2.2.0"
+"rocks.nvim" = "2.40.0"
+"rocks-git.nvim" = "2.2.0"
+"rocks-config.nvim" = "2.3.1"
+"rocks-treesitter.nvim" = "1.1.2"
 "guess-indent.nvim" = "scm"
 "lualine.nvim" = "scm"
-"oil.nvim" = "2.12.0"
+"oil.nvim" = "2.12.1"
 neogen = "2.19.4"
-tree-sitter-cpp = "0.0.3"
-tree-sitter-perl = "0.0.4"
-tree-sitter-toml = "0.0.2"
+tree-sitter-cpp = "scm"
+tree-sitter-perl = "scm"
+tree-sitter-toml = "scm"
 nvim-ts-autotag = "scm"
-tree-sitter-yaml = "0.0.2"
-tree-sitter-tmux = "0.0.3"
+tree-sitter-yaml = "scm"
+tree-sitter-tmux = "scm"
 nvim-autopairs = "scm"
 "fidget.nvim" = "1.4.1"
 nvim-surround = "2.1.5"
-tree-sitter-make = "0.0.2"
+tree-sitter-make = "scm"
 nvim-various-textobjs = "scm"
 nvim-treesitter-context = "scm"
 "which-key.nvim" = "3.13.2"
-tree-sitter-cmake = "0.0.2"
-tree-sitter-git_rebase = "0.0.3"
-tree-sitter-diff = "0.0.2"
-tree-sitter-starlark = "0.0.2"
-tree-sitter-gitcommit = "0.0.2"
-tree-sitter-proto = "0.0.2"
-tree-sitter-git_config = "0.0.2"
+tree-sitter-cmake = "scm"
+tree-sitter-git_rebase = "scm"
+tree-sitter-diff = "scm"
+tree-sitter-starlark = "scm"
+tree-sitter-gitcommit = "scm"
+tree-sitter-proto = "scm"
+tree-sitter-git_config = "scm"
 "ts-comments.nvim" = "1.5.0"
 nvim-snippets = "scm"
 "tmux.nvim" = "scm"
 friendly-snippets = "scm"
-tree-sitter-json = "0.0.3"
-tree-sitter-ssh_config = "0.0.2"
+tree-sitter-json = "scm"
+tree-sitter-ssh_config = "scm"
 "obsidian.nvim" = "3.9.0"
 "lspkind.nvim" = "scm"
-tree-sitter-properties = "0.0.2"
-"rocks-treesitter.nvim" = "1.0.3"
+tree-sitter-properties = "scm"
 "schemastore.nvim" = "0.2.0"
-tree-sitter-python = "0.0.3"
-tree-sitter-bash = "0.0.2"
+tree-sitter-python = "scm"
+tree-sitter-bash = "scm"
 nvim-cmp = "scm"
 cmp-buffer = "scm"
 cmp-path = "scm"
 cmp-nvim-lsp = "scm"
 cmp-cmdline = "scm"
-tree-sitter-csv = "0.0.2"
+tree-sitter-csv = "scm"
 "indent-blankline.nvim" = "3.7.2"
 "bufdelete.nvim" = "scm"
-"render-markdown.nvim" = "6.1.0"
-fzf-lua = "0.0.1440"
-tree-sitter-html = "0.0.3"
-
-[plugins."gitsigns.nvim"]
-git = "lewis6991/gitsigns.nvim"
-rev = "0ed466953fe5885166e0d60799172a8b1f752d16"
-pin = true
+"render-markdown.nvim" = "6.3.0"
+tree-sitter-html = "scm"
+"telescope.nvim" = "scm"
+"telescope-zf-native.nvim" = "1.0.0"
+"telescope-ui-select.nvim" = "scm"
+"gitsigns.nvim" = "0.9.0"
+tree-sitter-kconfig = "scm"
 
 [plugins.base16-vim]
 git = "tinted-theming/base16-vim"
-rev = "5a200412c9856085ce726beb4c14c47326c19700"
-opt = true
+rev = "032039a48b0646f0e860bd2c26c66623cdc2c246"
 
 [config]
 plugins_dir = "plugins/"
@@ -82,4 +80,11 @@ items = [
   "friendly-snippets",
   "lspkind.nvim",
   "nvim-snippets"
+]
+
+[bundles.telescope]
+items = [
+  "telescope.nvim",
+  "telescope-zf-native.nvim",
+  "telescope-ui-select.nvim"
 ]

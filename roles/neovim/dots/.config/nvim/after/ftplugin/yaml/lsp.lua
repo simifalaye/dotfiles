@@ -5,6 +5,7 @@ local ansiblels_root_patterns = { "ansible.cfg", ".ansible-lint" }
 if
   nil ~= vim.fs.root(vim.api.nvim_buf_get_name(0), ansiblels_root_patterns)
   and vim.fn.executable("ansible-language-server") == 1
+  and vim.fn.executable("ansible-lint") == 1
 then
   vim.bo.filetype = "yaml.ansible"
   lsp.start({

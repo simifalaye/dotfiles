@@ -7,19 +7,19 @@ require("fidget").setup({
 
 vim.keymap.set(
   "n",
-  "g[",
+  "g{",
   "<cmd>Fidget history<CR>",
   { desc = "Show notification history" }
 )
 vim.keymap.set(
   "n",
-  "g]",
+  "g}",
   "<cmd>Fidget clear_history<CR>",
   { desc = "Clear notification history" }
 )
 vim.keymap.set(
   "n",
-  "g}",
+  "g\\",
   "<cmd>Fidget clear<CR>",
   { desc = "Clear active notifications" }
 )

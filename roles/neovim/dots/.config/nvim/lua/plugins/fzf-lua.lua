@@ -1,3 +1,7 @@
+if true then
+  return false
+end
+
 if vim.fn.executable("fzf") < 1 then
   return
 end

@@ -85,6 +85,7 @@ lz:key("n", "<leader>nt", "<cmd>ObsidianTags<CR>", { desc = "Tags" })
 
 -- Autocmds
 vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
+  group = vim.api.nvim_create_augroup("user_oil_buffer", {}),
   desc = "Setup obsidian.nvim buffer-local keymaps",
   pattern = vim.fs.joinpath(vault_path .. "/**.md"),
   callback = function()

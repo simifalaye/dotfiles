@@ -1,23 +1,7 @@
-if true then
-  return
-end
 local lz = require("utils.lazy").new("telescope", function()
   local telescope = require("telescope")
   local actions = require("telescope.actions") ---@module 'telescope.actions'
   local themes = require("telescope.themes") ---@module 'telescope.themes'
-  local function find_command()
-    if 1 == vim.fn.executable("rg") then
-      return { "rg", "--files", "--color", "never", "-g", "!.git" }
-    elseif 1 == vim.fn.executable("fd") then
-      return { "fd", "--type", "f", "--color", "never", "-E", ".git" }
-    elseif 1 == vim.fn.executable("fdfind") then
-      return { "fdfind", "--type", "f", "--color", "never", "-E", ".git" }
-    elseif 1 == vim.fn.executable("find") and vim.fn.has("win32") == 0 then
-      return { "find", ".", "-type", "f" }
-    elseif 1 == vim.fn.executable("where") then
-      return { "where", "/r", ".", "*" }
-    end
-  end
   -- Setup plugin
   telescope.setup({
     defaults = {
@@ -67,16 +51,37 @@ local lz = require("utils.lazy").new("telescope", function()
       ["ui-select"] = {
         themes.get_dropdown(),
       },
-      fzf = {
-        fuzzy = true,
-        override_generic_sorter = true,
-        override_file_sorter = true,
-        case_mode = "smart_case",
+      ["zf-native"] = {
+        -- options for sorting file-like items
+        file = {
+          -- override default telescope file sorter
+          enable = true,
+          -- highlight matching text in results
+          highlight_results = true,
+          -- enable zf filename match priority
+          match_filename = true,
+          -- optional function to define a sort order when the query is empty
+          initial_sort = nil,
+          -- set to false to enable case sensitive matching
+          smart_case = true,
+        },
+        -- options for sorting all other items
+        generic = {
+          -- override default telescope generic item sorter
+          enable = true,
+          -- highlight matching text in results
+          highlight_results = true,
+          -- disable zf filename match priority
+          match_filename = false,
+          -- optional function to define a sort order when the query is empty
+          initial_sort = nil,
+          -- set to false to enable case sensitive matching
+          smart_case = true,
+        },
       },
     },
     pickers = {
       find_files = {
-        find_command = find_command,
         hidden = true,
       },
       buffers = {
@@ -108,6 +113,12 @@ lz:key(
   { desc = "Open Buffer Picker" }
 )
 lz:key("n", "<leader>f", "<cmd>Telescope find_files<CR>", { desc = "Open File Picker" })
+lz:key(
+  "n",
+  "<leader>F",
+  "<cmd>Telescope find_files no_ignore=true<CR>",
+  { desc = "Open File Picker (All)" }
+)
 lz:key(
   "n",
   "<leader>d",
@@ -157,6 +168,27 @@ lz:key("n", "<leader><", "<cmd>Telescope oldfiles<CR>", { desc = "Open Recents P
 lz:key("n", "<leader>.", "<cmd>Telescope resume<CR>", { desc = "Picker Resume" })
 lz:key("n", "<leader>/", "<cmd>Telescope live_grep<CR>", { desc = "Global Search" })
 lz:key("n", "<leader>?", "<cmd>Telescope help_tags<CR>", { desc = "Open Help Picker" })
+
+local wk_ok, wk = pcall(require, "which-key")
+if wk_ok then
+  wk.add({ { "<leader>g", group = "+git" } })
+end
+lz:key("n", "<leader>gb", "<cmd>Telescope git_branches<CR>", { desc = "Branches" })
+lz:key(
+  "n",
+  "<leader>gc",
+  "<cmd>Telescope git_bcommits<CR>",
+  { desc = "Commits (buf)" }
+)
+lz:key(
+  "n",
+  "<leader>gC",
+  "<cmd>Telescope git_commits<CR>",
+  { desc = "Commits (repo)" }
+)
+lz:key("n", "<leader>gf", "<cmd>Telescope git_files<CR>", { desc = "Files" })
+lz:key("n", "<leader>gs", "<cmd>Telescope git_status<CR>", { desc = "Status" })
+lz:key("n", "<leader>gS", "<cmd>Telescope git_stash<CR>", { desc = "Stash" })
 
 local old_ui_select = vim.ui["select"]
 ---@diagnostic disable-next-line: duplicate-set-field

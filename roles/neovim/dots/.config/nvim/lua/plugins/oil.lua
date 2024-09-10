@@ -142,12 +142,15 @@ end
 oil_sethl()
 
 -- Setup autocommands
-local grp_id = vim.api.nvim_create_augroup("user_plugin_oil", {})
+local grp_id = vim.api.nvim_create_augroup("user_oil_utilities", {})
 vim.api.nvim_create_autocmd({ "BufEnter", "TextChanged" }, {
   desc = "Set cwd to follow directory shown in oil buffers.",
   group = grp_id,
   pattern = "oil:///*",
   callback = function(info)
+    if not vim.g.user_rooter_enabled then
+      return
+    end
     if vim.bo[info.buf].filetype == "oil" then
       local cwd = vim.fs.normalize(vim.fn.getcwd(vim.fn.winnr()))
       local oildir = vim.fs.normalize(oil.get_current_dir())

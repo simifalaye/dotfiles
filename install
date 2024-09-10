@@ -10,7 +10,6 @@ function has {
 }
 
 # - Installs core dependencies:
-#   - curl
 #   - ansible
 function install_deps {
   echo "### Installing dependencies"
@@ -24,30 +23,24 @@ function install_deps {
       echo "### Detected Linux"
       if [ -f /etc/os-release ]; then
         # Install core dependencies
-        if grep -q -E '(debian|ubuntu|linuxmint)' /etc/os-release; then
-          echo "Detected Debian/Ubuntu/Linux Mint"
-          sudo apt-get update
-          sudo apt-get install -y curl python3 python3-pip
-        elif grep -q -E '(centos|rhel|fedora)' /etc/os-release; then
-          echo "Detected CentOS/RHEL/Fedora"
-          if [ -f /etc/centos-release ]; then
-            sudo yum update
-            sudo yum install -y epel-release
-          fi
-          sudo yum install -y curl python3 python3-pip
+        if grep -q -E 'ubuntu' /etc/os-release; then
+          echo "Detected Ubuntu"
+          sudo apt update
+          sudo apt install software-properties-common
+          sudo add-apt-repository --yes --update ppa:ansible/ansible
+          sudo apt install ansible
         elif grep -q -E '(arch)' /etc/os-release; then
           echo "Detected Arch"
-          sudo pacman -Syyu --noconfirm curl python python-pip
+          sudo pacman -S ansible
         elif grep -q -E '(opensuse)' /etc/os-release; then
           echo "Detected openSUSE"
-          sudo zypper update
-          sudo zypper install -y curl python3 python3-pip
+          sudo zypper install ansible
         else
           echo "Unsupported Linux distribution"
           exit 1
         fi
       else
-        echo "Unsupported Linux distribution"
+        echo "Missing linux os-release file"
         exit 1
       fi
       ;;
@@ -57,11 +50,7 @@ function install_deps {
       ;;
   esac
 
-  # Ensure PATH for new python executable locations
-  export PATH=${HOME}/.local/share/python/bin:${PATH}
-
-  # Install ansible and required modules
-  pip install ansible
+  # Install required modules
   ansible-galaxy install -r requirements.yml
 }
 
@@ -70,10 +59,10 @@ function install_deps {
 #-
 
 # Install deps if not installed
-if ! has curl ansible; then
+if ! has ansible; then
   if ! install_deps; then
     echo "### Failed to install dependencies"
-    exit 0
+    exit 1
   fi
 fi
 

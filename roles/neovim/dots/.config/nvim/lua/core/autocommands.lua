@@ -45,9 +45,11 @@ autocmd("BufReadPre", {
     if not ok then
       return
     end
+    local large_file_groupid = augroup("user_large_file", {})
     if stat and stat.size > 48000 then
       vim.b["midfile"] = true
       vim.api.nvim_create_autocmd("BufReadPost", {
+        group = large_file_groupid,
         buffer = info.buf,
         once = true,
         callback = function()
@@ -57,6 +59,7 @@ autocmd("BufReadPre", {
         end,
       })
       vim.api.nvim_create_autocmd("LspAttach", {
+        group = large_file_groupid,
         buffer = info.buf,
         callback = function(args)
           vim.schedule(function()
@@ -77,6 +80,7 @@ autocmd("BufReadPre", {
       vim.opt_local.foldcolumn = "0"
       vim.opt_local.winbar = ""
       vim.api.nvim_create_autocmd("BufReadPost", {
+        group = large_file_groupid,
         buffer = info.buf,
         once = true,
         callback = function()
@@ -164,6 +168,7 @@ autocmd("TextYankPost", {
 })
 
 autocmd({ "BufWinEnter", "FileChangedShellPost" }, {
+  group = augroup("user_auto_cwd", {}),
   desc = "Automatically change local current directory.",
   pattern = "*",
   callback = function(info)
@@ -192,9 +197,204 @@ autocmd({ "BufWinEnter", "FileChangedShellPost" }, {
         -- Prevent unnecessary directory change, which triggers
         -- DirChanged autocmds that may update winbar unexpectedly
         if stat and stat.type == "directory" and current_dir ~= target_dir then
+          vim.notify("Changing current dir: " .. target_dir, vim.log.levels.DEBUG)
           pcall(vim.cmd.lcd, target_dir)
         end
       end)
     end)
+  end,
+})
+
+autocmd({ "LspAttach" }, {
+  group = augroup("user_lsp_setup", {}),
+  desc = "Setup buffer-local lsp configuration on attach",
+  callback = function(args)
+    local bufnr = args.buf --[[@as number]]
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client == nil then
+      return
+    end
+
+    -- Enable lsp omnifunc and tagfunc for completion and goto def
+    if client.server_capabilities.completionProvider then
+      vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
+    end
+    if client.server_capabilities.definitionProvider then
+      vim.bo[bufnr].tagfunc = "v:lua.vim.lsp.tagfunc"
+    end
+
+    -- Setup main keymaps
+    -- :h lsp-defaults
+    --
+    -- NORMAL MODE
+    -- K        : hover
+    -- CTRL-]   : definition
+    -- CTRL-W_] : definition in new window
+    -- CTRL-W_} : definition in preview window
+    -- ]d       : next diagnostic
+    -- [d       : prev diagnostic
+    -- CTRL-W_d : open diagnostic float
+    --
+    -- VISUAL MODE
+    -- gq : format
+    --
+    -- INSERT MODE
+    -- CTRL-S        : signature help
+    -- CTRL-X_CTRL-O : completion
+    local wk_ok, wk = pcall(require, "which-key")
+    if wk_ok then
+      wk.add({ { "gr", group = "+lsp" } }, { buffer = bufnr })
+      wk.add({ { "grw", group = "+workspace" } }, { buffer = bufnr })
+    end
+    local keys = {
+      {
+        "gra",
+        vim.lsp.buf.code_action,
+        desc = "Code Action (lsp)",
+        mode = { "n", "v" },
+        has = "codeAction",
+      },
+      {
+        "grd",
+        vim.lsp.buf.declaration,
+        desc = "Goto Dec (lsp)",
+        has = "declaration",
+      },
+      {
+        "gri",
+        vim.lsp.buf.implementation,
+        desc = "Goto Impl (lsp)",
+        has = "implementation",
+      },
+      {
+        "grI",
+        function()
+          vim.lsp.inlay_hint.enable(
+            not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }),
+            { bufnr = bufnr }
+          )
+        end,
+        desc = "Toggle inlay hints (lsp)",
+        has = "inlayHint",
+      },
+      {
+        "grl",
+        function()
+          vim.lsp.codelens.refresh()
+        end,
+        desc = "Codelens refresh (lsp)",
+        has = "codeLens",
+      },
+      {
+        "grL",
+        function()
+          vim.lsp.codelens.run()
+        end,
+        desc = "Codelens run (lsp)",
+        has = "codeLens",
+      },
+      {
+        "grn",
+        vim.lsp.buf.rename,
+        desc = "Rename (lsp)",
+        has = "rename",
+      },
+      {
+        "grr",
+        vim.lsp.buf.references,
+        desc = "References (lsp)",
+        has = "references",
+      },
+      {
+        "grs",
+        vim.lsp.buf.signature_help,
+        desc = "Signature (lsp)",
+        has = "signatureHelp",
+      },
+      {
+        "grt",
+        vim.lsp.buf.type_definition,
+        desc = "Goto Type (lsp)",
+        has = "typeDefinition",
+      },
+      {
+        "grwa",
+        vim.lsp.buf.add_workspace_folder,
+        desc = "Add Folder (lsp)",
+      },
+      {
+        "grwr",
+        vim.lsp.buf.remove_workspace_folder,
+        desc = "Remove Folder (lsp)",
+      },
+      {
+        "grwl",
+        function()
+          print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        end,
+        desc = "List Folders (lsp)",
+      },
+    }
+
+    -- Register lsp keys
+    require("utils.lsp").register_keys(client, bufnr, keys)
+
+    -- Configure additional client functions
+    if
+      client.supports_method("textDocument/codeLens")
+      and vim.g.user_codelens_enabled
+    then
+      vim.lsp.codelens.refresh({ bufnr = bufnr })
+      vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+        group = augroup("user_codelens_refresh", {}),
+        buffer = bufnr,
+        callback = function()
+          if vim.g.user_codelens_enabled then
+            vim.lsp.codelens.refresh({ bufnr = bufnr })
+          end
+        end,
+      })
+    end
+    if
+      (
+        client.supports_method("textDocument/semanticTokens/full")
+        or client.supports_method("textDocument/semanticTokens/full/delta")
+      ) and vim.lsp.semantic_tokens
+    then
+      if vim.b["user_semantic_tokens_enabled"] == nil then
+        vim.b["user_semantic_tokens_enabled"] = vim.g.user_semantic_tokens_enabled
+      end
+      vim.lsp.semantic_tokens[vim.b.user_semantic_tokens_enabled and "start" or "stop"](
+        bufnr,
+        client.id
+      )
+    end
+    if client.supports_method("textDocument/documentHighlight") then
+      local doc_highlight_groupid = augroup("user_doc_highlight", {})
+      vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+        group = doc_highlight_groupid,
+        desc = "highlight references when cursor holds",
+        buffer = bufnr,
+        callback = function()
+          vim.lsp.buf.document_highlight()
+        end,
+      })
+      vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+        group = doc_highlight_groupid,
+        desc = "Clear references when cursor moves",
+        buffer = bufnr,
+        callback = function()
+          vim.lsp.buf.clear_references()
+        end,
+      })
+    end
+    if client.supports_method("textDocument/inlayHint") and vim.lsp.inlay_hint then
+      if vim.b.user_inlay_hints_enabled == nil then
+        vim.b.user_inlay_hints_enabled = vim.g.user_inlay_hints_enabled
+      end
+      if vim.b.user_inlay_hints_enabled then
+        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+      end
+    end
   end,
 })

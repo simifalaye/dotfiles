@@ -7,14 +7,7 @@
     name:
       - "{{ 'python' if 'arch' in ansible_distribution.lower() else 'python3' }}"
       - "{{ 'python-pip' if 'arch' in ansible_distribution.lower() else 'python3-pip' }}"
-    state: present
-
-- name: Install github3.py (required for community.general.github_release module)
-  become: true
-  tags: [pkgs]
-  ansible.builtin.pip:
-    name:
-      - github3.py
+      - pipx
     state: present
 
 - name: Install python dotfiles

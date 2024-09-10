@@ -60,7 +60,6 @@ lsp.start({
     clangdFileStatus = true,
   },
   on_attach = function(client, bufnr)
-    lsp.default_config.on_attach(client, bufnr)
     -- Create switch command
     -- https://clangd.llvm.org/extensions.html#switch-between-sourceheader
     vim.api.nvim_buf_create_user_command(bufnr, "ClangdSwitchSourceHeader", function()

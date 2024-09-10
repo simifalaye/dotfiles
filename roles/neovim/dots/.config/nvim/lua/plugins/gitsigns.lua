@@ -1,8 +1,7 @@
 local lz = require("utils.lazy").new("gitsigns", function()
   local wk_ok, wk = pcall(require, "which-key")
   if wk_ok then
-    wk.add({ { "gh", group = "+git_hunk" } })
-    wk.add({ { "<leader>g", group = "+git" } })
+    wk.add({ { "gh", group = "+git-hunk" } })
   end
 
   local gitsigns = require("gitsigns")
@@ -40,6 +39,13 @@ local lz = require("utils.lazy").new("gitsigns", function()
       map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "In Hunk" })
 
       -- Actions
+      map("n", "ghb", function()
+        gitsigns.blame_line({ full = true })
+      end, { desc = "Blame" })
+      map("n", "ghd", gitsigns.diffthis, { desc = "Diff" })
+      map("n", "ghD", function()
+        gitsigns.diffthis("~")
+      end, { desc = "Diff HEAD" })
       map("n", "ghp", gitsigns.preview_hunk, { desc = "Preview Hunk" })
       map("n", "ghr", gitsigns.reset_hunk, { desc = "Reset Hunk" })
       map("v", "ghr", function()
@@ -52,13 +58,6 @@ local lz = require("utils.lazy").new("gitsigns", function()
       end, { desc = "Stage Hunk" })
       map("n", "ghS", gitsigns.stage_buffer, { desc = "Stage Buffer" })
       map("n", "ghu", gitsigns.undo_stage_hunk, { desc = "Undo Stage Hunk" })
-      map("n", "<leader>gd", gitsigns.diffthis, { desc = "Diff" })
-      map("n", "<leader>gD", function()
-        gitsigns.diffthis("~")
-      end, { desc = "Diff HEAD" })
-      map("n", "<leader>gl", function()
-        gitsigns.blame_line({ full = true })
-      end, { desc = "Line blame" })
     end,
   })
   return true
@@ -67,6 +66,7 @@ lz:cmds({ "GitSigns" })
 
 local load_autocmd_id = 0
 load_autocmd_id = vim.api.nvim_create_autocmd({ "BufRead" }, {
+  group = vim.api.nvim_create_augroup("user_lazy_gitsigns", {}),
   desc = "Load gitsigns plugin",
   callback = function()
     vim.fn.system("git -C " .. '"' .. vim.fn.expand("%:p:h") .. '"' .. " rev-parse")

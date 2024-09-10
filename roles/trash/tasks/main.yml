@@ -1,11 +1,9 @@
 # vim: filetype=yaml.ansible
 
 - name: Install trash-cli
-  become: true
   tags: [pkgs]
-  ansible.builtin.pip:
-    name:
-      - trash-cli
+  community.general.pipx:
+    name: trash-cli
     state: present
 
 - name: Install trash dotfiles

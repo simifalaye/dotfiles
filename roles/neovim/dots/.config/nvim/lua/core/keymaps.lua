@@ -63,11 +63,11 @@ map("n", "g=", "yyp^v$r=Vk", { noremap = false, desc = "Underline =" })
 map("n", "g!", ":! chmod +x %<CR>", { desc = "Make File Executable" })
 map(
   "n",
-  "g<",
+  "g[",
   [[<cmd>set nomore<bar>40messages<bar>set more<CR>]],
   { desc = "Show Message History" }
 )
-map("n", "g>", [[<cmd>messages clear<CR>]], { desc = "Show Message History" })
+map("n", "g]", [[<cmd>messages clear<CR>]], { desc = "Show Message History" })
 map("n", "gq.", function()
   -- Save state
   local winview = vim.fn.winsaveview()

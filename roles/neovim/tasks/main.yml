@@ -28,9 +28,9 @@
 - name: Install neovim for python
   tags: [pkgs]
   become: true
-  ansible.builtin.pip:
+  ansible.builtin.package:
     name:
-      - pynvim
+      - "{{ 'python-pynvim' if 'arch' in ansible_distribution.lower() else 'python3-pynvim' }}"
     state: present
 
 - name: Install luarocks

@@ -9,11 +9,9 @@
     state: present
 
 - name: Install ansible-lint for ansible-ls
-  become: true
   tags: [pkgs]
-  ansible.builtin.pip:
-    name:
-      - ansible-lint
+  community.general.pipx:
+    name: ansible-lint
     state: present
 
 - name: Install bash language server
@@ -25,11 +23,9 @@
     state: present
 
 - name: Install black python code formatter
-  become: true
   tags: [pkgs]
-  ansible.builtin.pip:
-    name:
-      - black
+  community.general.pipx:
+    name: black
     state: present
 
 - name: Install clang-format formatter
@@ -49,11 +45,9 @@
     state: present
 
 - name: Install cpplint linter
-  become: true
   tags: [pkgs]
-  ansible.builtin.pip:
-    name:
-      - cpplint
+  community.general.pipx:
+    name: cpplint
     state: present
 
 - name: Install efm languague server
@@ -129,11 +123,9 @@
     state: present
 
 - name: Install pyright static type checker lsp
-  become: true
   tags: [pkgs]
-  ansible.builtin.pip:
-    name:
-      - pyright
+  community.general.pipx:
+    name: pyright
     state: present
 
 - name: Install shellcheck

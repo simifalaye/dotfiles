@@ -23,6 +23,7 @@ function LazyMod.new(name, loader)
     end
     return false
   end
+  self.group = vim.api.nvim_create_augroup("user_lazy_" .. self.name, {})
   lazy_modules[name] = self.load
 
   return self
@@ -48,6 +49,7 @@ function LazyMod:events(events, pattern, cond)
     return true
   end
   vim.api.nvim_create_autocmd(events, {
+    group = self.group,
     desc = "Lazy-load " .. self.name,
     pattern = pattern or "*",
     once = true,
@@ -63,6 +65,7 @@ end
 ---@param fts string[]
 function LazyMod:fts(fts)
   vim.api.nvim_create_autocmd("FileType", {
+    group = self.group,
     desc = "Lazy-load " .. self.name,
     pattern = fts,
     once = true,
