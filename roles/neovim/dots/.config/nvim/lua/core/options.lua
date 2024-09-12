@@ -29,6 +29,9 @@ set_default_global("user_inlay_hints_enabled", true)
 -- enable rooter
 set_default_global("user_rooter_enabled", true)
 
+-- enable diagnostic hover
+set_default_global("user_diagnostic_hover", true)
+
 -- Process the log level environment variable if set
 if vim.env.USER_LOG_LEVEL and type(vim.env.USER_LOG_LEVEL) == "string" then
   local lvl = tonumber(vim.env.USER_LOG_LEVEL)

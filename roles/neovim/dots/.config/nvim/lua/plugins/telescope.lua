@@ -20,15 +20,15 @@ local lz = require("utils.lazy").new("telescope", function()
       mappings = {
         i = {
           ["<Esc>"] = actions.close,
-          ["<C-j>"] = actions.cycle_history_next,
-          ["<C-k>"] = actions.cycle_history_prev,
+          ["<Down>"] = actions.cycle_history_next,
+          ["<Up>"] = actions.cycle_history_prev,
           ["<C-s>"] = actions.select_horizontal,
           ["<c-x>"] = false,
         },
         n = {
           ["<Esc>"] = actions.close,
-          ["<C-j>"] = actions.cycle_history_next,
-          ["<C-k>"] = actions.cycle_history_prev,
+          ["<Down>"] = actions.cycle_history_next,
+          ["<Up>"] = actions.cycle_history_prev,
           ["<C-s>"] = actions.select_horizontal,
           ["<c-x>"] = false,
         },

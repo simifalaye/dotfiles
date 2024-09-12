@@ -9,9 +9,10 @@
 "rocks-git.nvim" = "2.2.0"
 "rocks-config.nvim" = "2.3.1"
 "rocks-treesitter.nvim" = "1.1.2"
+"rocks-edit.nvim" = "scm"
 "guess-indent.nvim" = "scm"
 "lualine.nvim" = "scm"
-"oil.nvim" = "2.12.1"
+"oil.nvim" = "2.12.2"
 neogen = "2.19.4"
 tree-sitter-cpp = "scm"
 tree-sitter-perl = "scm"
@@ -63,7 +64,6 @@ tree-sitter-kconfig = "scm"
 
 [plugins.base16-vim]
 git = "tinted-theming/base16-vim"
-rev = "032039a48b0646f0e860bd2c26c66623cdc2c246"
 
 [config]
 plugins_dir = "plugins/"
