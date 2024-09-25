@@ -8,36 +8,6 @@ local map = vim.keymap.set
 map({ "n", "x" }, "j", [[v:count == 0 ? 'gj' : 'j']], { expr = true })
 map({ "n", "x" }, "k", [[v:count == 0 ? 'gk' : 'k']], { expr = true })
 
--- Fast window navigation
-map({ "n", "x", "t" }, "<A-h>", "<C-w>h", { desc = "Goto left window" })
-map({ "n", "x", "t" }, "<A-j>", "<C-w>j", { desc = "Goto down window" })
-map({ "n", "x", "t" }, "<A-k>", "<C-w>k", { desc = "Goto up window" })
-map({ "n", "x", "t" }, "<A-l>", "<C-w>l", { desc = "Goto right window" })
-map(
-  { "n", "x", "t" },
-  "<A-C-h>",
-  "<cmd>ResizeWindow l<CR>",
-  { desc = "Resize window left" }
-)
-map(
-  { "n", "x", "t" },
-  "<A-C-j>",
-  "<cmd>ResizeWindow d<CR>",
-  { desc = "Resize window down" }
-)
-map(
-  { "n", "x", "t" },
-  "<A-C-k>",
-  "<cmd>ResizeWindow u<CR>",
-  { desc = "Resize window up" }
-)
-map(
-  { "n", "x", "t" },
-  "<A-C-l>",
-  "<cmd>ResizeWindow r<CR>",
-  { desc = "Resize window right" }
-)
-
 -- Save
 map(
   { "n", "i", "x", "s" },

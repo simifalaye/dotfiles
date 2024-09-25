@@ -3,7 +3,7 @@
 # - remote  enable when starting zsh over a SSH connection.
 # - always  both of the above.
 # Set to any other value to disable.
-export TMUX_AUTOSTART="${TMUX_AUTOSTART-always}"
+export TMUX_AUTOSTART="${TMUX_AUTOSTART-remote}"
 
 # Define what to do when autostarting. Possible values are:
 # - background      do not prompt and run a regular shell.
