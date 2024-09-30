@@ -96,6 +96,9 @@ bind -n -N 'Select window 7' 'M-7' run '${TMUX_SCRIPTS_DIR}/smart_window_select.
 bind -n -N 'Select window 8' 'M-8' run '${TMUX_SCRIPTS_DIR}/smart_window_select.sh 8'
 bind -n -N 'Select window 9' 'M-9' run '${TMUX_SCRIPTS_DIR}/smart_window_select.sh 9'
 bind -n -N 'Select window 10' 'M-0' run '${TMUX_SCRIPTS_DIR}/smart_window_select.sh 10'
+bind -n -N 'Select next window' 'M-]' next-window
+bind -n -N 'Select prev window' 'M-[' previous-window
+
 bind -n -N 'Select pane left' 'M-h' run '${TMUX_SCRIPTS_DIR}/smart_pane_select.sh M-h L'
 bind -n -N 'Select pane down' 'M-j' run '${TMUX_SCRIPTS_DIR}/smart_pane_select.sh M-j D'
 bind -n -N 'Select pane up' 'M-k' run '${TMUX_SCRIPTS_DIR}/smart_pane_select.sh M-k U'
@@ -117,8 +120,8 @@ bind -n -N 'Move pane up' 'M-K' swap-pane -s '{up-of}'
 bind -n -N 'Move pane right' 'M-L' swap-pane -s '{right-of}'
 
 bind -n -N 'Zoom the current pane' 'M-z' resize-pane -Z
-bind -n -N 'Next layout' 'M-]' next-layout
-bind -n -N 'Previous layout' 'M-[' previous-layout
+bind -n -N 'Next layout' 'M-}' next-layout
+bind -n -N 'Previous layout' 'M-{' previous-layout
 
 bind -n -N 'Edit tmux configuration' 'M-E' run-shell \
   'tmux popup -w90% -h90% -E -d "#{pane_current_path}" ${VISUAL:-${EDITOR}} "${TMUX_CONFIG}" && tmux source "${TMUX_CONFIG}" && tmux display "Reloaded config"'
