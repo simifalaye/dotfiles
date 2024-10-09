@@ -14,27 +14,26 @@
 "lualine.nvim" = "scm"
 "oil.nvim" = "2.12.2"
 neogen = "2.19.4"
-tree-sitter-cpp = "0.0.26"
-tree-sitter-perl = "0.0.28"
-tree-sitter-toml = "0.0.24"
+tree-sitter-cpp = "0.0.31"
+tree-sitter-perl = "0.0.34"
+tree-sitter-toml = "0.0.29"
 nvim-ts-autotag = "scm"
-tree-sitter-yaml = "0.0.24"
-tree-sitter-tmux = "0.0.24"
+tree-sitter-yaml = "0.0.29"
+tree-sitter-tmux = "0.0.29"
 nvim-autopairs = "scm"
 "fidget.nvim" = "1.4.1"
 nvim-surround = "2.1.5"
-tree-sitter-make = "0.0.24"
+tree-sitter-make = "0.0.29"
 nvim-various-textobjs = "scm"
 nvim-treesitter-context = "scm"
 "which-key.nvim" = "3.13.3"
-tree-sitter-cmake = "0.0.24"
-tree-sitter-git_rebase = "0.0.24"
-tree-sitter-diff = "0.0.24"
-tree-sitter-gitcommit = "0.0.24"
-tree-sitter-proto = "0.0.24"
-tree-sitter-git_config = "0.0.24"
+tree-sitter-cmake = "0.0.30"
+tree-sitter-git_rebase = "0.0.29"
+tree-sitter-diff = "0.0.29"
+tree-sitter-gitcommit = "0.0.29"
+tree-sitter-proto = "0.0.29"
+tree-sitter-git_config = "0.0.29"
 "ts-comments.nvim" = "1.5.0"
-nvim-snippets = "scm"
 friendly-snippets = "scm"
 tree-sitter-json = "scm"
 tree-sitter-ssh_config = "scm"
@@ -42,44 +41,31 @@ tree-sitter-ssh_config = "scm"
 "lspkind.nvim" = "scm"
 tree-sitter-properties = "scm"
 "schemastore.nvim" = "0.2.0"
-tree-sitter-python = "0.0.24"
-tree-sitter-bash = "0.0.24"
-nvim-cmp = "scm"
-cmp-buffer = "scm"
-cmp-path = "scm"
-cmp-nvim-lsp = "scm"
-cmp-cmdline = "scm"
-tree-sitter-csv = "0.0.24"
-"indent-blankline.nvim" = "3.7.2"
+tree-sitter-python = "0.0.29"
+tree-sitter-bash = "0.0.29"
+tree-sitter-csv = "0.0.29"
+"indent-blankline.nvim" = "3.8.2"
 "bufdelete.nvim" = "scm"
-"render-markdown.nvim" = "7.2.0"
+"render-markdown.nvim" = "7.3.0"
 tree-sitter-html = "scm"
 "telescope.nvim" = "scm"
 "telescope-zf-native.nvim" = "1.0.0"
 "telescope-ui-select.nvim" = "scm"
 "gitsigns.nvim" = "0.9.0"
-tree-sitter-kconfig = "0.0.24"
-tree-sitter-groovy = "0.0.24"
-tree-sitter-kdl = "0.0.24"
-tree-sitter-robot = "0.0.24"
+tree-sitter-kconfig = "0.0.29"
+tree-sitter-groovy = "0.0.29"
+tree-sitter-kdl = "0.0.29"
+tree-sitter-robot = "0.0.29"
 base16-nvim = "scm"
+
+[plugins."blink.cmp"]
+git = "saghen/blink.cmp"
+rev = "v0.2.1^{}"
 
 [config]
 plugins_dir = "plugins/"
 auto_setup = false
 load_opt_plugins = true
-
-[bundles.cmp]
-items = [
-  "nvim-cmp",
-  "cmp-buffer",
-  "cmp-path",
-  "cmp-nvim-lsp",
-  "cmp-cmdline",
-  "friendly-snippets",
-  "lspkind.nvim",
-  "nvim-snippets"
-]
 
 [bundles.telescope]
 items = [

@@ -1,19 +1,5 @@
 local g = vim.g
 
---- Inspect the contents of an object very quickly
---- ex. P({1,2,3})
---- @vararg any
---- @return any
-_G.P = function(...)
-  local objects, v = {}, nil
-  for i = 1, select("#", ...) do
-    v = select(i, ...)
-    table.insert(objects, vim.inspect(v))
-  end
-  print(table.concat(objects, "\n"))
-  return ...
-end
-
 local function set_default_global(key, default)
   vim.g[key] = vim.g[key] and vim.g[key] or default
 end
@@ -138,3 +124,30 @@ g.loaded_vimball = true
 g.loaded_vimballPlugin = true
 g.loaded_tohtml = true
 g.loaded_2html_plugin = true
+
+--- Inspect the contents of an object very quickly
+--- ex. P({1,2,3})
+--- @vararg any
+--- @return any
+_G.P = function(...)
+  local objects, v = {}, nil
+  for i = 1, select("#", ...) do
+    v = select(i, ...)
+    table.insert(objects, vim.inspect(v))
+  end
+  print(table.concat(objects, "\n"))
+  return ...
+end
+
+--- Wrapper around a module to require it before using any table members
+---@param module string module to use
+---@return table a metatable of the module
+_G.reqcall = function(module)
+  return setmetatable({}, {
+    __index = function(_, k)
+      return function(...)
+        return require(module)[k](...)
+      end
+    end,
+  })
+end

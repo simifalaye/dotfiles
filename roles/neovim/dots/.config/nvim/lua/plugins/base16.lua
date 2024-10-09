@@ -7,7 +7,7 @@ require("base16-colorscheme").with_config({
 })
 
 -- Use tinty helper if installed
-local set_theme_path = vim.env.HOME .. "/.local/share/tinted-theming/tinty/current_scheme"
+local set_theme_path = vim.env.TINTY_SCHEME_FILE
 if vim.fn.filereadable(set_theme_path) == 1 then
   local fs = require("utils.fs")
 
