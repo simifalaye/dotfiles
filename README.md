@@ -1,5 +1,5 @@
 <h1 align="center">Dotfiles</h1>
-<p align="center">My dotfiles managed by Ansible</p>
+<p align="center">My dotfiles managed by Nix</p>
 <p align="center">
   <img src="https://img.shields.io/badge/OS-ubuntu_22.04-orange.svg" />
   <img src="https://img.shields.io/badge/Editor-vim-brightgreen.svg" />
@@ -10,13 +10,19 @@
 
 # Pre-Install Requirements
 
-- git
+**General**:
+- curl:
+  - For Debian based distros, run: `sudo apt update && sudo apt install curl`
 
+**Wsl2**:
+- Enable systemd support:
+  ```sh
+  echo -e "[boot]\nsystemd=true" | sudo tee -a /etc/wsl.conf && wsl.exe -t <DistroName>
+  ```
 # Install
 
 ```sh
-git clone https://github.com/simifalaye/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles
+source <(curl -L https://raw.githubusercontent.com/simifalaye/dotfiles/main/bootstrap.sh)
 ./install
 ```
 

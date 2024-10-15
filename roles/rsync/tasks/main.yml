@@ -1,9 +1,0 @@
-# vim: filetype=yaml.ansible
-
-- name: Install rsync
-  become: true
-  tags: [pkgs]
-  ansible.builtin.package:
-    name:
-      - rsync
-    state: present

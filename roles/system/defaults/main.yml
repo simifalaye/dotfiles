@@ -1,4 +1,0 @@
-# vim: filetype=yaml.ansible
-
-system_package_update: true
-system_package_upgrade: true

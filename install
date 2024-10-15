@@ -1,73 +1,42 @@
 #!/bin/bash
-#
-# Installs core dependencies needed to deploy dotfiles
 
-# Usage: has <cmd-1> <cmd-2> ... <cmd-n>
-function has {
-  for cmd in "$@"; do
-    command -v "$cmd" >/dev/null || return 1
-  done
-}
+# Detect architecture
+architecture=""
+case "$(uname -s)" in
+  Linux)
+    case "$(uname -m)" in
+      x86_64) architecture="x86_64-linux" ;;
+      aarch64) architecture="aarch64-linux" ;;
+      i686) architecture="i686-linux" ;;
+      *) echo "ERROR: Unsupported architecture" && exit 1 ;;
+    esac
+    ;;
+  Darwin)
+    case "$(uname -m)" in
+      x86_64) architecture="x86_64-darwin" ;;
+      arm64) architecture="aarch64-darwin" ;;
+      *) echo "ERROR: Unsupported architecture" && exit 1 ;;
+    esac
+    ;;
+  *)
+    echo "ERROR: Unsupported operating system" && exit 1
+    ;;
+esac
 
-# - Installs core dependencies:
-#   - ansible
-function install_deps {
-  echo "### Installing dependencies"
-  # Exit if anything fails within the function
-  set -e
+echo "## System Info: $architecture"
 
-  # Install required apps
-  os="$(uname)"
-  case $os in
-    'Linux')
-      echo "### Detected Linux"
-      if [ -f /etc/os-release ]; then
-        # Install core dependencies
-        if grep -q -E 'ubuntu' /etc/os-release; then
-          echo "Detected Ubuntu"
-          sudo apt update
-          sudo apt install software-properties-common
-          sudo add-apt-repository --yes --update ppa:ansible/ansible
-          sudo apt install ansible
-        elif grep -q -E '(arch)' /etc/os-release; then
-          echo "Detected Arch"
-          sudo pacman -S ansible
-        elif grep -q -E '(opensuse)' /etc/os-release; then
-          echo "Detected openSUSE"
-          sudo zypper install ansible
-        else
-          echo "Unsupported Linux distribution"
-          exit 1
-        fi
-      else
-        echo "Missing linux os-release file"
-        exit 1
-      fi
-      ;;
-    *)
-      echo "Unsupported OS"
-      exit 1
-      ;;
-  esac
-
-  # Install required modules
-  ansible-galaxy install -r requirements.yml
-}
-
-#-
-#  Main
-#-
-
-# Install deps if not installed
-if ! has ansible; then
-  if ! install_deps; then
-    echo "### Failed to install dependencies"
-    exit 1
-  fi
+# Run home-manager
+if command -v home-manager >/dev/null; then
+  home-manager switch \
+    -b backup \
+    --impure \
+    --extra-experimental-features "nix-command flakes" \
+    --flake ~/dotfiles#simifa-"${architecture}"
+else
+  nix --extra-experimental-features "nix-command flakes" run \
+    home-manager/release-24.05 switch -- \
+    -b backup \
+    --impure \
+    --extra-experimental-features "nix-command flakes" \
+    --flake ~/dotfiles#simifa-"${architecture}"
 fi
-
-# Prompt sudo so we don't have to ask-become-pass
-sudo echo ""
-
-# Run Ansible
-ansible-playbook -i ./hosts ./local-dev-env.yml "$@"
