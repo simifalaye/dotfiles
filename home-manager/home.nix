@@ -34,6 +34,7 @@
     ./tinty
     ./tmux
     ./trash-cli
+    ./wsl
     ./zellij
     ./zoxide
   ];

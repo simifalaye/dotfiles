@@ -21,4 +21,6 @@
   linkAll = from: to: linkAll_ from from to;
 
   link = path: config.lib.file.mkOutOfStoreSymlink path;
+
+  isWSL = builtins.getEnv "WSL_DISTRO_NAME" != "";
 }
