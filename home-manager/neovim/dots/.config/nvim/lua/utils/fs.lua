@@ -225,4 +225,18 @@ function M.file_by_offset(offset)
   end
 end
 
+--- Get the lua modules in a specific directory
+---@param directory_path string
+---@return string[]
+function M.get_lua_modules_in_directory(directory_path)
+  local modules = {}
+  for _, file in ipairs(vim.fn.readdir(directory_path, [[v:val =~ '\.lua$']])) do
+    local name = file:gsub("%.lua$", "")
+    if name ~= "init" then
+      table.insert(modules, name)
+    end
+  end
+  return modules
+end
+
 return M

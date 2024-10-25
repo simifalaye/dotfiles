@@ -8,8 +8,10 @@
   util = (import ../util.nix) {config = config;};
 in {
   home.packages = with pkgs; [
-    cht-sh
+    cargo
+    rust-analyzer
+    rustfmt
   ];
 
-  home.file = util.linkAll (util.dot "cheat/dots") "${config.home.homeDirectory}";
+  home.file = util.linkAll (util.dot "rust/dots") "${config.home.homeDirectory}";
 }

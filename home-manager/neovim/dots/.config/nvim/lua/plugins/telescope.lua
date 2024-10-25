@@ -219,29 +219,3 @@ vim.keymap.set(
   "<cmd>Telescope help_tags<CR>",
   { desc = "Open Help Picker" }
 )
-
-local wk_ok, wk = pcall(require, "which-key")
-if wk_ok then
-  wk.add({ { "<leader>g", group = "+git" } })
-end
-vim.keymap.set(
-  "n",
-  "<leader>gb",
-  "<cmd>Telescope git_branches<CR>",
-  { desc = "Branches" }
-)
-vim.keymap.set(
-  "n",
-  "<leader>gc",
-  "<cmd>Telescope git_bcommits<CR>",
-  { desc = "Commits (buf)" }
-)
-vim.keymap.set(
-  "n",
-  "<leader>gC",
-  "<cmd>Telescope git_commits<CR>",
-  { desc = "Commits (repo)" }
-)
-vim.keymap.set("n", "<leader>gf", "<cmd>Telescope git_files<CR>", { desc = "Files" })
-vim.keymap.set("n", "<leader>gs", "<cmd>Telescope git_status<CR>", { desc = "Status" })
-vim.keymap.set("n", "<leader>gS", "<cmd>Telescope git_stash<CR>", { desc = "Stash" })

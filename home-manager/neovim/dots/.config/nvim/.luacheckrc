@@ -1,0 +1,5 @@
+globals = {
+  "_",
+  "vim",
+  "assert",
+}

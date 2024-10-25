@@ -29,6 +29,7 @@
     ./python
     ./ripgrep
     ./rsync
+    ./rust
     ./sh
     ./tig
     ./tinty

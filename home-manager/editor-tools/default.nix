@@ -14,8 +14,8 @@ in {
     black
     clang-tools
     cpplint
-    efm-langserver
     lua-language-server
+    luajitPackages.luacheck
     marksman
     nil
     nodePackages.bash-language-server

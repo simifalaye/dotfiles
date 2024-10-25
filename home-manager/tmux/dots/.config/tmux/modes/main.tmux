@@ -120,8 +120,11 @@ bind -n -N 'Move pane up' 'M-K' swap-pane -s '{up-of}'
 bind -n -N 'Move pane right' 'M-L' swap-pane -s '{right-of}'
 
 bind -n -N 'Zoom the current pane' 'M-z' resize-pane -Z
-bind -n -N 'Next layout' 'M-}' next-layout
-bind -n -N 'Previous layout' 'M-{' previous-layout
+bind -n -N 'Next layout' 'M-=' next-layout
+bind -n -N 'Previous layout' 'M--' previous-layout
+
+bind -n -N 'Next Session' 'M-}' switch-client -n
+bind -n -N 'Previous Session' 'M-{' switch-client -p
 
 bind -n -N 'Edit tmux configuration' 'M-E' run-shell \
   'tmux popup -w90% -h90% -E -d "#{pane_current_path}" ${VISUAL:-${EDITOR}} "${TMUX_CONFIG}" && tmux source "${TMUX_CONFIG}" && tmux display "Reloaded config"'

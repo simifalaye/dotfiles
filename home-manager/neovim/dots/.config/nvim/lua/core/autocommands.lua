@@ -334,6 +334,12 @@ autocmd({ "LspAttach" }, {
         end,
         desc = "List Folders (lsp)",
       },
+      {
+        "gq.",
+        vim.lsp.buf.format,
+        desc = "Format Buffer (lsp)",
+        has = "documentFormatting",
+      }
     }
 
     -- Register lsp keys
@@ -485,4 +491,3 @@ autocmd({ "CursorMoved", "BufLeave", "WinLeave" }, {
     end
   end,
 })
-
