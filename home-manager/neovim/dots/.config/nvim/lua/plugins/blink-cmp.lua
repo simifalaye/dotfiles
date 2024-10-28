@@ -14,12 +14,6 @@ require("blink-cmp").setup({
     snippet_forward = "<Tab>",
     snippet_backward = "<S-Tab>",
   },
-  fuzzy = {
-    prebuiltBinaries = {
-      -- TODO: Remove when moving to a tagged version
-      forceVersion = "v0.2.1",
-    },
-  },
   windows = {
     autocomplete = {
       selection = "auto_insert",
