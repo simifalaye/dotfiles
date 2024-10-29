@@ -13,5 +13,5 @@ in {
     rustfmt
   ];
 
-  home.file = util.linkAll (util.dot "rust/dots") "${config.home.homeDirectory}";
+  # home.file = util.linkAll (util.dot "rust/dots") "${config.home.homeDirectory}";
 }
