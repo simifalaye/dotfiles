@@ -6,6 +6,7 @@
 #
 
 [[ -o interactive ]] || return 0
+(( $+functions[znap] )) || return 0
 
 #
 # zsh-history-substring-search plugin

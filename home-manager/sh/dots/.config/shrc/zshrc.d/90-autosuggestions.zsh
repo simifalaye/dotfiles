@@ -6,6 +6,7 @@
 #
 
 [[ -o interactive ]] || return 0
+(( $+functions[znap] )) || return 0
 
 #
 # zsh-autosuggestions plugin
@@ -21,4 +22,4 @@ ZSH_AUTOSUGGEST_USE_ASYNC=y
 znap source zsh-users/zsh-autosuggestions
 
 # Bind C-Space to accept autosuggestion
-bindkey "$key_info[Ctrl] " autosuggest-accept
+bindkey "$key_info[Ctrl];" autosuggest-accept

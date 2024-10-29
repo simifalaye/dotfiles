@@ -1,9 +1,11 @@
-if (( ! $+commands[fzf] )); then
-  return
-fi
+(( $+commands[fzf] )) || return 0
 
 # Load fzf shell integration
-eval "$(fzf --zsh)"
+if (( $+commands[znap] )); then
+  znap eval fzf-shell 'fzf --zsh'
+else
+  eval "$(fzf --zsh)"
+fi
 
 #
 # fzf-tab plugin
@@ -15,4 +17,6 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # Load plugin
-znap source Aloxaf/fzf-tab
+if (( $+commands[znap] )); then
+  znap source Aloxaf/fzf-tab
+fi

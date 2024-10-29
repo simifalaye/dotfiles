@@ -112,19 +112,3 @@ alias -g LL="2>&1 | less"
 alias -g CA="2>&1 | cat -A"
 alias -g NE="2> /dev/null"
 alias -g NUL="> /dev/null 2>&1"
-
-#
-# Plugin manager
-#
-
-# Download Znap, if it's not there yet
-[[ -r "${ZDATADIR}"/znap/znap.zsh ]] ||
-    git clone --depth 1 -- \
-        https://github.com/marlonrichert/zsh-snap.git "${ZDATADIR}"/znap
-
-# Configure Znap
-zstyle ':znap:*' repos-dir "${ZDATADIR}"/plugins
-zstyle '*:compinit' arguments -d "${ZCACHEDIR}/zcompdump"
-
-# Load Znap
-source "${ZDATADIR}"/znap/znap.zsh

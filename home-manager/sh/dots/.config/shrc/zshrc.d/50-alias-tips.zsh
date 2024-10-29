@@ -1,3 +1,5 @@
+(( $+functions[znap] )) || return 0
+
 #
 # alias-tips plugin
 #

@@ -4,6 +4,7 @@
 #
 
 [[ -o interactive ]] || return 0
+(( $+functions[znap] )) || return 0
 
 #
 # fast-syntax-highlighting plugin

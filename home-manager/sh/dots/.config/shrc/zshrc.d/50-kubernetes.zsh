@@ -1,6 +1,5 @@
-if (( ! $+commands[kubectl] )); then
-  return
-fi
+(( $+commands[kubectl] )) || return 0
+(( $+functions[znap] )) || return 0
 
 #
 # OhMyZsh kubectl/kubectx plugin

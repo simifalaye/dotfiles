@@ -1,3 +1,5 @@
+(( $+functions[znap] )) || return 0
+
 #
 # OhMyZsh command-not-found plugin
 #
