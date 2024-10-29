@@ -2,6 +2,7 @@ return {
   settings = {
     Lua = {
       workspace = {
+        maxPreload = 10000,
         checkThirdParty = false,
       },
       completion = {

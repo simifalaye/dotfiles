@@ -12,7 +12,6 @@
     ./atool
     ./bat
     ./bitwise
-    ./btop
     ./calc
     ./cheat
     ./delta
@@ -23,6 +22,7 @@
     ./fzf
     ./gh
     ./git
+    ./htop
     ./lazygit
     ./neovim
     ./node
