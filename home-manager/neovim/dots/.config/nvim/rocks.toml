@@ -1,3 +1,5 @@
+import = ["rocks-tresitter.toml"]
+
 # List of non-Neovim rocks.
 # This includes things like `toml` or other lua packages.
 [rocks]
@@ -5,8 +7,8 @@
 # List of Neovim plugins to install alongside their versions.
 # If the plugin name contains a dot then you must add quotes to the key name!
 [plugins]
-"rocks.nvim" = "2.41.0"
-"rocks-git.nvim" = "2.5.0"
+"rocks.nvim" = "2.41.1"
+"rocks-git.nvim" = "2.5.1"
 "rocks-config.nvim" = "3.0.0"
 "rocks-treesitter.nvim" = "1.1.3"
 "rocks-edit.nvim" = "scm"
@@ -27,9 +29,9 @@ friendly-snippets = "scm"
 "obsidian.nvim" = "3.9.0"
 "lspkind.nvim" = "scm"
 "schemastore.nvim" = "0.2.0"
-"indent-blankline.nvim" = "3.8.2"
+"indent-blankline.nvim" = "3.8.3"
 "bufdelete.nvim" = "scm"
-"render-markdown.nvim" = "7.4.0"
+"render-markdown.nvim" = "7.5.0"
 "telescope.nvim" = "scm"
 "telescope-zf-native.nvim" = "1.0.0"
 "telescope-ui-select.nvim" = "scm"
@@ -43,7 +45,7 @@ nvim-lint = "scm"
 
 [plugins."blink.cmp"]
 git = "saghen/blink.cmp"
-rev = "v0.4.1"
+rev = "v0.5.1"
 
 [config]
 plugins_dir = "plugins/"

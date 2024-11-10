@@ -9,7 +9,6 @@
 in {
   home.packages = with pkgs; [
     luajit
-    luajitPackages.luarocks
     unstable.neovim
   ];
 
