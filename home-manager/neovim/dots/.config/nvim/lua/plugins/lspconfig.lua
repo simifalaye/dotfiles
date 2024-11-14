@@ -4,6 +4,9 @@ local lz = require("utils.lazy").new("lsp", function()
   -- Register servers servers
   local server_configs = require("static.lsp_server_config")()
   for name, conf in pairs(server_configs) do
+    if not lspconfig[name] then
+      return
+    end
     local cmd = conf.cmd or lspconfig[name].document_config.default_config.cmd
     if not cmd or vim.fn.executable(cmd[1]) == 0 then
       conf.autostart = false
