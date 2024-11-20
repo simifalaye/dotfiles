@@ -118,5 +118,6 @@ vim.g.rocks_nvim = {
       cc = "cpp",
       cpp = "cpp",
     },
+    config_path = "rocks-treesitter.toml",
   },
 }

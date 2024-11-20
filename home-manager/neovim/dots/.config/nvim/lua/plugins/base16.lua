@@ -26,15 +26,17 @@ require("base16-colorscheme").with_config({
 vim.cmd("colorscheme " .. get_tinty_theme())
 
 -- Handle theme changes on focus gained
-vim.api.nvim_create_autocmd("FocusGained", {
-  callback = function()
-    local new_theme_name = get_tinty_theme()
-    local current_theme_name = vim.g.colors_name
+if tinty_installed then
+  vim.api.nvim_create_autocmd("FocusGained", {
+    callback = function()
+      local new_theme_name = get_tinty_theme()
+      local current_theme_name = vim.g.colors_name
 
-    if current_theme_name ~= new_theme_name then
-      vim.schedule(function()
-        vim.cmd("colorscheme " .. new_theme_name)
-      end)
-    end
-  end,
-})
+      if current_theme_name ~= new_theme_name then
+        vim.schedule(function()
+          vim.cmd("colorscheme " .. new_theme_name)
+        end)
+      end
+    end,
+  })
+end

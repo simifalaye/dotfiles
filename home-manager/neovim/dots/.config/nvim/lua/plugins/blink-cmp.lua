@@ -1,5 +1,5 @@
 local lz = require("utils.lazy").new("blink-cmp", function()
-  require("blink-cmp").setup({
+  local opts = {
     keymap = {
       ["<CR>"] = { "accept", "fallback" },
       ["<Tab>"] = { "select_next", "fallback" },
@@ -15,7 +15,7 @@ local lz = require("utils.lazy").new("blink-cmp", function()
     },
     windows = {
       autocomplete = {
-        selection = "manual",
+        selection = "auto_insert",
       },
       documentation = {
         auto_show = true,
@@ -27,7 +27,23 @@ local lz = require("utils.lazy").new("blink-cmp", function()
       signature_help = { enabled = true },
     },
     accept = { auto_brackets = { enabled = true } },
-  })
+    sources = {
+      completion = {
+        enabled_providers = { "lsp", "path", "snippets", "buffer" },
+      },
+    },
+  }
+
+  local _, lazydev_ok = pcall(require, "lazydev")
+  if lazydev_ok then
+    vim.list_extend(opts.sources.completion.enabled_providers, { "lazydev" })
+    opts.sources.providers = vim.tbl_deep_extend("force", opts.sources.providers or {}, {
+      lsp = { fallback_for = { "lazydev" } },
+      lazydev = { name = "LazyDev", module = "lazydev.integrations.blink" },
+    })
+  end
+
+  require("blink-cmp").setup(opts)
   return true
 end)
 lz:events({ "InsertEnter" })

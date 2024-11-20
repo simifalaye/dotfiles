@@ -17,6 +17,6 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # Load plugin
-if (( $+commands[znap] )); then
+if (( $+functions[znap] )); then
   znap source Aloxaf/fzf-tab
 fi
