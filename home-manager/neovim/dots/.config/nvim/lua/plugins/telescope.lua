@@ -17,6 +17,14 @@ telescope.setup({
       height = 0.80,
     },
     sorting_strategy = "ascending",
+    preview = {
+      treesitter = {
+        enable = true,
+        disable = {
+          "html", -- TODO: Check if still broken
+        },
+      },
+    },
     mappings = {
       i = {
         ["<C-n>"] = actions.move_selection_next,

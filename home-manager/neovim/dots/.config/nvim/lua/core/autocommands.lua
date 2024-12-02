@@ -183,16 +183,16 @@ autocmd({ "BufWinEnter", "FileChangedShellPost" }, {
 
     vim.schedule(function()
       if
-        not vim.api.nvim_buf_is_valid(buf)
-        or not vim.api.nvim_win_is_valid(win)
-        or not vim.api.nvim_win_get_buf(win) == buf
+          not vim.api.nvim_buf_is_valid(buf)
+          or not vim.api.nvim_win_is_valid(win)
+          or not vim.api.nvim_win_get_buf(win) == buf
       then
         return
       end
       vim.api.nvim_win_call(win, function()
         local current_dir = vim.fn.getcwd(0)
         local target_dir = vim.fs.root(info.file, require("utils.fs").root_patterns)
-          or vim.fs.dirname(info.file)
+            or vim.fs.dirname(info.file)
         local stat = target_dir and vim.uv.fs_stat(target_dir)
         -- Prevent unnecessary directory change, which triggers
         -- DirChanged autocmds that may update winbar unexpectedly
@@ -334,21 +334,26 @@ autocmd({ "LspAttach" }, {
         end,
         desc = "List Folders (lsp)",
       },
-      {
-        "gq.",
-        vim.lsp.buf.format,
-        desc = "Format Buffer (lsp)",
-        has = "documentFormatting",
-      }
     }
+
+    if not vim.b[bufnr].user_override_lsp_format then
+      vim.list_extend(keys, {
+        {
+          "gq.",
+          vim.lsp.buf.format,
+          desc = "Format Buffer (lsp)",
+          has = "documentFormatting",
+        }
+      })
+    end
 
     -- Register lsp keys
     require("utils.lsp").register_keys(client, bufnr, keys)
 
     -- Configure additional client functions
     if
-      client.supports_method("textDocument/codeLens")
-      and vim.g.user_codelens_enabled
+        client.supports_method("textDocument/codeLens")
+        and vim.g.user_codelens_enabled
     then
       vim.lsp.codelens.refresh({ bufnr = bufnr })
       vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
@@ -362,10 +367,10 @@ autocmd({ "LspAttach" }, {
       })
     end
     if
-      (
-        client.supports_method("textDocument/semanticTokens/full")
-        or client.supports_method("textDocument/semanticTokens/full/delta")
-      ) and vim.lsp.semantic_tokens
+        (
+          client.supports_method("textDocument/semanticTokens/full")
+          or client.supports_method("textDocument/semanticTokens/full/delta")
+        ) and vim.lsp.semantic_tokens
     then
       if vim.b["user_semantic_tokens_enabled"] == nil then
         vim.b["user_semantic_tokens_enabled"] = vim.g.user_semantic_tokens_enabled
@@ -431,9 +436,9 @@ autocmd({ "CursorHold" }, {
     local msg = ""
     for _, diag in ipairs(diagnostics) do
       if
-        diag.lnum == row - 1
-        and diag.col <= col
-        and (diag.end_col == nil or diag.end_col >= col)
+          diag.lnum == row - 1
+          and diag.col <= col
+          and (diag.end_col == nil or diag.end_col >= col)
       then
         if string.len(msg) > 0 then
           msg = msg .. "\n"
@@ -452,26 +457,26 @@ autocmd({ "CursorHold" }, {
       end
       -- Create a floating window
       diagnostic_float_win_id =
-        vim.api.nvim_open_win(vim.api.nvim_create_buf(false, true), false, {
-          relative = "editor",
-          width = width,
-          height = height,
-          anchor = "NE",
-          col = vim.o.columns,
-          row = 0,
-          style = "minimal",
-          border = { { " ", "NormalFloat" } },
-          -- border = {
-          --   { "╭", "NormalFloat" },
-          --   { "─", "NormalFloat" },
-          --   { "╮", "NormalFloat" },
-          --   { "│", "NormalFloat" },
-          --   { "╯", "NormalFloat" },
-          --   { "─", "NormalFloat" },
-          --   { "╰", "NormalFloat" },
-          --   { "│", "NormalFloat" },
-          -- },
-        })
+          vim.api.nvim_open_win(vim.api.nvim_create_buf(false, true), false, {
+            relative = "editor",
+            width = width,
+            height = height,
+            anchor = "NE",
+            col = vim.o.columns,
+            row = 0,
+            style = "minimal",
+            border = { { " ", "NormalFloat" } },
+            -- border = {
+            --   { "╭", "NormalFloat" },
+            --   { "─", "NormalFloat" },
+            --   { "╮", "NormalFloat" },
+            --   { "│", "NormalFloat" },
+            --   { "╯", "NormalFloat" },
+            --   { "─", "NormalFloat" },
+            --   { "╰", "NormalFloat" },
+            --   { "│", "NormalFloat" },
+            -- },
+          })
 
       -- Set buffer content and highlight
       local buf = vim.api.nvim_win_get_buf(diagnostic_float_win_id)

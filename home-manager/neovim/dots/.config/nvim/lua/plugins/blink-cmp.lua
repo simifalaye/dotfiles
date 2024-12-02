@@ -1,3 +1,4 @@
+-- TODO: Evaluate whether to re-install blink.cmp
 local lz = require("utils.lazy").new("blink-cmp", function()
   local opts = {
     keymap = {

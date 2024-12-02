@@ -1,4 +1,4 @@
-import = ["rocks-treesitter.toml"]
+import = ["rocks-treesitter.toml", "rocks-local.toml"]
 
 # List of non-Neovim rocks.
 # This includes things like `toml` or other lua packages.
@@ -9,7 +9,7 @@ import = ["rocks-treesitter.toml"]
 [plugins]
 "rocks.nvim" = "2.42.2"
 "rocks-git.nvim" = "2.5.1"
-"rocks-config.nvim" = "3.0.0"
+"rocks-config.nvim" = "3.1.0"
 "rocks-treesitter.nvim" = "1.2.0"
 "rocks-edit.nvim" = "scm"
 "rocks-dev.nvim" = "1.7.0"
@@ -23,7 +23,7 @@ nvim-autopairs = "scm"
 nvim-surround = "2.1.5"
 nvim-various-textobjs = "scm"
 nvim-treesitter-context = "scm"
-"which-key.nvim" = "3.13.3"
+"which-key.nvim" = "3.14.1"
 "ts-comments.nvim" = "1.5.0"
 friendly-snippets = "scm"
 "obsidian.nvim" = "3.9.0"
@@ -31,7 +31,7 @@ friendly-snippets = "scm"
 "schemastore.nvim" = "0.2.0"
 "indent-blankline.nvim" = "3.8.5"
 "bufdelete.nvim" = "scm"
-"render-markdown.nvim" = "7.5.0"
+"render-markdown.nvim" = "7.6.0"
 "telescope.nvim" = "scm"
 "telescope-zf-native.nvim" = "1.0.0"
 "telescope-ui-select.nvim" = "scm"
@@ -39,13 +39,9 @@ friendly-snippets = "scm"
 base16-nvim = "scm"
 neogit = "scm"
 nvim-lspconfig = "1.0.0"
-"conform.nvim" = "8.2.0"
-nvim-lint = "scm"
 "lazydev.nvim" = "scm"
-
-[plugins."blink.cmp"]
-git = "saghen/blink.cmp"
-rev = "v0.5.1"
+efmls-configs-nvim = "1.8.0"
+"lsp_signature.nvim" = "0.3.1"
 
 [config]
 plugins_dir = "plugins/"

@@ -113,6 +113,9 @@ vim.g.rocks_nvim = {
   treesitter = {
     auto_highlight = "all",
     auto_install = "true",
+    disable = {
+      "html", -- TODO: Check if still broken
+    },
     parser_map = {
       c = "c",
       cc = "cpp",

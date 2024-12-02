@@ -6,7 +6,12 @@
   _config,
   pkgs,
   ...
-}: {
+}: let
+  localConfig =
+    if builtins.pathExists ~/.dotfiles.local/home.nix
+    then import ~/.dotfiles.local/home.nix
+    else {};
+in {
   # You can import other home-manager modules here
   imports = [
     ./atool
@@ -29,7 +34,6 @@
     ./python
     ./ripgrep
     ./rsync
-    ./rust
     ./sh
     ./tig
     ./tinty
@@ -38,6 +42,7 @@
     ./wsl
     ./zellij
     ./zoxide
+    localConfig
   ];
 
   home = {
@@ -82,25 +87,25 @@
   # Configure nix
   nix = {
     package = pkgs.nix;
-    settings.experimental-features = [ "nix-command" "flakes" ];
+    settings.experimental-features = ["nix-command" "flakes"];
   };
 
   # Setup nix-specific xdg config
   xdg.configFile = {
     "shrc/zshrc.d/01-nix.zsh".text = ''
-    if [ -d "$HOME"/.nix-profile/share/zsh/site-functions ]; then
-      fpath=(
-          "$HOME"/.nix-profile/share/zsh/site-functions
-          $fpath
-      )
-    fi
+      if [ -d "$HOME"/.nix-profile/share/zsh/site-functions ]; then
+        fpath=(
+            "$HOME"/.nix-profile/share/zsh/site-functions
+            $fpath
+        )
+      fi
     '';
     "shrc/bashrc.d/01-nix.bash".text = ''
-    if [ -d "$HOME"/.nix-profile/share/bash-completion/completions ]; then
-        for file in "$HOME"/.nix-profile/share/bash-completion/completions/*; do
-            [ -f "$file" ] && . "$file"
-        done
-    fi
+      if [ -d "$HOME"/.nix-profile/share/bash-completion/completions ]; then
+          for file in "$HOME"/.nix-profile/share/bash-completion/completions/*; do
+              [ -f "$file" ] && . "$file"
+          done
+      fi
     '';
   };
 }
