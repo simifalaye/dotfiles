@@ -18,6 +18,7 @@ local languages = {
   javascriptreact = { eslintd, prettierd },
   python = { require("efmls-configs.formatters.black") },
   rust = { require("efmls-configs.formatters.rustfmt") },
+  go = { require("efmls-configs.linters.golangci_lint") },
   typescript = { eslintd, prettierd },
   typescriptreact = { eslintd, prettierd },
   lua = { stylua },
@@ -27,7 +28,7 @@ function _G.efm_formatexpr(opts)
   opts = opts or {}
   local timeout_ms = opts.timeout_ms or 500
 
-  if vim.list_contains({ 'i', 'R', 'ic', 'ix' }, vim.fn.mode()) then
+  if vim.list_contains({ "i", "R", "ic", "ix" }, vim.fn.mode()) then
     -- `formatexpr` is also called when exceeding `textwidth` in insert mode
     -- fall back to internal formatting
     return 1
@@ -44,20 +45,25 @@ function _G.efm_formatexpr(opts)
     if client.supports_method(vim.lsp.protocol.Methods.textDocument_rangeFormatting) then
       local params = vim.lsp.util.make_formatting_params()
       local end_line = vim.fn.getline(end_lnum) --[[@as string]]
-      local end_col = vim.lsp.util._str_utfindex_enc(end_line, nil, client.offset_encoding)
+      local end_col =
+        vim.lsp.util._str_utfindex_enc(end_line, nil, client.offset_encoding)
       --- @cast params +lsp.DocumentRangeFormattingParams
       params.range = {
         start = {
           line = start_lnum - 1,
           character = 0,
         },
-        ['end'] = {
+        ["end"] = {
           line = end_lnum - 1,
           character = end_col,
         },
       }
-      local response =
-          client.request_sync(vim.lsp.protocol.Methods.textDocument_rangeFormatting, params, timeout_ms, bufnr)
+      local response = client.request_sync(
+        vim.lsp.protocol.Methods.textDocument_rangeFormatting,
+        params,
+        timeout_ms,
+        bufnr
+      )
       if response and response.result then
         vim.lsp.util.apply_text_edits(response.result, bufnr, client.offset_encoding)
         return 0
@@ -72,7 +78,7 @@ end
 return {
   filetypes = vim.tbl_keys(languages),
   settings = {
-    rootMarkers = { '.git/' },
+    rootMarkers = { ".git/" },
     languages = languages,
   },
   init_options = {
@@ -86,12 +92,12 @@ return {
     end
     for _, conf in ipairs(languages[ft]) do
       if conf.formatCommand then
-        vim.bo[bufnr].formatexpr = 'v:lua.efm_formatexpr()'
+        vim.bo[bufnr].formatexpr = "v:lua.efm_formatexpr()"
         vim.b[bufnr].user_override_lsp_format = true
         vim.keymap.set("n", "gq.", function()
           vim.lsp.buf.format({ name = "efm" })
         end, { desc = "Format Buffer (efm)", buffer = bufnr })
       end
     end
-  end
+  end,
 }

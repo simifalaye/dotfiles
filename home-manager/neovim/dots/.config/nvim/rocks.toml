@@ -25,7 +25,6 @@ nvim-various-textobjs = "scm"
 nvim-treesitter-context = "scm"
 "which-key.nvim" = "3.14.1"
 "ts-comments.nvim" = "1.5.0"
-friendly-snippets = "scm"
 "obsidian.nvim" = "3.9.0"
 "lspkind.nvim" = "scm"
 "schemastore.nvim" = "0.2.0"
@@ -41,7 +40,13 @@ neogit = "scm"
 nvim-lspconfig = "1.0.0"
 "lazydev.nvim" = "scm"
 efmls-configs-nvim = "1.8.0"
-"lsp_signature.nvim" = "0.3.1"
+nvim-cmp = "scm"
+cmp-nvim-lsp = "scm"
+cmp-path = "scm"
+cmp-buffer = "scm"
+cmp-cmdline = "scm"
+nvim-snippets = "scm"
+friendly-snippets = "scm"
 
 [config]
 plugins_dir = "plugins/"
@@ -52,5 +57,16 @@ load_opt_plugins = true
 items = [
   "telescope.nvim",
   "telescope-zf-native.nvim",
-  "telescope-ui-select.nvim"
+  "telescope-ui-select.nvim",
+]
+
+[bundles.cmp]
+items = [
+  "nvim-cmp",
+  "cmp-nvim-lsp",
+  "cmp-path",
+  "cmp-buffer",
+  "cmp-cmdline",
+  "nvim-snippets",
+  "friendly-snippets",
 ]
