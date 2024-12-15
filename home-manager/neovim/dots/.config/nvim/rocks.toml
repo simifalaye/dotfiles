@@ -8,7 +8,7 @@ import = ["rocks-treesitter.toml", "rocks-local.toml"]
 # If the plugin name contains a dot then you must add quotes to the key name!
 [plugins]
 "rocks.nvim" = "2.42.2"
-"rocks-git.nvim" = "2.5.1"
+"rocks-git.nvim" = "2.5.2"
 "rocks-config.nvim" = "3.1.0"
 "rocks-treesitter.nvim" = "1.2.0"
 "rocks-edit.nvim" = "scm"
@@ -26,27 +26,25 @@ nvim-treesitter-context = "scm"
 "which-key.nvim" = "3.14.1"
 "ts-comments.nvim" = "1.5.0"
 "obsidian.nvim" = "3.9.0"
-"lspkind.nvim" = "scm"
 "schemastore.nvim" = "0.2.0"
-"indent-blankline.nvim" = "3.8.5"
+"indent-blankline.nvim" = "3.8.6"
 "bufdelete.nvim" = "scm"
-"render-markdown.nvim" = "7.6.0"
+"render-markdown.nvim" = "7.7.0"
 "telescope.nvim" = "scm"
 "telescope-zf-native.nvim" = "1.0.0"
 "telescope-ui-select.nvim" = "scm"
 "gitsigns.nvim" = "scm"
 base16-nvim = "scm"
-neogit = "scm"
-nvim-lspconfig = "1.0.0"
+nvim-lspconfig = "1.1.0"
 "lazydev.nvim" = "scm"
-efmls-configs-nvim = "1.8.0"
-nvim-cmp = "scm"
-cmp-nvim-lsp = "scm"
-cmp-path = "scm"
-cmp-buffer = "scm"
-cmp-cmdline = "scm"
+efmls-configs-nvim = "1.9.0"
+"magazine.nvim" = "0.4.1"
+mag-nvim-lsp = "0.1"
+mag-buffer = "0.1"
 nvim-snippets = "scm"
 friendly-snippets = "scm"
+"lspkind.nvim" = "scm"
+"toggleterm.nvim" = "2.13.0"
 
 [config]
 plugins_dir = "plugins/"
@@ -60,13 +58,11 @@ items = [
   "telescope-ui-select.nvim",
 ]
 
-[bundles.cmp]
+[bundles.magazine]
 items = [
-  "nvim-cmp",
-  "cmp-nvim-lsp",
-  "cmp-path",
-  "cmp-buffer",
-  "cmp-cmdline",
+  "magazine.nvim",
+  "mag-nvim-lsp",
+  "mag-buffer",
   "nvim-snippets",
   "friendly-snippets",
 ]

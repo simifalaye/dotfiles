@@ -1,6 +1,6 @@
-# Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
+# Template src: https://github.com/Misterio77/nix-starter-configs
 {
-  _inputs,
+  inputs,
   outputs,
   _lib,
   _config,
@@ -59,7 +59,7 @@ in {
       outputs.overlays.unstable-packages
 
       # You can also add overlays exported from other flakes:
-      # neovim-nightly-overlay.overlays.default
+      inputs.neovim-nightly-overlay.overlays.default
 
       # Or define it inline, for example:
       # (final: prev: {
@@ -82,7 +82,7 @@ in {
   systemd.user.startServices = "sd-switch";
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-  home.stateVersion = "24.05";
+  home.stateVersion = "24.11";
 
   # Configure nix
   nix = {

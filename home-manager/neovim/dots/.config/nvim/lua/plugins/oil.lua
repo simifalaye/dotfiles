@@ -78,23 +78,24 @@ oil.setup({
   },
   use_default_keymaps = true,
   keymaps = {
-    -- ["g?"] = "actions.show_help",
-    -- ["<CR>"] = "actions.select",
-    -- ["<C-p>"] = "actions.preview",
-    -- ["<C-c>"] = "actions.close",
-    -- ["<C-l>"] = "actions.refresh",
-    -- ["_"] = "actions.open_cwd",
-    -- ["`"] = "actions.cd",
-    -- ["~"] = "actions.tcd",
-    -- ["gs"] = "actions.change_sort",
-    -- ["gx"] = "actions.open_external",
-    -- ["g."] = "actions.toggle_hidden",
-    -- ["g\\"] = "actions.toggle_trash",
-    -- -- Custom
-    -- ["Q"] = "q",
-    -- ["q"] = "actions.close",
-    -- ["l"] = "actions.select",
-    -- ["h"] = "actions.parent",
+    -- Base
+    ["g?"] = "actions.show_help",
+    ["<CR>"] = "actions.select",
+    ["<C-p>"] = "actions.preview",
+    ["<C-c>"] = "actions.close",
+    ["<C-l>"] = "actions.refresh",
+    ["_"] = "actions.open_cwd",
+    ["`"] = "actions.cd",
+    ["~"] = "actions.tcd",
+    ["gs"] = "actions.change_sort",
+    ["gx"] = "actions.open_external",
+    ["g."] = "actions.toggle_hidden",
+    ["g\\"] = "actions.toggle_trash",
+    -- Custom
+    ["Q"] = "q",
+    ["q"] = "actions.close",
+    ["l"] = "actions.select",
+    ["h"] = "actions.parent",
     ["gy"] = {
       mode = "n",
       buffer = true,
@@ -153,7 +154,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "TextChanged" }, {
     end
     if vim.bo[info.buf].filetype == "oil" then
       local cwd = vim.fs.normalize(vim.fn.getcwd(vim.fn.winnr()))
-      local oildir = vim.fs.normalize(oil.get_current_dir())
+      local oildir = vim.fs.normalize(oil.get_current_dir() or "")
       if cwd ~= oildir and vim.loop.fs_stat(oildir) then
         local ok = pcall(vim.cmd.lcd, oildir)
         if not ok then

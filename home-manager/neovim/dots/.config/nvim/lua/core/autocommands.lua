@@ -352,8 +352,7 @@ autocmd({ "LspAttach" }, {
 
     -- Configure additional client functions
     if
-      client.supports_method("textDocument/codeLens")
-      and vim.g.user_codelens_enabled
+      client.supports_method("textDocument/codeLens") and vim.g.user_codelens_enabled
     then
       vim.lsp.codelens.refresh({ bufnr = bufnr })
       vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
@@ -411,15 +410,11 @@ autocmd({ "LspAttach" }, {
 })
 
 local diagnostics_groupid = augroup("user_diagnostics", {})
-local diagnostic_float_win_id = nil
 autocmd({ "CursorHold" }, {
   group = diagnostics_groupid,
   desc = "Show diagnostics on cursor hold",
   callback = function()
     if not vim.g.user_diagnostic_hover then
-      return
-    end
-    if diagnostic_float_win_id ~= nil then
       return
     end
     local bufnr = vim.api.nvim_get_current_buf()
@@ -447,52 +442,13 @@ autocmd({ "CursorHold" }, {
       end
     end
     if string.len(msg) > 0 then
-      local lines = vim.split(msg, "\n")
-      -- Calculate the width and height required
-      local height = #lines
-      local width = 0
-      -- Determine the maximum width of any line
-      for _, line in ipairs(lines) do
-        width = math.max(width, #line)
-      end
-      -- Create a floating window
-      diagnostic_float_win_id =
-        vim.api.nvim_open_win(vim.api.nvim_create_buf(false, true), false, {
-          relative = "editor",
-          width = width,
-          height = height,
-          anchor = "NE",
-          col = vim.o.columns,
-          row = 0,
-          style = "minimal",
-          border = { { " ", "NormalFloat" } },
-          -- border = {
-          --   { "╭", "NormalFloat" },
-          --   { "─", "NormalFloat" },
-          --   { "╮", "NormalFloat" },
-          --   { "│", "NormalFloat" },
-          --   { "╯", "NormalFloat" },
-          --   { "─", "NormalFloat" },
-          --   { "╰", "NormalFloat" },
-          --   { "│", "NormalFloat" },
-          -- },
-        })
-
-      -- Set buffer content and highlight
-      local buf = vim.api.nvim_win_get_buf(diagnostic_float_win_id)
-      vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-      vim.api.nvim_set_option_value("buftype", "nofile", { buf = buf })
-      vim.api.nvim_set_option_value("swapfile", false, { buf = buf })
-    end
-  end,
-})
-autocmd({ "CursorMoved", "BufLeave", "WinLeave" }, {
-  group = diagnostics_groupid,
-  desc = "Clear diagnostics on cursor move",
-  callback = function()
-    if diagnostic_float_win_id ~= nil then
-      pcall(vim.api.nvim_win_close, diagnostic_float_win_id, false)
-      diagnostic_float_win_id = nil
+      vim.notify("Diagnostic: " .. msg, vim.log.levels.INFO, {
+        -- snacks.nvim notifier
+        id = "user_diagnostics_notification",
+        -- fidget.nvim
+        key = "user_diagnostics_notification",
+        skip_history = true,
+      })
     end
   end,
 })
