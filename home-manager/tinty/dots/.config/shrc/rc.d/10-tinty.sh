@@ -25,7 +25,10 @@ if [ -n "$(command -v 'tinty')" ]; then
     tinty_source_shell_theme install
   fi
 
-  tinty_source_shell_theme "init" > /dev/null
+  # Only run in valid term
+  if [[ -z "${TMUX}" && -z "${NVIM}" && "${TERM}" != "linux" && "$(tty)" != /dev/tty[0-9]* ]]; then
+    tinty_source_shell_theme "init" >/dev/null
+  fi
 
   alias tinty=tinty_source_shell_theme
 fi
