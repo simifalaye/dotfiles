@@ -12,7 +12,7 @@ telescope.setup({
     layout_config = {
       horizontal = { prompt_position = "top", preview_width = 0.55 },
       vertical = { prompt_position = "top", mirror = false },
-      flex = { prompt_position = "top" },
+      flex = { prompt_position = "top", flip_columns = 150 },
       width = 0.87,
       height = 0.80,
     },
@@ -27,25 +27,19 @@ telescope.setup({
     },
     mappings = {
       i = {
+        ["<Esc>"] = actions.close,
         ["<C-n>"] = actions.move_selection_next,
         ["<C-p>"] = actions.move_selection_previous,
         ["<C-c>"] = actions.close,
         ["<C-j>"] = actions.cycle_history_next,
         ["<C-k>"] = actions.cycle_history_prev,
+        ["<C-s>"] = actions.select_horizontal,
+        ["<C-v>"] = actions.select_vertical,
         ["<C-q>"] = function(...)
           actions.smart_send_to_qflist(...)
           actions.open_qflist(...)
         end,
         ["<CR>"] = actions.select_default,
-      },
-      n = {
-        ["<C-n>"] = actions.move_selection_next,
-        ["<C-p>"] = actions.move_selection_previous,
-        ["<C-c>"] = actions.close,
-        ["<C-q>"] = function(...)
-          actions.smart_send_to_qflist(...)
-          actions.open_qflist(...)
-        end,
       },
     },
     -- open files in the first window that is an actual file.
@@ -101,8 +95,8 @@ telescope.setup({
     },
     buffers = {
       mappings = {
-        n = {
-          ["x"] = actions.delete_buffer,
+        i = {
+          ["<C-x>"] = actions.delete_buffer,
         },
       },
     },
