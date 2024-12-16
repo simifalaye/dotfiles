@@ -8,6 +8,7 @@ tinty_source_shell_theme() {
 
   if [ "$subcommand" = "apply" ] || [ "$subcommand" = "init" ]; then
     tinty_data_dir="${XDG_DATA_HOME}/tinted-theming/tinty"
+    export TINTY_CURRENT_FILE="${tinty_data_dir}/current_scheme"
 
     while read -r script; do
       # shellcheck disable=SC1090

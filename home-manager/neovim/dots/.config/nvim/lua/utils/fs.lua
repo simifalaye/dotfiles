@@ -102,8 +102,8 @@ end
 --- Watch a file/dir with function callbacks
 ---@param path string
 ---@param on_event function(filename: string, events: table, unwatch_cb: function)
----@param on_error function(error: string, unwatch_cb: function?)?
----@param opts user_fs_watch_opts_t?
+---@param on_error? function(error: string, unwatch_cb: function?)
+---@param opts? user_fs_watch_opts_t
 ---@return uv.uv_fs_event_t?
 function M.watch_with_function(path, on_event, on_error, opts)
   local handle = uv.new_fs_event()
