@@ -1,4 +1,4 @@
-local default_theme = "base16-default"
+local default_theme = "base16-default-dark"
 local tinty_current_file = vim.env.TINTY_CURRENT_FILE
 local tinty_installed = vim.fn.executable("tinty") == 1 and tinty_current_file
 local function get_tinty_theme()
