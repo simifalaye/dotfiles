@@ -1,3 +1,6 @@
+export TINTY_DATA_DIR="${XDG_DATA_HOME}/tinted-theming/tinty"
+export TINTY_CURRENT_FILE="${TINTY_DATA_DIR}/current_scheme"
+
 # Tinty isn't able to apply environment variables to your shell due to
 # the way shell sub-processes work. This is a work around by running
 # Tinty through a function and then executing the shell scripts.
@@ -7,15 +10,10 @@ tinty_source_shell_theme() {
   subcommand="$1"
 
   if [ "$subcommand" = "apply" ] || [ "$subcommand" = "init" ]; then
-    tinty_data_dir="${XDG_DATA_HOME}/tinted-theming/tinty"
-    export TINTY_CURRENT_FILE="${tinty_data_dir}/current_scheme"
-
     while read -r script; do
       # shellcheck disable=SC1090
       . "$script"
-    done < <(find "$tinty_data_dir" -maxdepth 1 -type f -name "*.sh" -newer "$newer_file")
-
-    unset tinty_data_dir
+    done < <(find "${TINTY_DATA_DIR}" -maxdepth 1 -type f -name "*.sh" -newer "$newer_file")
   fi
 
   unset subcommand

@@ -1,3 +1,6 @@
+if true then
+  return
+end
 local telescope = require("telescope")
 local actions = require("telescope.actions") ---@module 'telescope.actions'
 local themes = require("telescope.themes") ---@module 'telescope.themes'

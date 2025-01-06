@@ -4,12 +4,14 @@ if not ok then
 end
 
 local stylua = require("efmls-configs.formatters.stylua")
+stylua.formatCommand =
+  "stylua --color Never --search-parent-directories ${--range-start:charStart} ${--range-end:charEnd} --stdin-filepath '${INPUT}' -"
 
 local eslintd = require("efmls-configs.linters.eslint_d")
 local prettierd = require("efmls-configs.formatters.prettier_d")
 
-local cpplint = require("efmls-configs.linters.cpplint")
 local clang_format = require("efmls-configs.formatters.clang_format")
+local cpplint = require("efmls-configs.linters.cpplint")
 
 local languages = {
   c = { cpplint, clang_format },
@@ -93,10 +95,7 @@ return {
     for _, conf in ipairs(languages[ft]) do
       if conf.formatCommand then
         vim.bo[bufnr].formatexpr = "v:lua.efm_formatexpr()"
-        vim.b[bufnr].user_override_lsp_format = true
-        vim.keymap.set("n", "gq.", function()
-          vim.lsp.buf.format({ name = "efm" })
-        end, { desc = "Format Buffer (efm)", buffer = bufnr })
+        vim.b[bufnr].user_lsp_preferred_format_server = "efm"
       end
     end
   end,

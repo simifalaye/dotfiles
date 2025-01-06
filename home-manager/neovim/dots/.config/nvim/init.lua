@@ -6,6 +6,33 @@ Maintainer: simifalaye
 
 --]]
 
+--- Inspect the contents of an object very quickly
+--- ex. P({1,2,3})
+--- @vararg any
+--- @return any
+_G.P = function(...)
+  local objects, v = {}, nil
+  for i = 1, select("#", ...) do
+    v = select(i, ...)
+    table.insert(objects, vim.inspect(v))
+  end
+  print(table.concat(objects, "\n"))
+  return ...
+end
+
+--- Wrapper around a module to require it before using any table members
+---@param module string module to use
+---@return table a metatable of the module
+_G.reqcall = function(module)
+  return setmetatable({}, {
+    __index = function(_, k)
+      return function(...)
+        return require(module)[k](...)
+      end
+    end,
+  })
+end
+
 -- Enable faster lua loader using byte-compilation
 -- https://github.com/neovim/neovim/commit/2257ade3dc2daab5ee12d27807c0b3bcf103cd29
 pcall(function()
@@ -27,8 +54,49 @@ vim.api.nvim_create_autocmd("BufReadPre", {
   callback = _rshada,
 })
 
+-- Set leader keys
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+
+-- Configure user plugins
+local icons = require("static.icons")
+vim.g.user_diagnostics = {
+  signs = {
+    { name = "DiagnosticSignError", text = icons.font.diagnostics.error },
+    { name = "DiagnosticSignWarn", text = icons.font.diagnostics.warn },
+    { name = "DiagnosticSignHint", text = icons.font.diagnostics.hint },
+    { name = "DiagnosticSignInfo", text = icons.font.diagnostics.info },
+  },
+  default_mode = 3,
+}
+vim.g.largefile = { enabled = true }
+vim.g.rooter = { enabled = false }
+
+-- Configure lsp options
+vim.g.user_lsp_codelens_enabled = true
+vim.g.user_lsp_semantic_tokens_enabled = true
+vim.g.user_lsp_inlay_hints_enabled = true
+vim.g.user_lsp_reference_highlight_enabled = true
+
+-- Disable unused builtin plugins
+vim.g.loaded_netrw = true
+vim.g.loaded_netrwPlugin = true
+vim.g.loaded_netrwSettings = true
+vim.g.loaded_netrwFileHandlers = true
+vim.g.loaded_gzip = true
+vim.g.loaded_zip = true
+vim.g.loaded_zipPlugin = true
+vim.g.loaded_tar = true
+vim.g.loaded_tarPlugin = true
+vim.g.loaded_tutor_mode_plugin = true
+vim.g.loaded_getscript = true
+vim.g.loaded_getscriptPlugin = true
+vim.g.loaded_vimball = true
+vim.g.loaded_vimballPlugin = true
+vim.g.loaded_tohtml = true
+vim.g.loaded_2html_plugin = true
+
 -- Load core modules
-require("core.globals")
 require("core.options")
 require("core.autocommands")
 require("core.commands")

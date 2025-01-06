@@ -38,7 +38,7 @@ map(
   { desc = "Show Message History" }
 )
 map("n", "g]", [[<cmd>messages clear<CR>]], { desc = "Clear Message History" })
-map("n", "gq.", function()
+map("n", "gQ", function()
   -- Save state
   local winview = vim.fn.winsaveview()
   -- Run 'gq' to format the entire document
