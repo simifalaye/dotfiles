@@ -10,15 +10,6 @@ local function get(name)
   if not config_exists then
     config = vim.deepcopy(lsp.default_config)
   else
-    if config.on_attach then
-      local on_attach = config.on_attach
-      config.on_attach = function(client, bufnr)
-        -- Load default on_attach
-        lsp.default_config.on_attach(client, bufnr)
-        -- Override with user on_attach
-        on_attach(client, bufnr)
-      end
-    end
     config = vim.tbl_deep_extend("force", lsp.default_config, config)
   end
   return config

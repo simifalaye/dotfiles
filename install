@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+
 # Detect architecture
 architecture=""
 case "$(uname -s)" in
@@ -25,18 +27,26 @@ esac
 
 echo "## System Info: $architecture"
 
+# Detect hostname
+host="$(hostname)"
+if [ -f "${SCRIPT_DIR}/home-manager/home-${host}.nix" ]; then
+  host="-${host}-"
+else
+  host="-"
+fi
+
 # Run home-manager
 if command -v home-manager >/dev/null; then
   home-manager switch \
     -b backup \
     --impure \
     --extra-experimental-features "nix-command flakes" \
-    --flake ~/dotfiles#simifa-"${architecture}"
+    --flake ~/dotfiles#simifa"${host}${architecture}"
 else
   nix --extra-experimental-features "nix-command flakes" run \
     home-manager/release-24.11 switch -- \
     -b backup \
     --impure \
     --extra-experimental-features "nix-command flakes" \
-    --flake ~/dotfiles#simifa-"${architecture}"
+    --flake ~/dotfiles#simifa"${host}${architecture}"
 fi

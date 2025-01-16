@@ -6,6 +6,20 @@ Maintainer: simifalaye
 
 --]]
 
+if vim.env.PROF then
+  -- example for lazy.nvim
+  -- change this to the correct path for your plugin manager
+  local snacks = vim.fn.stdpath("data") .. "/lazy/snacks.nvim"
+  vim.opt.rtp:append(snacks)
+  require("snacks.profiler").startup({
+    startup = {
+      event = "VimEnter", -- stop profiler on this event. Defaults to `VimEnter`
+      -- event = "UIEnter",
+      -- event = "VeryLazy",
+    },
+  })
+end
+
 --- Inspect the contents of an object very quickly
 --- ex. P({1,2,3})
 --- @vararg any
@@ -39,20 +53,15 @@ pcall(function()
   vim.loader.enable()
 end)
 
----Restore 'shada' option and read from shada once
----@return true
-local function _rshada()
-  vim.cmd.set("shada&")
-  vim.cmd.rshada()
-  return true
+-- Process the log level environment variable if set
+if vim.env.LOG_LEVEL and type(vim.env.LOG_LEVEL) == "string" then
+  local lvl = tonumber(vim.env.LOG_LEVEL)
+  if lvl >= vim.log.levels.TRACE and lvl <= vim.log.levels.OFF then
+    vim.g.user_log_level = lvl
+  end
+else
+  vim.g.user_log_level = vim.log.levels.INFO
 end
-vim.opt.shada = ""
-vim.defer_fn(_rshada, 100)
-vim.api.nvim_create_autocmd("BufReadPre", {
-  group = vim.api.nvim_create_augroup("user_shada_restore", {}),
-  once = true,
-  callback = _rshada,
-})
 
 -- Set leader keys
 vim.g.mapleader = " "
@@ -63,9 +72,9 @@ local icons = require("static.icons")
 vim.g.user_diagnostics = {
   signs = {
     { name = "DiagnosticSignError", text = icons.font.diagnostics.error },
-    { name = "DiagnosticSignWarn", text = icons.font.diagnostics.warn },
-    { name = "DiagnosticSignHint", text = icons.font.diagnostics.hint },
-    { name = "DiagnosticSignInfo", text = icons.font.diagnostics.info },
+    { name = "DiagnosticSignWarn",  text = icons.font.diagnostics.warn },
+    { name = "DiagnosticSignHint",  text = icons.font.diagnostics.hint },
+    { name = "DiagnosticSignInfo",  text = icons.font.diagnostics.info },
   },
   default_mode = 3,
 }
@@ -102,93 +111,39 @@ require("core.autocommands")
 require("core.commands")
 require("core.keymaps")
 
--- Setup rocks.nvim
-do
-  -- Specifies where to install/use rocks.nvim
-  local install_location =
-    vim.fs.joinpath(vim.fn.stdpath("data") --[[@as string]], "rocks")
-
-  -- Set up configuration options related to rocks.nvim (recommended to leave as default)
-  local rocks_config = {
-    rocks_path = vim.fs.normalize(install_location),
-    luarocks_binary = vim.fs.joinpath(install_location, "bin", "luarocks"),
-  }
-
-  vim.g.rocks_nvim = rocks_config
-
-  -- Configure the package path (so that plugin code can be found)
-  local luarocks_path = {
-    vim.fs.joinpath(rocks_config.rocks_path, "share", "lua", "5.1", "?.lua"),
-    vim.fs.joinpath(rocks_config.rocks_path, "share", "lua", "5.1", "?", "init.lua"),
-  }
-  package.path = package.path .. ";" .. table.concat(luarocks_path, ";")
-
-  -- Configure the C path (so that e.g. tree-sitter parsers can be found)
-  local luarocks_cpath = {
-    vim.fs.joinpath(rocks_config.rocks_path, "lib", "lua", "5.1", "?.so"),
-    vim.fs.joinpath(rocks_config.rocks_path, "lib64", "lua", "5.1", "?.so"),
-  }
-  package.cpath = package.cpath .. ";" .. table.concat(luarocks_cpath, ";")
-
-  -- Load all installed plugins, including rocks.nvim itself
-  vim.opt.runtimepath:append(
-    vim.fs.joinpath(
-      rocks_config.rocks_path,
-      "lib",
-      "luarocks",
-      "rocks-5.1",
-      "rocks.nvim",
-      "*"
-    )
-  )
-end
-
--- If rocks.nvim is not installed then install it!
-if not pcall(require, "rocks") then
-  local rocks_location =
-    vim.fs.joinpath(vim.fn.stdpath("cache") --[[@as string]], "rocks.nvim")
-
-  if not vim.uv.fs_stat(rocks_location) then
-    -- Pull down rocks.nvim
-    vim.fn.system({
-      "git",
-      "clone",
-      "--filter=blob:none",
-      "https://github.com/nvim-neorocks/rocks.nvim",
-      rocks_location,
-    })
+-- Bootstrap lazy.nvim
+local lazypath =
+    vim.fs.joinpath(vim.fn.stdpath("data") --[[@as string]], "lazy", "lazy.nvim")
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "--branch=stable",
+    lazyrepo,
+    lazypath,
+  })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out,                            "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
   end
-
-  -- If the clone was successful then source the bootstrapping script
-  assert(
-    vim.v.shell_error == 0,
-    "rocks.nvim installation failed. Try exiting and re-entering Neovim!"
-  )
-
-  vim.cmd.source(vim.fs.joinpath(rocks_location, "bootstrap.lua"))
-
-  vim.fn.delete(rocks_location, "rf")
-
-  -- Run sync
-  vim.defer_fn(function()
-    vim.cmd([[Rocks sync]])
-  end, 500)
 end
+vim.opt.rtp:prepend(lazypath)
 
--- Configure rocks.nvim
-vim.g.rocks_nvim = {
-  -- rocks-treesitter.nvim config
-  treesitter = {
-    auto_highlight = "all",
-    auto_install = "true",
-    disable = {
-      "html", -- TODO: Check if still broken
-    },
-    parser_map = {
-      c = "c",
-      cc = "cpp",
-      cpp = "cpp",
-    },
-    config_path = "rocks-treesitter.toml",
+-- Setup lazy.nvim
+require("lazy").setup({
+  spec = {
+    { import = "plugins" },
   },
-}
+  -- Configure any other settings here. See the documentation for more details.
+  -- colorscheme that will be used when installing plugins.
+  install = { colorscheme = { "default" } },
+  -- automatically check for plugin updates
+  checker = { enabled = true },
+})

@@ -1,10 +1,4 @@
-{
-  _config,
-  pkgs,
-  _system,
-  _lib,
-  ...
-}: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
     delta
   ];

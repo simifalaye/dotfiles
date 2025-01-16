@@ -1,5 +1,8 @@
-local lz = require("utils.lazy").new("surround", function()
-  require("nvim-surround").setup({})
-  return true
-end)
-lz:events({ "BufRead" })
+return {
+  {
+    "kylechui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    event = { "BufReadPost", "BufNewFile", "BufWritePre" },
+    opts = {},
+  },
+}

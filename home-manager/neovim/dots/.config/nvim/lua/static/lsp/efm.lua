@@ -20,7 +20,11 @@ local languages = {
   javascriptreact = { eslintd, prettierd },
   python = { require("efmls-configs.formatters.black") },
   rust = { require("efmls-configs.formatters.rustfmt") },
-  go = { require("efmls-configs.linters.golangci_lint") },
+  go = {
+    require("efmls-configs.linters.golangci_lint"),
+    require("efmls-configs.formatters.gofmt"),
+    require("efmls-configs.formatters.golines"),
+  },
   typescript = { eslintd, prettierd },
   typescriptreact = { eslintd, prettierd },
   lua = { stylua },

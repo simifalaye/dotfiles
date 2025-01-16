@@ -19,8 +19,10 @@ in {
     ./bitwise
     ./calc
     ./cheat
+    ./cpp
     ./delta
-    ./editor-tools
+    ./direnv
+    ./efm-langserver
     ./elinks
     ./eza
     ./fd
@@ -28,9 +30,14 @@ in {
     ./gh
     ./git
     ./htop
+    ./json-languageserver
     ./lazygit
+    ./lua
+    ./marksman
     ./neovim
+    ./nix
     ./node
+    ./prettierd
     ./python
     ./ripgrep
     ./rsync
@@ -40,6 +47,7 @@ in {
     ./tmux
     ./trash-cli
     ./wsl
+    ./yaml-languageserver
     ./zellij
     ./zoxide
     localConfig

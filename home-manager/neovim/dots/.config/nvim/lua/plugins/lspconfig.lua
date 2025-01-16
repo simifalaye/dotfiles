@@ -36,41 +36,52 @@ local function load_local_config(root_dir)
   return conf
 end
 
-local lz = require("utils.lazy").new("lspconfig", function()
-  local lspconfig = require("lspconfig")
+return {
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "b0o/schemastore.nvim",
+      {
+        "creativenull/efmls-configs-nvim",
+        version = "v1.x.x", -- version is optional, but recommended
+      },
+    },
+    event = { "BufReadPre" },
+    config = function()
+      local lspconfig = require("lspconfig")
 
-  -- Register servers servers
-  local server_configs = require("static.lsp")()
-  for name, conf in pairs(server_configs) do
-    if lspconfig[name] then
-      local cmd = conf.cmd or lspconfig[name].document_config.default_config.cmd
-      if not cmd or vim.fn.executable(cmd[1]) == 0 then
-        conf.autostart = false
-      end
-      local on_new_config = lspconfig[name].document_config.default_config.on_new_config
-      conf.on_new_config = function(new_config, new_root_dir)
-        if on_new_config then
-          on_new_config(new_config, new_root_dir)
-        end
-        local local_conf = load_local_config(new_root_dir)
-        if not local_conf then
-          return
-        end
-        -- Merge local conf with base conf
-        local server_name = new_config.name
-        if local_conf and local_conf[server_name] then
-          -- Required to ensure original table variable is actually modified
-          for k, v in
-          pairs(vim.tbl_deep_extend("force", new_config, local_conf[server_name]))
-          do
-            new_config[k] = v
+      -- Register servers servers
+      local server_configs = require("static.lsp")()
+      for name, conf in pairs(server_configs) do
+        if lspconfig[name] then
+          local cmd = conf.cmd or lspconfig[name].document_config.default_config.cmd
+          if not cmd or vim.fn.executable(cmd[1]) == 0 then
+            conf.autostart = false
           end
+          local on_new_config =
+            lspconfig[name].document_config.default_config.on_new_config
+          conf.on_new_config = function(new_config, new_root_dir)
+            if on_new_config then
+              on_new_config(new_config, new_root_dir)
+            end
+            local local_conf = load_local_config(new_root_dir)
+            if not local_conf then
+              return
+            end
+            -- Merge local conf with base conf
+            local server_name = new_config.name
+            if local_conf and local_conf[server_name] then
+              -- Required to ensure original table variable is actually modified
+              for k, v in
+                pairs(vim.tbl_deep_extend("force", new_config, local_conf[server_name]))
+              do
+                new_config[k] = v
+              end
+            end
+          end
+          lspconfig[name].setup(conf)
         end
       end
-      lspconfig[name].setup(conf)
-    end
-  end
-
-  return true
-end)
-lz:events({ "BufReadPre" })
+    end,
+  },
+}

@@ -61,13 +61,6 @@ map(
 )
 
 -- ([/]) namespace
-local wk_ok, wk = pcall(require, "which-key")
-if wk_ok then
-  wk.add({
-    { "[", group = "+prev" },
-    { "]", group = "+next" },
-  })
-end
 map("n", "[b", function()
   vim.cmd(vim.v.count1 .. "bprevious")
 end, { desc = "Prev buffer" })

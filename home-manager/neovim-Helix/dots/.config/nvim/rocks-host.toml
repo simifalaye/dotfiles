@@ -1,0 +1,6 @@
+[plugins]
+"typescript-tools.nvim" = "scm"
+
+[plugins."tailwind-tools.nvim"]
+git = "luckasranarison/tailwind-tools.nvim"
+rev = "v0.3.1"
