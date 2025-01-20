@@ -77,6 +77,11 @@ return {
       },
       {
         "<leader>,",
+        "<cmd>Pick oldfiles current_dir=true<CR>",
+        desc = "Open Recents Picker (cwd)",
+      },
+      {
+        "<leader><",
         "<cmd>Pick oldfiles<CR>",
         desc = "Open Recents Picker",
       },

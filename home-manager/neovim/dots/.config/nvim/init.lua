@@ -72,9 +72,9 @@ local icons = require("static.icons")
 vim.g.user_diagnostics = {
   signs = {
     { name = "DiagnosticSignError", text = icons.font.diagnostics.error },
-    { name = "DiagnosticSignWarn",  text = icons.font.diagnostics.warn },
-    { name = "DiagnosticSignHint",  text = icons.font.diagnostics.hint },
-    { name = "DiagnosticSignInfo",  text = icons.font.diagnostics.info },
+    { name = "DiagnosticSignWarn", text = icons.font.diagnostics.warn },
+    { name = "DiagnosticSignHint", text = icons.font.diagnostics.hint },
+    { name = "DiagnosticSignInfo", text = icons.font.diagnostics.info },
   },
   default_mode = 3,
 }
@@ -113,7 +113,7 @@ require("core.keymaps")
 
 -- Bootstrap lazy.nvim
 local lazypath =
-    vim.fs.joinpath(vim.fn.stdpath("data") --[[@as string]], "lazy", "lazy.nvim")
+  vim.fs.joinpath(vim.fn.stdpath("data") --[[@as string]], "lazy", "lazy.nvim")
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
   local out = vim.fn.system({
@@ -127,7 +127,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out,                            "WarningMsg" },
+      { out, "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
     vim.fn.getchar()
@@ -137,13 +137,14 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- Setup lazy.nvim
+local colorscheme_ok, colorscheme = pcall(require, "plugins.colorscheme")
 require("lazy").setup({
   spec = {
     { import = "plugins" },
   },
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
-  install = { colorscheme = { "default" } },
+  install = { colorscheme = { colorscheme_ok and colorscheme() or "", "default" } },
   -- automatically check for plugin updates
   checker = { enabled = true },
 })
