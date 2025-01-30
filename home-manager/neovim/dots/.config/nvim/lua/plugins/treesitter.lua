@@ -4,7 +4,7 @@ return {
     version = false, -- last release is way too old and doesn't work on Windows
     dependencies = {
       "windwp/nvim-ts-autotag",
-      "folke/ts-comments.nvim",
+      { "folke/ts-comments.nvim", config = true },
       {
         "nvim-treesitter/nvim-treesitter-context",
         "nvim-treesitter/nvim-treesitter-textobjects",

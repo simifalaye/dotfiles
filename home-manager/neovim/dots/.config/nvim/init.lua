@@ -6,6 +6,12 @@ Maintainer: simifalaye
 
 --]]
 
+-- Enable faster lua loader using byte-compilation
+-- https://github.com/neovim/neovim/commit/2257ade3dc2daab5ee12d27807c0b3bcf103cd29
+pcall(function()
+  vim.loader.enable()
+end)
+
 if vim.env.PROF then
   -- example for lazy.nvim
   -- change this to the correct path for your plugin manager
@@ -47,12 +53,6 @@ _G.reqcall = function(module)
   })
 end
 
--- Enable faster lua loader using byte-compilation
--- https://github.com/neovim/neovim/commit/2257ade3dc2daab5ee12d27807c0b3bcf103cd29
-pcall(function()
-  vim.loader.enable()
-end)
-
 -- Process the log level environment variable if set
 if vim.env.LOG_LEVEL and type(vim.env.LOG_LEVEL) == "string" then
   local lvl = tonumber(vim.env.LOG_LEVEL)
@@ -77,6 +77,7 @@ vim.g.user_diagnostics = {
     { name = "DiagnosticSignInfo", text = icons.font.diagnostics.info },
   },
   default_mode = 3,
+  hover_notification_enabled = false,
 }
 vim.g.largefile = { enabled = true }
 vim.g.rooter = { enabled = false }
@@ -146,5 +147,5 @@ require("lazy").setup({
   -- colorscheme that will be used when installing plugins.
   install = { colorscheme = { colorscheme_ok and colorscheme() or "", "default" } },
   -- automatically check for plugin updates
-  checker = { enabled = true },
+  checker = { enabled = false },
 })
