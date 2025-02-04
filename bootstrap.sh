@@ -3,7 +3,7 @@
 
 # Constants
 GITHUB_USER="simifalaye"
-REPO_NAME="dotfiles-nix"
+REPO_NAME="dotfiles"
 CLONE_DIR="${HOME}/dotfiles"
 SSH_KEY="${HOME}/.ssh/id_ed25519"
 
