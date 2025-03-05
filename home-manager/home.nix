@@ -46,6 +46,7 @@ in {
     ./tinty
     ./tmux
     ./trash-cli
+    ./unzip
     ./wsl
     ./yaml-languageserver
     ./zellij

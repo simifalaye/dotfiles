@@ -54,7 +54,7 @@ case "$(uname -s)" in
     if [ -f /etc/os-release ]; then
       if grep -q -E '(debian|ubuntu|linuxmint)' /etc/os-release; then
         echo "## Detected Debian/Ubuntu/LinuxMint machine, installing deps..."
-        sudo apt update && sudo apt install -y zsh git xz-utils
+        sudo apt update && sudo apt install -y zsh git xz-utils build-essential
       elif grep -q -E '(centos|rhel|fedora)' /etc/os-release; then
           echo "## Detected CentOS/RHEL/Fedora machine, installing deps..."
           if [ -f /etc/centos-release ]; then
@@ -62,12 +62,14 @@ case "$(uname -s)" in
             sudo yum install -y epel-release
           fi
           sudo yum install -y zsh git
+          sudo yum groupinstall -y 'Development Tools'
       elif grep -q -E '(arch)' /etc/os-release; then
         echo "## Detected Arch machine, installing deps..."
-        sudo pacman -S zsh git
+        sudo pacman -S zsh git base-devel
       elif grep -q -E '(opensuse)' /etc/os-release; then
         echo "## Detected SUSE machine, installing deps..."
         sudo zypper install zsh git
+        sudo zypper install -t pattern devel_basis
       else
         echo "ERROR: Unsupported Linux distribution" && exit 1
       fi
