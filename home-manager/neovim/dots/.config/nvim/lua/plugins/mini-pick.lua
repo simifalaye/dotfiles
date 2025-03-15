@@ -45,6 +45,7 @@ end
 return {
   {
     "echasnovski/mini.pick",
+    enabled = false,
     version = false,
     dependencies = { { "echasnovski/mini.extra", version = false, config = true } },
     cmd = "Pick",
