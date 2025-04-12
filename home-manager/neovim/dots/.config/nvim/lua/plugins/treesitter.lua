@@ -55,10 +55,9 @@ return {
       incremental_selection = {
         enable = true,
         keymaps = {
-          init_selection = "<C-space>",
-          node_incremental = "<C-space>",
-          scope_incremental = false,
-          node_decremental = "<bs>",
+          init_selection = "<CR>", -- maps in normal mode to init the node/scope selection
+          node_incremental = "<CR>", -- increment to the upper named parent
+          node_decremental = "<BS>", -- decrement to the previous node
         },
       },
       textobjects = {

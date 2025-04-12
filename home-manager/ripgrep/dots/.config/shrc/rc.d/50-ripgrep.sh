@@ -14,21 +14,23 @@ FZF_RG_PREVIEW='noglob rg --pretty --context=10 2>/dev/null'
 # Selected entries are opened with the default opener.
 #
 # Usage: search <pattern> [rg-options...]
-search() {
+function search {
   [[ ! $1 || $1 == -* ]] && echo "fs: missing rg pattern" && return 1
   local pat="$1" && shift
 
-  selected=$( \
+  # shellcheck disable=SC2207
+  local selected=($( \
     FZF_HEIGHT=${FZF_HEIGHT:-90%} \
     FZF_DEFAULT_COMMAND="$FZF_RG_COMMAND $* '$pat'" \
     fzf \
-    --multi \
-    --preview "$FZF_RG_PREVIEW $* '$pat' {}" \
-    --preview-window=wrap
-  )
-  # Open selected files
-  # shellcheck disable=SC2086
-  ${EDITOR} ${selected}
+      --multi \
+      --preview "$FZF_RG_PREVIEW $* '$pat' {}" \
+      --preview-window=wrap
+  ))
+
+  # Open selected files.
+  # shellcheck disable=SC2068
+  ${EDITOR} ${selected[@]}
 }
 
 # Search files interactively and preview matches.
@@ -37,26 +39,35 @@ search() {
 # otherwise the behavior is undefined.
 #
 # Usage: search-interactive [dir] [rg-options...]
-search-interactive() {
+function search-interactive {
   local dir
   [[ $1 && $1 != -* ]] && dir=$1 && shift
 
-  selected=$( \
+  # shellcheck disable=SC2207
+  local selected=($( \
     FZF_HEIGHT=${FZF_HEIGHT:-90%} \
     FZF_DEFAULT_COMMAND="rg --files $* $dir" \
     fzf \
-    --multi \
-    --phony \
-    --bind "change:reload:$FZF_RG_COMMAND {q} $* $dir || true" \
-    --preview "$FZF_RG_PREVIEW {q} {} $*" \
-    --preview-window=wrap \
+      --multi \
+      --phony \
+      --bind "change:reload:$FZF_RG_COMMAND {q} $* $dir || true" \
+      --preview "$FZF_RG_PREVIEW {q} {} $*" \
+      --preview-window=wrap \
     | cut -d":" -f1,2
-  )
-  # Open selected files
-  # shellcheck disable=SC2086
-  ${EDITOR} ${selected}
+  ))
+
+  # Open selected files.
+  # shellcheck disable=SC2068
+  ${EDITOR} +':set number' "${selected[@]}"
+}
+
+# Interactive search variant that sorts the results.
+# This disables parallelism and makes searches much slower.
+function search-interactive-sorted {
+  search-interactive "$@" --sort=path
 }
 
 # Usability aliases.
 alias fs='search'
 alias ff='search-interactive'
+alias ffs='search-interactive-sorted'

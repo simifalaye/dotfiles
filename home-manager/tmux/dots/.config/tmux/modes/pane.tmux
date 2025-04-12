@@ -31,10 +31,10 @@ bind -n -N 'Select down' 'j' select-pane -D
 bind -n -N 'Select up' 'k' select-pane -U
 bind -n -N 'Select Right' 'l' select-pane -R
 bind -n -N 'Select last' 'p' last-pane
-bind -n -N 'Mark' 'm' select-pane -m
-bind -n -N 'Clear mark' 'M' select-pane -M
-bind -n -N 'Break to new window' 'b' break-pane
-bind -n -N 'Join marked with current' 'y' join-pane
+bind -n -N 'Mark' 'm' select-pane -m \; source "${TMUX_MODES_DIR}/main.tmux"
+bind -n -N 'Clear mark' 'M' select-pane -M \; source "${TMUX_MODES_DIR}/main.tmux"
+bind -n -N 'Break to new window' 'b' break-pane \; source "${TMUX_MODES_DIR}/main.tmux"
+bind -n -N 'Join marked with current' 'y' join-pane \; source "${TMUX_MODES_DIR}/main.tmux"
 bind -n -N 'Kill' 'x' kill-pane \; source "${TMUX_MODES_DIR}/main.tmux"
 bind -n -N 'Zoom' 'z' resize-pane -Z \; source "${TMUX_MODES_DIR}/main.tmux"
 bind -n -N 'List keybindings' 'M-/' display-popup -w80 -h90% -E "tmux list-keys -N -T root | $PAGER"

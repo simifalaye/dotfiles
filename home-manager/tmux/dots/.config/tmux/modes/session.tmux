@@ -25,7 +25,7 @@ bind -n -N 'Quit' 'Enter' source "${TMUX_MODES_DIR}/main.tmux"
 
 bind -n -N 'Customize options' 'c' customize-mode -Z \; source "${TMUX_MODES_DIR}/main.tmux"
 bind -n -N 'Detach' 'd' detach-client
-bind -n -N 'Kill' 'x' confirm-before -p "kill-session #S? (y/n)" kill-session
+bind -n -N 'Kill' 'x' source "${TMUX_MODES_DIR}/main.tmux" \; confirm-before -p "kill-session #S? (y/n)" kill-session
 bind -n -N 'Select last' 's' switch-client -l \; source "${TMUX_MODES_DIR}/main.tmux"
 bind -n -N 'Select next' 'l' switch-client -n
 bind -n -N 'Select prev' 'h' switch-client -p

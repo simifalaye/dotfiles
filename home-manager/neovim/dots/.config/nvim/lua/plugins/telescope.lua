@@ -104,7 +104,7 @@ return {
       },
       {
         "<leader>gc",
-        "<cmd>Telescope git_commits path='%'<CR>",
+        "<cmd>Telescope git_bcommits<CR>",
         desc = "Open Buf Commits Picker",
       },
       {

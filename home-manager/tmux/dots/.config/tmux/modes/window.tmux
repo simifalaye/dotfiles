@@ -32,12 +32,12 @@ bind -n -N 'Swap left' 'H' swap-window -d -t -1
 bind -n -N 'Rename' 'r' command-prompt -I "#W" { rename-window "%%" } \; source "${TMUX_MODES_DIR}/main.tmux"
 bind -n -N 'Select last' 'w' last-window \; source "${TMUX_MODES_DIR}/main.tmux"
 bind -n -N 'Select interactively' 'Space' choose-tree -Zw \; source "${TMUX_MODES_DIR}/main.tmux"
-bind -n -N 'Layout: even side-by-side' '|' select-layout even-horizontal
-bind -n -N 'Layout: main side-by-side' "\\" select-layout main-vertical
-bind -n -N 'Layout: even top-down' '_' select-layout even-vertical
-bind -n -N 'Layout: main top-down' '-' select-layout main-horizontal
-bind -n -N 'Layout: tiled' '+' select-layout tiled
-bind -n -N 'Layout: even spread' '=' select-layout -E
+bind -n -N 'Layout: even side-by-side' '|' select-layout even-horizontal \; source "${TMUX_MODES_DIR}/main.tmux"
+bind -n -N 'Layout: main side-by-side' "\\" select-layout main-vertical \; source "${TMUX_MODES_DIR}/main.tmux"
+bind -n -N 'Layout: even top-down' '_' select-layout even-vertical \; source "${TMUX_MODES_DIR}/main.tmux"
+bind -n -N 'Layout: main top-down' '-' select-layout main-horizontal \; source "${TMUX_MODES_DIR}/main.tmux"
+bind -n -N 'Layout: tiled' '+' select-layout tiled \; source "${TMUX_MODES_DIR}/main.tmux"
+bind -n -N 'Layout: even spread' '=' select-layout -E \; source "${TMUX_MODES_DIR}/main.tmux"
 bind -n -N 'Toggle activity monitoring' 'm' {
   set monitor-activity
     display 'monitor-activity #{?monitor-activity,on,off}'
