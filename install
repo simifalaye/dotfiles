@@ -28,11 +28,10 @@ esac
 echo "## System Info: $architecture"
 
 # Detect hostname
+flake_uri="${HOME}/dotfiles#${architecture}"
 host="$(hostname)"
 if [ -f "${SCRIPT_DIR}/home-manager/home-${host}.nix" ]; then
-  host="-${host}-"
-else
-  host="-"
+  flake_uri="${HOME}/dotfiles#${host}-${architecture}"
 fi
 
 # Run home-manager
@@ -41,12 +40,12 @@ if command -v home-manager >/dev/null; then
     -b backup \
     --impure \
     --extra-experimental-features "nix-command flakes" \
-    --flake ~/dotfiles#simifa"${host}${architecture}"
+    --flake "$flake_uri"
 else
   nix --extra-experimental-features "nix-command flakes" run \
     home-manager/release-24.11 switch -- \
     -b backup \
     --impure \
     --extra-experimental-features "nix-command flakes" \
-    --flake ~/dotfiles#simifa"${host}${architecture}"
+    --flake "$flake_uri"
 fi

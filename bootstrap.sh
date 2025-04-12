@@ -9,7 +9,6 @@ SSH_KEY="${HOME}/.ssh/id_ed25519"
 
 # Reset all variables that might be set
 email="simifalaye1@gmail.com"
-nix_single_user=0
 
 while :; do
   case $1 in
@@ -28,9 +27,6 @@ while :; do
           exit 1
         fi
         ;;
-    --nix-single-user)
-      nix_single_user=1
-      ;;
     --)
       shift
       break
@@ -46,7 +42,6 @@ done
 
 echo "## Running Bootstrap"
 echo "## Email: ${email}"
-echo "## Nix single user: ${nix_single_user}"
 
 # Install dependencies
 case "$(uname -s)" in
@@ -76,23 +71,20 @@ case "$(uname -s)" in
     else
       echo "ERROR: Missing linux os-release file" && exit 1
     fi
+
     # Install nix
-    if ! command -v nix >/dev/null; then
-      if [ ${nix_single_user} -eq 1 ]; then
-        sh <(curl -L https://nixos.org/nix/install) --no-daemon --yes
-      else
-        sh <(curl -L https://nixos.org/nix/install) --daemon --yes
-      fi
-    fi
+    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | \
+      sh -s -- install --determinate --no-confirm
     ;;
   Darwin)
     echo "## Detected Darwin machine, installing deps..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \
       brew install zsh git
+
     # Install nix
-    if ! command -v nix >/dev/null; then
-      sh <(curl -L https://nixos.org/nix/install) --yes
-    fi
+    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | \
+      sh -s -- install --determinate --no-confirm
+    echo "## NOTE: Any encrypted volumes created by nix can be found in 'Keychain Access:Logins'"
     ;;
   *)
     echo "ERROR: Unsupported operating system" && exit 1

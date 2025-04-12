@@ -67,10 +67,10 @@
     };
 
     # Standalone home-manager configuration entrypoint
-    # Available through 'home-manager --flake .#<username>-<host>-<system>'
+    # Available through 'home-manager --flake .#<hostname>-<system>'
     homeConfigurations =
       builtins.listToAttrs (map (system: {
-          name = "simifa-${system}";
+          name = "${system}";
           value = home-manager.lib.homeManagerConfiguration {
             pkgs = nixpkgs.legacyPackages.${system};
             extraSpecialArgs = {inherit inputs outputs;};
@@ -81,7 +81,7 @@
         })
         systems)
       // builtins.listToAttrs (map (system: {
-          name = "simifa-Helix-${system}";
+          name = "Helix-${system}";
           value = home-manager.lib.homeManagerConfiguration {
             pkgs = nixpkgs.legacyPackages.${system};
             extraSpecialArgs = {inherit inputs outputs;};

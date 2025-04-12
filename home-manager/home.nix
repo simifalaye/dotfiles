@@ -11,6 +11,8 @@
     if builtins.pathExists ~/.dotfiles.local/home.nix
     then import ~/.dotfiles.local/home.nix
     else {};
+  username = builtins.getEnv "USER";
+  homeDirectory = builtins.getEnv "HOME";
 in {
   # You can import other home-manager modules here
   imports = [
@@ -22,7 +24,6 @@ in {
     ./cpp
     ./delta
     ./direnv
-    ./efm-langserver
     ./elinks
     ./eza
     ./fd
@@ -55,8 +56,8 @@ in {
   ];
 
   home = {
-    username = "simifa";
-    homeDirectory = "/home/simifa";
+    username = username;
+    homeDirectory = homeDirectory;
   };
 
   nixpkgs = {
