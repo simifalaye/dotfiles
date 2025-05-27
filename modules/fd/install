@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+fd_pkg_name="fd"
+if [ "${__OS_LIKE}" = "debian" ]; then
+  fd_pkg_name="fd-find"
+fi
+
+if [ "${UNINSTALL}" = "1" ]; then
+  if is_installed "${fd_pkg_name}"; then
+    uninstall_pkg "${fd_pkg_name}"
+  fi
+else
+  if ! is_installed "${fd_pkg_name}"; then
+    install_pkg "${fd_pkg_name}"
+    if [ "${__OS_LIKE}" = "debian" ]; then
+      _run ln -s /usr/bin/fdfind /usr/local/bin/fd
+    fi
+  fi
+fi

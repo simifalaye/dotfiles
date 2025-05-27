@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+if [ "${UNINSTALL}" = "1" ]; then
+  if is_installed zellij; then
+    if [ "${__OS_ID}" = "mac" ]; then
+      uninstall_pkg zellij
+    else
+      remove_system_bins "zellij"
+      remove_system_bash_completions 'zellij'
+      remove_system_zsh_completions '_zellij'
+      remove_system_fish_completions 'zellij.fish'
+    fi
+  fi
+  unstow_dots "${SCRIPT_DIR}/dots"
+else
+  if [ "${__OS_ID}" = "mac" ]; then
+    is_installed zellij || install_pkg zellij
+  else
+    # shellcheck disable=SC2317
+    function __zellij_install_fn() {
+      install_system_bins '.' './zellij'
+      _run mkdir -p ./comp
+      _run --redirect comp/zellij zellij setup --generate-completion bash
+      _run --redirect comp/_zellij zellij setup --generate-completion zsh
+      _run --redirect comp/zellij.fish zellij setup --generate-completion fish
+      install_system_bash_completions '.' './comp/zellij'
+      install_system_zsh_completions '.' './comp/_zellij'
+      install_system_fish_completions '.' './comp/zellij.fish'
+    }
+    install_gh_pkg 'zellij-org/zellij' 'latest' 'zellij --version' '__zellij_install_fn'
+    unset -f __zellij_install_fn
+  fi
+  stow_dots "${SCRIPT_DIR}/dots"
+fi

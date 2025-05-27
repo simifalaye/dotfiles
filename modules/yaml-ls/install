@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+if [ "${UNINSTALL}" = "1" ]; then
+  if is_installed yaml-language-server; then
+    uninstall_npm_pkg yaml-language-server
+  fi
+else
+  if ! is_installed yaml-language-server; then
+    install_npm_pkg yaml-language-server
+  fi
+fi

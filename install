@@ -1,51 +1,96 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
+# Provisions dev machine and deploys dotfiles
+#
+# Optional env:
+# - LOG_LEVEL: 7 = debug -> 0 = emergency
+# - NO_COLOR: 1 = disable color
+# - DRY_RUN: 1 = don't do anything
+# - UNINSTALL: 1 = uinstall dotfiles
 
-SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+# Load common libs (sets LOG_LEVEL, NO_COLOR, DRY_RUN)
+source "./lib/common"
 
-# Detect architecture
-architecture=""
-case "$(uname -s)" in
-  Linux)
-    case "$(uname -m)" in
-      x86_64) architecture="x86_64-linux" ;;
-      aarch64) architecture="aarch64-linux" ;;
-      i686) architecture="i686-linux" ;;
-      *) echo "ERROR: Unsupported architecture" && exit 1 ;;
-    esac
-    ;;
-  Darwin)
-    case "$(uname -m)" in
-      x86_64) architecture="x86_64-darwin" ;;
-      arm64) architecture="aarch64-darwin" ;;
-      *) echo "ERROR: Unsupported architecture" && exit 1 ;;
-    esac
-    ;;
-  *)
-    echo "ERROR: Unsupported operating system" && exit 1
-    ;;
-esac
+function run_module() {
+  # shellcheck source=/dev/null
+  source "./modules/${1}/install"
+}
 
-echo "## System Info: $architecture"
+#-
+#  Main
+#-
 
-# Detect hostname
-flake_uri="${HOME}/dotfiles#${architecture}"
-host="$(hostname)"
-if [ -f "${SCRIPT_DIR}/home-manager/home-${host}.nix" ]; then
-  flake_uri="${HOME}/dotfiles#${host}-${architecture}"
-fi
+# Required for modules scripts
+# shellcheck disable=SC2034
+COMMON_LIB="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/common"
 
-# Run home-manager
-if command -v home-manager >/dev/null; then
-  home-manager switch \
-    -b backup \
-    --impure \
-    --extra-experimental-features "nix-command flakes" \
-    --flake "$flake_uri"
-else
-  nix --extra-experimental-features "nix-command flakes" run \
-    home-manager/release-24.11 switch -- \
-    -b backup \
-    --impure \
-    --extra-experimental-features "nix-command flakes" \
-    --flake "$flake_uri"
-fi
+# Update system package manager every 24 hours
+update_pkg_manager 24
+
+# Cleanup home
+info "Cleaning up HOME of misc files"
+remove_list=(
+  "$HOME/.lesshst"
+  "$HOME/.lesskey"
+  "$HOME/.viminfo"
+  "$HOME/.tig_history"
+  "$HOME/.calc_history"
+  "$HOME/.zcompdump"
+)
+for file in "${remove_list[@]}"; do
+  [ -e "$file" ] && _run rm -f "$file"
+done
+
+# Cleanup dead symlinks
+info "Cleaning up HOME of dead symlinks"
+remove_dead_links 1 "${HOME}"
+remove_dead_links 0 "${HOME}/.config"
+remove_dead_links 0 "${HOME}/.local"
+remove_dead_links 0 "${HOME}/.cache"
+
+# Run modules that are depended on by others
+run_module shell
+run_module git
+run_module homebrew
+run_module node
+run_module python
+
+# Run modules that have no order requirements
+run_module alacritty
+run_module atool
+run_module bash-ls
+run_module bat
+run_module black
+run_module cheat
+run_module clangd-ls
+run_module cpplint
+run_module delta
+run_module direnv
+run_module elinks
+run_module eza
+run_module fd
+run_module fzf
+run_module github
+run_module htop
+run_module hyperkey
+run_module json-ls
+run_module nerd-fonts
+run_module lua-ls
+run_module marksman-ls
+run_module neovim
+run_module prettierd
+run_module pyright
+run_module ripgrep
+run_module rsync
+run_module scroll-reverser
+run_module shellcheck
+run_module shfmt
+run_module stylua
+run_module tig
+run_module tinty
+run_module tmux
+run_module trash
+run_module unison
+run_module yaml-ls
+run_module zellij
+run_module zoxide

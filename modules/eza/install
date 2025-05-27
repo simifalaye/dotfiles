@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+if [ "${UNINSTALL}" = "1" ]; then
+  if is_installed eza; then
+    if [ "${__OS_ID}" = "mac" ]; then
+      uninstall_pkg eza
+    else
+      remove_system_bins "eza"
+      remove_system_bash_completions 'eza'
+      remove_system_zsh_completions '_eza'
+      remove_system_fish_completions 'eza.fish'
+      remove_system_manpages man1 'eza*'
+      remove_system_manpages man5 'eza*'
+    fi
+  fi
+  unstow_dots "${SCRIPT_DIR}/dots"
+else
+  if [ "${__OS_ID}" = "mac" ]; then
+    is_installed eza || install_pkg eza
+  else
+    additional_pkg_regex="man-\|completions-"
+    # shellcheck disable=SC2317
+    function __eza_install_fn() {
+      install_system_bins '.' './eza'
+      install_system_bash_completions '.' './target/completions*/eza'
+      install_system_zsh_completions '.' './target/completions*/_eza'
+      install_system_fish_completions '.' './target/completions*/eza.fish'
+      install_system_manpages man1 '.' './target/man*/*.1'
+      install_system_manpages man5 '.' './target/man*/*.5'
+    }
+    # shellcheck disable=SC2317
+    function __eza_filter_fn() {
+      _install_gh_pkg_default_filter_fn "${1}" && { echo "${1}" | grep -q -v 'no_libgit'; }
+    }
+    # shellcheck disable=SC2317
+    function __eza_system_filter_fn() {
+      _install_gh_pkg_default_system_filter_fn "${1}" || { echo "${1}" | grep -q "${additional_pkg_regex}"; }
+    }
+    # shellcheck disable=SC2317
+    function __eza_arch_filter_fn() {
+      __install_gh_pkg_default_arch_filter_fn "${1}" || { echo "${1}" | grep -q "${additional_pkg_regex}"; }
+    }
+    install_gh_pkg 'eza-community/eza' 'latest' 'eza --version' '__eza_install_fn' \
+      -n 3 \
+      -f '__eza_filter_fn' \
+      -s '__eza_system_filter_fn' \
+      -a '__eza_arch_filter_fn'
+    unset -f __eza_install_fn __eza_filter_fn __eza_system_filter_fn __eza_arch_filter_fn
+  fi
+  stow_dots "${SCRIPT_DIR}/dots"
+fi

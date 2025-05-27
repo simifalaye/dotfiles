@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+if [ "${UNINSTALL}" = "1" ]; then
+  if is_installed cpplint; then
+    uninstall_pkg cpplint
+  fi
+else
+  if ! is_installed cpplint; then
+    install_pkg cpplint
+  fi
+fi

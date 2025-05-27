@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+python_bin_name="python3"
+python_pkg_name="python3"
+python_pip_pkg_name="python3-pip"
+python_pipx_pkg_name="pipx"
+if [ "${__OS_ID}" = "mac" ]; then
+  python_pip_pkg_name=""
+elif [ "${__OS_ID}" = "arch" ]; then
+  python_bin_name="python"
+  python_pkg_name="python"
+  python_pip_pkg_name="python-pip"
+fi
+
+if [ "${UNINSTALL}" = "1" ]; then
+  if is_installed "${python_bin_name}"; then
+    uninstall_pkg "${python_pkg_name}" "${python_pip_pkg_name}" "${python_pipx_pkg_name}"
+  fi
+  unstow_dots "${SCRIPT_DIR}/dots"
+else
+  if ! is_installed "${python_bin_name}"; then
+    install_pkg "${python_pkg_name}" "${python_pip_pkg_name}" "${python_pipx_pkg_name}"
+  fi
+  stow_dots "${SCRIPT_DIR}/dots"
+fi

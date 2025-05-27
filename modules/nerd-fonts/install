@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+if [ "${__HAS_GUI}" != "1" ]; then
+  return
+fi
+
+function install_nerd_font() {
+  local font_dir tmp_dir
+  font_dir="${__USER_FONTS_DIR}/${1}"
+  test -d "${font_dir}" && return
+
+  tmp_dir=$(mktemp -d)
+  if ! out_file=$(download_asset "${1}.zip" "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${1}.zip" "${tmp_dir}") || \
+    ! extract "${out_file}" "${tmp_dir}"; then
+    rm -rf "${tmp_dir}" && return 1
+  fi
+  _run mkdir -p "${font_dir}"
+  _run cp -r "${tmp_dir}"/*.ttf "${font_dir}"
+  _run rm -rf "${tmp_dir}"
+}
+
+function uninstall_nerd_font() {
+  local font_dir
+  font_dir="${__USER_FONTS_DIR}/${1}"
+  test -d "${font_dir}" && return
+  _run rm -rf "${font_dir}"
+}
+
+if [ "${UNINSTALL}" = "1" ]; then
+  uninstall_nerd_font FiraCode
+  uninstall_nerd_font DejaVuSansMono
+  uninstall_nerd_font JetBrainsMono
+  uninstall_nerd_font FantasqueSansMono
+  uninstall_nerd_font VictorMono
+  uninstall_nerd_font SourceCodePro
+  uninstall_nerd_font Hack
+else
+  install_nerd_font FiraCode
+  install_nerd_font DejaVuSansMono
+  install_nerd_font JetBrainsMono
+  install_nerd_font FantasqueSansMono
+  install_nerd_font VictorMono
+  install_nerd_font SourceCodePro
+  install_nerd_font Hack
+fi

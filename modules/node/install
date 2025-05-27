@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+node_pkg_name="nodejs"
+npm_pkg_name="npm"
+if [ "${__OS_ID}" = "mac" ]; then
+  npm_pkg_name=""
+fi
+
+if [ "${UNINSTALL}" = "1" ]; then
+  if is_installed node; then
+    uninstall_pkg "${node_pkg_name}" "${node_pkg_name}"
+  fi
+  unstow_dots "${SCRIPT_DIR}/dots"
+else
+  if ! is_installed node; then
+    install_pkg "${node_pkg_name}" "${npm_pkg_name}"
+  fi
+  stow_dots "${SCRIPT_DIR}/dots"
+fi

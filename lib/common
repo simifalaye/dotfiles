@@ -1,0 +1,742 @@
+# vim: ft=bash
+#
+# Dotfiles common variables and functions (bash3.2+ compatible, gnu/bsd utils compatible)
+#
+
+# Exit on error. Append "|| true" if you expect an error.
+set -o errexit
+# Exit on error inside any functions or subshells.
+set -o errtrace
+# Catch the error in case mysqldump fails (but gzip succeeds) in `mysqldump |gzip`
+set -o pipefail
+# Turn on traces, useful while debugging but commented out by default
+# set -o xtrace
+
+#
+# Configurable Vars
+#
+
+# Define the environment variables (and their defaults) that this lib depends on
+LOG_LEVEL="${LOG_LEVEL:-6}" # 7 = debug -> 0 = emergency
+NO_COLOR="${NO_COLOR:-0}" # disable color
+DRY_RUN="${DRY_RUN:-}" # don't do anything
+
+#
+# Internal functions and constants
+#
+
+function _is_num() {
+  local input="${1}"
+  if [[ "$input" =~ ^[0-9]+$ ]]; then
+    return 0
+  fi
+  return 1
+}
+
+function _abspath() {
+  local target="${1}"
+  [ -z "${target}" ] && return 1
+  (
+    cd "$(dirname "${target}")" 2>/dev/null || return 1
+    echo "${PWD}/$(basename "${target}")"
+  )
+}
+
+function _resolve_symlink() {
+  local target="${1}"
+  [ -z "${target}" ] && return 1
+
+  target=$(_abspath "${target}")
+  while [ -L "${target}" ]; do
+    linkval=$(readlink "${target}")
+    case "${linkval}" in
+      /*) target="${linkval}" ;;
+      *) target="$(cd "$(dirname "${target}")" && _abspath "${linkval}")" ;;
+    esac
+  done
+  echo "${target}"
+}
+
+function _run() {
+  if [ "${DRY_RUN}" = '1' ]; then
+    if [ "$1" == '--redirect' ]; then
+      # do not output "--redirect file"
+      shift
+      shift
+    fi
+    echo "${@}"
+  else
+    local redirect_target="/dev/null"
+    if [ "$1" == '--redirect' ]; then
+      shift
+      redirect_target="$1"
+      shift
+      "${@}" > "$redirect_target"
+    else
+      "${@}"
+    fi
+  fi
+}
+
+function _log() {
+  local log_level="$1"
+  shift
+
+  local color
+  case "$log_level" in
+    debug) color="\033[35m";;
+    info) color="\033[32m";;
+    notice) color="\033[34m";;
+    warning) color="\033[33m";;
+    error) color="\033[31m";;
+    critical) color="\033[1;31m";;
+    alert) color="\033[1;37;41m";;
+    emergency) color="\033[1;4;5;37;41m";;
+    *) color="\033[31m";;
+  esac
+  local color_reset="\033[0m"
+  [ "$NO_COLOR" = "1" ] && color="" && color_reset=""
+  local now
+  now=$(date -u "+%Y-%m-%d %H:%M:%S UTC")
+  for line in "$@"; do
+    printf "%s %b[%9s]%b %s\n" "$now" "$color" "$log_level" "$color_reset" "$line" >&2
+  done
+}
+
+# Set constants
+__USER_BIN_DIR="${HOME}/.local/bin"
+__USER_FONTS_DIR="${HOME}/.local/share/fonts"
+__PM_INSTALL_CMD=""
+__PM_UNINSTALL_CMD=""
+__PM_UPDATE_CMD=""
+__OS_ID="" # OS keys: debian, ubuntu, centos, fedora, rhel, arch, suse, mac
+__OS_LIKE=""
+__PLATFORM_SYSTEM="$(uname | tr '[:upper:]' '[:lower:]')"
+__PLATFORM_ARCH="$(uname -m)"
+__HAS_GUI=0
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  __USER_FONTS_DIR="${HOME}/Library/Fonts"
+  __OS_ID="mac"
+  __OS_LIKE="mac"
+  if command -v brew >/dev/null 2>&1; then
+    __PM_INSTALL_CMD="$(which brew) install"
+    __PM_UNINSTALL_CMD="$(which brew) uninstall --force"
+    __PM_UPDATE_CMD="$(which brew) update"
+  else
+    echo "Homebrew not installed. Please install Homebrew (https://brew.sh/)." >&2
+    return 1
+  fi
+elif [[ "$OSTYPE" == "linux-gnu"* ]] && [ -f /etc/os-release ]; then
+  # shellcheck source=/dev/null
+  . /etc/os-release
+  __OS_ID="$(echo "${ID}" | tr '[:upper:]' '[:lower:]')"
+  __OS_LIKE="$(echo "${ID_LIKE}" | tr '[:upper:]' '[:lower:]')"
+  case "$__OS_ID" in
+    ubuntu|debian)
+      __PM_INSTALL_CMD="sudo apt install -y"
+      __PM_UNINSTALL_CMD="sudo apt remove -y"
+      __PM_UPDATE_CMD="sudo apt update"
+      ;;
+    arch)
+      __PM_INSTALL_CMD="sudo pacman -S --noconfirm"
+      __PM_UNINSTALL_CMD="sudo pacman -R --noconfirm"
+      __PM_UPDATE_CMD="sudo pacman -Sy"
+      ;;
+    centos|rhel|fedora)
+      if command -v dnf >/dev/null 2>&1; then
+        __PM_INSTALL_CMD="sudo dnf install -y"
+        __PM_UNINSTALL_CMD="sudo dnf remove -y"
+        __PM_UPDATE_CMD="sudo dnf makecache"
+      else
+        __PM_INSTALL_CMD="sudo yum install -y"
+        __PM_UNINSTALL_CMD="sudo yum remove -y"
+        __PM_UPDATE_CMD="sudo yum makecache"
+      fi
+      ;;
+    opensuse*|suse*)
+      __PM_INSTALL_CMD="sudo zypper install -y"
+      __PM_UNINSTALL_CMD="sudo zypper --non-interactive remove"
+      __PM_UPDATE_CMD="sudo zypper refresh"
+      ;;
+    *)
+      echo "Unsupported or unknown Linux distribution (ID='$__OS_ID', ID_LIKE='$__OS_LIKE')." >&2
+      return 1
+      ;;
+  esac
+else
+  echo "Unsupported OS: $OSTYPE" >&2
+  return 1
+fi
+# Check for X11 or Wayland session environment variables
+if [ -n "$DISPLAY" ] || [ -n "$WAYLAND_DISPLAY" ]; then
+  __HAS_GUI=1
+# Check for a graphical session type
+elif [ -n "$XDG_SESSION_TYPE" ] && { [ "$XDG_SESSION_TYPE" = "x11" ] || [ "$XDG_SESSION_TYPE" = "wayland" ]; }; then
+  __HAS_GUI=1
+# Check for common X11 or Wayland processes
+elif pgrep -x Xorg >/dev/null 2>&1 || pgrep -x Xwayland >/dev/null 2>&1 || pgrep -x quartz-wm >/dev/null 2>&1 || pgrep -x weston >/dev/null 2>&1; then
+  __HAS_GUI=1
+# Check for common desktop binaries
+elif command -v xrandr >/dev/null 2>&1 || command -v Xquartz >/dev/null 2>&1 || command -v osascript >/dev/null 2>&1; then
+  __HAS_GUI=1
+fi
+
+#
+# Lib functions
+#
+
+# Log helper functions
+# Usage: <name> ...
+function emergency() { _log emergency "$@"; exit 1; }
+function alert()     { [ "${LOG_LEVEL:-0}" -ge 1 ] && _log alert "$@"; true; }
+function critical()  { [ "${LOG_LEVEL:-0}" -ge 2 ] && _log critical "$@"; true; }
+function error()     { [ "${LOG_LEVEL:-0}" -ge 3 ] && _log error "$@"; true; }
+function warning()   { [ "${LOG_LEVEL:-0}" -ge 4 ] && _log warning "$@"; true; }
+function notice()    { [ "${LOG_LEVEL:-0}" -ge 5 ] && _log notice "$@"; true; }
+function info()      { [ "${LOG_LEVEL:-0}" -ge 6 ] && _log info "$@"; true; }
+function debug()     { [ "${LOG_LEVEL:-0}" -ge 7 ] && _log debug "$@"; true; }
+
+# Extract an archive
+# Usage: extract <file> [dir]
+function extract() {
+  local file="$1"
+  local dir="${2:-.}"
+  [ -f "${file}" ] || { error "'${file}' is not a valid file" && return 1; }
+
+  [ -n "${dir}" ] && _run mkdir -p "${dir}"
+  info "Extracting ${file} to ${dir}"
+  case "${file}" in
+    *.tar.bz2) _run tar xvjf "${file}" -C "${dir}" ;;
+    *.tar.gz) _run tar xvzf "${file}" -C "${dir}" ;;
+    *.tar.xz) _run tar xvJf "${file}" -C "${dir}" ;;
+    *.gz)
+      if [ "${dir}" = "." ]; then
+        _run gunzip "${file}"
+      else
+        _run cp "${file}" "${dir}/" && _run gunzip "${dir}/$(basename "${file}")"
+      fi
+      ;;
+    *.tar) _run tar xvf "${file}" -C "${dir}" ;;
+    *.tbz2) _run tar xvjf "${file}" -C "${dir}" ;;
+    *.tgz) _run tar xvzf "${file}" -C "${dir}" ;;
+    *.zip|*.jar) _run unzip "${file}" -d "${dir}" ;;
+    *) error "Unsupported extract file type: '${file}'" && return 1;;
+  esac
+}
+
+# Check if command is installed
+# Usage: is_installed <cmd-1> <cmd-2> ... <cmd-n>
+is_installed() {
+  local cmd
+  for cmd in "$@"; do
+    command -v "$cmd" >/dev/null 2>&1 || return 1
+  done
+}
+
+# Check if mac app is installed
+# Usage: is_mac_app_installed <app-1> <app-2> ... <app-n>
+is_mac_app_installed() {
+  [ -d "/Applications/${1}.app" ] || [ -d "${HOME}/Applications/${1}.app" ]
+}
+
+# Update package manager every N hours
+# Usage: update_pkg_manager [hours|0 = force]
+update_pkg_manager() {
+  local hours="${1-0}"
+  if ! [ "${hours}" -eq "${hours}" ] 2>/dev/null; then
+    error "Hours param must be a number" && return 1
+  fi
+
+  local stamp now interval
+  stamp="/tmp/last_pkg_manager_update"
+  now=$(date +%s)
+  interval=$(( hours * 3600 ))
+
+  if [ ${interval} -eq 0 ] || [ ! -f "${stamp}" ] || [ $((now - $(cat "${stamp}" 2>/dev/null || echo 0))) -ge ${interval} ]; then
+    info "Updating package manager"
+    _run "${__PM_UPDATE_CMD}" && echo "$now" > "$stamp"
+  fi
+}
+
+# Install bins to the system bins location using a base directory to search and a glob path
+# Usage: install_system_bins <basedir> <glob>
+#   - Ex: install_system_bins '.' './mybin'
+function install_system_bins() {
+  local basedir="${1}"
+  local glob="${2}"
+  info "Installing system bins: basedir=${basedir}, glob=${glob}"
+  _run sudo mkdir -p /usr/local/bin
+  _run find "${basedir}" -type f -path "${glob}" -exec sudo cp "{}" /usr/local/bin \;
+}
+
+# Remove bins from the system bin path with glob
+# Usage: remove_system_bins <basedir> <glob>
+function remove_system_bins() {
+  local glob="${1}"
+  info "Removing system bins: glob=${glob}"
+  _run sudo find /usr/local/bin -name "${glob}" -exec rm -rf {} +
+}
+
+# Install bash completions to the system completions location using a base directory to search and a glob path
+# Usage: install_system_bash_completions <basedir> <glob>
+#   - Ex: install_system_bash_completions '.' './myapp.bash'
+function install_system_bash_completions() {
+  local basedir="${1}"
+  local glob="${2}"
+  info "Installing system bash completions: basedir=${basedir}, glob=${2}"
+  _run sudo mkdir -p /usr/local/etc/bash_completion.d/
+  _run find "${basedir}" -type f -path "${2}" -exec sudo cp {} /usr/local/etc/bash_completion.d/ \;
+}
+
+# Remove bash completions from the system completions path with glob
+# Usage: remove_system_bash_completions <basedir> <glob>
+function remove_system_bash_completions() {
+  local glob="${1}"
+  info "Removing system bash completions: glob=${glob}"
+  _run sudo find /usr/local/etc/bash_completion.d/ -name "${glob}" -exec rm -rf {} +
+}
+
+# Install zsh completions to the system completions location using a base directory to search and a glob path
+# Usage: install_system_zsh_completions <basedir> <glob>
+#   - Ex: install_system_zsh_completions '.' './_myapp'
+function install_system_zsh_completions() {
+  local basedir="${1}"
+  local glob="${2}"
+  info "Installing system zsh completion: basedir=${basedir}, glob=${2}"
+  _run sudo mkdir -p /usr/local/share/zsh/site-functions/
+  _run find "${basedir}" -type f -path "${2}" -exec sudo cp {} /usr/local/share/zsh/site-functions/ \;
+}
+
+# Remove zsh completions from the system completions path with glob
+# Usage: remove_system_zsh_completions <basedir> <glob>
+function remove_system_zsh_completions() {
+  local glob="${1}"
+  info "Removing system zsh completions: glob=${glob}"
+  _run sudo find /usr/local/share/zsh/site-functions/ -name "${glob}" -exec rm -rf {} +
+}
+
+# Install fish completions to the system completions location using a base directory to search and a glob path
+# Usage: install_system_fish_completions <basedir> <glob>
+#   - Ex: install_system_fish_completions '.' './myapp.fish'
+function install_system_fish_completions() {
+  local basedir="${1}"
+  local glob="${2}"
+  info "Installing system fish completions: basedir=${basedir}, glob=${2}"
+  _run sudo mkdir -p /usr/local/share/fish/completions/
+  _run find "${basedir}" -type f -path "${2}" -exec sudo cp {} /usr/local/share/fish/completions/ \;
+}
+
+# Remove fish completions from the system completions path with glob
+# Usage: remove_system_fish_completions <basedir> <glob>
+function remove_system_fish_completions() {
+  local glob="${1}"
+  info "Removing system fish completions: glob ${glob}"
+  _run sudo find /usr/local/share/fish/completions/ -name "${glob}" -exec rm -rf {} +
+}
+
+# Install manpages to the system man location using a man directory (ex. man1), base directory to search and a glob path
+# Usage: install_system_manpages <mandir> <basedir> <glob>
+#   - Ex: install_system_manpages man1 '.' './man/*.1'
+function install_system_manpages() {
+  local mandir="${1}"
+  local basedir="${2}"
+  local glob="${3}"
+  info "Installing system man pages: mandir=${mandir} basedir=${basedir}, glob=${glob}"
+  _run sudo mkdir -p "/usr/local/share/man/${mandir}"
+  _run find "${basedir}" -type f -path "${glob}" -exec sudo cp {} "/usr/local/share/man/${mandir}" \;
+}
+
+# Remove manpages from the system man locaation with glob
+# Usage: remove_system_manpages <mandir> <glob>
+function remove_system_manpages() {
+  local mandir="${1}"
+  local glob="${2}"
+  info "Removing system manpage: mandir=${mandir} glob=${glob}"
+  _run sudo find "/usr/local/share/man/${mandir}" -name "${glob}" -exec rm -rf {} +
+}
+
+# install_pkg: Install packages using the system's package manager.
+#
+# Usage:
+#   install_pkg fd[debian=fd-find][ubuntu=fd-find][mac=fd] ripgrep
+#   install_pkg bat[debian=batcat][ubuntu=batcat]
+#   install_pkg rg
+install_pkg() {
+  for arg in "$@"; do
+    local pkg="$arg"
+    local default_pkg="${pkg%%[*}"
+    local os_pkg="$default_pkg"
+    local tmp="$pkg"
+    local match os_key os_pkg
+    while : ; do
+      match=$(echo "$tmp" | sed -n 's/.*\[\([a-z][a-z0-9]*\)=\([^]]*\)\].*/\1 \2/p' | head -n1)
+      [ -z "$match" ] && break
+      os_key=$(echo "$match" | awk '{print $1}')
+      os_val=$(echo "$match" | awk '{print $2}')
+      if [ "$os_key" = "$__OS_ID" ]; then
+        os_pkg="$os_val"
+      fi
+      tmp="${tmp//[$os_key=$os_val]/}"
+    done
+    info "Installing $default_pkg (os package: $os_pkg) on $__OS_ID"
+    # shellcheck disable=SC2086
+    _run ${__PM_INSTALL_CMD} ${os_pkg}
+  done
+}
+
+# uninstall_pkg: Install packages using the system's package manager.
+#
+# Usage:
+#   uninstall_pkg fd[debian=fd-find][ubuntu=fd-find][mac=fd] ripgrep
+#   uninstall_pkg bat[debian=batcat][ubuntu=batcat]
+#   uninstall_pkg rg
+uninstall_pkg() {
+  for arg in "$@"; do
+    local pkg="$arg"
+    local default_pkg="${pkg%%[*}"
+    local os_pkg="$default_pkg"
+    local tmp="$pkg"
+    local match os_key os_pkg
+    while : ; do
+      match=$(echo "$tmp" | sed -n 's/.*\[\([a-z][a-z0-9]*\)=\([^]]*\)\].*/\1 \2/p' | head -n1)
+      [ -z "$match" ] && break
+      os_key=$(echo "$match" | awk '{print $1}')
+      os_val=$(echo "$match" | awk '{print $2}')
+      if [ "$os_key" = "$__OS_ID" ]; then
+        os_pkg="$os_val"
+      fi
+      tmp="${tmp//[$os_key=$os_val]/}"
+    done
+    info "Uninstalling $default_pkg (os package: $os_pkg) on $__OS_ID"
+    # shellcheck disable=SC2086
+    _run ${__PM_UNINSTALL_CMD} ${os_pkg}
+  done
+}
+
+# Install npm packages
+# Usage: install_npm_pkg <pkg1> <pkg2> ... <pkgn>
+install_npm_pkg() {
+  info "Installing npm package(s): $*"
+  local pkg
+  for pkg in "$@"; do
+    _run sudo npm install --global "$pkg"
+  done
+}
+
+# Uninstall npm packages
+# Usage: install_npm_pkg <pkg1> <pkg2> ... <pkgn>
+uninstall_npm_pkg() {
+  local pkg
+  for pkg in "$@"; do
+    _run sudo npm uninstall --global "$pkg"
+  done
+}
+
+# Install pipx packages
+# Usage: install_pipx_pkg <pkg1> <pkg2> ... <pkgn>
+install_pipx_pkg() {
+  info "Installing pipx package(s): $*"
+  local pkg
+  for pkg in "$@"; do
+    _run sudo pipx install --global "$pkg"
+  done
+}
+
+# Uninstall pipx packages
+# Usage: install_pipx_pkg <pkg1> <pkg2> ... <pkgn>
+uninstall_pipx_pkg() {
+  local pkg
+  for pkg in "$@"; do
+    _run sudo pipx uninstall --global "$pkg"
+  done
+}
+
+# Remove dead symlinks in a directory recursively up to a max depth (0 for infinite)
+# Usage: remove_dead_links <depth> <dir>
+function remove_dead_links() {
+  local depth="${1}"
+  local dir="${2}"
+  local depth_str=""
+  [ ! -d "${dir}" ] && return 1
+  [ "${depth}" -gt "0" ] && depth_str="-maxdepth ${depth}"
+
+  # shellcheck disable=SC2086
+  find "${dir}" ${depth_str} -type l ! -exec test -e {} \; -print0 | while IFS= read -r -d '' link; do
+    _run rm -f "${link}"
+    debug "Removed dead symlink: ${link}"
+  done
+}
+
+# stow_dots: Recursively symlink files from src_dir to base_dir, backing up existing files and removing dead links.
+# Usage: stow_dots <src_dir> [base_dir|${HOME}]
+# Returns 0 on success, 1 on error.
+function stow_dots() {
+  local src_dir=$1
+  local base_dir=${2:-${HOME}}
+  [ ! -d "$src_dir" ] && error "$src_dir is not a directory." && return 1
+  [ ! -d "$base_dir" ] && error "$base_dir is not a directory." && return 1
+
+  info "Stowing dotfiles from '$src_dir' to '$base_dir'"
+
+  # Prepare all target directories in a single bulk (preserve directory structure)
+  find "$src_dir" -type d | while read -r src_subdir; do
+    rel_dir=${src_subdir#"$src_dir"/}
+    if [ "$src_subdir" = "$src_dir" ]; then
+      dest_subdir="$base_dir"
+    else
+      dest_subdir="$base_dir/$rel_dir"
+    fi
+    _run mkdir -p "$dest_subdir" || { error "Failed to create dir: $dest_subdir" && return 1; }
+  done
+
+  # Process files
+  find "$src_dir" -type f | while read -r src_file; do
+    rel_path=${src_file#"$src_dir"/}
+    dest_file="$base_dir/$rel_path"
+    # Backup if dest exists and is not the correct link
+    if [ -e "$dest_file" ] || [ -L "$dest_file" ]; then
+      # Only skip if already the right symlink
+      if [ -L "$dest_file" ]; then
+        real_src=$(_resolve_symlink "$src_file")
+        real_dest=$(_resolve_symlink "$dest_file")
+        [ "$real_src" = "$real_dest" ] && debug "Link already exists for $real_src" && continue
+      fi
+      backup_file="${dest_file}.backup"
+      _run mv "$dest_file" "$backup_file"
+      info "Backed up $dest_file to $backup_file"
+    fi
+    # Link file
+    _run ln -s "$src_file" "$dest_file"
+    info "Linked ${src_file} to ${dest_file}"
+  done
+}
+
+# unstow_dots: Recursively remove symlinks in base_dir matching files in src_dir.
+# Usage: unstow_dots <src_dir> [base_dir]
+# Returns 0 on success, 1 on error.
+function unstow_dots() {
+  local src_dir=$1
+  local base_dir=${2:-${HOME}}
+  [ ! -d "$src_dir" ] && error "Error: $src_dir is not a directory." && return 1
+  [ ! -d "$base_dir" ] && error "Error: $base_dir is not a directory." && return 1
+
+  info "Unstowing dotfiles from '$src_dir' to '$base_dir'"
+  find "$src_dir" -type f | while read -r src_file; do
+    rel_path=${src_file#"$src_dir"/}
+    dest_file="$base_dir/$rel_path"
+    if [ -L "$dest_file" ]; then
+      real_src=$(_resolve_symlink "$src_file")
+      real_dest=$(_resolve_symlink "$dest_file")
+      if [ "$real_src" = "$real_dest" ]; then
+        _run rm "$dest_file"
+        info "Removed symlink $dest_file"
+      fi
+    fi
+  done
+}
+
+# Parse a version from a string
+# Usage: parse_version <str>
+function parse_version() {
+  local input="$1"
+  local regex="${2:-[0-9]+\.[0-9]+(\.[0-9]+)?}"
+  if ! echo "$input" | grep -Eo "$regex" | head -n 1; then
+    error "Failed to parse version from input: ${input}" && return 1
+  fi
+}
+
+# Get the latest release version of a github repo
+# Usage: get_latest_github_tag <repo>
+function get_latest_github_tag() {
+  local url
+  url="https://api.github.com/repos/${1}/releases/latest"
+  if ! curl -fsSL "${url}" | grep '"tag_name":' | cut -d '"' -f4; then
+    error "Failed to fetch github tag from: ${url}" && return 1
+  fi
+}
+
+# Download an asset from a remote url
+# Usage: download_asset <asset_name> <url> <out_dir>
+function download_asset() {
+  local asset_name url out_dir out_file
+  asset_name="${1}"
+  url="${2}"
+  out_dir="${3}"
+  out_file="${out_dir}/${asset_name}"
+  info "Downloading ${asset_name} from ${url} to ${out_dir}..."
+  if ! _run curl -fsSL "${url}" -o "${out_file}"; then
+    error "Download failed: ${url}" && return 1
+  fi
+  echo "${out_file}"
+}
+
+# Install a github package
+function install_gh_pkg() {
+  # Required positional params
+  local repo tag version_cmd install_fn
+  repo="$1"
+  tag="$2"
+  version_cmd="$3"
+  install_fn="$4"
+  shift 4
+
+  # Defaults for optional flags
+  local filter_fn system_filter_fn arch_filter_fn version_regex num_assets no_extract
+  filter_fn="_install_gh_pkg_default_filter_fn"
+  system_filter_fn="_install_gh_pkg_default_system_filter_fn"
+  arch_filter_fn="__install_gh_pkg_default_arch_filter_fn"
+  version_regex=""
+  num_assets=1
+  no_extract=0
+
+  # Parse optional flags (support --flag value and -f value)
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --filter-fn|-f)
+        filter_fn="$2"; shift 2
+        ;;
+      --system-filter-fn|-s)
+        system_filter_fn="$2"; shift 2
+        ;;
+      --arch-filter-fn|-a)
+        arch_filter_fn="$2"; shift 2
+        ;;
+      --version-regex|-v)
+        version_regex="$2"; shift 2
+        ;;
+      --num-assets|-n)
+        num_assets="$2"; shift 2
+        ;;
+      --no-extract|-x)
+        no_extract=1
+        shift
+        ;;
+      --)
+        shift; break
+        ;;
+      *)
+        error "Unknown option: $1"
+        return 1
+        ;;
+    esac
+  done
+  if [ -z "${repo}" ] || [ -z "${tag}" ] || [ -z "${version_cmd}" ] || [ -z "${install_fn}" ] || ! _is_num "${num_assets}"; then
+    error "Missing required args" && return 1
+  fi
+
+  local current_version desired_version release_data
+
+  # Get current version
+  current_version="$(parse_version "$($version_cmd 2>/dev/null)" "${version_regex}")"
+
+  # Get latest tag if needed
+  if [ "$tag" = "latest" ]; then
+    tag="$(get_latest_github_tag "$repo")"
+    [ -z "$tag" ] && error "Could not determine latest release tag." && return 1
+  fi
+
+  # Compare desired version and current version
+  desired_version="$(parse_version "${tag}" "${version_regex}")"
+  if [ -n "$current_version" ] && [ "$current_version" = "$desired_version" ]; then
+    debug "Already installed: $version_cmd reports version $desired_version" && return 0
+  fi
+
+  # Fetch release data
+  info "Installing $repo@$desired_version..."
+  release_data=$(curl -fsSL "https://api.github.com/repos/$repo/releases/tags/$tag")
+  [ -z "$release_data" ] && error "Failed to fetch release data for $repo@$tag" && return 1
+
+  # Collect asset URLs into an array
+  local assets=() line val
+  while read -r line; do
+    val=$(echo "$line" | cut -d '"' -f4)
+    [ -n "$val" ] && assets+=("$val")
+  done < <(echo "$release_data" | grep "browser_download_url")
+  debug "All Assets: ${assets[*]}"
+
+  # Filter assets
+  local asset filtered_assets=()
+  for asset in "${assets[@]}"; do
+    debug "Filtering asset: ${asset}"
+    "${filter_fn}" "${asset}" || continue
+    "${system_filter_fn}" "${asset}" || continue
+    "${arch_filter_fn}" "${asset}" || continue
+    filtered_assets+=("${asset}")
+  done
+
+  # Make sure only one package is found
+  if [ ${#filtered_assets[@]} -ne "${num_assets}" ]; then
+    error "Unexpected number of assets found. Found ${#filtered_assets[@]} candidates:"
+    for asset in "${filtered_assets[@]}"; do
+      echo "  - $asset"
+    done
+    return 1
+  fi
+
+  # Download and extract pkgs
+  local tmp_dir out_file
+  tmp_dir=$(mktemp -d)
+  for asset in "${filtered_assets[@]}"; do
+    if ! out_file=$(download_asset "$(basename "${asset}")" "${asset}" "${tmp_dir}"); then
+      rm -rf "${tmp_dir}" && return 1
+    fi
+    if [ ${no_extract} -eq 0 ] && ! extract "${out_file}" "${tmp_dir}"; then
+      rm -rf "${tmp_dir}" && return 1
+    fi
+  done
+
+  info "Installing assets"
+  (_run cd "$tmp_dir" && _run eval "$install_fn")
+  local status=$?
+
+  info "Cleaning up..."
+  rm -rf "${tmp_dir}"
+
+  if [ $status -eq 0 ]; then
+    info "Installed $repo@$desired_version"
+  else
+    error "Install failed."
+  fi
+  return $status
+}
+function _install_gh_pkg_default_filter_fn() {
+  if ! echo "${1}" | grep -q '\.tar\.gz$'; then
+    debug "Asset '${1}' failed filter" && return 1
+  fi
+}
+function _install_gh_pkg_default_system_filter_fn() {
+  case "${__PLATFORM_SYSTEM}" in
+    linux)
+      if ! echo "${1}" | grep -e "linux" | grep -q -v "musl"; then
+        debug "Asset '${1}' failed system filter" && return 1
+      fi
+      ;;
+    darwin)
+      if ! echo "${1}" | grep -q -e "mac" -e "macos" -e "darwin"; then
+        debug "Asset '${1}' failed system filter" && return 1
+      fi
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+function __install_gh_pkg_default_arch_filter_fn() {
+  case "${__PLATFORM_ARCH}" in
+    x86_64|amd64)
+      if ! echo "${1}" | grep -q -e "x86_64" -e "x86" -e "amd64" -e "x64"; then
+        debug "Asset '${1}' failed system filter" && return 1
+      fi
+      ;;
+    aarch64|arm64)
+      if ! echo "${1}" | grep -q -e "aarch64" -e "arm64"; then
+        debug "Asset '${1}' failed system filter" && return 1
+      fi
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+__SOURCED_COMMON_LIB=1

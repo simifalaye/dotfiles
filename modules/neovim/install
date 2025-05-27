@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+if [ "${UNINSTALL}" = "1" ]; then
+  if is_installed neovim; then
+    _run sudo rm -rf /opt/nvim
+  fi
+  unstow_dots "${SCRIPT_DIR}/dots"
+else
+  # shellcheck disable=SC2317
+  function __neovim_install_fn() {
+    _run sudo rm -rf /opt/nvim
+    for d in nvim-*; do
+      _run sudo mv "${d}" /opt/nvim
+      break
+    done
+  }
+  install_gh_pkg 'neovim/neovim' 'latest' 'nvim --version' '__neovim_install_fn'
+  unset -f __neovim_install_fn
+  stow_dots "${SCRIPT_DIR}/dots"
+fi

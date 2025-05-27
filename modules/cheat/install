@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+cht_install_path="${__USER_BIN_DIR}/cht.sh"
+
+if [ "${UNINSTALL}" = "1" ]; then
+  if test -x "${cht_install_path}"; then
+    _run rm -rf "${cht_install_path}"
+  fi
+  unstow_dots "${SCRIPT_DIR}/dots"
+else
+  if ! test -x "${cht_install_path}"; then
+    _run curl https://cht.sh/:cht.sh > "${cht_install_path}"
+    _run chmod +x "${cht_install_path}"
+  fi
+  stow_dots "${SCRIPT_DIR}/dots"
+fi

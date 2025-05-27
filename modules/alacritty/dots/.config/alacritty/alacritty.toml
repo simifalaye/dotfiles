@@ -1,0 +1,24 @@
+# Source: https://alacritty.org/config-alacritty.html
+
+[general]
+live_config_reload = true
+working_directory = "None" # Inherit from parent
+
+[window]
+option_as_alt = "Both"
+
+[font]
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
+bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
+size = 12
+
+[debug]
+# render_timer = false
+# persistent_logging = false
+# log_level = "Debug"
+# renderer = "None"
+# print_events = true
+# highlight_damage = false
+# prefer_egl = false

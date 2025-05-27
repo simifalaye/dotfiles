@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+clangd_pkg_name="clangd"
+if [ "${__OS_ID}" = "mac" ]; then
+  clangd_pkg_name="llvm"
+fi
+
+if [ "${UNINSTALL}" = "1" ]; then
+  if is_installed clangd; then
+    uninstall_pkg "${clangd_pkg_name}"
+  fi
+else
+  if ! is_installed clangd; then
+    install_pkg "${clangd_pkg_name}"
+  fi
+fi

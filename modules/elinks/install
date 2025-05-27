@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+elinks_pkg_name="elinks"
+if [ "${__OS_ID}" = "mac" ]; then
+  elinks_pkg_name="felinks"
+fi
+
+if [ "${UNINSTALL}" = "1" ]; then
+  if is_installed elinks; then
+    uninstall_pkg "${elinks_pkg_name}"
+  fi
+  unstow_dots "${SCRIPT_DIR}/dots"
+else
+  if ! is_installed elinks; then
+    install_pkg "${elinks_pkg_name}"
+  fi
+  stow_dots "${SCRIPT_DIR}/dots"
+fi

@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+if [ "${UNINSTALL}" = "1" ]; then
+  if is_installed stylua; then
+    if [ "${__OS_ID}" = "mac" ]; then
+      uninstall_pkg stylua
+    else
+      remove_system_bins "stylua"
+    fi
+  fi
+  unstow_dots "${SCRIPT_DIR}/dots"
+else
+  if [ "${__OS_ID}" = "mac" ]; then
+    is_installed stylua || install_pkg stylua
+  else
+    # shellcheck disable=SC2317
+    function __stylua_install_fn() {
+      install_system_bins '.' './stylua'
+    }
+    # shellcheck disable=SC2317
+    function __stylua_filter_fn() {
+      if ! echo "${1}" | grep -q '\.zip$'; then
+        debug "Asset '${1}' failed filter" && return 1
+      fi
+    }
+    install_gh_pkg 'JohnnyMorganz/StyLua' 'latest' 'stylua --version' '__stylua_install_fn' \
+      -f '__stylua_filter_fn'
+    unset -f __stylua_install_fn __stylua_filter_fn
+  fi
+  stow_dots "${SCRIPT_DIR}/dots"
+fi

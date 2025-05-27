@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+if [ "${UNINSTALL}" = "1" ]; then
+  if is_installed tinty; then
+    remove_system_bins "tinty"
+    remove_system_bash_completions 'tinty'
+    remove_system_zsh_completions '_tinty'
+    remove_system_fish_completions 'tinty.fish'
+  fi
+  unstow_dots "${SCRIPT_DIR}/dots"
+else
+  # shellcheck disable=SC2317
+  function __tinty_install_fn() {
+    install_system_bins '.' './tinty'
+    conf_file="${SCRIPT_DIR}/dots/.config/tinty/config.toml"
+    _run tinty --config "${conf_file}" install
+    _run mkdir -p ./comp
+    _run --redirect comp/tinty tinty --config "${conf_file}" generate-completion bash
+    _run --redirect comp/_tinty tinty --config "${conf_file}" generate-completion zsh
+    _run --redirect comp/tinty.fish tinty --config "${conf_file}" generate-completion fish
+    install_system_bash_completions '.' './comp/tinty'
+    install_system_zsh_completions '.' './comp/_tinty'
+    install_system_fish_completions '.' './comp/tinty.fish'
+  }
+  # shellcheck disable=SC2317
+  function __tinty_filter_fn() {
+    _install_gh_pkg_default_filter_fn "${1}" && { echo "${1}" | grep -q -v 'universal'; }
+  }
+  install_gh_pkg 'tinted-theming/tinty' 'latest' 'tinty --version' '__tinty_install_fn' -f '__tinty_filter_fn'
+  unset -f __tinty_install_fn __tinty_filter_fn
+  stow_dots "${SCRIPT_DIR}/dots"
+fi

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+if [ "${__HAS_GUI}" != "1" ]; then
+  return
+fi
+
+if [ "${UNINSTALL}" = "1" ]; then
+  if is_installed alacritty; then
+    uninstall_pkg alacritty
+  fi
+  unstow_dots "${SCRIPT_DIR}/dots"
+else
+  if ! is_installed alacritty; then
+    install_pkg alacritty
+  fi
+  stow_dots "${SCRIPT_DIR}/dots"
+fi

@@ -1,124 +1,197 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Run with `source bootstrap.sh` OR `source <(wget -qO- <URL>/bootstrap.sh)`
 
 # Constants
-GITHUB_USER="simifalaye"
-REPO_NAME="dotfiles"
-CLONE_DIR="${HOME}/dotfiles"
-SSH_KEY="${HOME}/.ssh/id_ed25519"
+REPO_NAME="simifalaye/dotfiles"
+CLONE_DIR="${HOME}/.dotfiles"
+GIT_CONFIG_DIR="${HOME}/.config/git"
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[1;34m'
+NC='\033[0m' # No Color
+
+#
+# Helper Functions
+#
+
+step() { echo -e "${BLUE}:: $*${NC}" >&2; }
+sub_step() { echo -e "  ${BLUE}:: $*${NC}" >&2; }
+success() { echo -e "${GREEN}✔ $*${NC}" >&2; }
+warn() { echo -e "${YELLOW}⚠ $*${NC}" >&2; }
+error() { echo -e "${RED}✖ $*${NC}" >&2 >&2; }
+abort() { error "$@" && return 1; }
+usage() {
+  echo "usage: $0 -g <email> -s <email> [keyname] [-s <email> [keyname] ...]"
+  echo "  -g,--git-email <email> => Override the git email in the config"
+  echo "  -s,--ssh-key <email> => Generate an ssh key"
+  echo "  -h,--help => Display help"
+  abort ""
+}
+
+#
+# Main
+#
+
+set -e
 
 # Reset all variables that might be set
-email="simifalaye1@gmail.com"
+SSH_KEYS=()
+GIT_EMAIL=""
 
-while :; do
+while [[ $# -gt 0 ]]; do
   case $1 in
-    -h|-\?|--help)
-      echo "usage: $0 [-e]"
-      echo "  -e,--email [email]  Email to use for ssh key"
-      echo "  -h,--help           Display help"
-      exit
-      ;;
-    -e|--email)
-        if [ -n "$2" ]; then
-          email=$2
-          shift
-        else
-          printf 'ERROR: "--email" requires a non-empty option argument.\n' >&2
-          exit 1
-        fi
-        ;;
-    --)
+  -g | --git-email)
+    if [ -n "$2" ]; then
+      GIT_EMAIL=$2
       shift
-      break
-      ;;
-    -?*)
-      printf 'WARN: Unknown option (ignored): %s\n' "$1" >&2
-      ;;
-    *)
-      break
-  esac
-  shift
-done
-
-echo "## Running Bootstrap"
-echo "## Email: ${email}"
-
-# Install dependencies
-case "$(uname -s)" in
-  Linux)
-    if [ -f /etc/os-release ]; then
-      if grep -q -E '(debian|ubuntu|linuxmint)' /etc/os-release; then
-        echo "## Detected Debian/Ubuntu/LinuxMint machine, installing deps..."
-        sudo apt update && sudo apt install -y zsh git xz-utils build-essential
-      elif grep -q -E '(centos|rhel|fedora)' /etc/os-release; then
-          echo "## Detected CentOS/RHEL/Fedora machine, installing deps..."
-          if [ -f /etc/centos-release ]; then
-            sudo yum update
-            sudo yum install -y epel-release
-          fi
-          sudo yum install -y zsh git
-          sudo yum groupinstall -y 'Development Tools'
-      elif grep -q -E '(arch)' /etc/os-release; then
-        echo "## Detected Arch machine, installing deps..."
-        sudo pacman -S zsh git base-devel
-      elif grep -q -E '(opensuse)' /etc/os-release; then
-        echo "## Detected SUSE machine, installing deps..."
-        sudo zypper install zsh git
-        sudo zypper install -t pattern devel_basis
-      else
-        echo "ERROR: Unsupported Linux distribution" && exit 1
-      fi
     else
-      echo "ERROR: Missing linux os-release file" && exit 1
+      abort "-g|--git-email needs <email>"
     fi
-
-    # Install nix
-    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | \
-      sh -s -- install --determinate --no-confirm
     ;;
-  Darwin)
-    echo "## Detected Darwin machine, installing deps..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \
-      brew install zsh git
-
-    # Install nix
-    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | \
-      sh -s -- install --determinate --no-confirm
-    echo "## NOTE: Any encrypted volumes created by nix can be found in 'Keychain Access:Logins'"
+  -s | --ssh-key)
+    if [[ $# -lt 2 ]]; then
+      abort "-s|--ssh-key needs <email> [keyname]"
+    fi
+    email="$2"
+    shift
+    keyname=""
+    if [ $# -eq 2 ]; then
+      keyname="$2"
+      shift
+    fi
+    SSH_KEYS+=("$email:$keyname")
+    ;;
+  -h | --help)
+    usage
+    ;;
+  -?*)
+    warn "Unknown option (ignored): ${1}"
     ;;
   *)
-    echo "ERROR: Unsupported operating system" && exit 1
+    break
     ;;
-esac
+  esac
+done
 
-# Generate SSH key pair
-if [ ! -f "${SSH_KEY}.pub" ]; then
-  echo "## SSH key not detected, setting up key..."
-  ssh-keygen -t ed25519 -C "${email}" -f "${SSH_KEY}"
-  # Start the ssh-agent in the background
-  eval "$(ssh-agent -s)"
-  # Add SSH private key to the ssh-agent
-  ssh-add "${SSH_KEY}"
+step "Installing core dependencies"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  sub_step "Detected Darwin machine, installing core deps"
+  if ! command -v brew >/dev/null; then
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    if test -r /opt/homebrew/bin/brew; then
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif test -r /usr/local/bin/brew; then
+      eval "$(/usr/local/bin/brew shellenv)"
+    else
+      abort "Homebrew install not found"
+    fi
+    success "Homebrew installed"
+  fi
+elif [[ "$OSTYPE" == "linux-gnu"* ]] && [ -f /etc/os-release ]; then
+  # shellcheck source=/dev/null
+  . /etc/os-release
+  __os_id="$(echo "${ID}" | tr '[:upper:]' '[:lower:]')"
+  case "$__os_id" in
+    ubuntu|debian)
+      sub_step "Detected Ubuntu/Debian machine, installing core deps"
+      sudo apt update
+      sudo apt install software-properties-common
+      sudo apt install -y git zsh xz-utils build-essential wget curl
+      success "Installed core deps"
+      ;;
+    arch)
+      sub_step "Detected Arch machine, installing core deps"
+      sudo pacman -S git zsh base-devel wget curl
+      success "Installed core deps"
+      ;;
+    centos|rhel|fedora)
+      __dnf="dnf"
+      if ! command -v dnf >/dev/null 2>&1; then
+        __dnf="yum"
+      fi
+      sub_step "Detected CentOS/RHEL/Fedora machine, installing core deps"
+      if [ -f /etc/centos-release ]; then
+        sudo "${__dnf}" install -y epel-release
+      fi
+      sudo "${__dnf}"  install -y git zsh wget curl
+      sudo "${__dnf}"  groupinstall -y 'Development Tools'
+      success "Installed core deps"
+      ;;
+    opensuse*|suse*)
+      sub_step "Detected SUSE machine, installing core deps"
+      sudo zypper install git zsh wget curl
+      sudo zypper install -t pattern devel_basis
+      success "Installed core deps"
+      ;;
+    *)
+      error "Unsupported or unknown Linux distribution (ID='$__os_id')." && return 1
+      ;;
+  esac
+else
+  error "Unsupported OS: $OSTYPE" && return 1
+fi
+success "Installed core dependencies"
+
+# Override git email
+if [ -n "$GIT_EMAIL" ]; then
+  step "Overriding default git email"
+  mkdir -p "${GIT_CONFIG_DIR}"
+  git_override_file="${GIT_CONFIG_DIR}/config.local"
+  touch "${git_override_file}"
+  cat <<EOF >> "${git_override_file}"
+
+  [user]
+  email = "$GIT_EMAIL"
+EOF
 fi
 
-# Display the public key and prompt user to add it to GitHub
-printf "## Please add the following SSH key to your GitHub account:\n"
-cat "${SSH_KEY}.pub"
-printf "## Visit https://github.com/settings/keys to add the key.\n"
-printf "  Press [Enter] key after adding the key to GitHub..."
-read -r dummy
-[ -n "${dummy}" ] && echo ""
+# Generate SSH key pairs
+if [[ ${#SSH_KEYS[@]} -ne 0 ]]; then
+  step "Generating ssh keys"
+  # Start ssh-agent
+  eval "$(ssh-agent -s)"
+
+  # Create ssh dir if it doesn't exist
+  ssh_dir="$HOME/.ssh"
+  mkdir -p "$ssh_dir"
+  chmod 700 "$ssh_dir"
+
+  # Generate keys
+  keypath="${ssh_dir}/id_ed25519"
+  for entry in "${SSH_KEYS[@]}"; do
+    email="${entry%%:*}"
+    keyname="${entry##*:}"
+    if [ -n "$keyname" ]; then
+      keypath="${ssh_dir}/${keyname}"
+    fi
+
+    sub_step "Generating SSH key $keypath (email: $email)"
+    ssh-keygen -t ed25519 -C "$email" -f "$keypath" -N ""
+    ssh-add "$keypath"
+
+    echo
+    echo "=== SSH Key: $keypath ==="
+    echo "Public Key:"
+    echo
+    cat "${keypath}.pub"
+    echo
+    echo "If needed, copy this key to GitHub (https://github.com/settings/keys)"
+    echo "Press any key when you're done"
+    read -r -n 1
+    echo
+  done
+  success "SSH keys created, added to agent, and config updated.\n\
+    To clone with alt identities, use: git@github-alt1:username/repo.git"
+fi
 
 # Clone the repository using SSH
-echo "## Cloning dotfiles repo..."
-git clone git@github.com:"${GITHUB_USER}"/"${REPO_NAME}".git "${CLONE_DIR}"
+if ! test -d "${CLONE_DIR}"; then
+  step "Cloning dotfiles repo"
+  git clone git@github.com:"${REPO_NAME}".git "${CLONE_DIR}"
+  step "Cloned dotfiles repo"
+fi
 
-# Switch to zsh
-echo "## Setting zsh as default shell..."
-chsh -s "$(which zsh)"
-
-# Navigate to the cloned repository directory
-cd "${CLONE_DIR}" || exit 1
-
-# Restart shell to pull in nix
-exec "$(which zsh)"
+step "Switching to dotfiles directory"
+cd "${CLONE_DIR}" || return 1

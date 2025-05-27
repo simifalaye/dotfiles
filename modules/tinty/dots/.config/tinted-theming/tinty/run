@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+if test -z "${BASE16_COLOR_00_HEX}"; then
+    exit
+fi
+
+zellij_config_dir="${HOME}/.config/zellij"
+zellij_themes_dir="${zellij_config_dir}/themes" && mkdir -p "$zellij_themes_dir"
+
+cat <<EOF > "${zellij_themes_dir}/default.kdl"
+themes {
+    default {
+        fg "#${BASE16_COLOR_07_HEX}"
+        bg "#${BASE16_COLOR_00_HEX}"
+        black "#${BASE16_COLOR_01_HEX}"
+        red "#${BASE16_COLOR_08_HEX}"
+        green "#${BASE16_COLOR_0B_HEX}"
+        yellow "#${BASE16_COLOR_0A_HEX}"
+        blue "#${BASE16_COLOR_0D_HEX}"
+        magenta "#${BASE16_COLOR_0E_HEX}"
+        cyan "#${BASE16_COLOR_0C_HEX}"
+        white "#${BASE16_COLOR_05_HEX}"
+        orange "#${BASE16_COLOR_09_HEX}"
+    }
+}
+EOF
+# TODO: Evaluate if to reload zellij config
+# touch "${zellij_config_dir}/config.kdl"
