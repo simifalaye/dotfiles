@@ -24,14 +24,16 @@ else
   if [ "${__OS_ID}" = "mac" ]; then
     is_installed lua-language-server || install_pkg lua-language-server
   else
-    # shellcheck disable=SC2317
-    function __luals_install_fn() {
-      _run sudo rm -rf /opt/lua-language-server
-      _run rm -rf ./*.tar.gz
-      _run sudo mkdir -p /opt/lua-language-server
-      _run sudo cp -r . /opt/lua-language-server
-    }
-    install_gh_pkg 'LuaLS/lua-language-server' 'latest' 'lua-language-server --version' '__luals_install_fn'
-    unset -f __luals_install_fn
+    if ! is_installed lua-language-server; then
+      # shellcheck disable=SC2317
+      function __luals_install_fn() {
+        _run sudo rm -rf /opt/lua-language-server
+        _run rm -rf ./*.tar.gz
+        _run sudo mkdir -p /opt/lua-language-server
+        _run sudo cp -r . /opt/lua-language-server
+      }
+      install_gh_pkg 'LuaLS/lua-language-server' 'latest' 'echo 0.0' '__luals_install_fn'
+      unset -f __luals_install_fn
+    fi
   fi
 fi

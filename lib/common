@@ -71,9 +71,11 @@ function _run() {
       shift
       redirect_target="$1"
       shift
-      "${@}" > "$redirect_target"
+      # shellcheck disable=SC2068
+      ${@} > "$redirect_target"
     else
-      "${@}"
+      # shellcheck disable=SC2068
+      ${@}
     fi
   fi
 }
@@ -133,9 +135,9 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]] && [ -f /etc/os-release ]; then
   __OS_LIKE="$(echo "${ID_LIKE}" | tr '[:upper:]' '[:lower:]')"
   case "$__OS_ID" in
     ubuntu|debian)
-      __PM_INSTALL_CMD="sudo apt install -y"
-      __PM_UNINSTALL_CMD="sudo apt remove -y"
-      __PM_UPDATE_CMD="sudo apt update"
+      __PM_INSTALL_CMD="sudo apt-get install -y"
+      __PM_UNINSTALL_CMD="sudo apt-get remove -y"
+      __PM_UPDATE_CMD="sudo apt-get update"
       ;;
     arch)
       __PM_INSTALL_CMD="sudo pacman -S --noconfirm"
@@ -438,7 +440,7 @@ install_pipx_pkg() {
   info "Installing pipx package(s): $*"
   local pkg
   for pkg in "$@"; do
-    _run sudo pipx install --global "$pkg"
+    _run sudo pipx install "$pkg"
   done
 }
 
@@ -447,7 +449,7 @@ install_pipx_pkg() {
 uninstall_pipx_pkg() {
   local pkg
   for pkg in "$@"; do
-    _run sudo pipx uninstall --global "$pkg"
+    _run sudo pipx uninstall "$pkg"
   done
 }
 
@@ -541,7 +543,8 @@ function parse_version() {
   local input="$1"
   local regex="${2:-[0-9]+\.[0-9]+(\.[0-9]+)?}"
   if ! echo "$input" | grep -Eo "$regex" | head -n 1; then
-    error "Failed to parse version from input: ${input}" && return 1
+    debug "Failed to parse version from input: ${input}"
+    echo ""
   fi
 }
 

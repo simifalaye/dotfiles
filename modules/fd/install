@@ -24,7 +24,8 @@ else
   if ! is_installed "${fd_pkg_name}"; then
     install_pkg "${fd_pkg_name}"
     if [ "${__OS_LIKE}" = "debian" ]; then
-      _run ln -s /usr/bin/fdfind /usr/local/bin/fd
+      _run sudo rm -rf /usr/local/bin/fd
+      _run sudo ln -s /usr/bin/fdfind /usr/local/bin/fd
     fi
   fi
 fi
