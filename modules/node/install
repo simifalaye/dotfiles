@@ -18,12 +18,12 @@ if [ "${__OS_ID}" = "mac" ]; then
 fi
 
 if [ "${UNINSTALL}" = "1" ]; then
-  if is_installed node; then
+  if is_installed node npm; then
     uninstall_pkg "${node_pkg_name}" "${node_pkg_name}"
   fi
   unstow_dots "${SCRIPT_DIR}/dots"
 else
-  if ! is_installed node; then
+  if ! is_installed node npm; then
     install_pkg "${node_pkg_name}" "${npm_pkg_name}"
   fi
   stow_dots "${SCRIPT_DIR}/dots"

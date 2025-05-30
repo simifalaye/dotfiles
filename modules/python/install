@@ -14,7 +14,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 python_bin_name="python3"
 python_pkg_name="python3"
 python_pip_pkg_name="python3-pip"
-python_pipx_pkg_name="pipx"
 if [ "${__OS_ID}" = "mac" ]; then
   python_pip_pkg_name=""
 elif [ "${__OS_ID}" = "arch" ]; then
@@ -24,13 +23,13 @@ elif [ "${__OS_ID}" = "arch" ]; then
 fi
 
 if [ "${UNINSTALL}" = "1" ]; then
-  if is_installed "${python_bin_name}"; then
-    uninstall_pkg "${python_pkg_name}" "${python_pip_pkg_name}" "${python_pipx_pkg_name}"
+  if is_installed "${python_bin_name}" pipx; then
+    uninstall_pkg "${python_pkg_name}" "${python_pip_pkg_name}" pipx
   fi
   unstow_dots "${SCRIPT_DIR}/dots"
 else
-  if ! is_installed "${python_bin_name}"; then
-    install_pkg "${python_pkg_name}" "${python_pip_pkg_name}" "${python_pipx_pkg_name}"
+  if ! is_installed "${python_bin_name}" pipx; then
+    install_pkg "${python_pkg_name}" "${python_pip_pkg_name}" pipx
   fi
   stow_dots "${SCRIPT_DIR}/dots"
 fi

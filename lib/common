@@ -116,6 +116,7 @@ __OS_LIKE=""
 __PLATFORM_SYSTEM="$(uname | tr '[:upper:]' '[:lower:]')"
 __PLATFORM_ARCH="$(uname -m)"
 __HAS_GUI=0
+__IS_WSL=0
 if [[ "$OSTYPE" == "darwin"* ]]; then
   __USER_FONTS_DIR="${HOME}/Library/Fonts"
   __OS_ID="mac"
@@ -128,6 +129,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     echo "Homebrew not installed. Please install Homebrew (https://brew.sh/)." >&2
     return 1
   fi
+  __HAS_GUI=1
 elif [[ "$OSTYPE" == "linux-gnu"* ]] && [ -f /etc/os-release ]; then
   # shellcheck source=/dev/null
   . /etc/os-release
@@ -165,22 +167,14 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]] && [ -f /etc/os-release ]; then
       return 1
       ;;
   esac
+  if grep -qi microsoft /proc/version 2>/dev/null; then
+    __IS_WSL=1
+  elif [ -n "$DISPLAY" ] || [ -n "$WAYLAND_DISPLAY" ]; then
+    __HAS_GUI=1
+  fi
 else
   echo "Unsupported OS: $OSTYPE" >&2
   return 1
-fi
-# Check for X11 or Wayland session environment variables
-if [ -n "$DISPLAY" ] || [ -n "$WAYLAND_DISPLAY" ]; then
-  __HAS_GUI=1
-# Check for a graphical session type
-elif [ -n "$XDG_SESSION_TYPE" ] && { [ "$XDG_SESSION_TYPE" = "x11" ] || [ "$XDG_SESSION_TYPE" = "wayland" ]; }; then
-  __HAS_GUI=1
-# Check for common X11 or Wayland processes
-elif pgrep -x Xorg >/dev/null 2>&1 || pgrep -x Xwayland >/dev/null 2>&1 || pgrep -x quartz-wm >/dev/null 2>&1 || pgrep -x weston >/dev/null 2>&1; then
-  __HAS_GUI=1
-# Check for common desktop binaries
-elif command -v xrandr >/dev/null 2>&1 || command -v Xquartz >/dev/null 2>&1 || command -v osascript >/dev/null 2>&1; then
-  __HAS_GUI=1
 fi
 
 #
@@ -215,7 +209,7 @@ function extract() {
       if [ "${dir}" = "." ]; then
         _run gunzip "${file}"
       else
-        _run cp "${file}" "${dir}/" && _run gunzip "${dir}/$(basename "${file}")"
+        _run cp -f "${file}" "${dir}/" && _run gunzip "${dir}/$(basename "${file}")"
       fi
       ;;
     *.tar) _run tar xvf "${file}" -C "${dir}" ;;
@@ -268,7 +262,7 @@ function install_system_bins() {
   local glob="${2}"
   info "Installing system bins: basedir=${basedir}, glob=${glob}"
   _run sudo mkdir -p /usr/local/bin
-  _run find "${basedir}" -type f -path "${glob}" -exec sudo cp "{}" /usr/local/bin \;
+  _run find "${basedir}" -type f -path "${glob}" -exec sudo cp -f "{}" /usr/local/bin \; 2>/dev/null
 }
 
 # Remove bins from the system bin path with glob
@@ -287,7 +281,7 @@ function install_system_bash_completions() {
   local glob="${2}"
   info "Installing system bash completions: basedir=${basedir}, glob=${2}"
   _run sudo mkdir -p /usr/local/etc/bash_completion.d/
-  _run find "${basedir}" -type f -path "${2}" -exec sudo cp {} /usr/local/etc/bash_completion.d/ \;
+  _run find "${basedir}" -type f -path "${2}" -exec sudo cp -f {} /usr/local/etc/bash_completion.d/ \; 2>/dev/null
 }
 
 # Remove bash completions from the system completions path with glob
@@ -306,7 +300,7 @@ function install_system_zsh_completions() {
   local glob="${2}"
   info "Installing system zsh completion: basedir=${basedir}, glob=${2}"
   _run sudo mkdir -p /usr/local/share/zsh/site-functions/
-  _run find "${basedir}" -type f -path "${2}" -exec sudo cp {} /usr/local/share/zsh/site-functions/ \;
+  _run find "${basedir}" -type f -path "${2}" -exec sudo cp -f {} /usr/local/share/zsh/site-functions/ \; 2>/dev/null
 }
 
 # Remove zsh completions from the system completions path with glob
@@ -325,7 +319,7 @@ function install_system_fish_completions() {
   local glob="${2}"
   info "Installing system fish completions: basedir=${basedir}, glob=${2}"
   _run sudo mkdir -p /usr/local/share/fish/completions/
-  _run find "${basedir}" -type f -path "${2}" -exec sudo cp {} /usr/local/share/fish/completions/ \;
+  _run find "${basedir}" -type f -path "${2}" -exec sudo cp -f {} /usr/local/share/fish/completions/ \; 2>/dev/null
 }
 
 # Remove fish completions from the system completions path with glob
@@ -345,7 +339,7 @@ function install_system_manpages() {
   local glob="${3}"
   info "Installing system man pages: mandir=${mandir} basedir=${basedir}, glob=${glob}"
   _run sudo mkdir -p "/usr/local/share/man/${mandir}"
-  _run find "${basedir}" -type f -path "${glob}" -exec sudo cp {} "/usr/local/share/man/${mandir}" \;
+  _run find "${basedir}" -type f -path "${glob}" -exec sudo cp -f {} "/usr/local/share/man/${mandir}" \; 2>/dev/null
 }
 
 # Remove manpages from the system man locaation with glob
@@ -587,7 +581,7 @@ function install_gh_pkg() {
   local filter_fn system_filter_fn arch_filter_fn version_regex num_assets no_extract
   filter_fn="_install_gh_pkg_default_filter_fn"
   system_filter_fn="_install_gh_pkg_default_system_filter_fn"
-  arch_filter_fn="__install_gh_pkg_default_arch_filter_fn"
+  arch_filter_fn="_install_gh_pkg_default_arch_filter_fn"
   version_regex=""
   num_assets=1
   no_extract=0
@@ -703,14 +697,14 @@ function install_gh_pkg() {
   return $status
 }
 function _install_gh_pkg_default_filter_fn() {
-  if ! echo "${1}" | grep -q '\.tar\.gz$'; then
+  if ! echo "${1}" | grep '\.tar\.gz$' | grep -q -v "musl"; then
     debug "Asset '${1}' failed filter" && return 1
   fi
 }
 function _install_gh_pkg_default_system_filter_fn() {
   case "${__PLATFORM_SYSTEM}" in
     linux)
-      if ! echo "${1}" | grep -e "linux" | grep -q -v "musl"; then
+      if ! echo "${1}" | grep -e "linux"; then
         debug "Asset '${1}' failed system filter" && return 1
       fi
       ;;
@@ -724,7 +718,7 @@ function _install_gh_pkg_default_system_filter_fn() {
       ;;
   esac
 }
-function __install_gh_pkg_default_arch_filter_fn() {
+function _install_gh_pkg_default_arch_filter_fn() {
   case "${__PLATFORM_ARCH}" in
     x86_64|amd64)
       if ! echo "${1}" | grep -q -e "x86_64" -e "x86" -e "amd64" -e "x64"; then

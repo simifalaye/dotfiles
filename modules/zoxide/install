@@ -37,24 +37,12 @@ else
       install_system_manpages man1 '.' './man1/*.1'
     }
     # shellcheck disable=SC2317
-    function __zoxide_system_filter_fn() {
-      case "${__PLATFORM_SYSTEM}" in
-        linux)
-          if ! echo "${1}" | grep -e "linux" | grep -q -v -e "musleabihf" -e "andorid"; then
-            debug "Asset '${1}' failed system filter" && return 1
-          fi
-          ;;
-        darwin)
-          if ! echo "${1}" | grep -q -e "apple" -e "darwin"; then
-            debug "Asset '${1}' failed system filter" && return 1
-          fi
-          ;;
-        *)
-          return 1
-          ;;
-      esac
+    function __zoxide_filter_fn() {
+      if ! echo "${1}" | grep '\.tar\.gz$' | grep -q -v -e "musleabihf" -e "android"; then
+        debug "#### Asset '${1}' failed filter" && return 1
+      fi
     }
-    install_gh_pkg 'ajeetdsouza/zoxide' 'latest' 'zoxide --version' '__zoxide_install_fn' -s '__zoxide_system_filter_fn'
+    install_gh_pkg 'ajeetdsouza/zoxide' 'latest' 'zoxide --version' '__zoxide_install_fn' -f '__zoxide_filter_fn'
     unset -f __zoxide_install_fn __zoxide_system_filter_fn
   fi
   stow_dots "${SCRIPT_DIR}/dots"

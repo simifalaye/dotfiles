@@ -38,8 +38,14 @@ else
       install_system_zsh_completions '.' './comp/_zellij'
       install_system_fish_completions '.' './comp/zellij.fish'
     }
-    install_gh_pkg 'zellij-org/zellij' 'latest' 'zellij --version' '__zellij_install_fn'
-    unset -f __zellij_install_fn
+    # shellcheck disable=SC2317
+    function __zellij_filter_fn() {
+      if ! echo "${1}" | grep -q '\.tar\.gz$'; then
+        debug "#### Asset '${1}' failed filter" && return 1
+      fi
+    }
+    install_gh_pkg 'zellij-org/zellij' 'latest' 'zellij --version' '__zellij_install_fn' -f '__zellij_filter_fn'
+    unset -f __zellij_install_fn __zellij_filter_fn
   fi
   stow_dots "${SCRIPT_DIR}/dots"
 fi

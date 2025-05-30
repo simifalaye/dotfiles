@@ -14,14 +14,15 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cht_install_path="${__USER_BIN_DIR}/cht.sh"
 
 if [ "${UNINSTALL}" = "1" ]; then
-  if test -x "${cht_install_path}"; then
-    _run rm -rf "${cht_install_path}"
+  if is_installed cht.sh; then
+    remove_system_bins 'cht.sh'
   fi
   unstow_dots "${SCRIPT_DIR}/dots"
 else
-  if ! test -x "${cht_install_path}"; then
-    _run curl https://cht.sh/:cht.sh > "${cht_install_path}"
-    _run chmod +x "${cht_install_path}"
+  if ! is_installed cht.sh; then
+    _run curl https://cht.sh/:cht.sh > /tmp/cht.sh
+    _run chmod +x /tmp/cht.sh
+    install_system_bins '/tmp' '/tmp/cht.sh'
   fi
   stow_dots "${SCRIPT_DIR}/dots"
 fi

@@ -45,7 +45,6 @@ done
 info "Cleaning up HOME of dead symlinks"
 remove_dead_links 1 "${HOME}"
 remove_dead_links 0 "${HOME}/.config"
-remove_dead_links 0 "${HOME}/.local"
 remove_dead_links 0 "${HOME}/.cache"
 
 # Run modules that are depended on by others

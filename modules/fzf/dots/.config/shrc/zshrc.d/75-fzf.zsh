@@ -1,11 +1,7 @@
 (( $+commands[fzf] )) || return 0
 
 # Load fzf shell integration
-if (( $+commands[znap] )); then
-  znap eval fzf-shell 'fzf --zsh'
-else
-  eval "$(fzf --zsh)"
-fi
+eval "$(fzf --zsh)"
 
 # #
 # # fzf-tab plugin
