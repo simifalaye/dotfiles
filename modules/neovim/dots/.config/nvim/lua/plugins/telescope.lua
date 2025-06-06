@@ -65,11 +65,6 @@ M.keys = {
     desc = "Open Registers Picker",
   },
   {
-    "<leader><CR>",
-    find_files,
-    desc = "Open Files Picker",
-  },
-  {
     "<leader>,",
     "<cmd>Telescope buffers sort_mru=true<CR>",
     desc = "Open Buffers Picker",
@@ -81,6 +76,11 @@ M.keys = {
     desc = "Open Live Grep Picker",
   },
   { "<leader>?", "<cmd>Telescope help_tags<CR>", desc = "Open Help Picker" },
+  {
+    "<leader><leader>",
+    find_files,
+    desc = "Open Files Picker",
+  },
   -- Find
   {
     "<leader>f;",
