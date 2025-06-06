@@ -1,8 +1,8 @@
 local M = {
   "echasnovski/mini.pairs",
-  enabled = false,
-  event = "VeryLazy",
 }
+
+M.event = "VeryLazy"
 
 M.opts = {
   modes = { insert = true, command = true, terminal = false },

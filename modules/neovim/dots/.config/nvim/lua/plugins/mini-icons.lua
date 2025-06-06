@@ -1,7 +1,9 @@
 local M = {
   "echasnovski/mini.icons",
-  lazy = true,
+  version = "*",
 }
+
+M.lazy = true
 
 M.opts = {
   file = {

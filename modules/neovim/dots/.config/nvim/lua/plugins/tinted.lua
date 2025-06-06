@@ -9,7 +9,7 @@ M.config = function()
   vim.o.termguicolors = true
 
   -- Load base16 with configuration
-  require('tinted-colorscheme').setup(nil, {
+  require("tinted-colorscheme").setup(nil, {
     supports = {
       tinty = true,
       tinted_shell = true,
@@ -18,7 +18,7 @@ M.config = function()
     highlights = {
       telescope = true,
       telescope_borders = true,
-    }
+    },
   })
 end
 

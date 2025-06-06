@@ -7,26 +7,10 @@ local text_signs = {
   [vim.diagnostic.severity.INFO] = icons.font.diagnostics.info,
 }
 
--- local short_source_names = {
---   ["Lua Diagnostics."] = "Lua",
---   ["Lua Syntax Check"] = "Lua",
--- }
-
 vim.diagnostic.config({
-  -- virtual_text = {
-  --   spacing = 4,
-  --   prefix = "",
-  --   severity = vim.diagnostic.severity.HINT,
-  --   format = function(diag)
-  --     return string.format(
-  --       "%s %s (%s): %s",
-  --       text_signs[diag.severity],
-  --       short_source_names[diag.source] or diag.source,
-  --       diag.code,
-  --       diag.message
-  --     )
-  --   end,
-  -- },
+  severity_sort = true,
+  float = { border = "rounded", source = "if_many" },
+  underline = { severity = vim.diagnostic.severity.ERROR },
   signs = {
     text = text_signs,
     linehl = {
@@ -36,9 +20,17 @@ vim.diagnostic.config({
       [vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
     },
   },
-  virtual_lines = {
-    current_line = true,
+  virtual_text = {
+    source = "if_many",
+    spacing = 2,
+    format = function(diagnostic)
+      local diagnostic_message = {
+        [vim.diagnostic.severity.ERROR] = diagnostic.message,
+        [vim.diagnostic.severity.WARN] = diagnostic.message,
+        [vim.diagnostic.severity.INFO] = diagnostic.message,
+        [vim.diagnostic.severity.HINT] = diagnostic.message,
+      }
+      return diagnostic_message[diagnostic.severity]
+    end,
   },
-  underline = true,
-  severity_sort = true,
 })

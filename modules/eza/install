@@ -49,7 +49,7 @@ else
     }
     # shellcheck disable=SC2317
     function __eza_arch_filter_fn() {
-      __install_gh_pkg_default_arch_filter_fn "${1}" || { echo "${1}" | grep -q "${additional_pkg_regex}"; }
+      _install_gh_pkg_default_arch_filter_fn "${1}" || { echo "${1}" | grep -q "${additional_pkg_regex}"; }
     }
     install_gh_pkg 'eza-community/eza' 'latest' 'eza --version' '__eza_install_fn' \
       -n 3 \

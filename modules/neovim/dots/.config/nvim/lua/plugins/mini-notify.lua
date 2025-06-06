@@ -1,21 +1,21 @@
 local M = {
   "echasnovski/mini.notify",
   version = "*",
-  lazy = false,
-  config = true,
 }
+
+M.lazy = false
 
 M.keys = {
   {
     "g{",
-    function ()
+    function()
       require("mini.notify").show_history()
     end,
     desc = "Show notification history",
   },
   {
     "g}",
-    function ()
+    function()
       require("mini.notify").clear()
     end,
     desc = "Clear notifications",

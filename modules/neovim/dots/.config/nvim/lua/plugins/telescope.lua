@@ -30,24 +30,29 @@ local M = {
 
 M.dependencies = {
   { "nvim-lua/plenary.nvim" },
-  { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+  {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    build = "make",
+    cond = function()
+      return vim.fn.executable("make")
+    end,
+  },
   { "nvim-telescope/telescope-ui-select.nvim" },
 }
 
 M.cmd = { "Telescope" }
 
-M.init = function()
-  local wk_ok, wk = pcall(require, "which-key")
-  if wk_ok then
-    wk.add({ { "<leader>g", group = "+git" } })
-  end
-end
-
 M.keys = {
+  -- Root
   {
-    "<leader><CR>",
-    "<cmd>Telescope<CR>",
-    desc = "Open Picker",
+    "<leader>;",
+    "<cmd>Telescope command_history<CR>",
+    desc = "Open Command History Picker",
+  },
+  {
+    "<leader>:",
+    "<cmd>Telescope commands<CR>",
+    desc = "Open Commands Picker",
   },
   {
     "<leader>'",
@@ -60,71 +65,99 @@ M.keys = {
     desc = "Open Registers Picker",
   },
   {
-    "<leader>;",
-    "<cmd>Telescope command_history<CR>",
-    desc = "Open Command History Picker",
-  },
-  {
-    "<leader>:",
-    "<cmd>Telescope commands<CR>",
-    desc = "Open Commands Picker",
+    "<leader><CR>",
+    find_files,
+    desc = "Open Files Picker",
   },
   {
     "<leader>,",
-    "<cmd>Telescope oldfiles cwd_only=true<CR>",
-    desc = "Open Recents Picker (cwd)",
+    "<cmd>Telescope buffers sort_mru=true<CR>",
+    desc = "Open Buffers Picker",
   },
-  {
-    "<leader><",
-    "<cmd>Telescope oldfiles<CR>",
-    desc = "Open Recents Picker",
-  },
-  { "<leader>.", "<cmd>Telescope resume<CR>",    desc = "Resume Picker" },
+  { "<leader>.", "<cmd>Telescope resume<CR>", desc = "Resume Picker" },
   {
     "<leader>/",
     "<cmd>Telescope live_grep<CR>",
     desc = "Open Live Grep Picker",
   },
   { "<leader>?", "<cmd>Telescope help_tags<CR>", desc = "Open Help Picker" },
+  -- Find
   {
-    "<leader>b",
+    "<leader>f;",
+    "<cmd>Telescope command_history<CR>",
+    desc = "Command History",
+  },
+  {
+    "<leader>f:",
+    "<cmd>Telescope commands<CR>",
+    desc = "Commands",
+  },
+  {
+    "<leader>f'",
+    "<cmd>Telescope marks<CR>",
+    desc = "Marks",
+  },
+  {
+    '<leader>f"',
+    "<cmd>Telescope registers<CR>",
+    desc = "Registers",
+  },
+  {
+    "<leader>f<CR>",
+    "<cmd>Telescope<CR>",
+    desc = "Open Picker",
+  },
+  { "<leader>f.", "<cmd>Telescope resume<CR>", desc = "Resume" },
+  { "<leader>f/", "<cmd>Telescope current_buffer_fuzzy_find<CR>", desc = "Buffer lines" },
+  { "<leader>fa", "<cmd>Telescope autocommands<CR>", desc = "Autocommands" },
+  {
+    "<leader>fb",
     "<cmd>Telescope buffers sort_mru=true<CR>",
-    desc = "Open Buffers Picker",
+    desc = "Buffers",
   },
   {
-    "<leader>d",
+    "<leader>fd",
     "<cmd>Telescope diagnostics<CR>",
-    desc = "Open Diagnostics Picker",
+    desc = "Diagnostics",
   },
   {
-    "<leader>f",
+    "<leader>ff",
     find_files,
-    desc = "Open Files Picker",
+    desc = "Files",
   },
   {
-    "<leader>gc",
-    "<cmd>Telescope git_bcommits<CR>",
-    desc = "Open Buf Commits Picker",
-  },
-  {
-    "<leader>gC",
-    "<cmd>Telescope git_commits<CR>",
-    desc = "Open Commits Picker",
-  },
-  {
-    "<leader>gf",
+    "<leader>fF",
     "<cmd>Telescope git_files<CR>",
-    desc = "Open Files Picker",
+    desc = "Files",
   },
   {
-    "<leader>s",
+    "<leader>fg",
+    "<cmd>Telescope grep_string<CR>",
+    desc = "Grep",
+  },
+  { "<leader>fh", "<cmd>Telescope help_tags<CR>", desc = "Help" },
+  { "<leader>fk", "<cmd>Telescope keymaps<CR>", desc = "Keymaps" },
+  { "<leader>fm", "<cmd>Telescope man_pages<CR>", desc = "Man pages" },
+  { "<leader>fo", "<cmd>Telescope vim_options<CR>", desc = "Options" },
+  {
+    "<leader>fr",
+    "<cmd>Telescope oldfiles cwd_only=true<CR>",
+    desc = "Recents (cwd)",
+  },
+  {
+    "<leader>fR",
+    "<cmd>Telescope oldfiles<CR>",
+    desc = "Recents",
+  },
+  {
+    "<leader>fs",
     "<cmd>Telescope lsp_document_symbols<CR>",
-    desc = "Open Lsp Symbols Picker",
+    desc = "Lsp Symbols",
   },
   {
-    "<leader>q",
+    "<leader>fq",
     "<cmd>Telescope quickfix<CR>",
-    desc = "Open Quickfix Picker",
+    desc = "Quickfix",
   },
 }
 
@@ -150,28 +183,21 @@ M.config = function()
         treesitter = {
           enable = true,
           disable = {
-            "html",     -- TODO: Check if still broken
+            "html", -- TODO: Check if still broken
           },
         },
       },
       mappings = {
         i = {
-          ["<M-q>"] = false,
-          ["<M-f>"] = false,
-          ["<M-k>"] = false,
-          ["<Esc>"] = actions.close,
-          ["<C-c>"] = actions.close,
-          ["<C-n>"] = actions.move_selection_next,
-          ["<C-p>"] = actions.move_selection_previous,
-          ["<C-s>"] = actions.select_horizontal,
-          ["<C-v>"] = actions.select_vertical,
+          ["<Up>"] = actions.cycle_history_prev,
+          ["<Down>"] = actions.cycle_history_next,
           ["<C-q>"] = function(...)
             actions.smart_send_to_qflist(...)
             actions.open_qflist(...)
           end,
-          ["<Down>"] = actions.cycle_history_next,
-          ["<Up>"] = actions.cycle_history_prev,
-          ["<CR>"] = actions.select_default,
+        },
+        n = {
+          ["<C-c>"] = actions.close,
         },
       },
       -- open files in the first window that is an actual file.
@@ -190,10 +216,10 @@ M.config = function()
     },
     extensions = {
       fzf = {
-        fuzzy = true,                       -- false will only do exact matching
-        override_generic_sorter = true,     -- override the generic sorter
-        override_file_sorter = true,        -- override the file sorter
-        case_mode = "smart_case",           -- or "ignore_case" or "respect_case"
+        fuzzy = true, -- false will only do exact matching
+        override_generic_sorter = true, -- override the generic sorter
+        override_file_sorter = true, -- override the file sorter
+        case_mode = "smart_case", -- or "ignore_case" or "respect_case"
         -- the default case_mode is "smart_case"
       },
       ["ui-select"] = {
@@ -218,4 +244,8 @@ M.config = function()
   pcall(telescope.load_extension, "ui-select")
 end
 
-return M
+-- return M
+
+return {
+  M,
+}

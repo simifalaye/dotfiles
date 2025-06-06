@@ -7,18 +7,26 @@
 # - NO_COLOR: 1 = disable color
 # - DRY_RUN: 1 = don't do anything
 # - UNINSTALL: 1 = uinstall dotfiles
+#
+# Usage: ./install <module>
+
+MODULE=""
 
 # Load common libs (sets LOG_LEVEL, NO_COLOR, DRY_RUN)
 source "./lib/common"
 
 function run_module() {
-  # shellcheck source=/dev/null
-  source "./modules/${1}/install"
+  if [ -z "${MODULE}" ] || [ "${1}" = "${MODULE}" ]; then
+    # shellcheck source=/dev/null
+    source "./modules/${1}/install"
+  fi
 }
 
 #-
 #  Main
 #-
+
+MODULE="${1}"
 
 # Required for modules scripts
 # shellcheck disable=SC2034
@@ -60,6 +68,7 @@ run_module atool
 run_module bash-ls
 run_module bat
 run_module black
+run_module calc
 run_module cheat
 run_module clangd-ls
 run_module cpplint

@@ -2,6 +2,8 @@ local M = {
   "stevearc/oil.nvim",
 }
 
+M.cmd = { "Oil" }
+
 M.keys = {
   { "-", "<cmd>Oil<CR>", desc = "Open parent directory" },
   {
@@ -73,7 +75,7 @@ M.config = function()
           return hls
         end,
       },
-      { "size",  highlight = "Special" },
+      { "size", highlight = "Special" },
       { "mtime", highlight = "Number" },
       {
         "icon",

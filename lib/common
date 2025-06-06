@@ -64,7 +64,7 @@ function _run() {
       shift
       shift
     fi
-    echo "${@}"
+    echo "${@}" >&2
   else
     local redirect_target="/dev/null"
     if [ "$1" == '--redirect' ]; then
@@ -126,8 +126,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     __PM_UNINSTALL_CMD="$(which brew) uninstall --force"
     __PM_UPDATE_CMD="$(which brew) update"
   else
-    echo "Homebrew not installed. Please install Homebrew (https://brew.sh/)." >&2
-    return 1
+    error "Homebrew not installed. Please install Homebrew (https://brew.sh/)." && return 1
   fi
   __HAS_GUI=1
 elif [[ "$OSTYPE" == "linux-gnu"* ]] && [ -f /etc/os-release ]; then
@@ -163,8 +162,7 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]] && [ -f /etc/os-release ]; then
       __PM_UPDATE_CMD="sudo zypper refresh"
       ;;
     *)
-      echo "Unsupported or unknown Linux distribution (ID='$__OS_ID', ID_LIKE='$__OS_LIKE')." >&2
-      return 1
+      error "Unsupported or unknown Linux distribution (ID='$__OS_ID', ID_LIKE='$__OS_LIKE')." && return 1
       ;;
   esac
   if grep -qi microsoft /proc/version 2>/dev/null; then
@@ -173,8 +171,7 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]] && [ -f /etc/os-release ]; then
     __HAS_GUI=1
   fi
 else
-  echo "Unsupported OS: $OSTYPE" >&2
-  return 1
+  error "Unsupported OS: $OSTYPE" && return 1
 fi
 
 #
@@ -182,7 +179,7 @@ fi
 #
 
 # Log helper functions
-# Usage: <name> ...
+# Usage: <name> <msg> ...
 function emergency() { _log emergency "$@"; exit 1; }
 function alert()     { [ "${LOG_LEVEL:-0}" -ge 1 ] && _log alert "$@"; true; }
 function critical()  { [ "${LOG_LEVEL:-0}" -ge 2 ] && _log critical "$@"; true; }
@@ -197,7 +194,9 @@ function debug()     { [ "${LOG_LEVEL:-0}" -ge 7 ] && _log debug "$@"; true; }
 function extract() {
   local file="$1"
   local dir="${2:-.}"
-  [ -f "${file}" ] || { error "'${file}' is not a valid file" && return 1; }
+  if [ "${DRY_RUN}" != '1' ] && [ ! -f "${file}" ]; then
+    error "'${file}' is not a valid file" && return 1;
+  fi
 
   [ -n "${dir}" ] && _run mkdir -p "${dir}"
   info "Extracting ${file} to ${dir}"
@@ -661,7 +660,7 @@ function install_gh_pkg() {
     filtered_assets+=("${asset}")
   done
 
-  # Make sure only one package is found
+  # Make sure expected number of assets are found
   if [ ${#filtered_assets[@]} -ne "${num_assets}" ]; then
     error "Unexpected number of assets found. Found ${#filtered_assets[@]} candidates:"
     for asset in "${filtered_assets[@]}"; do

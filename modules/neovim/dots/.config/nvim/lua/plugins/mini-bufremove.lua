@@ -1,24 +1,25 @@
 local M = {
   "echasnovski/mini.bufremove",
   version = "*",
-  config = true,
 }
 
 M.keys = {
   {
-    "<leader>x",
+    "<leader>bd",
     function()
       require("mini.bufremove").delete()
     end,
-    desc = "Buffer Delete",
+    desc = "Delete",
   },
   {
-    "<leader>X",
+    "<leader>bw",
     function()
       require("mini.bufremove").wipeout()
     end,
-    desc = "Buffer Wipeout",
+    desc = "Wipeout",
   },
 }
+
+M.config = true
 
 return M

@@ -35,8 +35,8 @@ M.config = function()
     formatters_by_ft = formatters_by_ft,
     default_format_opts = {
       timeout_ms = 5000,
-      async = false,     -- not recommended to change
-      quiet = false,     -- not recommended to change
+      async = false, -- not recommended to change
+      quiet = false, -- not recommended to change
       lsp_format = "fallback",
       stop_after_first = true,
     },

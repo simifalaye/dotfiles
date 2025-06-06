@@ -133,54 +133,50 @@ autocmd({ "LspAttach" }, {
 
     -- Setup main keymaps
     -- :h lsp-defaults
-    local wk_ok, wk = pcall(require, "which-key")
-    if wk_ok then
-      wk.add({ { "gr", group = "+lsp" } }, { buffer = bufnr })
-      wk.add({ { "grw", group = "+workspace" } }, { buffer = bufnr })
-    end
-    vim.keymap.set("n", "grwa", vim.lsp.buf.add_workspace_folder, { desc = "Add Folder (lsp)", buffer = bufnr })
-    vim.keymap.set("n", "grwr", vim.lsp.buf.remove_workspace_folder, { desc = "Remove Folder (lsp)", buffer = bufnr })
-    vim.keymap.set("n", "grwl", function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
-      { desc = "List Folders (lsp)", buffer = bufnr })
+    vim.keymap.set(
+      "n",
+      "grwa",
+      vim.lsp.buf.add_workspace_folder,
+      { desc = "Add Folder (lsp)", buffer = bufnr }
+    )
+    vim.keymap.set(
+      "n",
+      "grwr",
+      vim.lsp.buf.remove_workspace_folder,
+      { desc = "Remove Folder (lsp)", buffer = bufnr }
+    )
+    vim.keymap.set("n", "grwl", function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, { desc = "List Folders (lsp)", buffer = bufnr })
 
     local supports_method = function(method)
       return client:supports_method("textDocument/" .. method)
     end
 
     -- Additional configuration based on supported methods
-    if supports_method("documentFormatting") then
-      vim.keymap.set("n", "gQ", vim.lsp.buf.format, { desc = "Format Buffer (lsp)", buffer = bufnr })
-    end
     if supports_method("declaration") then
-      vim.keymap.set("n", "grd", vim.lsp.buf.declaration, { desc = "Goto Dec (lsp)", buffer = bufnr })
+      vim.keymap.set(
+        "n",
+        "grd",
+        vim.lsp.buf.declaration,
+        { desc = "Goto Dec (lsp)", buffer = bufnr }
+      )
     end
     if supports_method("inlayHint") then
-      vim.keymap.set("n",
-        "grI",
-        function()
-          vim.lsp.inlay_hint.enable(
-            not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }),
-            { bufnr = bufnr }
-          )
-        end,
-        { desc = "Toggle inlay hints (lsp)", buffer = bufnr }
-      )
+      vim.keymap.set("n", "grI", function()
+        vim.lsp.inlay_hint.enable(
+          not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }),
+          { bufnr = bufnr }
+        )
+      end, { desc = "Toggle inlay hints (lsp)", buffer = bufnr })
     end
     if supports_method("codeLens") and vim.g.user_lsp_codelens_enabled then
-      vim.keymap.set("n",
-        "grl",
-        function()
-          vim.lsp.codelens.refresh()
-        end,
-        { desc = "Codelens refresh (lsp)", buffer = bufnr }
-      )
-      vim.keymap.set("n",
-        "grL",
-        function()
-          vim.lsp.codelens.run()
-        end,
-        { desc = "Codelens run (lsp)", buffer = bufnr }
-      )
+      vim.keymap.set("n", "grl", function()
+        vim.lsp.codelens.refresh()
+      end, { desc = "Codelens refresh (lsp)", buffer = bufnr })
+      vim.keymap.set("n", "grL", function()
+        vim.lsp.codelens.run()
+      end, { desc = "Codelens run (lsp)", buffer = bufnr })
       vim.lsp.codelens.refresh({ bufnr = bufnr })
       vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
         group = augroup("user_codelens_refresh", { clear = false }),
@@ -193,24 +189,26 @@ autocmd({ "LspAttach" }, {
       })
     end
     if supports_method("signatureHelp") then
-      vim.keymap.set("n",
+      vim.keymap.set(
+        "n",
         "grs",
         vim.lsp.buf.signature_help,
         { desc = "Signature (lsp)", buffer = bufnr }
       )
     end
     if supports_method("typeDefinition") then
-      vim.keymap.set("n",
+      vim.keymap.set(
+        "n",
         "grt",
         vim.lsp.buf.type_definition,
         { desc = "Goto Type (lsp)", buffer = bufnr }
       )
     end
     if
-        (
-          supports_method("semanticTokens/full")
-          or supports_method("semanticTokens/full/delta")
-        ) and vim.lsp.semantic_tokens
+      (
+      supports_method("semanticTokens/full")
+      or supports_method("semanticTokens/full/delta")
+    ) and vim.lsp.semantic_tokens
     then
       if vim.b["user_semantic_tokens_enabled"] == nil then
         vim.b["user_semantic_tokens_enabled"] = vim.g.user_lsp_semantic_tokens_enabled
@@ -221,8 +219,8 @@ autocmd({ "LspAttach" }, {
       )
     end
     if
-        supports_method("documentHighlight")
-        and vim.g.user_lsp_reference_highlight_enabled
+      supports_method("documentHighlight")
+      and vim.g.user_lsp_reference_highlight_enabled
     then
       local doc_highlight_grpid = augroup("user_doc_highlight", { clear = false })
       vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {

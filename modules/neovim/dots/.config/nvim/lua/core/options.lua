@@ -1,17 +1,3 @@
---
--- User options
---
-
--- Configure lsp options
-vim.g.user_lsp_codelens_enabled = true
-vim.g.user_lsp_semantic_tokens_enabled = true
-vim.g.user_lsp_inlay_hints_enabled = true
-vim.g.user_lsp_reference_highlight_enabled = true
-
---
--- Vim options
---
-
 local opt = vim.opt
 local fn = vim.fn
 
@@ -77,7 +63,9 @@ opt.guifont = "MesloLGS NerdFont:h13"
 opt.diffopt:append("algorithm:histogram")
 
 -- Use system clipboard by default
-opt.clipboard = "unnamedplus"
+vim.schedule(function()
+  opt.clipboard = "unnamedplus"
+end)
 
 -- Allow local project config
 opt.exrc = true

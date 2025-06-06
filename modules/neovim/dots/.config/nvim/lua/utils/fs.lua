@@ -86,12 +86,12 @@ local function make_default_error_cb(path, runnable)
   return function(error, _)
     error(
       "fwatch.watch("
-      .. path
-      .. ", "
-      .. runnable
-      .. ")"
-      .. "encountered an error: "
-      .. error
+        .. path
+        .. ", "
+        .. runnable
+        .. ")"
+        .. "encountered an error: "
+        .. error
     )
   end
 end
@@ -115,8 +115,8 @@ function M.watch_with_function(path, on_event, on_error, opts)
   -- these are just the default values
   local flags = {
     watch_entry = false, -- true = when dir, watch dir inode, not dir content
-    stat = false,        -- true = don't use inotify/kqueue but periodic check, not implemented
-    recursive = false,   -- true = watch dirs inside dirs
+    stat = false, -- true = don't use inotify/kqueue but periodic check, not implemented
+    recursive = false, -- true = watch dirs inside dirs
   }
 
   local unwatch_cb = function()
@@ -177,7 +177,7 @@ function M.watch(path, runnable, opts)
   else
     error(
       "Unknown runnable type given to watch,"
-      .. " must be string or {on_event = function, on_error = function}."
+        .. " must be string or {on_event = function, on_error = function}."
     )
   end
 end

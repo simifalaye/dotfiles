@@ -87,3 +87,11 @@ vim.api.nvim_create_user_command("Scratch", function()
     vim.api.nvim_set_option_value(name, value, { buf = buf })
   end
 end, { desc = "Open a scratch buffer", nargs = 0 })
+
+vim.api.nvim_create_user_command("ToggleDiagnostics", function()
+  if vim.diagnostic.is_enabled() then
+    vim.diagnostic.enable(false)
+    return
+  end
+  vim.diagnostic.enable(true)
+end, { desc = "Toggle whether diagnostics are enabled", nargs = 0 })

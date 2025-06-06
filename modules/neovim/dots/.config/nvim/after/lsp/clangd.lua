@@ -1,4 +1,3 @@
-vim.lsp.enable("clangd")
 return {
   cmd = {
     "clangd",

@@ -1,7 +1,8 @@
 local M = {
   "akinsho/git-conflict.nvim",
   version = "*",
-  config = true,
 }
+
+M.config = true
 
 return M

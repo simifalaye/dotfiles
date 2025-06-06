@@ -39,6 +39,16 @@ _G.reqcall = function(module)
   })
 end
 
+-- Set leader keys
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+
+-- Configure lsp options
+vim.g.user_lsp_codelens_enabled = true
+vim.g.user_lsp_semantic_tokens_enabled = true
+vim.g.user_lsp_inlay_hints_enabled = true
+vim.g.user_lsp_reference_highlight_enabled = true
+
 -- Process the log level environment variable if set
 if vim.env.LOG_LEVEL and type(vim.env.LOG_LEVEL) == "string" then
   local lvl = tonumber(vim.env.LOG_LEVEL)
@@ -48,10 +58,6 @@ if vim.env.LOG_LEVEL and type(vim.env.LOG_LEVEL) == "string" then
 else
   vim.g.user_log_level = vim.log.levels.INFO
 end
-
--- Set leader keys
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
 
 -- Disable unused builtin plugins
 vim.g.loaded_netrw = true
@@ -71,39 +77,12 @@ vim.g.loaded_vimballPlugin = true
 vim.g.loaded_tohtml = true
 vim.g.loaded_2html_plugin = true
 
--- Bootstrap lazy.nvim
-local lazypath =
-  vim.fs.joinpath(vim.fn.stdpath("data") --[[@as string]], "lazy", "lazy.nvim")
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "--branch=stable",
-    lazyrepo,
-    lazypath,
-  })
-  if vim.v.shell_error ~= 0 then
-    vim.api.nvim_echo({
-      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
-      { "\nPress any key to exit..." },
-    }, true, {})
-    vim.fn.getchar()
-    os.exit(1)
-  end
-end
-vim.opt.rtp:prepend(lazypath)
 
--- Setup lazy.nvim
-require("lazy").setup({
-  spec = {
-    { import = "plugins" },
-  },
-  -- Configure any other settings here. See the documentation for more details.
-  -- colorscheme that will be used when installing plugins.
-  install = { missing = true, colorscheme = { "default" } },
-  -- automatically check for plugin updates
-  checker = { enabled = false },
-})
+-- Load core modules
+require("core.options")
+require("core.autocommands")
+require("core.commands")
+require("core.keymaps")
+require("core.diagnostics")
+require("core.lsp")
+require("core.lazy")
