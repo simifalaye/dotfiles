@@ -2,10 +2,6 @@
 #  General
 #-
 
-# Prepend user binaries to PATH to allow overriding system commands.
-[[ "${PATH}" =~ ${HOME}/.local/bin ]] || \
-  export PATH="${HOME}/.local/bin:${PATH}"
-
 # Set the browser
 if [ -n "${DISPLAY}" ]; then
   export BROWSER=firefox

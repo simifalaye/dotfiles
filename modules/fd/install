@@ -11,18 +11,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Main
 #
 
-fd_pkg_name="fd"
-if [ "${__OS_LIKE}" = "debian" ]; then
-  fd_pkg_name="fd-find"
-fi
-
 if [ "${UNINSTALL}" = "1" ]; then
-  if is_installed "${fd_pkg_name}"; then
-    uninstall_pkg "${fd_pkg_name}"
+  if is_installed fd; then
+    uninstall_pkg 'fd[debian=fd-find][ubuntu=fd-find]'
   fi
 else
-  if ! is_installed "${fd_pkg_name}"; then
-    install_pkg "${fd_pkg_name}"
+  if ! is_installed fd; then
+    install_pkg 'fd[debian=fd-find][ubuntu=fd-find]'
     if [ "${__OS_LIKE}" = "debian" ]; then
       _run sudo rm -rf /usr/local/bin/fd
       _run sudo ln -s /usr/bin/fdfind /usr/local/bin/fd

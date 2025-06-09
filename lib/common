@@ -351,10 +351,10 @@ function remove_system_manpages() {
 }
 
 # install_pkg: Install packages using the system's package manager.
+# Optionally declare package name variations for different OS_IDs
 #
 # Usage:
-#   install_pkg fd[debian=fd-find][ubuntu=fd-find][mac=fd] ripgrep
-#   install_pkg bat[debian=batcat][ubuntu=batcat]
+#   install_pkg 'fd[debian=fd-find][ubuntu=fd-find]' ripgrep
 #   install_pkg rg
 install_pkg() {
   for arg in "$@"; do
@@ -373,17 +373,19 @@ install_pkg() {
       fi
       tmp="${tmp//[$os_key=$os_val]/}"
     done
-    info "Installing $default_pkg (os package: $os_pkg) on $__OS_ID"
-    # shellcheck disable=SC2086
-    _run ${__PM_INSTALL_CMD} ${os_pkg}
+    if [ -n "${os_pkg}" ]; then
+      info "Installing $default_pkg (os package: $os_pkg) on $__OS_ID"
+      # shellcheck disable=SC2086
+      _run ${__PM_INSTALL_CMD} ${os_pkg}
+    fi
   done
 }
 
 # uninstall_pkg: Install packages using the system's package manager.
+# Optionally declare package name variations for different OS_IDs
 #
 # Usage:
-#   uninstall_pkg fd[debian=fd-find][ubuntu=fd-find][mac=fd] ripgrep
-#   uninstall_pkg bat[debian=batcat][ubuntu=batcat]
+#   uninstall_pkg 'fd[debian=fd-find][ubuntu=fd-find]' ripgrep
 #   uninstall_pkg rg
 uninstall_pkg() {
   for arg in "$@"; do
@@ -402,9 +404,11 @@ uninstall_pkg() {
       fi
       tmp="${tmp//[$os_key=$os_val]/}"
     done
-    info "Uninstalling $default_pkg (os package: $os_pkg) on $__OS_ID"
-    # shellcheck disable=SC2086
-    _run ${__PM_UNINSTALL_CMD} ${os_pkg}
+    if [ -n "${os_pkg}" ]; then
+      info "Uninstalling $default_pkg (os package: $os_pkg) on $__OS_ID"
+      # shellcheck disable=SC2086
+      _run ${__PM_UNINSTALL_CMD} ${os_pkg}
+    fi
   done
 }
 
@@ -433,7 +437,7 @@ install_pipx_pkg() {
   info "Installing pipx package(s): $*"
   local pkg
   for pkg in "$@"; do
-    _run sudo pipx install "$pkg"
+    _run pipx install "$pkg"
   done
 }
 
@@ -442,7 +446,7 @@ install_pipx_pkg() {
 uninstall_pipx_pkg() {
   local pkg
   for pkg in "$@"; do
-    _run sudo pipx uninstall "$pkg"
+    _run pipx uninstall "$pkg"
   done
 }
 
@@ -620,16 +624,16 @@ function install_gh_pkg() {
     error "Missing required args" && return 1
   fi
 
-  local current_version desired_version release_data
-
-  # Get current version
-  current_version="$(parse_version "$($version_cmd 2>/dev/null)" "${version_regex}")"
-
   # Get latest tag if needed
   if [ "$tag" = "latest" ]; then
     tag="$(get_latest_github_tag "$repo")"
     [ -z "$tag" ] && error "Could not determine latest release tag." && return 1
   fi
+
+  local current_version desired_version release_data
+
+  # Get current version
+  current_version="$(parse_version "$($version_cmd 2>/dev/null)" "${version_regex}")"
 
   # Compare desired version and current version
   desired_version="$(parse_version "${tag}" "${version_regex}")"

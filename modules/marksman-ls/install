@@ -23,6 +23,10 @@ else
   if [ "${__OS_ID}" = "mac" ]; then
     is_installed marksman || install_pkg marksman
   else
+    # Marksman versions and tags are mismatched formats, just install only if it is not installed
+    if is_installed marksman; then
+      return
+    fi
     #shellcheck disable=SC2317
     function __marksmanls_install_fn() {
       for f in marksman*; do
@@ -36,8 +40,7 @@ else
     function __marksman_filter_fn() { return 0; }
     install_gh_pkg 'artempyanykh/marksman' 'latest' 'marksman --version' '__marksmanls_install_fn' \
       -x \
-      -f '__marksman_filter_fn' \
-      -v '[0-9]{4}-[0-9]{2}-[0-9]{2}'
+      -f '__marksman_filter_fn'
     unset -f __marksmanls_install_fn __marksman_filter_fn
   fi
 fi

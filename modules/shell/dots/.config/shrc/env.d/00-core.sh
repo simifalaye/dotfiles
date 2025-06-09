@@ -15,6 +15,10 @@ export XDG_RUNTIME_DIR="/tmp/runtimedir/${UID}" && mkdir -p "${XDG_RUNTIME_DIR}"
 # System directories
 export XDG_DATA_DIRS="/usr/local/share:/usr/share"
 
+#
+# Functions
+#
+
 # Functions to help us manage paths.  Second argument is the name of the
 # path variable to be modified (default: PATH)
 # path_remove () {
@@ -88,3 +92,10 @@ path_append () {
     value=$(indirect_expand "$var")
     export "$var"="${value:+${value}:}${1}"
 }
+
+#
+# Path
+#
+
+path_prepend "/usr/local/bin"
+path_prepend "${HOME}/.local/bin"

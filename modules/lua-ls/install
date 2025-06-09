@@ -20,6 +20,7 @@ if [ "${UNINSTALL}" = "1" ]; then
       _run sudo rm -rf /opt/lua-language-server
     fi
   fi
+  unstow_dots "${SCRIPT_DIR}/dots"
 else
   if [ "${__OS_ID}" = "mac" ]; then
     is_installed lua-language-server || install_pkg lua-language-server
@@ -36,4 +37,5 @@ else
       unset -f __luals_install_fn
     fi
   fi
+  stow_dots "${SCRIPT_DIR}/dots"
 fi

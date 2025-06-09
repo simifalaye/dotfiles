@@ -19,6 +19,10 @@ if [ "${UNINSTALL}" = "1" ]; then
 else
   if ! is_installed bat; then
     install_pkg bat
+    if [ "${__OS_LIKE}" = "debian" ]; then
+      _run sudo rm -rf /usr/local/bin/bat
+      _run sudo ln -s /usr/bin/batcat /usr/local/bin/bat
+    fi
   fi
   stow_dots "${SCRIPT_DIR}/dots"
 fi

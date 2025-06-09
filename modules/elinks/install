@@ -11,19 +11,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Main
 #
 
-elinks_pkg_name="elinks"
-if [ "${__OS_ID}" = "mac" ]; then
-  elinks_pkg_name="felinks"
-fi
-
 if [ "${UNINSTALL}" = "1" ]; then
   if is_installed elinks; then
-    uninstall_pkg "${elinks_pkg_name}"
+    uninstall_pkg 'elinks[mac=felinks]'
   fi
   unstow_dots "${SCRIPT_DIR}/dots"
 else
   if ! is_installed elinks; then
-    install_pkg "${elinks_pkg_name}"
+    install_pkg 'elinks[mac=felinks]'
   fi
   stow_dots "${SCRIPT_DIR}/dots"
 fi

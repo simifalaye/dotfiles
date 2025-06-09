@@ -11,17 +11,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Main
 #
 
-clangd_pkg_name="clangd"
-if [ "${__OS_ID}" = "mac" ]; then
-  clangd_pkg_name="llvm"
-fi
-
 if [ "${UNINSTALL}" = "1" ]; then
   if is_installed clangd; then
-    uninstall_pkg "${clangd_pkg_name}"
+    uninstall_pkg 'clangd[mac=llvm]'
   fi
 else
   if ! is_installed clangd; then
-    install_pkg "${clangd_pkg_name}"
+    install_pkg 'clangd[mac=llvm]'
   fi
 fi
