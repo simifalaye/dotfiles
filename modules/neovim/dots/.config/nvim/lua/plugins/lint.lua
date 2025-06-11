@@ -19,6 +19,7 @@ M.init = function()
   vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
     desc = "Try linting file on buffer read and write",
     pattern = "*",
+    group = vim.api.nvim_create_augroup("user_plugin_lint", {}),
     callback = function(args)
       local ft = vim.api.nvim_get_option_value("filetype", { buf = args.buf })
       if linters_by_ft[ft] then

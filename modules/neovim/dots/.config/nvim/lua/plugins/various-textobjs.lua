@@ -1,5 +1,6 @@
 local M = {
   "chrisgrieser/nvim-various-textobjs",
+  enabled = false,
 }
 M.event = { "VeryLazy" }
 

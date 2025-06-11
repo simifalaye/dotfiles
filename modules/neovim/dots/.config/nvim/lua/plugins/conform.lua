@@ -24,6 +24,7 @@ M.init = function()
   vim.api.nvim_create_autocmd("FileType", {
     desc = "Load conform for configured filetypes",
     pattern = vim.tbl_keys(formatters_by_ft),
+    group = vim.api.nvim_create_augroup("user_plugin_conform", {}),
     callback = function()
       require("lazy").load({ plugins = { "conform.nvim" } })
     end,
