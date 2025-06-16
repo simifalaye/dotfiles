@@ -3,7 +3,8 @@ local actions = reqcall("fzf-lua.actions")
 
 local M = {
   "ibhagwan/fzf-lua",
-  enabled = vim.fn.executable("fzf") > 0,
+  enabled = false,
+  -- enabled = vim.fn.executable("fzf") > 0,
 }
 
 M.cmd = { "FzfLua" }

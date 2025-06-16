@@ -18,11 +18,12 @@ if [ "${UNINSTALL}" = "1" ]; then
     else
       _run sudo rm -rf /opt/nvim
     fi
+    uninstall_npm_pkg tree-sitter-cli
   fi
   unstow_dots "${SCRIPT_DIR}/dots"
 else
   if [ "${__OS_ID}" = "mac" ]; then
-    is_installed nvim || install_pkg neovim
+    is_installed nvim || { install_pkg neovim && install_npm_pkg tree-sitter-cli; }
   else
     # shellcheck disable=SC2317
     function __neovim_install_fn() {
@@ -31,6 +32,7 @@ else
         _run sudo mv "${d}" /opt/nvim
         break
       done
+      install_npm_pkg tree-sitter-cli
     }
     install_gh_pkg 'neovim/neovim' 'latest' 'nvim --version' '__neovim_install_fn'
     unset -f __neovim_install_fn

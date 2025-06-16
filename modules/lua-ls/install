@@ -11,13 +11,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Main
 #
 
+lua_ls_install_path="${HOME}/.local/share/lua-language-server"
 
 if [ "${UNINSTALL}" = "1" ]; then
   if is_installed lua-language-server; then
     if [ "${__OS_ID}" = "mac" ]; then
       uninstall_pkg lua-language-server
     else
-      _run sudo rm -rf /opt/lua-language-server
+      _run sudo rm -rf "${lua_ls_install_path}"
     fi
   fi
   unstow_dots "${SCRIPT_DIR}/dots"
@@ -28,10 +29,10 @@ else
     if ! is_installed lua-language-server; then
       # shellcheck disable=SC2317
       function __luals_install_fn() {
-        _run sudo rm -rf /opt/lua-language-server
+        _run rm -rf "${lua_ls_install_path}"
         _run rm -rf ./*.tar.gz
-        _run sudo mkdir -p /opt/lua-language-server
-        _run sudo cp -r . /opt/lua-language-server
+        _run mkdir -p "${lua_ls_install_path}"
+        _run cp -r . "${lua_ls_install_path}"
       }
       install_gh_pkg 'LuaLS/lua-language-server' 'latest' 'echo 0.0' '__luals_install_fn'
       unset -f __luals_install_fn

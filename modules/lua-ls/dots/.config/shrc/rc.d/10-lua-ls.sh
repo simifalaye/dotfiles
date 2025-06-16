@@ -1,4 +1,1 @@
-if test -d /opt/lua-language-server/bin; then
-  [[ "${PATH}" =~ /opt/lua-language-server/bin ]] || \
-    export PATH="/opt/lua-language-server/bin:${PATH}"
-fi
+path_prepend "${HOME}/.local/share/lua-language-server/bin"

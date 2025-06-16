@@ -63,6 +63,8 @@ local ft_map = {
   xslt = "xml",
 }
 
+local disabled_langs = { "tmux" }
+
 local M = {
   "nvim-treesitter/nvim-treesitter",
   version = false,
@@ -70,25 +72,38 @@ local M = {
   build = ":TSUpdate",
 }
 
-M.cmd = { "TSUpdate", "TSInstall", "TSUpdateSync" }
+M.cmd = { "TSUpdate", "TSInstall", "TSUpdateSync", "TSUninstall" }
 
 M.init = function()
-  vim.api.nvim_create_autocmd("FileType", {
+  -- Register langs
+  for filetype, lang in pairs(ft_map) do
+    vim.treesitter.language.register(lang, filetype)
+  end
+  -- Setup filetype autocmd to start treesitter
+  vim.api.nvim_create_autocmd("BufWinEnter", {
     desc = "Enable highlighting for installed treesitter filetypes",
     pattern = { "*" },
     group = vim.api.nvim_create_augroup("user_plugin_nvim_treesitter", {}),
     callback = function(args)
       -- Start treesitter if parser installed OR install and start it if it isn't
       local treesitter = require("nvim-treesitter") -- Lazy load on require
+
       local bufnr = args.buf
-      local ft = vim.bo[bufnr].filetype
-      ft = ft_map[ft] or ft
-      if vim.list_contains(treesitter.get_installed(), ft) then
-        vim.treesitter.start(bufnr, ft)
-      elseif vim.list_contains(treesitter.get_available(), ft) then
-        treesitter.install(ft, { summary = true }):await(function()
+      local filetype = vim.bo[bufnr].filetype
+      if not filetype or filetype == "" then
+        return
+      end
+      local lang = vim.treesitter.language.get_lang(filetype) or filetype
+      if vim.list_contains(disabled_langs, lang) then
+        return
+      end
+
+      if vim.list_contains(treesitter.get_installed(), lang) then
+        vim.treesitter.start(bufnr)
+      elseif vim.list_contains(treesitter.get_available(), lang) then
+        treesitter.install(lang, { summary = true }):await(function()
           vim.schedule(function()
-            vim.treesitter.start(bufnr, ft)
+            vim.treesitter.start(bufnr)
           end)
         end)
       end
@@ -98,7 +113,9 @@ end
 
 M.config = function()
   local treesitter = require("nvim-treesitter")
-  treesitter.setup({})
+  treesitter.setup({
+    install_dir = vim.fn.stdpath("data") .. "/site",
+  })
   vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
   vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 end
