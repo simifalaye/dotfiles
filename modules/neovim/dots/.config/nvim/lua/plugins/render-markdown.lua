@@ -3,7 +3,7 @@ local M = {
   version = "*",
 }
 
-M.dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.icons" } -- if you use standalone mini plugin
+M.dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.icons" }
 
 M.ft = { "markdown" }
 

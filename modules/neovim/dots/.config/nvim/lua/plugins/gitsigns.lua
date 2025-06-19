@@ -50,13 +50,13 @@ M.config = function()
     { "o", "x" },
     "ig",
     ":<C-U>Gitsigns select_hunk<CR>",
-    { desc = "In Hunk" }
+    { desc = "inner git hunk" }
   )
   vim.keymap.set(
     { "o", "x" },
     "ag",
     ":<C-u>Gitsigns select_hunk<CR>",
-    { silent = true, desc = "A hunk" }
+    { silent = true, desc = "git hunk" }
   )
 
   -- Actions

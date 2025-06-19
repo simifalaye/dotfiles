@@ -124,6 +124,19 @@ map(
   { desc = "Q macro over range", silent = false }
 )
 
+-- Text Objects
+map("x", "ie", [[gg0oG$]], { desc = "entire buffer" })
+map(
+  "o",
+  "ie",
+  [[<cmd>execute "normal! m`"<Bar>keepjumps normal! ggVG<CR>]],
+  { desc = "entire buffer" }
+)
+map("x", "al", "$o0", { desc = "line" })
+map("o", "al", "<cmd>normal val<CR>", { desc = "line" })
+map("x", "il", [[<Esc>^vg_]], { desc = "inner line" })
+map("o", "il", [[<cmd>normal! ^vg_<CR>]], { desc = "inner line" })
+
 --
 -- Insert mode
 --

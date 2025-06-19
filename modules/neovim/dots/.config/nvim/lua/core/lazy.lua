@@ -1,6 +1,6 @@
 -- Bootstrap lazy.nvim
 local lazypath =
-vim.fs.joinpath(vim.fn.stdpath("data") --[[@as string]], "lazy", "lazy.nvim")
+  vim.fs.joinpath(vim.fn.stdpath("data") --[[@as string]], "lazy", "lazy.nvim")
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
   local out = vim.fn.system({
@@ -30,7 +30,18 @@ require("lazy").setup({
   },
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
-  install = { missing = true, colorscheme = { "default" } },
+  install = {
+    missing = true,
+    colorscheme = {
+      (function()
+        if vim.fn.executable("tinty") == 1 then
+          local theme_name = vim.fn.system({ "tinty", "current" })
+          return vim.trim(theme_name or "")
+        end
+        return "default"
+      end)(),
+    },
+  },
   -- automatically check for plugin updates
   checker = { enabled = false },
 })
