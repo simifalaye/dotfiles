@@ -22,6 +22,7 @@ M.opts = {
       { "<leader>f", group = "+Find" },
       { "<leader>g", group = "+Git" },
       { "<leader>p", group = "+Plugin" },
+      { "<leader>u", group = "+Ui" },
     },
   },
 }

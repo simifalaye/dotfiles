@@ -43,12 +43,6 @@ end
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
--- Configure lsp options
-vim.g.user_lsp_codelens_enabled = true
-vim.g.user_lsp_semantic_tokens_enabled = true
-vim.g.user_lsp_inlay_hints_enabled = true
-vim.g.user_lsp_reference_highlight_enabled = true
-
 -- Process the log level environment variable if set
 if vim.env.LOG_LEVEL and type(vim.env.LOG_LEVEL) == "string" then
   local lvl = tonumber(vim.env.LOG_LEVEL)

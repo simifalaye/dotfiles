@@ -4,6 +4,23 @@ local M = {
 
 M.event = "VeryLazy"
 
+M.keys = {
+  {
+    "<leader>uA",
+    function()
+      if vim.g.minipairs_disable then
+        vim.g.minipairs_disable = false
+      else
+        vim.g.minipairs_disable = true
+      end
+
+      local state = vim.g.minipairs_disable
+      vim.notify(string.format("autopairs %s", require("utils.ui").bool2str(not state)))
+    end,
+    desc = "Toggle autopairs",
+  },
+}
+
 M.opts = {
   modes = { insert = true, command = true, terminal = false },
   -- skip autopair when next character is one of these

@@ -20,6 +20,20 @@ M.keys = {
     end,
     desc = "Clear notifications",
   },
+  {
+    "<leader>un",
+    function()
+      if vim.g.mininotify_disable then
+        vim.g.mininotify_disable = false
+      else
+        vim.g.mininotify_disable = true
+      end
+
+      local state = vim.g.mininotify_disable
+      vim.notify(string.format("notifications %s", require("utils.ui").bool2str(not state)))
+    end,
+    desc = "Toggle notifications",
+  },
 }
 
 M.config = function()

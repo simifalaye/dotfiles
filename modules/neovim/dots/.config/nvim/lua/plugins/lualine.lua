@@ -57,6 +57,20 @@ M.opts = {
     lualine_b = {
       "branch",
       -- { "diff", colored = false },
+      -- {
+      --   "diagnostics",
+      --   symbols = {
+      --     error = spaced(diag_icons.error),
+      --     warn = spaced(diag_icons.warn),
+      --     info = spaced(diag_icons.info),
+      --     hint = spaced(diag_icons.hint),
+      --   },
+      --   colored = true,
+      -- },
+    },
+    lualine_c = { { "filename", path = 1, shorting_target = 60 } },
+    lualine_x = {
+      -- { lsp_clients },
       {
         "diagnostics",
         symbols = {
@@ -67,9 +81,8 @@ M.opts = {
         },
         colored = true,
       },
+      { "filetype", colored = false },
     },
-    lualine_c = { { "filename", path = 1, shorting_target = 60 } },
-    lualine_x = { { lsp_clients }, { "filetype", colored = false } },
     lualine_y = {},
     lualine_z = { { "%l:%c" } },
   },

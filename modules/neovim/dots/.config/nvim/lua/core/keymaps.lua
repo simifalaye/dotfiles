@@ -1,4 +1,5 @@
 local map = vim.keymap.set
+local ui = require("utils.ui")
 
 --
 -- Multi-mode
@@ -98,6 +99,27 @@ map("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
 map("n", "<leader>bd", "<cmd>bd<CR>", { desc = "Delete" })
 map("n", "<leader>bD", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
 map("n", "<leader>bw", "<cmd>bd!<CR>", { desc = "Wipeout" })
+
+map("n", "<leader>ui", ui.set_indent, { desc = "Set indent" })
+map("n", "<leader>uc", ui.toggle_codelens, { desc = "Toggle codelens (buf)" })
+map("n", "<leader>uC", ui.toggle_conceal, { desc = "Toggle conceal" })
+map("n", "<leader>ud", function()
+  ui.toggle_diagnostics(0)
+end, { desc = "Toggle diagnostics (buf)" })
+map("n", "<leader>uD", ui.toggle_diagnostics, { desc = "Toggle diagnostics (all)" })
+map("n", "<leader>uf", ui.toggle_foldcolumn, { desc = "Toggle foldcolumn" })
+map("n", "<leader>ui", ui.toggle_inlay_hints, { desc = "Toggle inlay hints (buf)" })
+map("n", "<leader>ul", ui.toggle_statusline, { desc = "Toggle statusline" })
+map("n", "<leader>up", ui.toggle_paste, { desc = "Toggle paste mode" })
+map(
+  "n",
+  "<leader>us",
+  ui.toggle_semantic_tokens,
+  { desc = "Toggle semantic tokens (buf)" }
+)
+map("n", "<leader>uS", ui.toggle_signcolumn, { desc = "Toggle sign column" })
+map("n", "<leader>uw", ui.toggle_wrap, { desc = "Toggle wrap" })
+map("n", "<leader>uz", ui.toggle_spell, { desc = "Toggle spell" })
 
 --
 -- Visual/Select/Operator mode

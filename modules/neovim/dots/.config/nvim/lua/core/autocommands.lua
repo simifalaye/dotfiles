@@ -162,15 +162,7 @@ autocmd({ "LspAttach" }, {
         { desc = "Goto Dec (lsp)", buffer = bufnr }
       )
     end
-    if supports_method("inlayHint") then
-      vim.keymap.set("n", "grI", function()
-        vim.lsp.inlay_hint.enable(
-          not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }),
-          { bufnr = bufnr }
-        )
-      end, { desc = "Toggle inlay hints (lsp)", buffer = bufnr })
-    end
-    if supports_method("codeLens") and vim.g.user_lsp_codelens_enabled then
+    if supports_method("codeLens") and not vim.g.user_lsp_codelens_disable then
       vim.keymap.set("n", "grl", function()
         vim.lsp.codelens.refresh()
       end, { desc = "Codelens refresh (lsp)", buffer = bufnr })
@@ -182,7 +174,7 @@ autocmd({ "LspAttach" }, {
         group = augroup("user_codelens_refresh", { clear = false }),
         buffer = bufnr,
         callback = function()
-          if vim.g.user_lsp_codelens_enabled then
+          if not vim.b.user_lsp_codelens_disable then
             vim.lsp.codelens.refresh({ bufnr = bufnr })
           end
         end,
@@ -206,22 +198,17 @@ autocmd({ "LspAttach" }, {
     end
     if
       (
-      supports_method("semanticTokens/full")
-      or supports_method("semanticTokens/full/delta")
-    ) and vim.lsp.semantic_tokens
-    then
-      if vim.b["user_semantic_tokens_enabled"] == nil then
-        vim.b["user_semantic_tokens_enabled"] = vim.g.user_lsp_semantic_tokens_enabled
-      end
-      vim.lsp.semantic_tokens[vim.b.user_semantic_tokens_enabled and "start" or "stop"](
-        bufnr,
-        client.id
+        supports_method("semanticTokens/full")
+        or supports_method("semanticTokens/full/delta")
       )
-    end
-    if
-      supports_method("documentHighlight")
-      and vim.g.user_lsp_reference_highlight_enabled
+      and vim.lsp.semantic_tokens
+      and not vim.g.user_lsp_semantic_tokens_disable
     then
+      if not vim.b.user_lsp_semantic_tokens_disable then
+        vim.lsp.semantic_tokens["start"](bufnr, client.id)
+      end
+    end
+    if supports_method("documentHighlight") then
       local doc_highlight_grpid = augroup("user_doc_highlight", { clear = false })
       vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
         group = doc_highlight_grpid,
@@ -240,11 +227,12 @@ autocmd({ "LspAttach" }, {
         end,
       })
     end
-    if supports_method("inlayHint") and vim.lsp.inlay_hint then
-      if vim.b.user_inlay_hints_enabled == nil then
-        vim.b.user_inlay_hints_enabled = vim.g.user_lsp_inlay_hints_enabled
-      end
-      if vim.b.user_inlay_hints_enabled then
+    if
+      supports_method("inlayHint")
+      and vim.lsp.inlay_hint
+      and not vim.g.user_lsp_inlay_hints_disable
+    then
+      if not vim.b.user_lsp_inlay_hints_disable then
         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
       end
     end
