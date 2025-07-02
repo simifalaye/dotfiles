@@ -81,7 +81,6 @@ M.keys = {
   { "<leader>?", "<cmd>Pick history scope='/'<CR>", desc = "Find search history" },
   -- <leader> + f
   { "<leader>fc", "<cmd>Pick list scope='change'<CR>", desc = "Changes" },
-  { "<leader>fC", "<cmd>Pick<CR>", desc = "Colorschemes" },
   { "<leader>fd", "<cmd>Pick diagnostic scope='current'<CR>", desc = "Diagnostics" },
   { "<leader>fD", "<cmd>Pick diagnostic<CR>", desc = "Diagnostics (workspace)" },
   { "<leader>ff", "<cmd>Pick git_files<CR>", desc = "Files (git)" },
