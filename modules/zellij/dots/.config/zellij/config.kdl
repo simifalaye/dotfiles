@@ -25,6 +25,10 @@ keybinds clear-defaults=true {
         bind "l" "Right" { MoveFocus "Right"; }
         bind "j" "Down" { MoveFocus "Down"; }
         bind "k" "Up" { MoveFocus "Up"; }
+        bind "Shift h" "Shift Left" { MovePane "Left"; }
+        bind "Shift l" "Shift Right" { MovePane "Right"; }
+        bind "Shift j" "Shift Down" { MovePane "Down"; }
+        bind "Shift k" "Shift Up" { MovePane "Up"; }
         bind "p" { SwitchFocus; SwitchToMode "Normal"; }
         bind "n" { NewPane; SwitchToMode "Normal"; }
         bind "s" { NewPane "Down"; SwitchToMode "Normal"; }
@@ -36,15 +40,6 @@ keybinds clear-defaults=true {
         bind "e" { TogglePaneEmbedOrFloating; SwitchToMode "Normal"; }
         bind "r" { SwitchToMode "RenamePane"; PaneNameInput 0;}
         bind "i" { TogglePanePinned; SwitchToMode "Normal"; }
-    }
-    move {
-        bind "Alt m" { SwitchToMode "Normal"; }
-        bind "n" "Tab" { MovePane; }
-        bind "p" { MovePaneBackwards; }
-        bind "h" "Left" { MovePane "Left"; }
-        bind "j" "Down" { MovePane "Down"; }
-        bind "k" "Up" { MovePane "Up"; }
-        bind "l" "Right" { MovePane "Right"; }
     }
     tab {
         bind "Alt '" { SwitchToMode "Normal"; }
@@ -150,9 +145,8 @@ keybinds clear-defaults=true {
         bind "Alt '" { SwitchToMode "tab"; }
         bind "Alt p" { SwitchToMode "pane"; }
         bind "Alt r" { SwitchToMode "resize"; }
-        bind "Alt s" { SwitchToMode "scroll"; }
-        bind "Alt m" { SwitchToMode "move"; }
-        bind "Alt o" { SwitchToMode "session"; }
+        bind "Alt /" { SwitchToMode "scroll"; }
+        bind "Alt s" { SwitchToMode "session"; }
         bind "Alt [" { PreviousSwapLayout; }
         bind "Alt ]" { NextSwapLayout; }
         bind "Alt w" { ToggleFloatingPanes; SwitchToMode "normal"; }
@@ -161,10 +155,14 @@ keybinds clear-defaults=true {
         bind "Alt l" "Alt Right" { MoveFocusOrTab "Right"; }
         bind "Alt j" "Alt Down" { MoveFocus "Down"; }
         bind "Alt k" "Alt Up" { MoveFocus "Up"; }
+        bind "Alt Shift h" "Alt Shift Left" { MovePane "Left"; }
+        bind "Alt Shift j" "Alt Shift Down" { MovePane "Down"; }
+        bind "Alt Shift k" "Alt Shift Up" { MovePane "Up"; }
+        bind "Alt Shift l" "Alt Shift Right" { MovePane "Right"; }
         bind "Alt =" "Alt +" { Resize "Increase"; }
         bind "Alt -" { Resize "Decrease"; }
-        bind "Alt Shift h" { GoToPreviousTab; }
-        bind "Alt Shift l" { GoToNextTab; }
+        bind "Alt ," { GoToPreviousTab; }
+        bind "Alt ." { GoToNextTab; }
         bind "Alt 1" { GoToTab 1; SwitchToMode "normal"; }
         bind "Alt 2" { GoToTab 2; SwitchToMode "normal"; }
         bind "Alt 3" { GoToTab 3; SwitchToMode "normal"; }
@@ -174,14 +172,9 @@ keybinds clear-defaults=true {
         bind "Alt 7" { GoToTab 7; SwitchToMode "normal"; }
         bind "Alt 8" { GoToTab 8; SwitchToMode "normal"; }
         bind "Alt 9" { GoToTab 9; SwitchToMode "normal"; }
-        // bind "Alt \\" {
-        //     Run "nvim" ".config/zellij/config.kdl" {
-        //         cwd "\$HOME"
-        //         direction "Down"
-        //     }
-        // }
         bind "Alt \\" {
-            Run "echo" "HOME: \\$HOME" {
+            Run "nvim" ".config/zellij/config.kdl" {
+                cwd "$HOME"
                 direction "Down"
             }
         }
@@ -301,7 +294,7 @@ pane_frames false
 // Choose the theme that is specified in the themes section.
 // Default: default
 //
-theme "default"
+theme "catppuccin-mocha"
 
 // The name of the default layout to load on startup
 // Default: "default"

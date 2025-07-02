@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+RPS1=   # Clear the right side of the prompt; see next section.
+
+# Tell the Zsh Line Editor to ensure that our prompt and command line look
+# visually correct both before and after our output.
+zle -I

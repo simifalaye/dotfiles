@@ -33,14 +33,12 @@ SAVEHIST=$(( 100 * 1000 ))      # Use multiplication for readability.
 # Max number of history entries to keep in memory.
 HISTSIZE=$(( 1.2 * SAVEHIST ))  # Zsh recommended value
 
-# Expire duplicates first when trimming history
-setopt HIST_EXPIRE_DUPS_FIRST
+# Enable additional glob operators. (Globbing = pattern matching)
+# https://zsh.sourceforge.io/Doc/Release/Expansion.html#Filename-Generation
+setopt EXTENDED_GLOB
 
 # Use modern file-locking mechanisms, for better safety & performance.
 setopt HIST_FCNTL_LOCK
-
-# When searching history, don't repeat
-setopt HIST_FIND_NO_DUPS
 
 # Keep only the most recent copy of each duplicate entry in history.
 setopt HIST_IGNORE_ALL_DUPS
@@ -81,6 +79,9 @@ setopt PUSHD_IGNORE_DUPS
 # Don't print the directory stack after pushd or popd.
 setopt PUSHD_SILENT
 
+# Allow comments starting with `#` in the interactive shell.
+setopt INTERACTIVE_COMMENTS
+
 #
 # Named directories
 #
@@ -89,7 +90,8 @@ setopt PUSHD_SILENT
 # Set these early, because it affects how dirs are displayed and printed.
 # `hash -d <name>=<path>` makes ~<name> a shortcut for <path>.
 # You can use this ~name anywhere you would specify a dir, not just with `cd`!
-hash -d zcfg="${ZDOTDIR}"
+hash -d tmp=$TMPDIR
+hash -d zsh=${ZDOTDIR}
 hash -d zdata="${ZDATADIR}"
 hash -d zplug="${ZPLUGDIR}"
 hash -d dot="${HOME}/.dotfiles"

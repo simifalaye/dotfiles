@@ -85,9 +85,9 @@ M.init = function()
     pattern = { "*" },
     group = vim.api.nvim_create_augroup("user_plugin_nvim_treesitter", {}),
     callback = function(args)
-      -- Start treesitter if parser installed OR install and start it if it isn't
-      local treesitter = require("nvim-treesitter") -- Lazy load on require
+      -- Start treesitter if parser installed OR install/start it if it isn't
 
+      local treesitter = require("nvim-treesitter") -- Lazy load on require
       local bufnr = args.buf
       local filetype = vim.bo[bufnr].filetype
       if not filetype or filetype == "" then

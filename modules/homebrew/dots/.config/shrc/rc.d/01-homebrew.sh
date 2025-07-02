@@ -7,6 +7,6 @@ elif test -x /home/linuxbrew/.linuxbrew/bin/brew; then
   export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
 fi
 
-if test -d "${HOMEBREW_PREFIX}"; then
+if ! command -v brew >/dev/null && test -d "${HOMEBREW_PREFIX}"; then
   eval "$("${HOMEBREW_PREFIX}"/bin/brew shellenv)"
 fi

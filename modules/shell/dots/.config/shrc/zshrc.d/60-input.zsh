@@ -16,9 +16,6 @@
 # Disable control flow (^S/^Q) even for non-interactive shells.
 setopt NO_FLOW_CONTROL
 
-# Allow comments starting with `#` in the interactive shell.
-setopt INTERACTIVE_COMMENTS
-
 #
 # Keymaps
 #
@@ -85,7 +82,7 @@ bindkey ' ' magic-space
 bindkey "${key_info[Escape]}." insert-last-word
 bindkey "${key_info[Escape]}_" insert-last-word
 
-# <Ctrl-x><Ctrl-e> to edit command-line in EDITOR
+# Edit command-line in EDITOR
 autoload -Uz edit-command-line && zle -N edit-command-line && \
     bindkey "${key_info[Ctrl]}x${key_info[Ctrl]}e" edit-command-line
 
@@ -95,6 +92,41 @@ if [[ -n ${key_info[BackTab]} ]] bindkey ${key_info[BackTab]} reverse-menu-compl
 # Use smart URL pasting and escaping.
 autoload -Uz bracketed-paste-url-magic && zle -N bracketed-paste bracketed-paste-url-magic
 autoload -Uz url-quote-magic && zle -N self-insert url-quote-magic
+
+# Load advanced run help
+unalias run-help 2> /dev/null   # Remove the simple default.
+autoload -RUz run-help          # Load a more advanced version.
+# -R resolves the function immediately, so we can access the source dir.
+
+# Load $functions_source, an associative array (a.k.a. dictionary, hash table
+# or map) that maps each function to its source file.
+zmodload -F zsh/parameter p:functions_source
+
+# Lazy-load all the run-help-* helper functions from the same dir.
+# autoload -Uz $functions_source[run-help]-*~*.zwc  # Exclude .zwc files.
+autoload -Uz ${functions_source[run-help]-*~*.zwc(N)}
+
+# Run help
+bindkey "${key_info[Ctrl]}x${key_info[Ctrl]}h" run-help
+
+# - On the main prompt: Push aside your current command line, so you can type a
+#   new one. The old command line is re-inserted when you press Alt-G or
+#   automatically on the next command line.
+# - On the continuation prompt: Move all entered lines to the main prompt, so
+#   you can edit the previous lines.
+bindkey "${key_info[Ctrl]}x${key_info[Ctrl]}q" push-line-or-edit
+bindkey "${key_info[Ctrl]}x${key_info[Ctrl]}g" get-line
+
+# Show the next key combo's terminal code and state what it does.
+bindkey "${key_info[Ctrl]}x${key_info[Ctrl]}v" describe-key-briefly
+
+# Type a widget name and press Enter to see the keys bound to it.
+# Type part of a widget name and press Enter for autocompletion.
+bindkey "${key_info[Ctrl]}x${key_info[Ctrl]}w" where-is
+
+# Edit command-line in EDITOR
+autoload -Uz edit-command-line && zle -N edit-command-line && \
+    bindkey "${key_info[Ctrl]}x${key_info[Ctrl]}e" edit-command-line
 
 # Toggle process as bg and fg
 fancy-ctrl-z() {
@@ -139,6 +171,22 @@ double-dot-expand() {
 zle -N double-dot-expand
 bindkey . double-dot-expand
 bindkey -M isearch . self-insert
+
+# magic-enter, Output useful dir info on Enter key when the buffer is empty
+_prompt_mnml_buffer-empty() {
+  if [[ -z ${BUFFER} && ${CONTEXT} == start ]]; then
+    # display magic enter
+    print -P %F{blue}$(pwd)%f
+    ls -AF
+    command git status -sb 2>/dev/null
+    print -Pn ${PS1}
+    zle redisplay
+  else
+    zle accept-line
+  fi
+}
+zle -N buffer-empty _prompt_mnml_buffer-empty
+bindkey "${key_info[Ctrl]}M" buffer-empty
 
 autoload -Uz is-at-least
 if ! is-at-least 5.3; then

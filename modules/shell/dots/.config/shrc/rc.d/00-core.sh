@@ -7,6 +7,10 @@ alias -- -='cd -'
 # '--' signifies the end of options. Otherwise, '-=...' would be interpreted as
 # a flag.
 
+# These aliases enable you to paste example code into the terminal without the
+# shell complaining about the pasted prompt symbol.
+alias %= \$=
+
 # Elementary.
 alias reload='exec $SHELL -l' # reload the current shell configuration
 alias sudo='sudo '            # preserve aliases when running sudo
@@ -61,12 +65,15 @@ alias browse='${BROWSER}'
 alias b='browse'
 
 # Editor
-alias edit='${VISUAL:-${EDITOR}}'
+alias edit='${EDITOR}'
 alias e='edit'
 
 # Pager
 alias p='${PAGER}'
 alias more='less'
+
+# Use `< file` to quickly view the contents of any text file.
+READNULLCMD='${PAGER}'  # Set the program to use for this.
 
 #-
 #  Functions

@@ -6,7 +6,7 @@
 #
 
 [[ -o interactive ]] || return 0
-(( $+functions[zcompile-many] )) || return 0
+(( $+functions[znap] )) || return 0
 
 #
 # Plugin: zsh-autosuggestions
@@ -18,15 +18,8 @@
 # Fetch suggestions asynchronously.
 ZSH_AUTOSUGGEST_USE_ASYNC=y
 
-# Install plugin
-plugin_dir=${ZPLUGDIR}/zsh-autosuggestions
-if [[ ! -e ${plugin_dir} ]]; then
-  git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git ${plugin_dir}
-  zcompile-many ${plugin_dir}/{zsh-autosuggestions.zsh,src/**/*.zsh}
-fi
-
 # Load plugin
-source ${plugin_dir}/zsh-autosuggestions.zsh
+znap source zsh-users/zsh-autosuggestions
 
 # Bind C-Space to accept autosuggestion
 bindkey "$key_info[Ctrl] " autosuggest-accept

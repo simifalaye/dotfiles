@@ -28,7 +28,7 @@ name = "tinted-shell"
 # Name of the repository directory containing the theme files
 themes-dir = "scripts"
 # (Optional) Command to execute after copying template (goes through `shell`)
-hook = ". %f && test -x ~/.config/tinted-theming/tinty/run && ~/.config/tinted-theming/tinty/run %f"
+hook = ". %f"
 
 [[items]]
 path = "https://github.com/tinted-theming/tinted-tmux"

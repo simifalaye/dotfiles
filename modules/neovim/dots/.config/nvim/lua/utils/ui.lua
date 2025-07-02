@@ -58,13 +58,13 @@ end
 --- @param bufnr? number the buffer to toggle diagnostics on.
 function M.toggle_diagnostics(bufnr)
   local opts = { bufnr = bufnr }
-  if vim.diagnostic.is_enabled() then
+  if vim.diagnostic.is_enabled(opts) then
     vim.diagnostic.enable(false, opts)
     vim.notify("diagnostics off")
-    return
+  else
+    vim.diagnostic.enable(true, opts)
+    vim.notify("diagnostics on")
   end
-  vim.notify("diagnostics on")
-  vim.diagnostic.enable(true, opts)
 end
 
 local last_active_foldcolumn

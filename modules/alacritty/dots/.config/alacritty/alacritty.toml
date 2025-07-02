@@ -3,6 +3,13 @@
 [general]
 live_config_reload = true
 working_directory = "None" # Inherit from parent
+import = [
+  # uncomment the flavour you want below:
+  # "~/.config/alacritty/catppuccin-latte.toml"
+  # "~/.config/alacritty/catppuccin-frappe.toml"
+  # "~/.config/alacritty/catppuccin-macchiato.toml"
+  "~/.config/alacritty/catppuccin-mocha.toml"
+]
 
 [window]
 option_as_alt = "Both"
@@ -13,6 +20,9 @@ bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
 italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
 bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
 size = 12
+
+[env]
+TERM = "xterm-256color"
 
 [debug]
 # render_timer = false

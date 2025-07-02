@@ -1,5 +1,6 @@
 local M = {
   "tinted-theming/tinted-nvim",
+  enabled = false,
   lazy = false,
   priority = 1000,
 }

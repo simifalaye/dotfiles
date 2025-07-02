@@ -32,15 +32,7 @@ require("lazy").setup({
   -- colorscheme that will be used when installing plugins.
   install = {
     missing = true,
-    colorscheme = {
-      (function()
-        if vim.fn.executable("tinty") == 1 then
-          local theme_name = vim.fn.system({ "tinty", "current" })
-          return vim.trim(theme_name or "")
-        end
-        return "default"
-      end)(),
-    },
+    colorscheme = { "catppuccin-mocha", "default" },
   },
   -- automatically check for plugin updates
   checker = { enabled = false },

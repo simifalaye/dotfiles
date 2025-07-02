@@ -35,6 +35,9 @@ typeset -gU \
 # NOTE: Must be in .zshenv file
 skip_global_compinit=1
 
+# Prevent /etc/zshrc_Apple_Terminal from running some unnecessary code.
+export SHELL_SESSIONS_DISABLE=1
+
 # Load common shell env config
 if [ -d "${HOME}/.config/shrc/env.d" ]; then
   for file in "${HOME}/.config/shrc/env.d"/*.sh; do
