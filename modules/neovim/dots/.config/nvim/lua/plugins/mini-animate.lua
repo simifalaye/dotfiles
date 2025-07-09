@@ -21,6 +21,18 @@ M.keys = {
   },
 }
 
+M.init = function()
+  local augrp_id = vim.api.nvim_create_augroup("user_plugin_mini_animate", {})
+  vim.api.nvim_create_autocmd("VimEnter", {
+    group = augrp_id,
+    callback = function()
+      if vim.env.SSH_CONNECTION and vim.env.SSH_CONNECTION ~= "" then
+        vim.g.minianimate_disable = true
+      end
+    end,
+  })
+end
+
 M.opts = function()
   local mouse_scrolled = false
   -- don't use animate when scrolling with the mouse

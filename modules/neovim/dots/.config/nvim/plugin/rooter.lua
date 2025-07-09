@@ -8,11 +8,11 @@ end
 vim.g.loaded_user_plugin_rooter = true
 
 ---@class RooterOpts
----@field enabled? boolean
+---@field disable? boolean
 
 ---@type RooterOpts
 local default_config = {
-  enabled = true,
+  disable = true,
 }
 
 ---@type RooterOpts | fun():RooterOpts
@@ -41,7 +41,7 @@ local root_cache = {}
 local set_root = function()
   -- Check config
   local config = get_config()
-  if not config.enabled then
+  if config.disable then
     return
   end
 

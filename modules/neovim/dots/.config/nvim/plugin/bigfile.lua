@@ -12,13 +12,13 @@ vim.g.loaded_user_plugin_bigfile = true
 ---@field buflocal_name? string
 
 ---@class BigfileOpts
----@field enabled? boolean
+---@field disable? boolean
 ---@field midfile? BigfileStepOpts
 ---@field bigfile? BigfileStepOpts
 
 ---@type BigfileOpts
 local default_config = {
-  enabled = true,
+  disable = false,
   midfile = {
     size = 48000,
     buflocal_name = "midfile",
@@ -52,7 +52,7 @@ vim.api.nvim_create_autocmd("BufReadPre", {
   group = bigfile_grp,
   callback = function(info)
     local config = get_config()
-    if not config.enabled then
+    if config.disable then
       return
     end
     vim.b[config.midfile.buflocal_name] = false

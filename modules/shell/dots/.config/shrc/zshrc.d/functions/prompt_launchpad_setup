@@ -10,7 +10,7 @@ job='%(1j.%F{208}%j* .)%f'
 timenow="%F{8}[%D{%T}]%f"
 [[ -n "${SSH_CONNECTION}" ]] && host='%F{blue}%m%f%F{white}:%f' || host=''
 dir='%F{%(?,yellow,red)}%1d%f'
-prompt_symbol="%F{red}${PROMPT_SYMBOL:-|}%f"
+prompt_symbol="%F{magenta}${PROMPT_SYMBOL:-|}%f"
 
 # Prompt escape codes
 #      %F{<x>}:  Set foreground color. <x> can be one of the 8 standard color

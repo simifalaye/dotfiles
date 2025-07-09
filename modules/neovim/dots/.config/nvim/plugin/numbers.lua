@@ -8,11 +8,11 @@ end
 vim.g.loaded_user_plugin_numbers = true
 
 ---@class NumbersOpts
----@field enabled? boolean
+---@field disable? boolean
 
 ---@type NumbersOpts
 local default_config = {
-  enabled = true,
+  disabled = false,
   excluded_filetypes = {},
 }
 
@@ -60,7 +60,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "FileType", "FocusGained", "InsertLeav
   group = numbers_group_id,
   callback = function()
     local config = get_config()
-    if not config.enabled then
+    if config.disable then
       return
     end
     local enabled = not is_blocked()
@@ -72,7 +72,7 @@ vim.api.nvim_create_autocmd({ "FocusLost", "BufLeave", "InsertEnter", "TermOpen"
   group = numbers_group_id,
   callback = function()
     local config = get_config()
-    if not config.enabled then
+    if config.disable then
       return
     end
     vim.wo.number, vim.wo.relativenumber = not is_blocked(), false

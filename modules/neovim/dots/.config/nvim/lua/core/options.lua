@@ -35,7 +35,7 @@ opt.breakindent = true
 opt.conceallevel = 2
 opt.autowriteall = true
 opt.virtualedit = "block"
-opt.completeopt = { "menu", "menuone", "noselect" }
+opt.completeopt = { "menuone", "noselect", "popup" }
 opt.wildmode = "longest:full,full"
 opt.selection = "old"
 
