@@ -175,6 +175,7 @@ bindkey -M isearch . self-insert
 # magic-enter, Output useful dir info on Enter key when the buffer is empty
 _prompt_mnml_buffer-empty() {
   if [[ -z ${BUFFER} && ${CONTEXT} == start ]]; then
+    clear
     # display magic enter
     print -P %F{blue}$(pwd)%f
     ls -AF

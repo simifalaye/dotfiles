@@ -42,7 +42,7 @@ local function pick_buffers(local_opts, opts)
   return minipick.start(opts)
 end
 
-local M = { "echasnovski/mini.pick", version = "*" }
+local M = { "echasnovski/mini.pick", version = "*", enabled = false }
 
 M.dependencies = {
   { "echasnovski/mini.extra", version = "*", config = true },

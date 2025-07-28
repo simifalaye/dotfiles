@@ -25,7 +25,7 @@ end
 
 local M = {
   "nvim-telescope/telescope.nvim",
-  enabled = false,
+  -- enabled = false,
   version = false,
 }
 
@@ -65,23 +65,23 @@ M.keys = {
     "<cmd>Telescope registers<CR>",
     desc = "Open Registers Picker",
   },
+  { "<leader><CR>", "<cmd>Telescope resume<CR>", desc = "Resume Picker" },
   {
     "<leader>,",
     "<cmd>Telescope buffers sort_mru=true<CR>",
     desc = "Open Buffers Picker",
   },
-  { "<leader>.", "<cmd>Telescope resume<CR>", desc = "Resume Picker" },
+  {
+    "<leader>.",
+    find_files,
+    desc = "Open Files Picker",
+  },
   {
     "<leader>/",
     "<cmd>Telescope live_grep<CR>",
     desc = "Open Live Grep Picker",
   },
   { "<leader>?", "<cmd>Telescope help_tags<CR>", desc = "Open Help Picker" },
-  {
-    "<leader><leader>",
-    find_files,
-    desc = "Open Files Picker",
-  },
   -- Find
   {
     "<leader>f;",
@@ -171,14 +171,15 @@ M.config = function()
       prompt_prefix = " ",
       selection_caret = " ",
       path_display = { "truncate" },
-      layout_strategy = "flex",
-      layout_config = {
-        horizontal = { prompt_position = "top", preview_width = 0.55 },
-        vertical = { prompt_position = "top", mirror = false },
-        flex = { prompt_position = "top", flip_columns = 150 },
-        width = 0.87,
-        height = 0.80,
-      },
+      layout_strategy = "bottom_pane",
+      -- layout_strategy = "flex",
+      -- layout_config = {
+      --   horizontal = { prompt_position = "top", preview_width = 0.55 },
+      --   vertical = { prompt_position = "top", mirror = false },
+      --   flex = { prompt_position = "top", flip_columns = 150 },
+      --   width = 0.87,
+      --   height = 0.80,
+      -- },
       sorting_strategy = "ascending",
       preview = {
         treesitter = {
