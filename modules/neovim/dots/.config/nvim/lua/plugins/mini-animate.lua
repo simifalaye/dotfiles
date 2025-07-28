@@ -22,6 +22,8 @@ M.keys = {
 }
 
 M.init = function()
+  -- Disable for now
+  -- vim.g.minianimate_disable = true
   local augrp_id = vim.api.nvim_create_augroup("user_plugin_mini_animate", {})
   vim.api.nvim_create_autocmd("VimEnter", {
     group = augrp_id,

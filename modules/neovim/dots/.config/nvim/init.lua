@@ -71,7 +71,6 @@ vim.g.loaded_vimballPlugin = true
 vim.g.loaded_tohtml = true
 vim.g.loaded_2html_plugin = true
 
-
 -- Load core modules
 require("core.options")
 require("core.autocommands")

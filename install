@@ -71,6 +71,7 @@ run_module black
 run_module calc
 run_module cheat
 run_module clangd-ls
+run_module coreutils
 run_module cpplint
 run_module delta
 run_module direnv
@@ -102,3 +103,12 @@ run_module unison
 run_module yaml-ls
 run_module zellij
 run_module zoxide
+
+#
+# Mac-specific
+# TODO: Maybe move into a module
+#
+
+if [ "${__OS_ID}" == "mac" ]; then
+  is_installed clang || xcode-select --install
+fi
