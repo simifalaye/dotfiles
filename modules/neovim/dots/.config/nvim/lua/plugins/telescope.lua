@@ -25,7 +25,7 @@ end
 
 local M = {
   "nvim-telescope/telescope.nvim",
-  -- enabled = false,
+  enabled = false,
   version = false,
 }
 

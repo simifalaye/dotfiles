@@ -15,6 +15,7 @@ end
 
 local M = {
   "obsidian-nvim/obsidian.nvim",
+  version = "*",
 }
 
 M.dependencies = {
@@ -31,16 +32,18 @@ M.keys = {
   {
     "<leader>nn",
     function()
-      local name = vim.fn.input("Enter fleeting note name: ", "")
-      vim.cmd("Obsidian new_from_template " .. name .. " fleeting")
+      vim.ui.input({ prompt = "Enter fleeting note name: " }, function(name)
+        vim.cmd("Obsidian new_from_template " .. name .. " fleeting")
+      end)
     end,
     desc = "New",
   },
   {
     "<leader>nN",
     function()
-      local name = vim.fn.input("Enter permanent note name: ", "")
-      vim.cmd("Obsidian new_from_template " .. name .. " permanent")
+      vim.ui.input({ prompt = "Enter permanent note name: " }, function(name)
+        vim.cmd("Obsidian new_from_template " .. name .. " permanent")
+      end)
     end,
     desc = "New",
   },

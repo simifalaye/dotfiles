@@ -20,30 +20,31 @@ M.opts = {
   },
 }
 
+M.init = function()
+  local wk_ok, wk = pcall(require, "which-key")
+  if wk_ok then
+    wk.add({ { "<leader>g", group = "+Git" } })
+  end
+end
+
 M.config = function()
   local gitsigns = require("gitsigns")
 
   -- Navigation
-  vim.keymap.set("n", "]g", function()
+  vim.keymap.set("n", "]c", function()
     if vim.wo.diff then
       vim.cmd.normal({ "]c", bang = true })
     else
       gitsigns.nav_hunk("next")
     end
-  end, { desc = "Next Git Hunk" })
-  vim.keymap.set("n", "[g", function()
+  end)
+  vim.keymap.set("n", "[c", function()
     if vim.wo.diff then
       vim.cmd.normal({ "[c", bang = true })
     else
       gitsigns.nav_hunk("prev")
     end
-  end, { desc = "Prev Git Hunk" })
-  vim.keymap.set("n", "]G", function()
-    gitsigns.nav_hunk("last")
-  end, { desc = "Last Git Hunk" })
-  vim.keymap.set("n", "[G", function()
-    gitsigns.nav_hunk("first")
-  end, { desc = "First Git Hunk" })
+  end)
 
   -- Text object
   vim.keymap.set(

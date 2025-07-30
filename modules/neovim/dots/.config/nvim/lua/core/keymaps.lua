@@ -43,8 +43,6 @@ map("n", "p", "p`[v`]=", { desc = "Paste & Format" })
 map("n", "Q", "@q", { desc = "Run q Macro" })
 
 -- (g) namespace
-map("n", "g-", "yyp^v$r-Vk", { noremap = false, desc = "Underline -" })
-map("n", "g=", "yyp^v$r=Vk", { noremap = false, desc = "Underline =" })
 map("n", "g!", ":! chmod +x %<CR>", { desc = "Make File Executable" })
 map(
   "n",
@@ -62,9 +60,6 @@ map("n", "gQ", function()
   vim.fn.winrestview(winview)
 end, { desc = "Format Document" })
 map("n", "gx", ":SystemOpen<CR>", { desc = "System Open" })
-map("n", "gK", function()
-  vim.diagnostic.enable(not vim.diagnostic.is_enabled())
-end, { desc = "Toggle Diagnostics" })
 
 -- ([/]) namespace
 map("n", "[f", function()
@@ -95,11 +90,21 @@ map("n", "]f", function()
 end, { desc = "Next file" })
 
 -- Leader
-map("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
+map("n", "<leader><tab><tab>", "<cmd>tablast<cr>", { desc = "Switch to Last" })
+map("n", "<leader><tab>e", "<cmd>tabnew<cr>", { desc = "New" })
+map("n", "<leader><tab>d", "<cmd>tabclose<cr>", { desc = "Delete" })
+map("n", "<leader><tab>n", "<cmd>tabnext<cr>", { desc = "Next" })
+map("n", "<leader><tab>p", "<cmd>tabprevious<cr>", { desc = "Prev" })
+map("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Last" })
 map("n", "<leader>bd", "<cmd>bd<CR>", { desc = "Delete" })
-map("n", "<leader>bD", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
-map("n", "<leader>bw", "<cmd>bd!<CR>", { desc = "Wipeout" })
-
+map("n", "<leader>bD", "<cmd>bd!<cr>", { desc = "Delete (force)" })
+map("n", "<leader>bn", "<cmd>bn<CR>", { desc = "Next" })
+map("n", "<leader>bp", "<cmd>bp<CR>", { desc = "Prev" })
+map("n", "<leader>bw", "<cmd>w<CR>", { desc = "Write" })
+map("n", "<leader>bW", "<cmd>w!<CR>", { desc = "Write (force)" })
+map("n", "<leader>qa", "<cmd>qa<CR>", { desc = "Quit all" })
+map("n", "<leader>qq", "<cmd>q<CR>", { desc = "Quit" })
+map("n", "<leader>qw", "<cmd>wq<CR>", { desc = "Write quit" })
 map("n", "<leader>ui", ui.set_indent, { desc = "Set indent" })
 map("n", "<leader>uc", ui.toggle_codelens, { desc = "Toggle codelens (buf)" })
 map("n", "<leader>uC", ui.toggle_conceal, { desc = "Toggle conceal" })

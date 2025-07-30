@@ -492,7 +492,7 @@ function stow_dots() {
   find "$src_dir" -type f | while read -r src_file; do
     rel_path=${src_file#"$src_dir"/}
     dest_file="$base_dir/$rel_path"
-    # Backup if dest exists and is not the correct link
+    # Backup if dest exists or is not the correct link
     if [ -e "$dest_file" ] || [ -L "$dest_file" ]; then
       # Only skip if already the right symlink
       if [ -L "$dest_file" ]; then

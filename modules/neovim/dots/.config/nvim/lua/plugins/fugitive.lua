@@ -45,6 +45,13 @@ M.keys = {
   { "<leader>gL", "<cmd>Git log --oneline --graph<CR>", desc = "Log current repo" },
 }
 
+M.init = function()
+  local wk_ok, wk = pcall(require, "which-key")
+  if wk_ok then
+    wk.add({ { "<leader>g", group = "+Git" } })
+  end
+end
+
 M.config = function()
   local groupid = vim.api.nvim_create_augroup("user_fugitive_settings", {})
 

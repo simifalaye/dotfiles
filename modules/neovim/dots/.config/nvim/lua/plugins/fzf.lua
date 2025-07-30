@@ -1,4 +1,4 @@
-local fzf = reqcall("fzf-lua")
+local fzf = reqcall("fzf-lua") ---@module 'fzf-lua'
 local actions = reqcall("fzf-lua.actions")
 
 local M = {
