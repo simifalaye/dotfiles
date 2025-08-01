@@ -47,5 +47,10 @@ deps.later(function()
     --
     -- See the fuzzy documentation for more information
     fuzzy = { implementation = "prefer_rust_with_warning" },
+    -- Setup cmdline to match default mode
+    cmdline = {
+      -- keymap = { preset = "inherit" },
+      completion = { menu = { auto_show = true } },
+    },
   })
 end)

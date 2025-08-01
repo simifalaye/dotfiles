@@ -27,7 +27,7 @@ deps.now(function()
     })
   end)
   lz:events({ "InsertEnter" }, "*")
-  lz:key("n", "<leader>uA", function()
+  lz:key("n", "<leader>ua", function()
     if autopairs_enabled then
       autopairs_enabled = false
     else

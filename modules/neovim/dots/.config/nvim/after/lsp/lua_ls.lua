@@ -11,6 +11,9 @@ return {
       doc = {
         privateName = { "^_" },
       },
+      telemetry = {
+        enable = false,
+      },
       hint = {
         enable = true,
         setType = false,
