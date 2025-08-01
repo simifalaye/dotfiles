@@ -12,33 +12,6 @@ pcall(function()
   vim.loader.enable()
 end)
 
---- Inspect the contents of an object very quickly
---- ex. P({1,2,3})
---- @vararg any
---- @return any
-_G.P = function(...)
-  local objects, v = {}, nil
-  for i = 1, select("#", ...) do
-    v = select(i, ...)
-    table.insert(objects, vim.inspect(v))
-  end
-  print(table.concat(objects, "\n"))
-  return ...
-end
-
---- Wrapper around a module to require it before using any table members
----@param module string module to use
----@return table a metatable of the module
-_G.reqcall = function(module)
-  return setmetatable({}, {
-    __index = function(_, k)
-      return function(...)
-        return require(module)[k](...)
-      end
-    end,
-  })
-end
-
 -- Set leader keys
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
@@ -71,11 +44,22 @@ vim.g.loaded_vimballPlugin = true
 vim.g.loaded_tohtml = true
 vim.g.loaded_2html_plugin = true
 
--- Load core modules
-require("core.options")
-require("core.autocommands")
-require("core.commands")
-require("core.keymaps")
-require("core.diagnostics")
-require("core.lsp")
-require("core.lazy")
+-- Clone 'mini.nvim' manually in a way that it gets managed by 'mini.deps'
+local path_package = vim.fs.joinpath(vim.fn.stdpath("data"), "site")
+local mini_path = vim.fs.joinpath(path_package, "pack", "deps", "start", "mini.nvim")
+if not vim.uv.fs_stat(mini_path) then
+  vim.cmd('echo "Installing `mini.nvim`" | redraw')
+  local clone_cmd = {
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/echasnovski/mini.deps",
+    mini_path,
+  }
+  vim.fn.system(clone_cmd)
+  vim.cmd("packadd mini.nvim | helptags ALL")
+  vim.cmd('echo "Installed `mini.nvim`" | redraw')
+end
+
+-- Set up 'mini.deps' (customize to your liking)
+require("mini.deps").setup({ path = { package = path_package } })
