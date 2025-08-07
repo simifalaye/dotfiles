@@ -115,24 +115,17 @@ deps.later(function()
 
     { desc = "inner parameter" }
   )
-  vim.keymap.set({ "x", "o" }, "n", ts_select_to("@block.outer"), { desc = "block" })
+  vim.keymap.set({ "x", "o" }, "am", ts_select_to("@function.outer"), { desc = "method" })
   vim.keymap.set(
     { "x", "o" },
-    "n",
-    ts_select_to("@block.inner"),
-    { desc = "inner block" }
-  )
-  vim.keymap.set({ "x", "o" }, "n", ts_select_to("@function.outer"), { desc = "method" })
-  vim.keymap.set(
-    { "x", "o" },
-    "n",
+    "im",
     ts_select_to("@function.inner"),
     { desc = "inner method" }
   )
-  vim.keymap.set({ "x", "o" }, "n", ts_select_to("@class.outer"), { desc = "class" })
+  vim.keymap.set({ "x", "o" }, "ac", ts_select_to("@class.outer"), { desc = "class" })
   vim.keymap.set(
     { "x", "o" },
-    "n",
+    "ic",
     ts_select_to("@class.inner"),
     { desc = "inner class" }
   )

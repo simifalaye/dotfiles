@@ -12,7 +12,27 @@ deps.add({
 deps.later(function()
   -- Setup plugin
   local fzf = require("fzf-lua")
-  fzf.setup({})
+  fzf.setup({
+    grep = {
+      rg_glob = true,
+      rg_opts = table.concat({
+        "--no-messages",
+        "--hidden",
+        "--follow",
+        "--smart-case",
+        "--column",
+        "--line-number",
+        "--no-heading",
+        "--color=always",
+        "-g=!.git/",
+        "-e",
+      }, " "),
+      fzf_opts = {
+        ["--info"] = "inline-right",
+      },
+    },
+  })
+  fzf.register_ui_select()
 
   -- Keymaps
 
@@ -63,7 +83,7 @@ deps.later(function()
   vim.keymap.set("n", "<leader>fo", fzf.nvim_options, { desc = "Options" })
   vim.keymap.set("n", "<leader>fq", fzf.quickfix, { desc = "Quickfix" })
   vim.keymap.set("n", "<leader>fr", function()
-    fzf.oldfiles({ cwd_old = true })
+    fzf.oldfiles({ cwd_only = true })
   end, { desc = "Recent (cwd)" })
   vim.keymap.set("n", "<leader>fR", fzf.oldfiles, { desc = "Recent" })
   vim.keymap.set("n", "<leader>fs", fzf.lsp_document_symbols, { desc = "Symbols" })

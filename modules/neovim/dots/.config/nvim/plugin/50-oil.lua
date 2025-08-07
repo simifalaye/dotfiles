@@ -2,7 +2,7 @@ local deps = require("mini.deps")
 
 deps.add({
   source = "stevearc/oil.nvim",
-  dependencies = { "echasnovski/mini.icons" },
+  depends = { "echasnovski/mini.icons" },
 })
 
 deps.now(function()
@@ -201,6 +201,6 @@ deps.now(function()
   lz:cmds({ "Oil" })
   lz:key("n", "-", "<cmd>Oil<CR>", { desc = "Open parent directory" })
   lz:key("n", "_", function()
-    vim.cmd("Oil " .. vim.fs.root(0, require("utils.fs")))
+    vim.cmd("Oil " .. vim.fs.root(0, require("utils.fs").root_patterns))
   end, { desc = "Open root directory" })
 end)

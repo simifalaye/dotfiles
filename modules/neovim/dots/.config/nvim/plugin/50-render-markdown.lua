@@ -4,7 +4,7 @@ deps.add({
   source = "MeanderingProgrammer/render-markdown.nvim",
   checkout = "v8.6.0",
   monitor = "main",
-  dependencies = { "echasnovski/mini.icons" },
+  depends = { "echasnovski/mini.icons" },
 })
 
 deps.later(function()

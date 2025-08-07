@@ -1,4 +1,4 @@
-local uv = vim.loop
+local uv = vim.uv or vim.loop -- compatibility alias
 local M = {}
 
 M.path_sep = vim.loop.os_uname().version:match("Windows") and "\\" or "/"
@@ -82,7 +82,7 @@ end
 ---@param path string
 ---@param runnable string|table
 ---@return function(error: string, unwatch_cb: function?)
-local function make_default_error_cb(path, runnable)
+local function make_default_watch_error_cb(path, runnable)
   return function(error, _)
     error(
       "fwatch.watch("
@@ -153,7 +153,7 @@ function M.watch_with_string(path, string, opts)
       vim.cmd(string)
     end)
   end
-  local on_error = make_default_error_cb(path, string)
+  local on_error = make_default_watch_error_cb(path, string)
   return M.watch_with_function(path, on_event, on_error, opts)
 end
 
@@ -170,7 +170,7 @@ function M.watch(path, runnable, opts)
 
     -- no on_error provided, make default
     if runnable.on_error == nil then
-      table.on_error = make_default_error_cb(path, "on_event_cb")
+      table.on_error = make_default_watch_error_cb(path, "on_event_cb")
     end
 
     return M.watch_with_function(path, runnable.on_event, runnable.on_error, opts)
@@ -182,24 +182,24 @@ function M.watch(path, runnable, opts)
   end
 end
 
-local function get_files(dir)
-  local entries = vim.fn.split(vim.fn.glob(dir .. "/*"), "\n")
-  local files = {}
-  for _, entry in pairs(entries) do
-    if vim.fn.isdirectory(entry) ~= 1 then
-      table.insert(files, vim.fn.fnamemodify(entry, ":t"))
-    end
-  end
-  if vim.tbl_isempty(files) then
-    return
-  else
-    return files
-  end
-end
-
 --- Get the path to the next/prev file in the same directory
 ---@param offset number +/- number of files from current file
 function M.file_by_offset(offset)
+  local function get_files(dir)
+    local entries = vim.fn.split(vim.fn.glob(dir .. "/*"), "\n")
+    local files = {}
+    for _, entry in pairs(entries) do
+      if vim.fn.isdirectory(entry) ~= 1 then
+        table.insert(files, vim.fn.fnamemodify(entry, ":t"))
+      end
+    end
+    if vim.tbl_isempty(files) then
+      return
+    else
+      return files
+    end
+  end
+
   local dir = vim.fn.expand("%:p:h")
   local files = get_files(dir)
   if not files then
@@ -225,20 +225,6 @@ function M.file_by_offset(offset)
     end
     return dir .. "/" .. files[index]
   end
-end
-
---- Get the lua modules in a specific directory
----@param directory_path string
----@return string[]
-function M.get_lua_modules_in_directory(directory_path)
-  local modules = {}
-  for _, file in ipairs(vim.fn.readdir(directory_path, [[v:val =~ '\.lua$']])) do
-    local name = file:gsub("%.lua$", "")
-    if name ~= "init" then
-      table.insert(modules, name)
-    end
-  end
-  return modules
 end
 
 return M

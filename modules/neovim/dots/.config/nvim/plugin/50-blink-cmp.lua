@@ -4,7 +4,7 @@ deps.add({
   source = "saghen/blink.cmp",
   checkout = "v1.6.0",
   monitor = "main",
-  dependencies = { "rafamadriz/friendly-snippets" },
+  depends = { "rafamadriz/friendly-snippets" },
 })
 
 deps.later(function()

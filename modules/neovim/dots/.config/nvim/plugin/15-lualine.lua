@@ -2,7 +2,7 @@ local deps = require("mini.deps")
 
 deps.add({
   source = "nvim-lualine/lualine.nvim",
-  dependencies = { "echasnovski/mini.icons" },
+  depends = { "echasnovski/mini.icons" },
 })
 
 deps.later(function()
