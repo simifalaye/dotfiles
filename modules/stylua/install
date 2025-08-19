@@ -30,7 +30,7 @@ else
     }
     # shellcheck disable=SC2317
     function __stylua_filter_fn() {
-      if ! echo "${1}" | grep -q '\.zip$'; then
+      if ! echo "${1}" | grep -q '\.zip$' | grep -q -v "musl"; then
         debug "Asset '${1}' failed filter" && return 1
       fi
     }
