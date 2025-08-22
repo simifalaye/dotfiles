@@ -4,12 +4,15 @@
 #
 
 #
-# Plugin: fast-syntax-highlighting
+# Plugin: zsh-syntax-highlighting
 #
 
 # Abort if requirements are not met
 (( $+functions[znap] )) || return 1
 [[ -o interactive ]] || return 1
 
-# Load plugin
-znap source zdharma-continuum/fast-syntax-highlighting
+# Set highlighters
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+
+#Load plugin
+znap source zsh-users/zsh-syntax-highlighting

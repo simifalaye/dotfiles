@@ -20,6 +20,3 @@ ZSH_AUTOSUGGEST_USE_ASYNC=y
 
 # Load plugin
 znap source zsh-users/zsh-autosuggestions
-
-# Bind C-Space to accept autosuggestion
-bindkey "$key_info[Ctrl] " autosuggest-accept

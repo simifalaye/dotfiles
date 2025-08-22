@@ -7,89 +7,89 @@ MiniDeps.add({
   checkout = "main",
 })
 
-MiniDeps.later(function()
-  -- Setup plugin
-  local fzf = require("fzf-lua")
-  fzf.setup({
-    grep = {
-      rg_glob = true,
-      rg_opts = table.concat({
-        "--no-messages",
-        "--hidden",
-        "--follow",
-        "--smart-case",
-        "--column",
-        "--line-number",
-        "--no-heading",
-        "--color=always",
-        "-g=!.git/",
-        "-e",
-      }, " "),
-      fzf_opts = {
-        ["--info"] = "inline-right",
-      },
-    },
-  })
-  fzf.register_ui_select()
-
-  -- Keymaps
-
-  -- <leader>
-  vim.keymap.set("n", "<leader>*", fzf.grep_cword, { desc = "Grep word under cursor" })
-  vim.keymap.set("x", "<leader>*", fzf.grep_visual, { desc = "Grep visual selection" })
-  vim.keymap.set("n", "<leader>#", fzf.grep_cword, { desc = "Grep word under cursor" })
-  vim.keymap.set("x", "<leader>#", fzf.grep_visual, { desc = "Grep visual selection" })
-  vim.keymap.set("n", "<leader>-", fzf.blines, { desc = "Find lines in buffer" })
-  vim.keymap.set("x", "<leader>-", fzf.blines, { desc = "Find lines in selection" })
-  vim.keymap.set("n", "<leader>\\", function()
-    fzf.oldfiles({ cwd_only = true })
-  end, { desc = "Find recent (cwd)" })
-  vim.keymap.set("n", "<leader>;", fzf.command_history, { desc = "Find command history" })
-  vim.keymap.set("n", "<leader>:", fzf.commands, { desc = "Find commands" })
-  vim.keymap.set("n", "<leader>'", fzf.marks, { desc = "Find marks" })
-  vim.keymap.set("n", '<leader>"', fzf.registers, { desc = "Find registers" })
-  vim.keymap.set("n", "<leader><CR>", fzf.resume, { desc = "Resume last find" })
-  vim.keymap.set("n", "<leader>,", fzf.buffers, { desc = "Find buffers" })
-  vim.keymap.set("n", "<leader>.", fzf.files, { desc = "Find files" })
-  vim.keymap.set("n", "<leader>/", fzf.live_grep, { desc = "Grep" })
-  vim.keymap.set("n", "<leader>?", fzf.help_tags, { desc = "Find help tags" })
-  -- <leader> + f
-  vim.keymap.set("n", "<leader>f:", fzf.commands, { desc = "Find commands" })
-  vim.keymap.set("n", "<leader>f'", fzf.marks, { desc = "Find marks" })
-  vim.keymap.set("n", '<leader>f"', fzf.registers, { desc = "Find registers" })
-  vim.keymap.set("n", "<leader>f<CR>", fzf.resume, { desc = "Resume" })
-  vim.keymap.set("n", "<leader>fa", fzf.autocmds, { desc = "Autocommands" })
-  vim.keymap.set("n", "<leader>fb", fzf.buffers, { desc = "Buffers" })
-  vim.keymap.set("n", "<leader>fc", fzf.changes, { desc = "Changes" })
-  vim.keymap.set("n", "<leader>fC", fzf.colorschemes, { desc = "Colorschemes" })
-  vim.keymap.set("n", "<leader>fd", fzf.diagnostics_document, { desc = "Diagnostics" })
-  vim.keymap.set(
-    "n",
-    "<leader>fD",
-    fzf.diagnostics_workspace,
-    { desc = "Diagnostics (workspace)" }
-  )
-  vim.keymap.set("n", "<leader>ff", fzf.files, { desc = "Files" })
-  vim.keymap.set("n", "<leader>fF", fzf.git_files, { desc = "Files (git)" })
-  vim.keymap.set("n", "<leader>fg", fzf.grep, { desc = "Grep" })
-  vim.keymap.set("n", "<leader>fh", fzf.help_tags, { desc = "Help tags" })
-  vim.keymap.set("n", "<leader>fH", fzf.highlights, { desc = "Highlights" })
-  vim.keymap.set("n", "<leader>fj", fzf.jumps, { desc = "Jumps" })
-  vim.keymap.set("n", "<leader>fk", fzf.keymaps, { desc = "Keymaps" })
-  vim.keymap.set("n", "<leader>fl", fzf.loclist, { desc = "Loclist" })
-  vim.keymap.set("n", "<leader>fm", fzf.manpages, { desc = "Manpages" })
-  vim.keymap.set("n", "<leader>fo", fzf.nvim_options, { desc = "Options" })
-  vim.keymap.set("n", "<leader>fq", fzf.quickfix, { desc = "Quickfix" })
-  vim.keymap.set("n", "<leader>fr", function()
-    fzf.oldfiles({ cwd_only = true })
-  end, { desc = "Recent (cwd)" })
-  vim.keymap.set("n", "<leader>fR", fzf.oldfiles, { desc = "Recent" })
-  vim.keymap.set("n", "<leader>fs", fzf.lsp_document_symbols, { desc = "Symbols" })
-  vim.keymap.set(
-    "n",
-    "<leader>fS",
-    fzf.lsp_workspace_symbols,
-    { desc = "Symbols (workspace)" }
-  )
-  vim.keymap.set("n", "<leader>fz", fzf.spell_suggest, { desc = "Spelling" })
-end)
+-- MiniDeps.later(function()
+--   -- Setup plugin
+--   local fzf = require("fzf-lua")
+--   fzf.setup({
+--     grep = {
+--       rg_glob = true,
+--       rg_opts = table.concat({
+--         "--no-messages",
+--         "--hidden",
+--         "--follow",
+--         "--smart-case",
+--         "--column",
+--         "--line-number",
+--         "--no-heading",
+--         "--color=always",
+--         "-g=!.git/",
+--         "-e",
+--       }, " "),
+--       fzf_opts = {
+--         ["--info"] = "inline-right",
+--       },
+--     },
+--   })
+--   fzf.register_ui_select()
+--
+--   -- Keymaps
+--
+--   -- <leader>
+--   vim.keymap.set("n", "<leader>*", fzf.grep_cword, { desc = "Grep word under cursor" })
+--   vim.keymap.set("x", "<leader>*", fzf.grep_visual, { desc = "Grep visual selection" })
+--   vim.keymap.set("n", "<leader>#", fzf.grep_cword, { desc = "Grep word under cursor" })
+--   vim.keymap.set("x", "<leader>#", fzf.grep_visual, { desc = "Grep visual selection" })
+--   vim.keymap.set("n", "<leader>-", fzf.blines, { desc = "Find lines in buffer" })
+--   vim.keymap.set("x", "<leader>-", fzf.blines, { desc = "Find lines in selection" })
+--   vim.keymap.set("n", "<leader>\\", function()
+--     fzf.oldfiles({ cwd_only = true })
+--   end, { desc = "Find recent (cwd)" })
+--   vim.keymap.set("n", "<leader>;", fzf.command_history, { desc = "Find command history" })
+--   vim.keymap.set("n", "<leader>:", fzf.commands, { desc = "Find commands" })
+--   vim.keymap.set("n", "<leader>'", fzf.marks, { desc = "Find marks" })
+--   vim.keymap.set("n", '<leader>"', fzf.registers, { desc = "Find registers" })
+--   vim.keymap.set("n", "<leader><CR>", fzf.resume, { desc = "Resume last find" })
+--   vim.keymap.set("n", "<leader>,", fzf.buffers, { desc = "Find buffers" })
+--   vim.keymap.set("n", "<leader>.", fzf.files, { desc = "Find files" })
+--   vim.keymap.set("n", "<leader>/", fzf.live_grep, { desc = "Grep" })
+--   vim.keymap.set("n", "<leader>?", fzf.help_tags, { desc = "Find help tags" })
+--   -- <leader> + f
+--   vim.keymap.set("n", "<leader>f:", fzf.commands, { desc = "Find commands" })
+--   vim.keymap.set("n", "<leader>f'", fzf.marks, { desc = "Find marks" })
+--   vim.keymap.set("n", '<leader>f"', fzf.registers, { desc = "Find registers" })
+--   vim.keymap.set("n", "<leader>f<CR>", fzf.resume, { desc = "Resume" })
+--   vim.keymap.set("n", "<leader>fa", fzf.autocmds, { desc = "Autocommands" })
+--   vim.keymap.set("n", "<leader>fb", fzf.buffers, { desc = "Buffers" })
+--   vim.keymap.set("n", "<leader>fc", fzf.changes, { desc = "Changes" })
+--   vim.keymap.set("n", "<leader>fC", fzf.colorschemes, { desc = "Colorschemes" })
+--   vim.keymap.set("n", "<leader>fd", fzf.diagnostics_document, { desc = "Diagnostics" })
+--   vim.keymap.set(
+--     "n",
+--     "<leader>fD",
+--     fzf.diagnostics_workspace,
+--     { desc = "Diagnostics (workspace)" }
+--   )
+--   vim.keymap.set("n", "<leader>ff", fzf.files, { desc = "Files" })
+--   vim.keymap.set("n", "<leader>fF", fzf.git_files, { desc = "Files (git)" })
+--   vim.keymap.set("n", "<leader>fg", fzf.grep, { desc = "Grep" })
+--   vim.keymap.set("n", "<leader>fh", fzf.help_tags, { desc = "Help tags" })
+--   vim.keymap.set("n", "<leader>fH", fzf.highlights, { desc = "Highlights" })
+--   vim.keymap.set("n", "<leader>fj", fzf.jumps, { desc = "Jumps" })
+--   vim.keymap.set("n", "<leader>fk", fzf.keymaps, { desc = "Keymaps" })
+--   vim.keymap.set("n", "<leader>fl", fzf.loclist, { desc = "Loclist" })
+--   vim.keymap.set("n", "<leader>fm", fzf.manpages, { desc = "Manpages" })
+--   vim.keymap.set("n", "<leader>fo", fzf.nvim_options, { desc = "Options" })
+--   vim.keymap.set("n", "<leader>fq", fzf.quickfix, { desc = "Quickfix" })
+--   vim.keymap.set("n", "<leader>fr", function()
+--     fzf.oldfiles({ cwd_only = true })
+--   end, { desc = "Recent (cwd)" })
+--   vim.keymap.set("n", "<leader>fR", fzf.oldfiles, { desc = "Recent" })
+--   vim.keymap.set("n", "<leader>fs", fzf.lsp_document_symbols, { desc = "Symbols" })
+--   vim.keymap.set(
+--     "n",
+--     "<leader>fS",
+--     fzf.lsp_workspace_symbols,
+--     { desc = "Symbols (workspace)" }
+--   )
+--   vim.keymap.set("n", "<leader>fz", fzf.spell_suggest, { desc = "Spelling" })
+-- end)

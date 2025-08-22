@@ -60,11 +60,13 @@ MiniDeps.later(function()
   })
 
   local os_sep = package.config:sub(1, 1)
-  local api = vim.api
-  local fn = vim.fn
-  local bo = vim.bo
-
   local conditions = require("heirline.conditions")
+  local normalize_filename = function(filename)
+    if vim.api.nvim_buf_get_option(0, "buftype") == "" then
+      return vim.fn.fnamemodify(filename, ":t")
+    end
+    return filename
+  end
 
   --
   -- Components
@@ -89,7 +91,7 @@ MiniDeps.later(function()
     })
     ReadOnly = {
       condition = function()
-        return not bo.modifiable or bo.readonly
+        return not vim.bo.modifiable or vim.bo.readonly
       end,
       provider = "",
       hl = { fg = "red" },
@@ -167,12 +169,12 @@ MiniDeps.later(function()
         if vim.o.cmdheight ~= 0 then
           return false
         end
-        local lines = api.nvim_buf_line_count(0)
+        local lines = vim.api.nvim_buf_line_count(0)
         if lines > 50000 then
           return
         end
 
-        local query = fn.getreg("/")
+        local query = vim.fn.getreg("/")
         if query == "" then
           return
         end
@@ -181,7 +183,7 @@ MiniDeps.later(function()
           return
         end
 
-        local search_count = fn.searchcount({ recompute = 1, maxcount = -1 })
+        local search_count = vim.fn.searchcount({ recompute = 1, maxcount = -1 })
         local active = false
         if vim.v.hlsearch and vim.v.hlsearch == 1 and search_count.total > 0 then
           active = true
@@ -227,7 +229,7 @@ MiniDeps.later(function()
       end,
       init = function(self)
         local filename = self.filename
-        local extension = fn.fnamemodify(filename, ":e")
+        local extension = vim.fn.fnamemodify(filename, ":e")
         local has_devicons, devicons = pcall(require, "nvim-web-devicons")
         if has_devicons then
           self.icon, self.icon_color =
@@ -249,7 +251,7 @@ MiniDeps.later(function()
 
     local WorkDir = {
       condition = function(self)
-        if bo.buftype == "" then
+        if vim.bo.buftype == "" then
           return self.pwd
         end
       end,
@@ -262,7 +264,7 @@ MiniDeps.later(function()
       },
       {
         provider = function(self)
-          return fn.pathshorten(self.pwd)
+          return vim.fn.pathshorten(self.pwd)
         end,
       },
       Null,
@@ -270,7 +272,7 @@ MiniDeps.later(function()
 
     CurrentPath = {
       condition = function(self)
-        if bo.buftype == "" then
+        if vim.bo.buftype == "" then
           return self.current_path
         end
       end,
@@ -283,7 +285,7 @@ MiniDeps.later(function()
       },
       {
         provider = function(self)
-          return fn.pathshorten(self.current_path, 2)
+          return vim.fn.pathshorten(self.current_path, 2)
         end,
       },
       { provider = "" },
@@ -337,7 +339,7 @@ MiniDeps.later(function()
     -- %L  : number of lines in the buffer
     -- %c  : column number
     -- %V  : virtual column number as -{num}.  Not displayed if equal to '%c'.
-    provider = " %9(%l:%L%)",
+    provider = "%l:%L",
     hl = { bold = true },
   }
 
@@ -346,7 +348,7 @@ MiniDeps.later(function()
       return conditions.width_percent_below(4, 0.035)
     end,
     -- %P  : percentage through file of displayed window
-    provider = " %3(%P%)",
+    provider = "%P",
     hl = { fg = "fore", bg = "back1" },
   }
 
@@ -373,10 +375,10 @@ MiniDeps.later(function()
   local Diagnostics = {
     condition = conditions.has_diagnostics,
     static = {
-      error_icon = fn.sign_getdefined("DiagnosticSignError")[1].text,
-      warn_icon = fn.sign_getdefined("DiagnosticSignWarn")[1].text,
-      info_icon = fn.sign_getdefined("DiagnosticSignInfo")[1].text,
-      hint_icon = fn.sign_getdefined("DiagnosticSignHint")[1].text,
+      error_icon = vim.fn.sign_getdefined("DiagnosticSignError")[1].text,
+      warn_icon = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text,
+      info_icon = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text,
+      hint_icon = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text,
     },
     init = function(self)
       self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
@@ -494,8 +496,7 @@ MiniDeps.later(function()
     Space,
     {
       provider = function()
-        local filename = api.nvim_buf_get_name(0)
-        return fn.fnamemodify(filename, ":t")
+        return normalize_filename(vim.api.nvim_buf_get_name(0))
       end,
       hl = { fg = "fore", bold = true },
     },
@@ -535,17 +536,17 @@ MiniDeps.later(function()
   local StatusLines = {
     fallthrough = false,
     init = function(self)
-      local pwd = fn.getcwd(0)
-      local current_path = api.nvim_buf_get_name(0)
+      local pwd = vim.fn.getcwd(0)
+      local current_path = vim.api.nvim_buf_get_name(0)
 
       if current_path == "" then
-        self.pwd = fn.fnamemodify(pwd, ":~")
+        self.pwd = vim.fn.fnamemodify(pwd, ":~")
         self.current_path = nil
         self.filename = " [No Name]"
       elseif current_path and current_path:find(pwd, 1, true) then
-        self.filename = fn.fnamemodify(current_path, ":t")
-        self.current_path = fn.fnamemodify(current_path, ":~:.:h")
-        self.pwd = fn.fnamemodify(pwd, ":~") .. os_sep
+        self.filename = normalize_filename(current_path)
+        self.current_path = vim.fn.fnamemodify(current_path, ":~:.:h")
+        self.pwd = vim.fn.fnamemodify(pwd, ":~") .. os_sep
         if self.current_path == "." then
           self.current_path = nil
         else
@@ -553,8 +554,8 @@ MiniDeps.later(function()
         end
       else
         self.pwd = nil
-        self.filename = fn.fnamemodify(current_path, ":t")
-        self.current_path = fn.fnamemodify(current_path, ":~:.:h") .. os_sep
+        self.filename = normalize_filename(current_path)
+        self.current_path = vim.fn.fnamemodify(current_path, ":~:.:h") .. os_sep
       end
     end,
     hl = { fg = "fore", bg = "back1" },
@@ -565,7 +566,9 @@ MiniDeps.later(function()
       Mode,
       Space,
       FileNameBlock,
+      Space(2),
       Ruler,
+      Space,
       ScrollPercentage,
       Align,
       Diagnostics,
