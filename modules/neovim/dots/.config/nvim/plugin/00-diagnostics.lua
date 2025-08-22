@@ -1,10 +1,10 @@
 local icons = require("static.icons")
 
 local text_signs = {
-  [vim.diagnostic.severity.ERROR] = icons.font.diagnostics.error,
-  [vim.diagnostic.severity.WARN] = icons.font.diagnostics.warn,
-  [vim.diagnostic.severity.HINT] = icons.font.diagnostics.hint,
-  [vim.diagnostic.severity.INFO] = icons.font.diagnostics.info,
+  [vim.diagnostic.severity.ERROR] = icons.Font.Diag.Error,
+  [vim.diagnostic.severity.WARN] = icons.Font.Diag.warn,
+  [vim.diagnostic.severity.HINT] = icons.Font.Diag.Hint,
+  [vim.diagnostic.severity.INFO] = icons.Font.Diag.Info,
 }
 
 vim.diagnostic.config({
@@ -34,3 +34,20 @@ vim.diagnostic.config({
     end,
   },
 })
+
+vim.fn.sign_define(
+  "DiagnosticSignError",
+  { text = icons.Font.Diag.Error, texthl = "DiagnosticSignError" }
+)
+vim.fn.sign_define(
+  "DiagnosticSignWarn",
+  { text = icons.Font.Diag.warn, texthl = "DiagnosticSignWarn" }
+)
+vim.fn.sign_define(
+  "DiagnosticSignInfo",
+  { text = icons.Font.Diag.Info, texthl = "DiagnosticSignInfo" }
+)
+vim.fn.sign_define(
+  "DiagnosticSignHint",
+  { text = icons.Font.Diag.Hint, texthl = "DiagnosticSignHint" }
+)

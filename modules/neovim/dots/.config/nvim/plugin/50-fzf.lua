@@ -1,15 +1,13 @@
-local deps = require("mini.deps")
-
 if vim.fn.executable("fzf") <= 0 then
   return
 end
 
-deps.add({
+MiniDeps.add({
   source = "ibhagwan/fzf-lua",
   checkout = "main",
 })
 
-deps.later(function()
+MiniDeps.later(function()
   -- Setup plugin
   local fzf = require("fzf-lua")
   fzf.setup({

@@ -181,6 +181,7 @@ map(
 --
 
 vim.cmd('iab <expr> dts strftime("%F %b %T")')
+vim.cmd("cnoremap <expr> %% getcwd()")
 vim.cmd("cnoreabbrev W! w!")
 vim.cmd("cnoreabbrev Q! q!")
 vim.cmd("cnoreabbrev Qall! qall!")

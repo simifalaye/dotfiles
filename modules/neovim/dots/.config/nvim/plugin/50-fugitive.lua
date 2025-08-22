@@ -1,11 +1,9 @@
-local deps = require("mini.deps")
-
-deps.add({
+MiniDeps.add({
   source = "tpope/vim-fugitive",
   depends = { "tpope/vim-rhubarb" },
 })
 
-deps.later(function()
+MiniDeps.later(function()
   -- Autocmds
   local grp = vim.api.nvim_create_augroup("user_fugitive_settings", {})
   vim.api.nvim_create_autocmd("BufEnter", {

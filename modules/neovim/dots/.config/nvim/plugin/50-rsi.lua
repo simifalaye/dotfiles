@@ -1,5 +1,1 @@
-local deps = require("mini.deps")
-
-deps.add({
-  source = "tpope/vim-rsi",
-})
+MiniDeps.add({ source = "tpope/vim-rsi" })

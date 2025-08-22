@@ -1,11 +1,9 @@
-local deps = require("mini.deps")
-
-deps.add({
+MiniDeps.add({
   source = "nvim-treesitter/nvim-treesitter-textobjects",
   checkout = "main",
 })
 
-deps.later(function()
+MiniDeps.later(function()
   --
   -- Load plugin
   --

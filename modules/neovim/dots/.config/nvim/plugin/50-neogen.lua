@@ -1,10 +1,8 @@
-local deps = require("mini.deps")
-
-deps.add({
+MiniDeps.add({
   source = "danymat/neogen",
 })
 
-deps.now(function()
+MiniDeps.now(function()
   local lz = require("utils.lazy").new("neogen", function()
     require("neogen").setup({ snippet_engine = "nvim" })
   end)

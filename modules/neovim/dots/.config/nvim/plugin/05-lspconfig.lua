@@ -1,6 +1,4 @@
-local deps = require("mini.deps")
-
-deps.add({
+MiniDeps.add({
   source = "neovim/nvim-lspconfig",
   depends = { "b0o/schemastore.nvim" },
 })

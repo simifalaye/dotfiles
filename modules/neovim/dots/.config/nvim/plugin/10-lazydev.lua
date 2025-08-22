@@ -1,10 +1,8 @@
-local deps = require("mini.deps")
-
-deps.add({
+MiniDeps.add({
   source = "folke/lazydev.nvim",
 })
 
-deps.now(function()
+MiniDeps.now(function()
   local lz = require("utils.lazy").new("lazydev", function()
     require("lazydev").setup({
       library = {

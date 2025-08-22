@@ -1,9 +1,7 @@
-local deps = require("mini.deps")
-
-deps.add({
+MiniDeps.add({
   source = "windwp/nvim-ts-autotag",
 })
 
-deps.later(function()
+MiniDeps.later(function()
   require("nvim-ts-autotag").setup()
 end)

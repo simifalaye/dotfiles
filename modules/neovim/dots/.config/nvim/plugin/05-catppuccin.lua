@@ -1,11 +1,14 @@
-local deps = require("mini.deps")
-
-deps.add({
+MiniDeps.add({
   source = "catppuccin/nvim",
 })
 
-deps.now(function()
+MiniDeps.now(function()
   require("catppuccin").setup({
+    float = {
+      transparent = false, -- enable transparent floating windows
+      solid = false, -- use solid styling for floating windows, see |winborder|
+    },
+    term_colors = true,
     integrations = {
       fzf = true,
       gitsigns = true,

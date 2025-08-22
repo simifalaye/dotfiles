@@ -1,11 +1,9 @@
-local deps = require("mini.deps")
-
-deps.add({
+MiniDeps.add({
   source = "kylechui/nvim-surround",
 })
 
-deps.now(function()
-  local lz = require("utils.lazy").new("render-markdown", function()
+MiniDeps.now(function()
+  local lz = require("utils.lazy").new("surround", function()
     require("nvim-surround").setup({})
   end)
   lz:events({ "BufReadPost", "BufNewFile", "BufWritePre" })

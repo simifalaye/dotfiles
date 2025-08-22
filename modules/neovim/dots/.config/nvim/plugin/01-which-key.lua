@@ -1,15 +1,15 @@
-local deps = require("mini.deps")
-
-deps.add({
+MiniDeps.add({
   source = "folke/which-key.nvim",
 })
 
-deps.later(function()
+MiniDeps.later(function()
   require("which-key").setup({
-    preset = "helix",
+    preset = "classic",
+    delay = 500,
     icons = {
       rules = false,
     },
+    layout = { align = "center" },
     disable = { filetypes = { "TelescopePrompt" } },
     spec = {
       {

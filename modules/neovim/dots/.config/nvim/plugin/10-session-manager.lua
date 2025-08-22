@@ -1,0 +1,288 @@
+-- ---
+-- --- Neovim global plugin for managing directory sessions
+-- ---
+--
+-- if vim.g.loaded_user_plugin_session_manager then
+--   return
+-- end
+-- vim.g.loaded_user_plugin_session_manager = true
+--
+-- ---@class SessionBufferPreserve
+-- ---@field name? string
+-- ---@field ft? string
+-- ---@field vt? string
+--
+-- ---@class SessionManagerOpts
+-- ---@field disable boolean
+-- ---@field dir string
+-- ---@field preserve_list SessionBufferPreserve[]
+--
+-- ---@type SessionManagerOpts
+-- local config = {
+--   disable = false,
+--   stop_lsp_on_restore = true,
+--   dir = vim.fs.joinpath(vim.fn.stdpath("data"), "sessions"),
+--   preserve_list = { { name = "", ft = "", bt = "terminal" } },
+-- }
+--
+-- ---@type SessionManagerOpts | fun():SessionManagerOpts
+-- vim.g.session_manager = vim.g.session_manager
+--
+-- --- Get configuration
+-- local function read_config()
+--   local opts = type(vim.g.session_manager) == "function" and vim.g.session_manager()
+--     or vim.g.session_manager
+--     or {}
+--   config = vim.tbl_deep_extend("force", config, opts)
+-- end
+--
+-- -- State tracking
+-- local current_session = nil
+-- local last_session = nil
+--
+-- -- Get session filename from name
+-- local function session_file(name)
+--   read_config()
+--   return config.dir .. "/" .. name .. ".vim"
+-- end
+--
+-- local function dir_to_name(dir)
+--   if not dir then
+--     dir = vim.fn.getcwd()
+--   end
+--   local ret = dir:gsub("[\\/:]+", "%%")
+--   return ret
+-- end
+--
+-- local function name_to_dir(name)
+--   local ret = name:gsub("%%", "/")
+--   return ret
+-- end
+--
+-- local function curr_dir_to_name()
+--   return dir_to_name(vim.fs.root(0, require("utils.fs").root_patterns))
+-- end
+--
+-- --- @param preserve_list table[] list of match rules { ft?: string, bt?: string, name?: string }
+-- local function clear_buffers(preserve_list)
+--   local function should_preserve(bufnr)
+--     local ft = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
+--     local bt = vim.api.nvim_get_option_value("buftype", { buf = bufnr })
+--     local name = vim.api.nvim_buf_get_name(bufnr)
+--
+--     for _, rule in ipairs(preserve_list) do
+--       local match = true
+--       if rule.ft and rule.ft ~= ft then
+--         match = false
+--       end
+--       if rule.bt and rule.bt ~= bt then
+--         match = false
+--       end
+--       if rule.name and rule.name ~= name then
+--         match = false
+--       end
+--       return match
+--     end
+--     return false
+--   end
+--
+--   for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+--     if not should_preserve(bufnr) then
+--       vim.api.nvim_buf_delete(bufnr, { force = true })
+--     end
+--   end
+-- end
+--
+-- -- Save current session
+-- local function write(name)
+--   if not name then
+--     if not current_session then
+--       name = curr_dir_to_name()
+--     else
+--       name = current_session
+--     end
+--   end
+--   current_session = name
+--   vim.cmd("mksession! " .. vim.fn.fnameescape(session_file(name)))
+--   vim.notify("Session saved: " .. name_to_dir(name))
+-- end
+--
+-- ---@class SessionReadOpts
+-- ---@field startup? boolean
+--
+-- -- Load a session
+-- --- Read a session
+-- ---@param name? string Session name
+-- ---@param opts? SessionReadOpts
+-- local function read(name, opts)
+--   local o = opts or {}
+--   read_config()
+--   if not name or name == "" then
+--     -- Choose from list if not provided
+--     local sessions = {}
+--     local files = vim.fn.glob(config.dir .. "/*.vim", true, true)
+--     if vim.tbl_isempty(files) then
+--       vim.notify("No sessions found", vim.log.levels.WARN)
+--       return
+--     end
+--     for _, file in ipairs(files) do
+--       table.insert(sessions, name_to_dir(vim.fn.fnamemodify(file, ":t:r")))
+--     end
+--     if vim.tbl_isempty(sessions) then
+--       vim.notify("No sessions found", vim.log.levels.WARN)
+--       return
+--     end
+--     vim.ui.select(sessions, { prompt = "Select session:" }, function(choice)
+--       if choice then
+--         read(dir_to_name(choice))
+--       end
+--     end)
+--     return
+--   end
+--
+--   -- Stop any language servers if config is set but don't do
+--   -- this on startup as it causes a perceptible delay (and we
+--   -- know there aren't any language servers anyway)
+--   if not o.startup then
+--     if config.stop_lsp_on_restore then
+--       -- dd("Stopping clients")
+--       local clients = vim.lsp.get_clients()
+--       if #clients > 0 then
+--         -- dd(clients)
+--         vim.lsp.stop_client(clients)
+--       end
+--     end
+--   end
+--
+--   -- Save current session if one is loaded
+--   if current_session then
+--     write(current_session)
+--     last_session = current_session
+--   end
+--
+--   -- Clear neovim state
+--   clear_buffers(config.preserve_list)
+--   vim.cmd("silent clearjumps")
+--
+--   if name == "current" then
+--     name = curr_dir_to_name()
+--   end
+--
+--   local file = session_file(name)
+--   if vim.fn.filereadable(file) == 0 then
+--     vim.notify("Session not found: " .. name, vim.log.levels.ERROR)
+--     return
+--   end
+--   vim.cmd("silent! source " .. vim.fn.fnameescape(file))
+--   current_session = name
+--   vim.notify("Session loaded: " .. name_to_dir(name))
+-- end
+--
+-- -- Delete a session
+-- local function delete(name)
+--   if not name then
+--     if not current_session then
+--       name = curr_dir_to_name()
+--     else
+--       name = current_session
+--     end
+--   end
+--   local file = session_file(name)
+--   if vim.fn.filereadable(file) == 0 then
+--     vim.notify("Session not found: " .. name, vim.log.levels.ERROR)
+--     return
+--   end
+--   os.remove(file)
+--   if current_session == name then
+--     current_session = nil
+--   end
+--   vim.notify("Session deleted: " .. name_to_dir(name))
+-- end
+--
+-- -- Load last session
+-- local function last()
+--   if current_session then
+--     if last_session then
+--       read(last_session)
+--     else
+--       vim.notify("No previous session in this instance", vim.log.levels.WARN)
+--     end
+--   else
+--     -- Load most recently modified session file
+--     local files = vim.fn.glob(config().dir .. "/*.vim", true, true)
+--     if vim.tbl_isempty(files) then
+--       vim.notify("No sessions found", vim.log.levels.WARN)
+--       return
+--     end
+--     table.sort(files, function(a, b)
+--       return vim.fn.getftime(a) > vim.fn.getftime(b)
+--     end)
+--     read(vim.fn.fnamemodify(files[1], ":t:r"))
+--   end
+-- end
+--
+-- --
+-- -- Main
+-- --
+--
+-- read_config()
+-- if config.disable then
+--   return
+-- end
+--
+-- -- Create session dir
+-- vim.fn.mkdir(config.dir, "p")
+--
+-- -- Set session options
+-- vim.o.sessionoptions =
+--   "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+--
+-- -- Autocommands
+-- local grp = vim.api.nvim_create_augroup("user_fugitive_settings", {})
+-- vim.api.nvim_create_autocmd("VimLeavePre", {
+--   desc = "Auto-save on exit if session loaded",
+--   group = grp,
+--   callback = function()
+--     if current_session then
+--       write(current_session)
+--     end
+--   end,
+-- })
+--
+-- -- Commands
+-- vim.api.nvim_create_user_command("SessionWrite", function(opts)
+--   write(opts.args ~= "" and opts.args or nil)
+-- end, { nargs = "?" })
+--
+-- vim.api.nvim_create_user_command("SessionRead", function(opts)
+--   read(opts.args ~= "" and opts.args or nil)
+-- end, { nargs = "?" })
+--
+-- vim.api.nvim_create_user_command("SessionDelete", function(opts)
+--   delete(opts.args ~= "" and opts.args or nil)
+-- end, { nargs = "?" })
+--
+-- vim.api.nvim_create_user_command("SessionLast", function()
+--   last()
+-- end, {})
+--
+-- -- Setup wk group
+-- local wk_ok, wk = pcall(require, "which-key")
+-- if wk_ok then
+--   wk.add({ { "<leader>s", group = "+Session" } })
+-- end
+--
+-- -- Keymaps
+-- vim.keymap.set("n", "<leader>sd", "<cmd>SessionDelete<CR>", { desc = "Delete" })
+-- vim.keymap.set("n", "<leader>sl", "<cmd>SessionLast<CR>", { desc = "Last" })
+-- vim.keymap.set("n", "<leader>sr", "<cmd>SessionRead current<CR>", { desc = "Read" })
+-- vim.keymap.set("n", "<leader>ss", "<cmd>SessionRead<CR>", { desc = "Select" })
+-- vim.keymap.set("n", "<leader>sw", "<cmd>SessionWrite<CR>", { desc = "Write" })
+--
+-- -- Auto-load session if started with no args
+-- if #vim.fn.argv() == 0 then
+--   local default_name = curr_dir_to_name()
+--   if vim.fn.filereadable(session_file(default_name)) == 1 then
+--     read(default_name, { startup = true })
+--   end
+-- end

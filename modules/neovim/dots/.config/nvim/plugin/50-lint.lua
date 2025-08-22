@@ -1,5 +1,3 @@
-local deps = require("mini.deps")
-
 -- Setup linters
 local linters_by_ft = {
   c = { "cpplint" },
@@ -12,11 +10,11 @@ local linters_by_ft = {
   typescriptreact = { "eslint" },
 }
 
-deps.add({
+MiniDeps.add({
   source = "mfussenegger/nvim-lint",
 })
 
-deps.now(function()
+MiniDeps.now(function()
   local lz = require("utils.lazy").new("lint", function()
     require("lint").linters_by_ft = linters_by_ft
   end)

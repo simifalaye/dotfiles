@@ -1,5 +1,3 @@
-local deps = require("mini.deps")
-
 local ensure_installed = {
   "bash",
   "c",
@@ -11,7 +9,9 @@ local ensure_installed = {
   "java",
   "javascript",
   "json",
+  "lua",
   "markdown",
+  "markdown_inline",
   "nu",
   "pandoc",
   "python",
@@ -21,11 +21,14 @@ local ensure_installed = {
   "rust",
   "toml",
   "tsx",
+  "query",
+  "vim",
+  "vimdoc",
   "yaml",
   "zig",
 }
 
-deps.add({
+MiniDeps.add({
   source = "nvim-treesitter/nvim-treesitter",
   checkout = "main",
   hooks = {
@@ -34,7 +37,8 @@ deps.add({
     end,
   },
 })
-deps.now(function()
+
+MiniDeps.now(function()
   local treesitter = require("nvim-treesitter")
   treesitter.setup({
     install_dir = vim.fn.stdpath("data") .. "/site",

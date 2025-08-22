@@ -1,12 +1,11 @@
-local deps = require("mini.deps")
-
-deps.add({
+MiniDeps.add({
   source = "obsidian-nvim/obsidian.nvim",
-  checkout = "v3.13.0",
-  monitor = "main",
+  checkout = "main",
+  -- checkout = "v3.13.1",
+  -- monitor = "main",
 })
 
-deps.later(function()
+MiniDeps.later(function()
   local vault_path = vim.fn.resolve(vim.fs.joinpath(vim.fn.expand("~"), "notes"))
   local note_id_func = function(title)
     local name = ""

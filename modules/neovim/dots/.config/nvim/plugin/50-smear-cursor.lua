@@ -1,10 +1,8 @@
-local deps = require("mini.deps")
-
-deps.add({
+MiniDeps.add({
   source = "sphamba/smear-cursor.nvim",
 })
 
-deps.later(function()
+MiniDeps.later(function()
   local fast_smear_opts = {
     stiffness = 0.8,                      -- 0.6      [0, 1]
     trailing_stiffness = 0.5,             -- 0.4      [0, 1]

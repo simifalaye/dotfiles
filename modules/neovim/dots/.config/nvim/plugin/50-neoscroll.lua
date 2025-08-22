@@ -1,9 +1,7 @@
-local deps = require("mini.deps")
-
-deps.add({
+MiniDeps.add({
   source = "karb94/neoscroll.nvim",
 })
 
-deps.later(function()
+MiniDeps.later(function()
   require("neoscroll").setup({})
 end)

@@ -1,11 +1,9 @@
-local deps = require("mini.deps")
-
-deps.add({
+MiniDeps.add({
   source = "stevearc/oil.nvim",
   depends = { "echasnovski/mini.icons" },
 })
 
-deps.now(function()
+MiniDeps.now(function()
   local lz = require("utils.lazy").new("oil", function()
     local permission_hlgroups = setmetatable({
       ["-"] = "OilPermissionNone",

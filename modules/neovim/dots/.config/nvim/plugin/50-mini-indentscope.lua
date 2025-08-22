@@ -1,11 +1,9 @@
-local deps = require("mini.deps")
-
-deps.add({
+MiniDeps.add({
   source = "echasnovski/mini.indentscope",
   checkout = "stable",
 })
 
-deps.later(function()
+MiniDeps.later(function()
   local indentscope = require("mini.indentscope")
   indentscope.setup({
     draw = {
