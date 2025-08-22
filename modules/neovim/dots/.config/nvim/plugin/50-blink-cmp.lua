@@ -100,18 +100,18 @@ MiniDeps.later(function()
       documentation = {
         auto_show = false,
       },
-      menu = { auto_show = false },
-      -- menu = {
-      --   min_width = vim.go.pumwidth,
-      --   max_height = vim.go.pumheight,
-      --   draw = {
-      --     columns = {
-      --       { "label" },
-      --       { "kind_icon" },
-      --       { "label_description" },
-      --     },
-      --   },
-      -- },
+      -- menu = { auto_show = false },
+      menu = {
+        min_width = vim.go.pumwidth,
+        max_height = vim.go.pumheight,
+        draw = {
+          columns = {
+            { "label" },
+            { "kind_icon" },
+            { "label_description" },
+          },
+        },
+      },
     },
     -- experimental signature help support
     signature = { enabled = true },
@@ -137,7 +137,7 @@ MiniDeps.later(function()
     fuzzy = { implementation = "prefer_rust_with_warning" },
     cmdline = {
       keymap = { preset = "inherit" },
-      -- completion = { menu = { auto_show = true } },
+      completion = { menu = { auto_show = true } },
     },
   }
 
