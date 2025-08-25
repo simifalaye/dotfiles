@@ -250,7 +250,8 @@ update_pkg_manager() {
 
   if [ ${interval} -eq 0 ] || [ ! -f "${stamp}" ] || [ $((now - $(cat "${stamp}" 2>/dev/null || echo 0))) -ge ${interval} ]; then
     info "Updating package manager"
-    _run "${__PM_UPDATE_CMD}" && echo "$now" > "$stamp"
+    # shellcheck disable=SC2086
+    _run ${__PM_UPDATE_CMD} && echo "$now" > "$stamp"
   fi
 }
 
