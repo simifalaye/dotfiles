@@ -4,17 +4,6 @@ local function is_found(str, pattern)
   return string.find(str, pattern) ~= nil
 end
 
--- Detect if running in WSL
-local function has_wsl()
-  local f = io.open("/proc/version", "r")
-  if f then
-    local version = f:read("*all")
-    f:close()
-    return version:match("Microsoft") ~= nil
-  end
-  return false
-end
-
 ---@alias PlatformType 'windows' | 'linux' | 'mac'
 
 ---@return {os: PlatformType, is_win: boolean, is_linux: boolean, is_mac: boolean, is_wsl: boolean}
@@ -27,7 +16,7 @@ local function platform()
 
   if is_win then
     os = "windows"
-    is_wsl = has_wsl()
+    is_wsl = true
   elseif is_linux then
     os = "linux"
   elseif is_mac then

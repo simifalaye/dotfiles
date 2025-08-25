@@ -59,23 +59,23 @@ function _resolve_symlink() {
 
 function _run() {
   if [ "${DRY_RUN}" = '1' ]; then
-    if [ "$1" == '--redirect' ]; then
-      # do not output "--redirect file"
+    if [ "${1}" == '--redirect' ]; then
       shift
+      redirect_target="${1}"
       shift
+      echo "${*} > ${redirect_target}" >&2
+    else
+      echo "${@}"
     fi
-    echo "${@}" >&2
   else
     local redirect_target="/dev/null"
-    if [ "$1" == '--redirect' ]; then
+    if [ "${1}" == '--redirect' ]; then
       shift
-      redirect_target="$1"
+      redirect_target="${1}"
       shift
-      # shellcheck disable=SC2068
-      ${@} > "$redirect_target"
+      "${@}" > "${redirect_target}"
     else
-      # shellcheck disable=SC2068
-      ${@}
+      "${@}"
     fi
   fi
 }
@@ -167,6 +167,7 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]] && [ -f /etc/os-release ]; then
   esac
   if grep -qi microsoft /proc/version 2>/dev/null; then
     __IS_WSL=1
+    __WSL_HOME="$(wslpath -u "$(cmd.exe /c "<nul set /p=%UserProfile%" 2>/dev/null)")"
   elif [ -n "$DISPLAY" ] || [ -n "$WAYLAND_DISPLAY" ]; then
     __HAS_GUI=1
   fi

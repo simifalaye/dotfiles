@@ -100,8 +100,9 @@ run_module tinty
 run_module tmux
 run_module trash
 run_module unison
+run_module wezterm
 run_module yaml-ls
-run_module zellij
+# run_module zellij
 run_module zoxide
 
 #
