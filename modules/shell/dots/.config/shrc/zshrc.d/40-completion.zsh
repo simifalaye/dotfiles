@@ -335,4 +335,4 @@ unset glob_case_sensitivity completion_case_sensitivity
 
 (( $+functions[znap] )) || return
 
-znap install "zsh-users/zsh-completions"
+znap clone "zsh-users/zsh-completions"

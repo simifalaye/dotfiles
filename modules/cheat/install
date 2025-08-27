@@ -11,8 +11,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Main
 #
 
-cht_install_path="${__USER_BIN_DIR}/cht.sh"
-
 if [ "${UNINSTALL}" = "1" ]; then
   if is_installed cht.sh; then
     remove_system_bins 'cht.sh'
@@ -20,7 +18,7 @@ if [ "${UNINSTALL}" = "1" ]; then
   unstow_dots "${SCRIPT_DIR}/dots"
 else
   if ! is_installed cht.sh; then
-    _run curl https://cht.sh/:cht.sh > /tmp/cht.sh
+    _run --redirect /tmp/cht.sh curl https://cht.sh/:cht.sh
     _run chmod +x /tmp/cht.sh
     install_system_bins '/tmp' '/tmp/cht.sh'
   fi

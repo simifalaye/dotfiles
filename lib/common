@@ -458,7 +458,7 @@ function remove_dead_links() {
   local depth="${1}"
   local dir="${2}"
   local depth_str=""
-  [ ! -d "${dir}" ] && return 1
+  [ ! -d "${dir}" ] && return
   [ "${depth}" -gt "0" ] && depth_str="-maxdepth ${depth}"
 
   # shellcheck disable=SC2086
