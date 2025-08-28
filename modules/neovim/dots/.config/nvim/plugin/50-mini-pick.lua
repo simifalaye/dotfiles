@@ -71,7 +71,7 @@ MiniDeps.later(function()
     },
   })
 
-  -- Set keymaps
+  -- Keymaps: Leader
   vim.keymap.set(
     "n",
     "<leader>*",
@@ -80,51 +80,29 @@ MiniDeps.later(function()
   )
   vim.keymap.set(
     "n",
-    "<leader>#",
-    "<cmd>Pick grep pattern='<cword>'<CR>",
-    { desc = "Grep word under cursor" }
-  )
-  vim.keymap.set(
-    "n",
     "<leader>-",
     "<cmd>Pick buf_lines scope='current'<CR>",
-    { desc = "Find lines in buffer" }
+    { desc = "Find lines in current buffer" }
   )
   vim.keymap.set(
     "n",
     "<leader>_",
     "<cmd>Pick buf_lines<CR>",
-    { desc = "Find lines all buffers" }
+    { desc = "Find lines in open buffers" }
   )
-  vim.keymap.set(
-    "n",
-    "<leader>[",
-    "<cmd>Pick oldfiles current_dir=true<CR>",
-    { desc = "Find oldfiles" }
-  )
-  vim.keymap.set(
-    "n",
-    "<leader>]",
-    "<cmd>Pick oldfiles<CR>",
-    { desc = "Find oldfiles (all)" }
-  )
+  vim.keymap.set("n", "<leader>=", "<cmd>Pick spellsuggest<CR>", { desc = "Spelling" })
   vim.keymap.set(
     "n",
     "<leader>;",
     "<cmd>Pick history scope=':'<CR>",
     { desc = "Find command history" }
   )
-  vim.keymap.set("n", "<leader>:", "<cmd>Pick commands<CR>", { desc = "Find commands" })
-  vim.keymap.set("n", "<leader>'", "<cmd>Pick marks<CR>", { desc = "Find marks" })
-  vim.keymap.set("n", '<leader>"', "<cmd>Pick registers<CR>", { desc = "Find registers" })
-  vim.keymap.set(
-    "n",
-    "<leader><CR>",
-    "<cmd>Pick resume<CR>",
-    { desc = "Resume last find" }
-  )
-  vim.keymap.set("n", "<leader>,", pick_buffers, { desc = "Find buffers" })
-  vim.keymap.set("n", "<leader>.", "<cmd>Pick files<CR>", { desc = "Find files" })
+  vim.keymap.set("n", "<leader>:", "<cmd>Pick commands<CR>", { desc = "Find command" })
+  vim.keymap.set("n", "<leader>'", "<cmd>Pick marks<CR>", { desc = "Find mark" })
+  vim.keymap.set("n", '<leader>"', "<cmd>Pick registers<CR>", { desc = "Find register" })
+  vim.keymap.set("n", "<leader><CR>", "<cmd>Pick resume<CR>", { desc = "Resume Picker" })
+  vim.keymap.set("n", "<leader>,", pick_buffers, { desc = "Find buffer" })
+  vim.keymap.set("n", "<leader>.", "<cmd>Pick files<CR>", { desc = "Find file" })
   vim.keymap.set("n", "<leader>/", "<cmd>Pick grep_live<CR>", { desc = "Find text" })
   vim.keymap.set(
     "n",
@@ -134,57 +112,109 @@ MiniDeps.later(function()
   )
   vim.keymap.set(
     "n",
-    "<leader>fc",
-    "<cmd>Pick list scope='change'<CR>",
-    { desc = "Changes" }
-  )
-  vim.keymap.set(
-    "n",
-    "<leader>fd",
+    "<leader>d",
     "<cmd>Pick diagnostic scope='current'<CR>",
-    { desc = "Diagnostics" }
+    { desc = "Find Diagnostic" }
   )
   vim.keymap.set(
     "n",
-    "<leader>fD",
+    "<leader>D",
     "<cmd>Pick diagnostic<CR>",
-    { desc = "Diagnostics (workspace)" }
+    { desc = "Find Diagnostic (workspace)" }
   )
-  vim.keymap.set("n", "<leader>ff", "<cmd>Pick git_files<CR>", { desc = "Files (git)" })
-  vim.keymap.set("n", "<leader>fg", "<cmd>Pick grep<CR>", { desc = "Grep" })
-  vim.keymap.set("n", "<leader>fh", "<cmd>Pick help<CR>", { desc = "Help tags" })
   vim.keymap.set(
     "n",
-    "<leader>fH",
+    "<leader>s",
+    "<cmd>Pick lsp scope='document_symbol'<CR>",
+    { desc = "Find Symbol" }
+  )
+  vim.keymap.set(
+    "n",
+    "<leader>S",
+    "<cmd>Pick lsp scope='workspace_symbol'<CR>",
+    { desc = "Find Symbol (workspace)" }
+  )
+
+  -- Keymaps: Leader + b (buffer)
+  vim.keymap.set("n", "<leader>bf", pick_buffers, { desc = "Find" })
+
+  -- Keymaps: Leader + f (file)
+  vim.keymap.set(
+    "n",
+    "<leader>fc",
+    "<cmd>Pick files scope='~/.dotfiles'<CR>",
+    { desc = "Find config" }
+  )
+  vim.keymap.set("n", "<leader>ff", "<cmd>Pick files<CR>", { desc = "Find" })
+  vim.keymap.set(
+    "n",
+    "<leader>fo",
+    "<cmd>Pick oldfiles current_dir=true<CR>",
+    { desc = "Find oldfile" }
+  )
+  vim.keymap.set(
+    "n",
+    "<leader>fO",
+    "<cmd>Pick oldfiles<CR>",
+    { desc = "Find oldfile (all)" }
+  )
+
+  -- Keymaps: Leader + g (git)
+  vim.keymap.set("n", "<leader>gf", "<cmd>Pick git_files<CR>", { desc = "Find file" })
+
+  -- Keymaps: Leader + s (search)
+  vim.keymap.set(
+    "n",
+    "<leader>sc",
+    "<cmd>Pick list scope='change'<CR>",
+    { desc = "Change" }
+  )
+  vim.keymap.set(
+    "n",
+    "<leader>sd",
+    "<cmd>Pick diagnostic scope='current'<CR>",
+    { desc = "Diagnostic" }
+  )
+  vim.keymap.set(
+    "n",
+    "<leader>sD",
+    "<cmd>Pick diagnostic<CR>",
+    { desc = "Diagnostic (workspace)" }
+  )
+  vim.keymap.set("n", "<leader>sg", "<cmd>Pick grep<CR>", { desc = "Grep" })
+  vim.keymap.set("n", "<leader>sh", "<cmd>Pick help<CR>", { desc = "Help tag" })
+  vim.keymap.set(
+    "n",
+    "<leader>sH",
     "<cmd>Pick hl_groups<CR>",
-    { desc = "Highlight groups" }
+    { desc = "Highlight group" }
   )
-  vim.keymap.set("n", "<leader>fj", "<cmd>Pick list scope='jump'<CR>", { desc = "Jumps" })
-  vim.keymap.set("n", "<leader>fk", "<cmd>Pick keymaps<CR>", { desc = "Keymaps" })
+  vim.keymap.set("n", "<leader>sj", "<cmd>Pick list scope='jump'<CR>", { desc = "Jump" })
+  vim.keymap.set("n", "<leader>sk", "<cmd>Pick keymaps<CR>", { desc = "Keymap" })
   vim.keymap.set(
     "n",
-    "<leader>fl",
+    "<leader>sl",
     "<cmd>Pick list scope='location'<CR>",
     { desc = "Loclist" }
   )
-  vim.keymap.set("n", "<leader>fo", "<cmd>Pick options<CR>", { desc = "Options" })
+  vim.keymap.set("n", "<leader>so", "<cmd>Pick options<CR>", { desc = "Option" })
   vim.keymap.set(
     "n",
-    "<leader>fq",
+    "<leader>sq",
     "<cmd>Pick list scope='quickfix'<CR>",
     { desc = "Quickfix" }
   )
   vim.keymap.set(
     "n",
-    "<leader>fs",
+    "<leader>ss",
     "<cmd>Pick lsp scope='document_symbol'<CR>",
-    { desc = "Symbols" }
+    { desc = "Symbol" }
   )
   vim.keymap.set(
     "n",
-    "<leader>fS",
+    "<leader>sS",
     "<cmd>Pick lsp scope='workspace_symbol'<CR>",
-    { desc = "Symbols (workspace)" }
+    { desc = "Symbol (workspace)" }
   )
-  vim.keymap.set("n", "<leader>fz", "<cmd>Pick spellsuggest<CR>", { desc = "Spelling" })
+  vim.keymap.set("n", "<leader>sz", "<cmd>Pick spellsuggest<CR>", { desc = "Spelling" })
 end)

@@ -30,6 +30,7 @@ map(
   "v:count == 0 ? 'gk' : 'k'",
   { desc = "Up", expr = true, silent = true }
 )
+map({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save File" })
 
 --
 -- Normal mode
@@ -89,7 +90,60 @@ map("n", "]f", function()
   end
 end, { desc = "Next file" })
 
+local function find_file()
+  local buf_path = vim.api.nvim_buf_get_name(0)
+  local dir = vim.fn.fnamemodify(buf_path, ":p:h")
+  if dir == "" then
+    dir = "."
+  end
+  local cmd = ":e " .. vim.fn.fnameescape(dir) .. "/"
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(cmd, true, false, true), "n", true)
+end
+
 -- Leader
+map("n", "<leader>,", ":b ", { desc = "Find buffer" })
+map("n", "<leader>.", find_file, { desc = "Find file" })
+
+-- Leader + tab (tab)
+map("n", "<leader><tab><tab>", "<cmd>tabnew<cr>", { desc = "New" })
+map("n", "<leader><tab>d", "<cmd>tabclose<cr>", { desc = "Delete" })
+map("n", "<leader><tab>f", "<cmd>tabfirst<cr>", { desc = "First" })
+map("n", "<leader><tab>l", "<cmd>tablast<cr>", { desc = "Last" })
+map("n", "<leader><tab>n", "<cmd>tabnext<cr>", { desc = "Next" })
+map("n", "<leader><tab>o", "<cmd>tabonly<cr>", { desc = "Only" })
+map("n", "<leader><tab>p", "<cmd>tabprevious<cr>", { desc = "Previous" })
+
+-- Leader + b (buffer)
+map("n", "<leader>bb", "<cmd>e #<CR>", { desc = "Last" })
+map("n", "<leader>bd", "<cmd>bd<CR>", { desc = "Delete" })
+map("n", "<leader>bD", "<cmd>bd!<CR>", { desc = "Delete!" })
+map("n", "<leader>bf", ":b ", { desc = "Find" })
+map("n", "<leader>bk", ":bufdo bd!<CR>", { desc = "Killall" })
+map("n", "<leader>bn", "<cmd>bn<CR>", { desc = "Next" })
+map("n", "<leader>bN", "<cmd>enew<CR>", { desc = "New" })
+map("n", "<leader>bo", function()
+  local current_buf = vim.api.nvim_get_current_buf()
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if buf ~= current_buf and vim.api.nvim_buf_is_loaded(buf) then
+      vim.api.nvim_buf_delete(buf, { force = true })
+    end
+  end
+end, { desc = "Only" })
+map("n", "<leader>bp", "<cmd>bp<CR>", { desc = "Previous" })
+map("n", "<leader>bs", "<cmd>w<CR>", { desc = "Save" })
+map("n", "<leader>bS", "<cmd>wall<CR>", { desc = "Save all" })
+map("n", "<leader>bw", "<cmd>bw<CR>", { desc = "Wipeout" })
+map("n", "<leader>bW", "<cmd>bw!<CR>", { desc = "Wipeout!" })
+map("n", "<leader>by", "<cmd>%y+<CR>", { desc = "Yank" })
+
+-- Leader + f (file)
+map("n", "<leader>ff", find_file, { desc = "Find" })
+map("n", "<leader>fd", "<cmd>DeleteFile<CR>", { desc = "Delete" })
+map("n", "<leader>fD", "<cmd>DeleteFile!<CR>", { desc = "Delete!" })
+map("n", "<leader>fr", "<cmd>RenameFile<CR>", { desc = "Rename" })
+map("n", "<leader>fy", "<cmd>YankFilePath<CR>", { desc = "Yank path" })
+
+-- Leader + u (ui)
 map("n", "<leader>ui", ui.set_indent, { desc = "Set indent" })
 map("n", "<leader>uc", ui.toggle_codelens, { desc = "Toggle codelens (buf)" })
 map("n", "<leader>uC", ui.toggle_conceal, { desc = "Toggle conceal" })
@@ -110,6 +164,10 @@ map(
 map("n", "<leader>uS", ui.toggle_signcolumn, { desc = "Toggle sign column" })
 map("n", "<leader>uw", ui.toggle_wrap, { desc = "Toggle wrap" })
 map("n", "<leader>uz", ui.toggle_spell, { desc = "Toggle spell" })
+
+-- Leader + q (quit/session)
+map("n", "<leader>qq", "<cmd>qall<CR>", { desc = "Quit" })
+map("n", "<leader>qQ", "<cmd>qall!<CR>", { desc = "Quit!" })
 
 --
 -- Visual/Select/Operator mode

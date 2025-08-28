@@ -55,20 +55,14 @@ MiniDeps.now(function()
     },
   })
 
-  -- Setup wk group
-  local wk_ok, wk = pcall(require, "which-key")
-  if wk_ok then
-    wk.add({ { "<leader>s", group = "+Session" } })
-  end
-
   -- Keymaps
-  vim.keymap.set("n", "<leader>sd", "<cmd>SessionDelete<CR>", { desc = "Delete" })
-  vim.keymap.set("n", "<leader>sl", function()
+  vim.keymap.set("n", "<leader>qd", "<cmd>SessionDelete<CR>", { desc = "Delete" })
+  vim.keymap.set("n", "<leader>ql", function()
     local latest_session =
       require("auto-session.lib").get_latest_session(autosession.get_root_dir())
     autosession.RestoreSession(latest_session)
   end, { desc = "Restore latest" })
-  vim.keymap.set("n", "<leader>sr", "<cmd>SessionRestore<CR>", { desc = "Restore" })
-  vim.keymap.set("n", "<leader>ss", "<cmd>SessionSearch<CR>", { desc = "Search" })
-  vim.keymap.set("n", "<leader>sw", "<cmd>SessionSave<CR>", { desc = "Write" })
+  vim.keymap.set("n", "<leader>qr", "<cmd>SessionRestore<CR>", { desc = "Restore" })
+  vim.keymap.set("n", "<leader>qs", "<cmd>SessionSearch<CR>", { desc = "Search" })
+  vim.keymap.set("n", "<leader>qw", "<cmd>SessionSave<CR>", { desc = "Write" })
 end)

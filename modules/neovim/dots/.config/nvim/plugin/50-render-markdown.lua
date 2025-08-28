@@ -2,7 +2,7 @@ MiniDeps.add({
   source = "MeanderingProgrammer/render-markdown.nvim",
   checkout = "v8.6.0",
   monitor = "main",
-  depends = { "echasnovski/mini.icons" },
+  depends = { "nvim-tree/nvim-web-devicons" },
 })
 
 MiniDeps.later(function()

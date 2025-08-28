@@ -266,18 +266,12 @@
 --   last()
 -- end, {})
 --
--- -- Setup wk group
--- local wk_ok, wk = pcall(require, "which-key")
--- if wk_ok then
---   wk.add({ { "<leader>s", group = "+Session" } })
--- end
---
 -- -- Keymaps
--- vim.keymap.set("n", "<leader>sd", "<cmd>SessionDelete<CR>", { desc = "Delete" })
--- vim.keymap.set("n", "<leader>sl", "<cmd>SessionLast<CR>", { desc = "Last" })
--- vim.keymap.set("n", "<leader>sr", "<cmd>SessionRead current<CR>", { desc = "Read" })
--- vim.keymap.set("n", "<leader>ss", "<cmd>SessionRead<CR>", { desc = "Select" })
--- vim.keymap.set("n", "<leader>sw", "<cmd>SessionWrite<CR>", { desc = "Write" })
+-- vim.keymap.set("n", "<leader>qd", "<cmd>SessionDelete<CR>", { desc = "Delete" })
+-- vim.keymap.set("n", "<leader>ql", "<cmd>SessionLast<CR>", { desc = "Last" })
+-- vim.keymap.set("n", "<leader>qr", "<cmd>SessionRead current<CR>", { desc = "Read" })
+-- vim.keymap.set("n", "<leader>qs", "<cmd>SessionRead<CR>", { desc = "Select" })
+-- vim.keymap.set("n", "<leader>qw", "<cmd>SessionWrite<CR>", { desc = "Write" })
 --
 -- -- Auto-load session if started with no args
 -- if #vim.fn.argv() == 0 then

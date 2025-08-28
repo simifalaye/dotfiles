@@ -19,12 +19,6 @@ MiniDeps.later(function()
     },
   })
 
-  -- Setup wk group
-  local wk_ok, wk = pcall(require, "which-key")
-  if wk_ok then
-    wk.add({ { "<leader>g", group = "+Git" } })
-  end
-
   -- Keymaps
   vim.keymap.set({ "n", "x" }, "[g", function()
     gitsigns.nav_hunk("prev")

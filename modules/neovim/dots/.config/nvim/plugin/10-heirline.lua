@@ -4,6 +4,7 @@ MiniDeps.add({
 
 MiniDeps.later(function()
   local heirline = require("heirline")
+  local heirline_utils = require("heirline.utils")
   local hl_utils = require("utils.hl")
 
   local function get_term_color(num, default)
@@ -221,7 +222,7 @@ MiniDeps.later(function()
     }
   end
 
-  local FileNameBlock, CurrentPath, FileName, HelpFileName, TerminalName, FileType
+  local FileNameBlock, CurrentPath, FileName, FileNameModifer, HelpFileName, TerminalName, FileType
   do
     local FileIcon = {
       condition = function()
@@ -298,6 +299,15 @@ MiniDeps.later(function()
       hl = { fg = "fore", bold = true },
     }
 
+    FileNameModifer = {
+      hl = function()
+        if vim.bo.modified then
+          -- use `force` because we need to override the child's hl foreground
+          return { fg = "yellow", bold = true, force = true }
+        end
+      end,
+    }
+
     HelpFileName = {
       condition = function()
         return vim.bo.filetype == "help"
@@ -325,7 +335,12 @@ MiniDeps.later(function()
     }
 
     FileNameBlock = {
-      { FileIcon, WorkDir, CurrentPath, FileName },
+      {
+        FileIcon,
+        WorkDir,
+        CurrentPath,
+        heirline_utils.insert(FileNameModifer, FileName),
+      },
       -- This means that the statusline is cut here when there's not enough space.
       { provider = "%<" },
     }

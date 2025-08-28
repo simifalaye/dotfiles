@@ -65,10 +65,4 @@ MiniDeps.later(function()
     "<cmd>Git log --oneline --graph<CR>",
     { desc = "Log current repo" }
   )
-
-  -- Setup wk group
-  local wk_ok, wk = pcall(require, "which-key")
-  if wk_ok then
-    wk.add({ { "<leader>g", group = "+Git" } })
-  end
 end)
