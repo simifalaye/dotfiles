@@ -3,9 +3,24 @@ MiniDeps.add({
 })
 
 MiniDeps.later(function()
-  require("which-key").setup({
-    preset = "classic",
-    delay = 500,
+  local wk = require("which-key")
+  wk.setup({
+    preset = "helix",
+    delay = function(ctx)
+      return ctx.plugin and 0 or 640
+    end,
+    sort = {
+      "local",
+      "order",
+      "group",
+      "desc",
+      "alphanum",
+      "mod",
+      "case",
+    },
+    defer = function(ctx)
+      return ctx.mode == "V" or ctx.mode == "<C-V>" or ctx.mode == "v"
+    end,
     icons = {
       breadcrumb = "-", -- symbol used in the command line area that shows your active key combo
       separator = ":", -- symbol used between a key and it's label

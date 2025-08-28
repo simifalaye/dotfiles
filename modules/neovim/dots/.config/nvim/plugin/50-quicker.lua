@@ -50,12 +50,12 @@ MiniDeps.later(function()
   })
 
   -- Keymaps
-  vim.keymap.set("n", "<leader>q", function()
+  vim.keymap.set("n", "<leader>uq", function()
     require("quicker").toggle()
   end, {
     desc = "Toggle quickfix",
   })
-  vim.keymap.set("n", "<leader>l", function()
+  vim.keymap.set("n", "<leader>ul", function()
     require("quicker").toggle({ loclist = true })
   end, {
     desc = "Toggle loclist",

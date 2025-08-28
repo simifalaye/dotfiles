@@ -90,7 +90,6 @@ MiniDeps.later(function()
     "<cmd>Pick buf_lines<CR>",
     { desc = "Find lines in open buffers" }
   )
-  vim.keymap.set("n", "<leader>=", "<cmd>Pick spellsuggest<CR>", { desc = "Spelling" })
   vim.keymap.set(
     "n",
     "<leader>;",

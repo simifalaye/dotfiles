@@ -153,7 +153,6 @@ end, { desc = "Toggle diagnostics (buf)" })
 map("n", "<leader>uD", ui.toggle_diagnostics, { desc = "Toggle diagnostics (all)" })
 map("n", "<leader>uf", ui.toggle_foldcolumn, { desc = "Toggle foldcolumn" })
 map("n", "<leader>ui", ui.toggle_inlay_hints, { desc = "Toggle inlay hints (buf)" })
-map("n", "<leader>ul", ui.toggle_statusline, { desc = "Toggle statusline" })
 map("n", "<leader>up", ui.toggle_paste, { desc = "Toggle paste mode" })
 map(
   "n",
