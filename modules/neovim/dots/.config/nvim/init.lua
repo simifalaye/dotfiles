@@ -125,9 +125,6 @@ opt.timeoutlen = 300
 -- Recognize numbered lists when formatting text
 opt.formatoptions:append("n")
 
--- Font for GUI
-opt.guifont = "MesloLGS NerdFont:h13"
-
 -- Use histogram algorithm for diffing, generates more readable diffs in
 -- situations where two lines are swapped
 opt.diffopt:append("algorithm:histogram")

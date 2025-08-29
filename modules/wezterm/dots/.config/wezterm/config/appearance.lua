@@ -45,7 +45,7 @@ return {
     left = 0,
     right = 0,
     top = 5,
-    bottom = 5,
+    bottom = 0,
   },
   adjust_window_size_when_changing_font_size = false,
 
