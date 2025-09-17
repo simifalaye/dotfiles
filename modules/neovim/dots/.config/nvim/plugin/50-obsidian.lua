@@ -1,16 +1,16 @@
-local vault_path = vim.fn.resolve(vim.fs.joinpath(vim.fn.expand("~"), "notes"))
-if not require("utils.fs").dir_exists(vault_path) then
-  return
-end
-
-MiniDeps.add({
-  source = "obsidian-nvim/obsidian.nvim",
-  checkout = "main",
-  -- checkout = "v3.13.1",
-  -- monitor = "main",
-})
-
 MiniDeps.later(function()
+  local vault_path = vim.fn.resolve(vim.fs.joinpath(vim.fn.expand("~"), "notes"))
+  if not require("utils.fs").dir_exists(vault_path) then
+    return
+  end
+
+  MiniDeps.add({
+    source = "obsidian-nvim/obsidian.nvim",
+    checkout = "main",
+    -- checkout = "v3.13.1",
+    -- monitor = "main",
+  })
+
   local note_id_func = function(title)
     local name = ""
     if title ~= nil then

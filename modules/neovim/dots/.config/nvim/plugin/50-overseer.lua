@@ -1,8 +1,8 @@
-MiniDeps.add({
-  source = "stevearc/overseer.nvim",
-})
+MiniDeps.later(function()
+  MiniDeps.add({
+    source = "stevearc/overseer.nvim",
+  })
 
-MiniDeps.now(function()
   local overseer = require("overseer")
 
   -- Load plugin

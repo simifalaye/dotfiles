@@ -1,8 +1,8 @@
-MiniDeps.add({
-  source = "j-hui/fidget.nvim",
-})
-
 MiniDeps.now(function()
+  MiniDeps.add({
+    source = "j-hui/fidget.nvim",
+  })
+
   -- Load plugin
   require("fidget").setup({
     notification = {

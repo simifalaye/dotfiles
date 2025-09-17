@@ -1,12 +1,9 @@
-MiniDeps.add({
-  source = "danymat/neogen",
-})
+MiniDeps.later(function()
+  MiniDeps.add({
+    source = "danymat/neogen",
+  })
 
-MiniDeps.now(function()
-  local lz = require("utils.lazy").new("neogen", function()
-    require("neogen").setup({ snippet_engine = "nvim" })
-  end)
-  lz:cmds({ "Neogen" })
-  lz:events({ "BufReadPost", "BufNewFile", "BufWritePre" })
-  lz:key("n", "g.", "<cmd>Neogen<CR>", { desc = "Generate Annotation" })
+  require("neogen").setup({ snippet_engine = "nvim" })
+
+  vim.keymap.set("n", "g.", "<cmd>Neogen<CR>", { desc = "Generate Annotation" })
 end)

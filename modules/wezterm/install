@@ -12,18 +12,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 #
 
 if [ "${UNINSTALL}" = "1" ]; then
-  if [ "${__IS_WSL}" -eq 1 ]; then
-    _run rm -rf "${SCRIPT_DIR}"/dots/.config/wezterm/* "${__WSL_HOME}/.config/wezterm"
-  else
+  if [ "${__IS_WSL}" -ne 1 ]; then
     uninstall_pkg wezterm
-    unstow_dots "${SCRIPT_DIR}/dots"
   fi
+  unstow_dots "${SCRIPT_DIR}/dots"
 else
-  if [ "${__IS_WSL}" -eq 1 ]; then
-    _run mkdir -p "${__WSL_HOME}/.config/wezterm"
-    _run cp -r "${SCRIPT_DIR}"/dots/.config/wezterm/* "${__WSL_HOME}/.config/wezterm"
-  else
+  if [ "${__IS_WSL}" -ne 1 ]; then
     install_pkg wezterm
-    stow_dots "${SCRIPT_DIR}/dots"
   fi
+  stow_dots "${SCRIPT_DIR}/dots"
 fi

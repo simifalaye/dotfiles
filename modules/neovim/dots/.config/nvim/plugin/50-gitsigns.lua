@@ -1,8 +1,8 @@
-MiniDeps.add({
-  source = "lewis6991/gitsigns.nvim",
-})
-
 MiniDeps.later(function()
+  MiniDeps.add({
+    source = "lewis6991/gitsigns.nvim",
+  })
+
   -- Load plugin
   local gitsigns = require("gitsigns")
   gitsigns.setup({
@@ -21,16 +21,32 @@ MiniDeps.later(function()
 
   -- Keymaps
   vim.keymap.set({ "n", "x" }, "[g", function()
-    gitsigns.nav_hunk("prev")
+    if vim.wo.diff then
+      vim.cmd.normal({ "[g", bang = true })
+    else
+      gitsigns.nav_hunk("prev")
+    end
   end, { desc = "Go to previous git hunk" })
   vim.keymap.set({ "n", "x" }, "]g", function()
-    gitsigns.nav_hunk("next")
+    if vim.wo.diff then
+      vim.cmd.normal({ "[g", bang = true })
+    else
+      gitsigns.nav_hunk("next")
+    end
   end, { desc = "Go to next git hunk" })
   vim.keymap.set({ "n", "x" }, "[G", function()
-    gitsigns.nav_hunk("first")
+    if vim.wo.diff then
+      vim.cmd.normal({ "[G", bang = true })
+    else
+      gitsigns.nav_hunk("first")
+    end
   end, { desc = "Go to first git hunk" })
   vim.keymap.set({ "n", "x" }, "]G", function()
-    gitsigns.nav_hunk("last")
+    if vim.wo.diff then
+      vim.cmd.normal({ "]G", bang = true })
+    else
+      gitsigns.nav_hunk("last")
+    end
   end, { desc = "Go to last git hunk" })
   vim.keymap.set(
     { "o", "x" },

@@ -1,1 +1,3 @@
-MiniDeps.add({ source = "tpope/vim-rsi" })
+MiniDeps.now(function()
+  MiniDeps.add({ source = "tpope/vim-rsi" })
+end)

@@ -1,10 +1,10 @@
-MiniDeps.add({
-  source = "Bekaboo/dropbar.nvim",
-  checkout = "v14.2.1",
-  monitor = "master",
-})
-
 MiniDeps.later(function()
+  MiniDeps.add({
+    source = "Bekaboo/dropbar.nvim",
+    checkout = "v14.2.1",
+    monitor = "master",
+  })
+
   require("dropbar").setup({
     bar = {
       enable = function(buf, win, _)

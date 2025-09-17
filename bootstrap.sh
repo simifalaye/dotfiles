@@ -190,6 +190,7 @@ fi
 if ! test -d "${CLONE_DIR}"; then
   step "Cloning dotfiles repo"
   git clone git@github.com:"${REPO_NAME}".git "${CLONE_DIR}"
+  git submodule update --init --recursive
   step "Cloned dotfiles repo"
 fi
 

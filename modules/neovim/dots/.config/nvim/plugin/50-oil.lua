@@ -1,9 +1,8 @@
-MiniDeps.add({
-  source = "stevearc/oil.nvim",
-  depends = { "nvim-tree/nvim-web-devicons" },
-})
+MiniDeps.now_if_args(function()
+  MiniDeps.add({
+    source = "stevearc/oil.nvim",
+  })
 
-MiniDeps.now(function()
   local permission_hlgroups = setmetatable({
     ["-"] = "OilPermissionNone",
     ["r"] = "OilPermissionRead",

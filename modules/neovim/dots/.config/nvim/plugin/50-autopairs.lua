@@ -1,8 +1,8 @@
-MiniDeps.add({
-  source = "windwp/nvim-autopairs",
-})
+MiniDeps.later(function()
+  MiniDeps.add({
+    source = "windwp/nvim-autopairs",
+  })
 
-MiniDeps.now(function()
   local autopairs_enabled = true
   local lz = require("utils.lazy").new("autopairs", function()
     require("nvim-autopairs").setup({

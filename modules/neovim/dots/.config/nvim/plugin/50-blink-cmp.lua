@@ -1,72 +1,74 @@
-MiniDeps.add({
-  source = "saghen/blink.cmp",
-  checkout = "v1.6.0",
-  monitor = "main",
-  depends = { "rafamadriz/friendly-snippets" },
-})
-
-MiniDeps.later(function()
-  local icons = require("static.icons")
-
-  require("blink-cmp").setup({
-    enabled = function()
-      return vim.fn.reg_recording() == "" and vim.fn.reg_executing() == ""
-    end,
-    keymap = { preset = "default" },
-    appearance = {
-      kind_icons = {
-        Text = icons.Font.Kinds.Text,
-        Method = icons.Font.Kinds.Method,
-        Function = icons.Font.Kinds.Function,
-        Constructor = icons.Font.Kinds.Constructor,
-        Field = icons.Font.Kinds.Field,
-        Variable = icons.Font.Kinds.Variable,
-        Property = icons.Font.Kinds.Property,
-        Class = icons.Font.Kinds.Class,
-        Interface = icons.Font.Kinds.Interface,
-        Struct = icons.Font.Kinds.Struct,
-        Module = icons.Font.Kinds.Module,
-        Unit = icons.Font.Kinds.Unit,
-        Value = icons.Font.Kinds.Value,
-        Enum = icons.Font.Kinds.Enum,
-        EnumMember = icons.Font.Kinds.EnumMember,
-        Keyword = icons.Font.Kinds.Keyword,
-        Constant = icons.Font.Kinds.Constant,
-        Snippet = icons.Font.Kinds.Snippet,
-        Color = icons.Font.Kinds.Color,
-        File = icons.Font.Kinds.File,
-        Reference = icons.Font.Kinds.Reference,
-        Folder = icons.Font.Kinds.Folder,
-        Event = icons.Font.Kinds.Event,
-        Operator = icons.Font.Kinds.Operator,
-        TypeParameter = icons.Font.Kinds.TypeParameter,
-      },
-    },
-    completion = {
-      documentation = {
-        auto_show = false,
-      },
-    },
-    signature = { enabled = true },
-    sources = {
-      default = { "lsp", "path", "snippets", "buffer" },
-      providers = {
-        lsp = {
-          -- Don't wait for LSP completions for a long time before fallback to
-          -- buffer completions
-          -- - https://github.com/Saghen/blink.cmp/issues/2042
-          -- - https://cmp.saghen.dev/configuration/sources.html#show-buffer-completions-with-lsp
-          timeout_ms = 500,
-        },
-        cmdline = {
-          -- ignores cmdline completions when executing shell commands
-          enabled = function()
-            return vim.fn.getcmdtype() ~= ":"
-              or not vim.fn.getcmdline():match("^[%%0-9,'<>%-]*!")
-          end,
-        },
-      },
-    },
-    fuzzy = { implementation = "prefer_rust_with_warning" },
-  })
-end)
+-- MiniDeps.add({
+--   source = "saghen/blink.cmp",
+--   checkout = "v1.6.0",
+--   monitor = "main",
+--   depends = { "rafamadriz/friendly-snippets" },
+-- })
+--
+-- MiniDeps.later(function()
+--   local icons = require("static.icons")
+--
+--   require("blink-cmp").setup({
+--     enabled = function()
+--       return vim.fn.reg_recording() == "" and vim.fn.reg_executing() == ""
+--     end,
+--     keymap = { preset = "default" },
+--     appearance = {
+--       kind_icons = {
+--         Text = icons.Font.Kinds.Text,
+--         Method = icons.Font.Kinds.Method,
+--         Function = icons.Font.Kinds.Function,
+--         Constructor = icons.Font.Kinds.Constructor,
+--         Field = icons.Font.Kinds.Field,
+--         Variable = icons.Font.Kinds.Variable,
+--         Property = icons.Font.Kinds.Property,
+--         Class = icons.Font.Kinds.Class,
+--         Interface = icons.Font.Kinds.Interface,
+--         Struct = icons.Font.Kinds.Struct,
+--         Module = icons.Font.Kinds.Module,
+--         Unit = icons.Font.Kinds.Unit,
+--         Value = icons.Font.Kinds.Value,
+--         Enum = icons.Font.Kinds.Enum,
+--         EnumMember = icons.Font.Kinds.EnumMember,
+--         Keyword = icons.Font.Kinds.Keyword,
+--         Constant = icons.Font.Kinds.Constant,
+--         Snippet = icons.Font.Kinds.Snippet,
+--         Color = icons.Font.Kinds.Color,
+--         File = icons.Font.Kinds.File,
+--         Reference = icons.Font.Kinds.Reference,
+--         Folder = icons.Font.Kinds.Folder,
+--         Event = icons.Font.Kinds.Event,
+--         Operator = icons.Font.Kinds.Operator,
+--         TypeParameter = icons.Font.Kinds.TypeParameter,
+--       },
+--     },
+--     completion = {
+--       -- Don't select by default, auto insert on selection
+--       list = { selection = { preselect = false, auto_insert = true } },
+--       documentation = {
+--         auto_show = false,
+--       },
+--     },
+--     signature = { enabled = true },
+--     sources = {
+--       default = { "lsp", "path", "snippets", "buffer" },
+--       providers = {
+--         lsp = {
+--           -- Don't wait for LSP completions for a long time before fallback to
+--           -- buffer completions
+--           -- - https://github.com/Saghen/blink.cmp/issues/2042
+--           -- - https://cmp.saghen.dev/configuration/sources.html#show-buffer-completions-with-lsp
+--           timeout_ms = 500,
+--         },
+--         cmdline = {
+--           -- ignores cmdline completions when executing shell commands
+--           enabled = function()
+--             return vim.fn.getcmdtype() ~= ":"
+--               or not vim.fn.getcmdline():match("^[%%0-9,'<>%-]*!")
+--           end,
+--         },
+--       },
+--     },
+--     fuzzy = { implementation = "prefer_rust_with_warning" },
+--   })
+-- end)

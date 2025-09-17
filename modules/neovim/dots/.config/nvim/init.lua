@@ -6,8 +6,6 @@ Maintainer: simifalaye
 
 --]]
 
-vim.opt.exrc = true
-
 -- Enable faster lua loader using byte-compilation
 -- https://github.com/neovim/neovim/commit/2257ade3dc2daab5ee12d27807c0b3bcf103cd29
 pcall(function()
@@ -68,85 +66,28 @@ vim.g.loaded_2html_plugin = true
 -- Options
 --
 
-local opt = vim.opt
-local fn = vim.fn
+-- General
+vim.opt.backup = false
+vim.opt.writebackup = false
+vim.opt.mouse = "a"
+vim.opt.mousescroll = "ver:25,hor:6"
+vim.opt.switchbuf = "usetab"
+vim.opt.undofile = true
+vim.opt.shada = "'100,<50,s10,:1000,/100,@100,h"
+vim.opt.exrc = true
+-- vim.opt.swapfile = false -- TODO: Evaluate
 
-opt.viewoptions:remove("curdir")
-opt.shortmess:append({ a = true, s = true })
-opt.backspace:append({ "nostop" })
-if fn.has("nvim-0.9") == 1 then
-  opt.diffopt:append("linematch:60")
-end
-
-opt.cursorline = true
-opt.helpheight = 10
-opt.showmode = false
-opt.mousemoveevent = true
-opt.number = true
-opt.relativenumber = true
-opt.ruler = false
-opt.cmdheight = 1
-opt.pumheight = 16
-opt.scrolloff = 10
-opt.sidescrolloff = 8
-opt.sidescroll = 0
-opt.signcolumn = "yes:1"
-opt.splitright = true
-opt.splitbelow = true
-opt.swapfile = false
-opt.termguicolors = true
-opt.undofile = true
-opt.undodir = {
-  vim.fs.joinpath(vim.fn.stdpath("data") --[[@as string]], "undodir"),
-}
-opt.wrap = false
-opt.linebreak = true
-opt.breakindent = true
-opt.conceallevel = 2
-opt.autowriteall = true
-opt.virtualedit = "block"
-opt.completeopt = { "menuone", "noselect", "popup" }
-opt.wildmode = "longest:full,full"
-opt.selection = "old"
-
--- Folds
-opt.foldcolumn = "0"
-opt.foldenable = true
-opt.foldlevel = 99
-opt.foldlevelstart = 99
-opt.foldmethod = "expr"
-opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-
--- Timings
-opt.updatetime = 250
-opt.timeout = true
-opt.timeoutlen = 300
-
--- Recognize numbered lists when formatting text
-opt.formatoptions:append("n")
-
--- Use histogram algorithm for diffing, generates more readable diffs in
--- situations where two lines are swapped
-opt.diffopt:append("algorithm:histogram")
-
--- Use system clipboard by default
-vim.schedule(function()
-  opt.clipboard = "unnamedplus"
-end)
-
--- Allow local project config
-opt.exrc = true
-
-opt.backup = false
-opt.writebackup = false
-
-opt.list = true
-opt.listchars = {
+-- UI
+vim.opt.breakindent = true
+vim.opt.cursorline = true
+vim.opt.linebreak = true
+vim.opt.list = true
+vim.opt.listchars = {
   tab = "» ",
   trail = "·",
   nbsp = "␣",
 }
-opt.fillchars = {
+vim.opt.fillchars = {
   fold = "·",
   foldopen = "",
   foldclose = "",
@@ -154,28 +95,90 @@ opt.fillchars = {
   diff = "╱",
   eob = " ",
 }
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.cmdheight = 1
+vim.opt.pumheight = 10
+vim.opt.ruler = false
+vim.opt.shortmess = "FOSWaco"
+vim.opt.showmode = false
+vim.opt.signcolumn = "yes"
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+vim.opt.wrap = false
+vim.opt.cursorlineopt = "screenline,number"
+vim.opt.breakindentopt = "list:-1"
+if vim.fn.has("nvim-0.9") == 1 then
+  vim.opt.shortmess = "CFOSWaco"
+  vim.opt.splitkeep = "screen"
+end
+if vim.fn.has("nvim-0.10") == 0 then
+  vim.opt.termguicolors = true
+end
+if vim.fn.has("nvim-0.12") == 1 then
+  vim.opt.pummaxwidth = 100
+  vim.opt.completefuzzycollect = "keyword,files,whole_line"
 
-opt.ts = 2
-opt.softtabstop = 2
-opt.shiftwidth = 2
-opt.expandtab = true
-opt.smartindent = true
-opt.autoindent = true
+  require("vim._extui").enable({ enable = true })
 
-opt.ignorecase = true
-opt.smartcase = true
+  vim.cmd([[autocmd CmdlineChanged [:/\?@] call wildtrigger()]])
+  vim.opt.wildmode = "noselect:lastused"
+  vim.opt.wildoptions = "pum,fuzzy"
+  vim.keymap.set("c", "<Up>", "<C-u><Up>")
+  vim.keymap.set("c", "<Down>", "<C-u><Down>")
+end
 
-opt.spellcapcheck = ""
-opt.spelllang = "en"
-opt.spelloptions = "camel"
-opt.spellsuggest = "best,9"
+-- Editing
+vim.opt.autoindent = true
+vim.opt.expandtab = true
+vim.opt.formatoptions = "rqnl1j"
+vim.opt.ignorecase = true
+vim.opt.incsearch = true
+vim.opt.infercase = true
+vim.opt.shiftwidth = 2
+vim.opt.smartcase = true
+vim.opt.smartindent = true
+vim.opt.softtabstop = 2
+vim.opt.expandtab = true
+vim.opt.tabstop = 2
+vim.opt.virtualedit = "block"
+vim.opt.iskeyword = "@,48-57,_,192-255,-"
+-- Define pattern for a start of 'numbered' list. This is responsible for
+-- correct formatting of lists when using `gw`. This basically reads as 'at
+-- least one special character (digit, -, +, *) possibly followed some
+-- punctuation (. or `)`) followed by at least one space is a start of list
+-- item'
+vim.opt.formatlistpat = [[^\s*[0-9\-\+\*]\+[\.\)]*\s\+]]
+vim.opt.completeopt = "menuone,noselect"
+if vim.fn.has("nvim-0.11") == 1 then
+  vim.opt.completeopt = "menuone,noselect,fuzzy,nosort"
+end
+vim.opt.complete = ".,w,b,kspell"
 
--- Preview substitutions live, as you type!
-opt.inccommand = "split"
+-- Spelling
+vim.opt.spelllang = "en"
+vim.opt.spelloptions = "camel"
+
+-- Folds
+vim.opt.foldmethod = "indent"
+vim.opt.foldlevel = 99
+vim.opt.foldnestmax = 10
+vim.g.markdown_folding = 1
+if vim.fn.has("nvim-0.10") == 1 then
+  vim.opt.foldtext = ""
+end
+
+-- Use system clipboard by default
+vim.schedule(function()
+  vim.opt.clipboard = "unnamedplus"
+end)
 
 --
 -- Plugin manager
 --
+
+-- Define for lua-ls
+_G.MiniDeps = {}
 
 -- Clone 'mini.deps' manually in a way that it gets managed by 'mini.deps'
 local path_package = vim.fs.joinpath(vim.fn.stdpath("data"), "site")
@@ -186,7 +189,7 @@ if not vim.uv.fs_stat(mini_path) then
     "git",
     "clone",
     "--filter=blob:none",
-    "https://github.com/echasnovski/mini.deps",
+    "https://github.com/nvim-mini/mini.deps",
     mini_path,
   }
   vim.fn.system(clone_cmd)
@@ -196,3 +199,5 @@ end
 
 -- Set up 'mini.deps' (customize to your liking)
 require("mini.deps").setup({ path = { package = path_package } })
+
+_G.MiniDeps.now_if_args = vim.fn.argc(-1) > 0 and _G.MiniDeps.now or _G.MiniDeps.later

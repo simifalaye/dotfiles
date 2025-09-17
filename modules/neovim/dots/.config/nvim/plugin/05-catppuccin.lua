@@ -1,8 +1,8 @@
-MiniDeps.add({
-  source = "catppuccin/nvim",
-})
-
 MiniDeps.now(function()
+  MiniDeps.add({
+    source = "catppuccin/nvim",
+  })
+
   require("catppuccin").setup({
     float = {
       transparent = false, -- enable transparent floating windows

@@ -1,23 +1,23 @@
--- Single list to run multiple formatters sequentially
--- Sub-list to run only the first available formatter
-local formatters_by_ft = {
-  c = { "clang_format" },
-  cpp = { "clang_format" },
-  go = { "gofmt", "golines", stop_after_first = false },
-  javascript = { "prettierd", "prettier" },
-  javascriptreact = { "prettierd", "prettier" },
-  python = { "isort", "black", stop_after_first = false },
-  rust = { "rustfmt" },
-  typescript = { "prettierd", "prettier" },
-  typescriptreact = { "prettierd", "prettier" },
-  lua = { "stylua" },
-}
+MiniDeps.later(function()
+  -- Single list to run multiple formatters sequentially
+  -- Sub-list to run only the first available formatter
+  local formatters_by_ft = {
+    c = { "clang_format" },
+    cpp = { "clang_format" },
+    go = { "gofmt", "golines", stop_after_first = false },
+    javascript = { "prettierd", "prettier" },
+    javascriptreact = { "prettierd", "prettier" },
+    python = { "isort", "black", stop_after_first = false },
+    rust = { "rustfmt" },
+    typescript = { "prettierd", "prettier" },
+    typescriptreact = { "prettierd", "prettier" },
+    lua = { "stylua" },
+  }
 
-MiniDeps.add({
-  source = "stevearc/conform.nvim",
-})
+  MiniDeps.add({
+    source = "stevearc/conform.nvim",
+  })
 
-MiniDeps.now(function()
   local lz = require("utils.lazy").new("conform", function()
     require("conform").setup({
       formatters_by_ft = formatters_by_ft,

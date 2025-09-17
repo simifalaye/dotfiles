@@ -1,8 +1,8 @@
-MiniDeps.add({
-  source = "rebelot/heirline.nvim",
-})
+MiniDeps.now(function()
+  MiniDeps.add({
+    source = "rebelot/heirline.nvim",
+  })
 
-MiniDeps.later(function()
   local heirline = require("heirline")
   local heirline_utils = require("heirline.utils")
   local hl_utils = require("utils.hl")
@@ -490,7 +490,9 @@ MiniDeps.later(function()
       init = function(self)
         local names = {}
         for _, server in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
-          table.insert(names, server.name)
+          if server.name ~= "mini.snippets" then
+            table.insert(names, server.name)
+          end
         end
         self.lsp_names = names
       end,

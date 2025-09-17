@@ -1,9 +1,9 @@
-MiniDeps.add({
-  source = "nvim-treesitter/nvim-treesitter-textobjects",
-  checkout = "main",
-})
-
 MiniDeps.later(function()
+  MiniDeps.add({
+    source = "nvim-treesitter/nvim-treesitter-textobjects",
+    checkout = "main",
+  })
+
   --
   -- Load plugin
   --

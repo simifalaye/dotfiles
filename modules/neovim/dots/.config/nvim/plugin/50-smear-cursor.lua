@@ -1,8 +1,9 @@
-MiniDeps.add({
-  source = "sphamba/smear-cursor.nvim",
-})
+MiniDeps.now(function()
+  MiniDeps.add({
+    source = "sphamba/smear-cursor.nvim",
+  })
 
-MiniDeps.later(function()
+  -- stylua: ignore
   local fast_smear_opts = {
     stiffness = 0.8,                      -- 0.6      [0, 1]
     trailing_stiffness = 0.5,             -- 0.4      [0, 1]
@@ -18,5 +19,6 @@ MiniDeps.later(function()
   --   damping = 0.67,
   --   matrix_pixel_threshold = 0.5,
   -- }
+
   require("smear_cursor").setup(fast_smear_opts)
 end)

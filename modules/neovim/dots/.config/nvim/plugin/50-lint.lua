@@ -1,20 +1,20 @@
--- Setup linters
-local linters_by_ft = {
-  c = { "cpplint" },
-  cpp = { "cpplint" },
-  go = { "golangcilint" },
-  javascript = { "eslint" },
-  javascriptreact = { "eslint" },
-  python = { "flake8" },
-  typescript = { "eslint" },
-  typescriptreact = { "eslint" },
-}
-
-MiniDeps.add({
-  source = "mfussenegger/nvim-lint",
-})
-
 MiniDeps.now(function()
+  -- Setup linters
+  local linters_by_ft = {
+    c = { "cpplint" },
+    cpp = { "cpplint" },
+    go = { "golangcilint" },
+    javascript = { "eslint" },
+    javascriptreact = { "eslint" },
+    python = { "flake8" },
+    typescript = { "eslint" },
+    typescriptreact = { "eslint" },
+  }
+
+  MiniDeps.add({
+    source = "mfussenegger/nvim-lint",
+  })
+
   local lz = require("utils.lazy").new("lint", function()
     require("lint").linters_by_ft = linters_by_ft
   end)

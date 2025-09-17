@@ -1,9 +1,9 @@
-MiniDeps.add({
-  source = "echasnovski/mini.indentscope",
-  checkout = "stable",
-})
-
 MiniDeps.later(function()
+  MiniDeps.add({
+    source = "nvim-mini/mini.indentscope",
+    checkout = "stable",
+  })
+
   local indentscope = require("mini.indentscope")
   indentscope.setup({
     draw = {

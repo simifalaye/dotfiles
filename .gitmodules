@@ -1,0 +1,3 @@
+[submodule "modules/wezterm/dots/.config/wezterm"]
+	path = modules/wezterm/dots/.config/wezterm
+	url = git@github.com:simifalaye/wezterm-cfg.git

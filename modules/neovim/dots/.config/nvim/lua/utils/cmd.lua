@@ -37,8 +37,8 @@ function M.sys_open(path)
   local is_wsl = vim.fn.has("wsl") == 1
   local open = function(p)
     local cmd
-    if is_wsl and vim.fn.executable("wslview") > 0 then
-      cmd = { "wslview" }
+    if is_wsl and vim.fn.executable("explorer.exe") > 0 then
+      cmd = { "explorer.exe" }
     elseif vim.fn.has("unix") == 1 and vim.fn.executable("xdg-open") > 0 then
       cmd = { "xdg-open" }
     elseif

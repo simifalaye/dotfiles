@@ -1,10 +1,10 @@
-MiniDeps.add({
-  source = "echasnovski/mini.pick",
-  checkout = "stable",
-  depends = { { source = "echasnovski/mini.extra", checkout = "stable" } },
-})
-
 MiniDeps.later(function()
+  MiniDeps.add({
+    source = "nvim-mini/mini.pick",
+    checkout = "stable",
+    depends = { { source = "nvim-mini/mini.extra", checkout = "stable" } },
+  })
+
   local minipick = require("mini.pick")
 
   --- Pick from buffers
@@ -70,6 +70,9 @@ MiniDeps.later(function()
       end,
     },
   })
+
+  -- Replace UI select
+  vim.ui.select = minipick.ui_select
 
   -- Keymaps: Leader
   vim.keymap.set(

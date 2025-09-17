@@ -41,6 +41,16 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
     end
   end,
 })
+vim.api.nvim_create_autocmd("FileType", {
+  desc = "Ensure proper 'formatoptions'",
+  group = file_utilities_grp,
+  callback = function()
+    -- Don't auto-wrap comments and don't insert comment leader after hitting 'o'
+    -- If don't do this on `FileType`, this keeps reappearing due to being set in
+    -- filetype plugins.
+    vim.cmd("setlocal formatoptions-=c formatoptions-=o")
+  end,
+})
 
 local window_behaviours_grp = vim.api.nvim_create_augroup("user_window_behaviours", {})
 vim.api.nvim_create_autocmd("VimResized", {

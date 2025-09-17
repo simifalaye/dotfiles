@@ -1,44 +1,44 @@
-local ensure_installed = {
-  "bash",
-  "c",
-  "cpp",
-  "css",
-  "diff",
-  "go",
-  "html",
-  "java",
-  "javascript",
-  "json",
-  "lua",
-  "markdown",
-  "markdown_inline",
-  "nu",
-  "pandoc",
-  "python",
-  "r",
-  "regex",
-  "rst",
-  "rust",
-  "toml",
-  "tsx",
-  "query",
-  "vim",
-  "vimdoc",
-  "yaml",
-  "zig",
-}
+MiniDeps.now_if_args(function()
+  local ensure_installed = {
+    "bash",
+    "c",
+    "cpp",
+    "css",
+    "diff",
+    "go",
+    "html",
+    "java",
+    "javascript",
+    "json",
+    "lua",
+    "markdown",
+    "markdown_inline",
+    "nu",
+    "pandoc",
+    "python",
+    "r",
+    "regex",
+    "rst",
+    "rust",
+    "toml",
+    "tsx",
+    "query",
+    "vim",
+    "vimdoc",
+    "yaml",
+    "zig",
+  }
 
-MiniDeps.add({
-  source = "nvim-treesitter/nvim-treesitter",
-  checkout = "main",
-  hooks = {
-    post_checkout = function()
-      vim.cmd("TSUpdate")
-    end,
-  },
-})
+  MiniDeps.add({
+    source = "nvim-treesitter/nvim-treesitter",
+    checkout = "main",
+    hooks = {
+      post_checkout = function()
+        vim.cmd("TSUpdate")
+      end,
+    },
+  })
 
-MiniDeps.now(function()
   local treesitter = require("nvim-treesitter")
   treesitter.setup({
     install_dir = vim.fn.stdpath("data") .. "/site",
@@ -65,6 +65,7 @@ MiniDeps.now(function()
   vim.api.nvim_create_autocmd("FileType", { pattern = filetypes, callback = ts_start })
 
   -- Enable folds and indent
+  vim.wo.foldmethod = "expr"
   vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
   vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 end)

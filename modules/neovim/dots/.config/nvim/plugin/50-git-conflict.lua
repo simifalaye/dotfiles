@@ -1,8 +1,8 @@
-MiniDeps.add({
-  source = "akinsho/git-conflict.nvim",
-})
+MiniDeps.now_if_args(function()
+  MiniDeps.add({
+    source = "akinsho/git-conflict.nvim",
+  })
 
-MiniDeps.now(function()
   ---@diagnostic disable-next-line: missing-fields
   require("git-conflict").setup({
     disable_diagnostics = true,
