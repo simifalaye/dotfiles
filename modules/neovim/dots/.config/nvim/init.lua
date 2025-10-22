@@ -119,7 +119,7 @@ if vim.fn.has("nvim-0.12") == 1 then
   vim.opt.pummaxwidth = 100
   vim.opt.completefuzzycollect = "keyword,files,whole_line"
 
-  require("vim._extui").enable({ enable = true })
+  require("vim._extui").enable({ enable = true, msg = { target = "msg" } })
 
   vim.cmd([[autocmd CmdlineChanged [:/\?@] call wildtrigger()]])
   vim.opt.wildmode = "noselect:lastused"

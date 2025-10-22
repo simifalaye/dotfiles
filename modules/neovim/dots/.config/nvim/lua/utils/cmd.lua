@@ -12,9 +12,7 @@ function M.run(cmd, show_error)
   local result = vim.fn.system(wind32_cmd or cmd)
   local success = vim.api.nvim_get_vvar("shell_error") == 0
   if not success and (show_error == nil or show_error) then
-    vim.api.nvim_err_writeln(
-      "Error running command: " .. cmd .. "\nError message:\n" .. result
-    )
+    vim.notify("Error running command: " .. cmd .. "\nError message:\n" .. result)
   end
   return success and result:gsub("[\27\155][][()#;?%d]*[A-PRZcf-ntqry=><~]", "") or nil
 end

@@ -1,0 +1,12 @@
+-- MiniDeps.later(function()
+--   -- Configure
+--   vim.g.grug_far = {
+--     -- windowCreationCommand = "tab",
+--   }
+--
+--   MiniDeps.add("MagicDuck/grug-far.nvim")
+--
+--   -- Keymaps
+--   vim.keymap.set("n", "<leader>/", "<cmd>GrugFar<CR>", { desc = "Search" })
+--   vim.keymap.set("x", "<leader>/", ":GrugFarWithin<CR>", { desc = "Search" })
+-- end)
