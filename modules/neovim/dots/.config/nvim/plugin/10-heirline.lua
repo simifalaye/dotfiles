@@ -509,7 +509,16 @@ MiniDeps.now(function()
   --
 
   local InactiveStatusLine = {
-    condition = conditions.is_not_active,
+    condition = function()
+      if vim.fn.has("nvim-0.12") == 1 then
+        local winid = vim.api.nvim_get_current_win()
+        local mb_ok, mb = pcall(require, "minibuffer")
+        if mb_ok and mb.is_active() and mb.get_active_window() == winid then
+          return false
+        end
+      end
+      return conditions.is_not_active()
+    end,
     Space,
     {
       provider = function()

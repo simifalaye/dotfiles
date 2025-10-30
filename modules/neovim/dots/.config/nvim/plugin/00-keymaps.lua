@@ -126,7 +126,11 @@ map("n", "<leader>bN", "<cmd>enew<CR>", { desc = "New" })
 map("n", "<leader>bo", function()
   local current_buf = vim.api.nvim_get_current_buf()
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    if buf ~= current_buf and vim.api.nvim_buf_is_loaded(buf) then
+    if
+      buf ~= current_buf
+      and vim.api.nvim_buf_is_loaded(buf)
+      and vim.fn.buflisted(buf) == 1
+    then
       vim.api.nvim_buf_delete(buf, { force = true })
     end
   end

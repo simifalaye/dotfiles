@@ -89,4 +89,11 @@ MiniDeps.now(function()
       },
     })
   end)
+
+  if vim.fn.has("nvim-0.12") == 1 then
+    local wk_mb = require("minibuffer.integrations.which-key")
+    local wk_view = require("which-key.view")
+    wk_view.show = wk_mb.show
+    wk_view.hide = wk_mb.hide
+  end
 end)
