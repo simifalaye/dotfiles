@@ -112,7 +112,11 @@ vim.api.nvim_create_autocmd({ "LspAttach" }, {
       and not vim.g.user_lsp_semantic_tokens_disable
     then
       if not vim.b.user_lsp_semantic_tokens_disable then
-        vim.lsp.semantic_tokens["start"](bufnr, client.id)
+        if vim.fn.has("nvim-0.12") == 1 then
+          vim.lsp.semantic_tokens.enable(true, { bufnr = bufnr })
+        else
+          vim.lsp.semantic_tokens["start"](bufnr, client.id)
+        end
       end
     end
     if supports_method("documentHighlight") then

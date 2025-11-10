@@ -1,6 +1,7 @@
 # Never wrap and let the pager do its job.
 --wrap=never
 # Set theme
---theme="Catppuccin-Mocha"
+# --theme="Catppuccin-Mocha"
+--theme="base16-256"
 # Disable decorations
 --plain

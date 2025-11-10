@@ -21,6 +21,7 @@ MiniDeps.now(function()
       fore = hl_utils.get_hl_color("fg", { "StatusLine", "Normal" }, "#000000"),
       back1 = hl_utils.get_hl_color("bg", { "StatusLine", "Normal" }, "#000000"),
       back2 = hl_utils.get_hl_color("bg", { "StatusLineNC" }, "#000000"),
+      grey = hl_utils.get_hl_color("fg", { "LineNr" }, "#808080"),
       -- ANSI terminal colors
       black = get_term_color(0, "#000000"),
       red = get_term_color(1, "#d70000"),
@@ -115,7 +116,7 @@ MiniDeps.now(function()
             ["\22"] = "magenta",
             c = "cyan",
             R = "red",
-            t = "bright_black",
+            t = "grey",
           }
           return c[m] or "yellow"
         end,
@@ -256,7 +257,7 @@ MiniDeps.now(function()
           return self.pwd
         end
       end,
-      hl = { fg = "bright_black", bold = true },
+      hl = { fg = "grey", bold = true },
       flexible = priority.WorkDir,
       {
         provider = function(self)
@@ -509,6 +510,7 @@ MiniDeps.now(function()
   --
 
   local InactiveStatusLine = {
+    hl = { fg = "fore", bg = "back2" },
     condition = function()
       if vim.fn.has("nvim-0.12") == 1 then
         local winid = vim.api.nvim_get_current_win()
