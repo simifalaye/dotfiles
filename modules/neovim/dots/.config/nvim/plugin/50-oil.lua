@@ -1,5 +1,7 @@
-MiniDeps.now_if_args(function()
-  MiniDeps.add({
+local deps = require("mini.deps")
+
+deps.now_if_args(function()
+  deps.add({
     source = "stevearc/oil.nvim",
   })
 

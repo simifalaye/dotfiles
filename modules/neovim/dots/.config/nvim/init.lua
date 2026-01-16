@@ -75,7 +75,7 @@ vim.opt.switchbuf = "usetab"
 vim.opt.undofile = true
 vim.opt.shada = "'100,<50,s10,:1000,/100,@100,h"
 vim.opt.exrc = true
--- vim.opt.swapfile = false -- TODO: Evaluate
+vim.opt.swapfile = false -- TODO: Evaluate
 
 -- UI
 vim.opt.breakindent = true
@@ -117,7 +117,7 @@ if vim.fn.has("nvim-0.10") == 0 then
 end
 if vim.fn.has("nvim-0.12") == 1 then
   vim.opt.pummaxwidth = 100
-  vim.opt.completefuzzycollect = "keyword,files,whole_line"
+  -- vim.opt.completefuzzycollect = "keyword,files,whole_line"
 
   require("vim._extui").enable({ enable = true, msg = { target = "msg" } })
 
@@ -142,7 +142,6 @@ vim.opt.softtabstop = 2
 vim.opt.expandtab = true
 vim.opt.tabstop = 2
 vim.opt.virtualedit = "block"
-vim.opt.iskeyword = "@,48-57,_,192-255,-"
 -- Define pattern for a start of 'numbered' list. This is responsible for
 -- correct formatting of lists when using `gw`. This basically reads as 'at
 -- least one special character (digit, -, +, *) possibly followed some
@@ -180,7 +179,7 @@ end)
 -- Define for lua-ls
 _G.MiniDeps = {}
 
--- Clone 'mini.deps' manually in a way that it gets managed by 'mini.deps'
+-- Put this at the top of 'init.lua'
 local path_package = vim.fs.joinpath(vim.fn.stdpath("data"), "site")
 local mini_path = vim.fs.joinpath(path_package, "pack", "deps", "start", "mini.nvim")
 if not vim.uv.fs_stat(mini_path) then
@@ -189,7 +188,9 @@ if not vim.uv.fs_stat(mini_path) then
     "git",
     "clone",
     "--filter=blob:none",
-    "https://github.com/nvim-mini/mini.deps",
+    "--branch",
+    "stable",
+    "https://github.com/nvim-mini/mini.nvim",
     mini_path,
   }
   vim.fn.system(clone_cmd)
@@ -198,6 +199,6 @@ if not vim.uv.fs_stat(mini_path) then
 end
 
 -- Set up 'mini.deps' (customize to your liking)
-require("mini.deps").setup({ path = { package = path_package } })
-
-_G.MiniDeps.now_if_args = vim.fn.argc(-1) > 0 and _G.MiniDeps.now or _G.MiniDeps.later
+local deps = require("mini.deps")
+deps.setup({ path = { package = path_package } })
+deps.now_if_args = vim.fn.argc(-1) > 0 and deps.now or deps.later

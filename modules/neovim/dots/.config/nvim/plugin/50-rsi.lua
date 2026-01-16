@@ -1,3 +1,5 @@
-MiniDeps.now(function()
-  MiniDeps.add({ source = "tpope/vim-rsi" })
+local deps = require("mini.deps")
+
+deps.now(function()
+  deps.add({ source = "tpope/vim-rsi" })
 end)

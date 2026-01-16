@@ -2,7 +2,6 @@
 -- Neovim global plugin for handling large files
 --
 
-vim.g.loaded_user_plugin_bigfile = true
 if vim.g.loaded_user_plugin_bigfile then
   return
 end

@@ -1,14 +1,15 @@
-MiniDeps.later(function()
+local deps = require("mini.deps")
+
+deps.later(function()
   local vault_path = vim.fn.resolve(vim.fs.joinpath(vim.fn.expand("~"), "notes"))
   if not require("utils.fs").dir_exists(vault_path) then
     return
   end
 
-  MiniDeps.add({
+  deps.add({
     source = "obsidian-nvim/obsidian.nvim",
-    checkout = "main",
-    -- checkout = "v3.13.1",
-    -- monitor = "main",
+    checkout = "v3.14.7",
+    monitor = "main",
   })
 
   local note_id_func = function(title)
@@ -48,7 +49,9 @@ MiniDeps.later(function()
     new_notes_location = "notes_subdir",
     note_id_func = note_id_func,
     preferred_link_style = "wiki", -- 'wiki' or 'markdown'.
-    disable_frontmatter = true,
+    frontmatter = {
+      enabled = false,
+    },
     templates = {
       folder = "templates",
       date_format = "%Y-%m-%d",
@@ -73,7 +76,7 @@ MiniDeps.later(function()
     },
     footer = { enabled = true },
     callbacks = {
-      enter_note = function(_, _)
+      enter_note = function(_)
         -- ob_map("<CR>", "<cmd>Obsidian follow_link<CR>", "Follow link")
         ob_map("<localleader>nb", "<cmd>Obsidian backlinks<CR>", "Backlinks")
         ob_map(

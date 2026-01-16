@@ -86,3 +86,13 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     end
   end,
 })
+
+local ft_corrections_grp = vim.api.nvim_create_augroup("user_ft_corrections", {})
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  desc = "Set dockerfile",
+  group = ft_corrections_grp,
+  pattern = "Dockerfile*",
+  callback = function()
+    vim.bo.filetype = "dockerfile"
+  end,
+})

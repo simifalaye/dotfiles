@@ -2,7 +2,6 @@
 -- Neovim global plugin toggling the number display
 --
 
-vim.g.loaded_user_plugin_numbers_toggle = true
 if vim.g.loaded_user_plugin_numbers_toggle then
   return
 end
@@ -17,13 +16,13 @@ local default_config = {
 }
 
 ---@type NumbersToggleOpts | fun():NumbersToggleOpts
-vim.g.bigfile = vim.g.bigfile
+vim.g.numbers_toggle = vim.g.numbers_toggle
 
 --- Get configuration
 ---@return NumbersToggleOpts
 local function get_config()
-  local opts = type(vim.g.bigfile) == "function" and vim.g.bigfile()
-    or vim.g.bigfile
+  local opts = type(vim.g.numbers_toggle) == "function" and vim.g.numbers_toggle()
+    or vim.g.numbers_toggle
     or {}
   local config = vim.tbl_deep_extend("force", default_config, opts)
   return config

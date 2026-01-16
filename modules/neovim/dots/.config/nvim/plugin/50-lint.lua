@@ -1,4 +1,6 @@
-MiniDeps.now(function()
+local deps = require("mini.deps")
+
+deps.now(function()
   -- Setup linters
   local linters_by_ft = {
     c = { "cpplint" },
@@ -11,7 +13,7 @@ MiniDeps.now(function()
     typescriptreact = { "eslint" },
   }
 
-  MiniDeps.add({
+  deps.add({
     source = "mfussenegger/nvim-lint",
   })
 

@@ -87,6 +87,7 @@ run_module nerd-fonts
 run_module lua-ls
 run_module marksman-ls
 run_module neovim
+run_module os-theme-watcher
 run_module prettierd
 run_module pyright
 run_module ripgrep

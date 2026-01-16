@@ -1,5 +1,7 @@
-MiniDeps.later(function()
-  MiniDeps.add({
+local deps = require("mini.deps")
+
+deps.later(function()
+  deps.add({
     source = "Bekaboo/dropbar.nvim",
     checkout = "v14.2.1",
     monitor = "master",

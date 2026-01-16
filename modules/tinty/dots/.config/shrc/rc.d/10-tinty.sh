@@ -1,3 +1,8 @@
+# Disable. Using fixed colorscheme for now
+if true; then
+  return
+fi
+
 export TINTY_DATA_DIR="${XDG_DATA_HOME}/tinted-theming/tinty"
 export TINTY_CURRENT_FILE="${TINTY_DATA_DIR}/current_scheme"
 export TINTED_SHELL_ENABLE_BASE16_VARS=1

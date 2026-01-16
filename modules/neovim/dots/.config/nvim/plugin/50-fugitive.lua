@@ -1,5 +1,7 @@
-MiniDeps.later(function()
-  MiniDeps.add({
+local deps = require("mini.deps")
+
+deps.later(function()
+  deps.add({
     source = "tpope/vim-fugitive",
     depends = { "tpope/vim-rhubarb" },
   })

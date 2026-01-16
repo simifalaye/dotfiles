@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+svc_script="${HOME}"/.dotfiles/scripts/create-systemd-service.sh
+case "${__PLATFORM_SYSTEM}" in
+  linux)
+    if [ "${__IS_WSL}" == "1" ]; then
+      "${svc_script}" os-theme-watcher -a "${WSL_DISTRO_NAME}" "${SCRIPT_DIR}"/scripts/wsl.sh
+    else
+      info "Unsupported platform: ${__PLATFORM_SYSTEM}. TODO"
+    fi
+    ;;
+  darwin)
+    info "Unsupported platform: ${__PLATFORM_SYSTEM}. TODO"
+    ;;
+  *)
+    info "Unsupported platform: ${__PLATFORM_SYSTEM}"
+    ;;
+esac

@@ -1,4 +1,6 @@
-MiniDeps.now_if_args(function()
+local deps = require("mini.deps")
+
+deps.now_if_args(function()
   local ensure_installed = {
     "bash",
     "c",
@@ -14,7 +16,6 @@ MiniDeps.now_if_args(function()
     "markdown",
     "markdown_inline",
     "nu",
-    "pandoc",
     "python",
     "r",
     "regex",
@@ -29,7 +30,7 @@ MiniDeps.now_if_args(function()
     "zig",
   }
 
-  MiniDeps.add({
+  deps.add({
     source = "nvim-treesitter/nvim-treesitter",
     checkout = "main",
     hooks = {

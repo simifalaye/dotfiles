@@ -1,3 +1,5 @@
-MiniDeps.now(function()
-  MiniDeps.add({ source = "dstein64/vim-startuptime" })
+local deps = require("mini.deps")
+
+deps.now(function()
+  deps.add({ source = "dstein64/vim-startuptime" })
 end)

@@ -1,4 +1,6 @@
-MiniDeps.later(function()
+local deps = require("mini.deps")
+
+deps.later(function()
   -- Single list to run multiple formatters sequentially
   -- Sub-list to run only the first available formatter
   local formatters_by_ft = {
@@ -14,7 +16,7 @@ MiniDeps.later(function()
     lua = { "stylua" },
   }
 
-  MiniDeps.add({
+  deps.add({
     source = "stevearc/conform.nvim",
   })
 

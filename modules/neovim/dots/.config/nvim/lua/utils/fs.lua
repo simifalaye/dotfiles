@@ -157,9 +157,13 @@ function M.watch_with_string(path, string, opts)
   return M.watch_with_function(path, on_event, on_error, opts)
 end
 
+---@class user_runnable_tbl
+---@field on_event function(filename: string, events: table, unwatch_cb: function)
+---@field on_error? function(error: string, unwatch_cb: function?)
+
 --- Watch a file/dir with any callable callback
 ---@param path string
----@param runnable string|table|nil
+---@param runnable string|user_runnable_tbl|nil
 ---@param opts user_fs_watch_opts_t?
 function M.watch(path, runnable, opts)
   if type(runnable) == "string" then

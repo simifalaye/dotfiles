@@ -1,19 +1,13 @@
-MiniDeps.now_if_args(function()
-  MiniDeps.add({
+local deps = require("mini.deps")
+
+deps.now_if_args(function()
+  deps.add({
     source = "akinsho/git-conflict.nvim",
   })
 
   ---@diagnostic disable-next-line: missing-fields
   require("git-conflict").setup({
     disable_diagnostics = true,
-    default_mappings = {
-      ours = "c<",
-      theirs = "c>",
-      none = "c-",
-      both = "c=",
-      next = "]x",
-      prev = "[x",
-    },
   })
 
   ---Set default hl for git-conflict.nvim
