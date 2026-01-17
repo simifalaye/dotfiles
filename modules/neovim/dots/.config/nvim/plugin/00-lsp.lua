@@ -6,18 +6,11 @@ vim.lsp.config("*", {
   },
 })
 
-vim.lsp.enable({
-  "bashls",
-  "clangd",
-  "fish_lsp",
-  "gopls",
-  "jsonls",
-  "lua_ls",
-  "nil_ls",
-  "pyright",
-  "rust_analyzer",
-  "yamlls",
-})
+for _, dir in ipairs(vim.api.nvim__get_runtime({ "lsp" }, true, {})) do
+  for config_file in vim.fs.dir(dir) do
+    vim.lsp.enable(vim.fn.fnamemodify(config_file, ":r"))
+  end
+end
 
 local lsp_setup_grp = vim.api.nvim_create_augroup("user_lsp_setup", {})
 vim.api.nvim_create_autocmd({ "LspAttach" }, {

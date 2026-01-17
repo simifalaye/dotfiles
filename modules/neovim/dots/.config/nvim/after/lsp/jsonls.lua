@@ -8,7 +8,13 @@ if schemastore_ok then
   }
 end
 
+---@type vim.lsp.Config
 return {
-  cmd = { "vscode-json-languageserver", "--stdio" },
+  cmd = { "vscode-json-language-server", "--stdio" },
   settings = jsonls_settings,
+  filetypes = { "json", "jsonc" },
+  init_options = {
+    provideFormatter = true,
+  },
+  root_markers = { ".git" },
 }

@@ -99,11 +99,11 @@ end)
 
 later(function()
   local clue = require("mini.clue")
-  --stylua: ignore
   clue.setup({
     clues = {
       { mode = { "n", "v" }, keys = "gr", desc = "+Lsp" },
       { mode = { "n", "v" }, keys = "grw", desc = "+Workspace" },
+      { mode = { "n", "v" }, keys = "<localleader>", desc = "+Local" },
       { mode = { "n", "v" }, keys = "<leader>", desc = "+Global" },
       { mode = { "n", "v" }, keys = "<leader><tab>", desc = "+Tab" },
       { mode = { "n", "v" }, keys = "<leader>b", desc = "+Buffer" },
@@ -121,19 +121,20 @@ later(function()
       clue.gen_clues.z(),
     },
     triggers = {
-      { mode = { "n", "x" }, keys = "<Leader>" }, -- Leader triggers
-      { mode =   "n",        keys = "\\" },       -- mini.basics
+      { mode = { "n", "x" }, keys = "<localleader>" }, -- Leader triggers
+      { mode = { "n", "x" }, keys = "<leader>" }, -- Leader triggers
+      { mode = "n", keys = "\\" }, -- mini.basics
       { mode = { "n", "x" }, keys = "[" },
       { mode = { "n", "x" }, keys = "]" },
-      { mode =   "i",        keys = "<C-x>" },    -- Built-in completion
-      { mode = { "n", "x" }, keys = "g" },        -- `g` key
-      { mode = { "n", "x" }, keys = "'" },        -- Marks
+      { mode = "i", keys = "<C-x>" }, -- Built-in completion
+      { mode = { "n", "x" }, keys = "g" }, -- `g` key
+      { mode = { "n", "x" }, keys = "'" }, -- Marks
       { mode = { "n", "x" }, keys = "`" },
-      { mode = { "n", "x" }, keys = '"' },        -- Registers
+      { mode = { "n", "x" }, keys = '"' }, -- Registers
       { mode = { "i", "c" }, keys = "<C-r>" },
-      { mode =   "n",        keys = "<C-w>" },    -- Window commands
-      { mode = { "n", "x" }, keys = "s" },        -- `s` key
-      { mode = { "n", "x" }, keys = "z" },        -- `z` key
+      { mode = "n", keys = "<C-w>" }, -- Window commands
+      { mode = { "n", "x" }, keys = "s" }, -- `s` key
+      { mode = { "n", "x" }, keys = "z" }, -- `z` key
     },
   })
 end)
