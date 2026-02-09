@@ -82,6 +82,7 @@ run_module fzf
 run_module github
 run_module htop
 run_module hyperkey
+run_module jq
 run_module json-ls
 run_module nerd-fonts
 run_module lua-ls

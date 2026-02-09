@@ -40,7 +40,7 @@ else
     }
     # shellcheck disable=SC2317
     function __zellij_filter_fn() {
-      if ! echo "${1}" | grep -q '\.tar\.gz$'; then
+      if ! echo "${1}" | grep '\.tar\.gz$' | grep -q -v 'no-web'; then
         debug "#### Asset '${1}' failed filter" && return 1
       fi
     }

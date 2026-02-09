@@ -3,6 +3,26 @@ local now, later = deps.now, deps.later
 -- local now_if_args = deps.now_if_args
 
 now(function()
+  local starter = require("mini.starter")
+  starter.setup({
+    query_updaters = "abcdefghijklmnopqrstuvwxyz0123456789.",
+    evaluate_single = true,
+    items = {
+      starter.sections.builtin_actions(),
+      starter.sections.recent_files(10, false),
+      starter.sections.recent_files(10, true),
+      -- Use this if you set up 'mini.sessions'
+      starter.sections.sessions(5, true)
+    },
+    content_hooks = {
+      starter.gen_hook.adding_bullet(),
+      starter.gen_hook.indexing('all', { 'Builtin actions' }),
+      starter.gen_hook.padding(3, 2),
+    },
+  })
+end)
+
+now(function()
   local icons = require("mini.icons")
   icons.setup({
     use_file_extension = function(ext, _)
@@ -163,6 +183,10 @@ end)
 later(function()
   require("mini.surround").setup()
 end)
+
+-- later(function()
+--   require("mini.trailspace").setup()
+-- end)
 
 later(function()
   local pick = require("mini.pick")
