@@ -13,18 +13,21 @@ if [ -d "${HOME}/.config/shrc/env.d" ]; then
   done
 fi
 
-# Load common shell interactive config
-if [ -d "${HOME}/.config/shrc/rc.d" ]; then
-  for file in "${HOME}/.config/shrc/rc.d"/*.sh; do
-    # shellcheck source=/dev/null
-    source "$file"
-  done
-fi
+# Load interactive config if this is an interactive shell
+if [[ $- == *i* ]]; then
+  # Load common shell interactive config
+  if [ -d "${HOME}/.config/shrc/rc.d" ]; then
+    for file in "${HOME}/.config/shrc/rc.d"/*.sh; do
+      # shellcheck source=/dev/null
+      source "$file"
+    done
+  fi
 
-# Load bash shell interactive config
-if [ -d "${HOME}/.config/shrc/bashrc.d" ]; then
-  for file in "${HOME}/.config/shrc/bashrc.d"/*.bash; do
-    # shellcheck source=/dev/null
-    source "$file"
-  done
+  # Load bash shell interactive config
+  if [ -d "${HOME}/.config/shrc/bashrc.d" ]; then
+    for file in "${HOME}/.config/shrc/bashrc.d"/*.bash; do
+      # shellcheck source=/dev/null
+      source "$file"
+    done
+  fi
 fi

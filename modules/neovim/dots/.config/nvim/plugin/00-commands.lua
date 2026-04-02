@@ -128,3 +128,84 @@ vim.api.nvim_create_user_command("Scratch", function()
     vim.api.nvim_set_option_value(name, value, { buf = buf })
   end
 end, { desc = "Open a scratch buffer", nargs = 0 })
+
+local function complete_pack_names(arglead)
+  local items = {}
+  local packs = (vim.pack and vim.pack.get) and vim.pack.get(nil, { info = false }) or {}
+
+  for _, plug in ipairs(packs) do
+    local name = tostring(plug.spec.name) ---@type string
+    if arglead == "" or name:find("^" .. vim.pesc(arglead)) then
+      items[#items + 1] = name
+    end
+  end
+
+  table.sort(items)
+  return items
+end
+
+vim.api.nvim_create_user_command("PackAdd", function(opts)
+  local src = opts.fargs[1]
+  local version = opts.fargs[2]
+
+  ---@type vim.pack.Spec
+  local spec = { src = src }
+  if version and version ~= "" then
+    spec.version = version
+  end
+
+  vim.pack.add({ spec })
+end, {
+  desc = "vim.pack.add wrapper: :PackAdd {src} [version]",
+  nargs = "+", -- {src,version?}
+  complete = "file",
+})
+
+vim.api.nvim_create_user_command("PackDel", function(opts)
+  vim.pack.del(opts.fargs, { force = opts.bang })
+end, {
+  desc = "vim.pack.del wrapper: :PackDel[!] {name} ... (use ! to force)",
+  bang = true,
+  nargs = "+",
+  complete = function(arglead, _, _)
+    return complete_pack_names(arglead)
+  end,
+})
+
+vim.api.nvim_create_user_command("PackGet", function(opts)
+  local names = (#opts.fargs > 0) and opts.fargs or nil
+  local info = not opts.bang
+
+  local res = vim.pack.get(names, { info = info })
+  vim.print(res)
+end, {
+  desc = "vim.pack.get wrapper: :PackGet[!] [name ...] (! => info=false)",
+  bang = true,
+  nargs = "*",
+  complete = function(arglead, _, _)
+    return complete_pack_names(arglead)
+  end,
+})
+
+vim.api.nvim_create_user_command("PackUpdate", function(opts)
+  local names = (#opts.fargs > 0) and opts.fargs or nil
+  vim.pack.update(names, { force = opts.bang })
+end, {
+  desc = "vim.pack.update wrapper: :PackUpdate[!] [name ...] (! => force)",
+  bang = true,
+  nargs = "*",
+  complete = function(arglead, _, _)
+    return complete_pack_names(arglead)
+  end,
+})
+
+vim.api.nvim_create_user_command("PackClean", function()
+  local plugs = vim.pack.get(nil, nil)
+  local remove_list = {}
+  for _, plug in ipairs(plugs) do
+    if not plug.active and plug.spec then
+      table.insert(remove_list, plug.spec.name)
+    end
+  end
+  vim.pack.del(remove_list)
+end, { desc = "Clean inactive plugins", nargs = 0 })

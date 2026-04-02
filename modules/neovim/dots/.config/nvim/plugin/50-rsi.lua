@@ -1,5 +1,3 @@
-local deps = require("mini.deps")
-
-deps.now(function()
-  deps.add({ source = "tpope/vim-rsi" })
-end)
+vim.pack.add({
+  { src = "https://github.com/tpope/vim-rsi" },
+})

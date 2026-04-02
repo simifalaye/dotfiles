@@ -8,7 +8,6 @@ return {
     ".luarc.jsonc",
     ".luacheckrc",
     ".stylua.toml",
-
     "stylua.toml",
     "selene.toml",
     "selene.yml",
@@ -20,6 +19,10 @@ return {
       workspace = {
         maxPreload = 10000,
         checkThirdParty = false,
+        -- Don't analyze code from submodules
+        ignoreSubmodules = true,
+        -- Add Neovim's methods for easier code writing
+        library = { vim.env.VIMRUNTIME },
       },
       completion = {
         callSnippet = "Replace",

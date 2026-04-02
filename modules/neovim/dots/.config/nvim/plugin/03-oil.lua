@@ -1,8 +1,6 @@
-local deps = require("mini.deps")
-
-deps.now_if_args(function()
-  deps.add({
-    source = "stevearc/oil.nvim",
+_G.now_if_args(function()
+  vim.pack.add({
+    { src = "https://github.com/stevearc/oil.nvim" },
   })
 
   local permission_hlgroups = setmetatable({

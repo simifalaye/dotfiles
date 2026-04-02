@@ -9,11 +9,13 @@ vim.g.loaded_user_plugin_theme_watcher = true
 
 ---@class ThemeWatcherOpts
 ---@field disable? boolean
+---@field on_startup? boolean
 ---@field theme_file? string
 
 ---@type ThemeWatcherOpts
 local default_config = {
   disable = false,
+  on_startup = true,
   theme_file = "/tmp/.os-theme",
 }
 
@@ -50,7 +52,9 @@ local function set_theme(file)
 end
 
 -- Set on startup
-set_theme(config.theme_file)
+if config.on_startup then
+  set_theme(config.theme_file)
+end
 
 fs.watch(config.theme_file, {
   on_event = function(_, _, _)

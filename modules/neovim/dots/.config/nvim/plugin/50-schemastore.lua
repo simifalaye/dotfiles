@@ -1,7 +1,3 @@
-local deps = require("mini.deps")
-
-deps.now(function()
-  deps.add({
-    source = "b0o/schemastore.nvim",
-  })
-end)
+vim.pack.add({
+  { src = "https://github.com/b0o/schemastore.nvim" },
+})

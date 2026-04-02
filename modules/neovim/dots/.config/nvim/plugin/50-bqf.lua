@@ -1,7 +1,7 @@
-local deps = require("mini.deps")
-
-deps.later(function()
-  deps.add({
-    source = "kevinhwang91/nvim-bqf",
+vim.schedule(function()
+  vim.pack.add({
+    {
+      src = "https://github.com/kevinhwang91/nvim-bqf",
+    },
   })
 end)

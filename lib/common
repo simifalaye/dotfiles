@@ -709,12 +709,12 @@ function _install_gh_pkg_default_filter_fn() {
 function _install_gh_pkg_default_system_filter_fn() {
   case "${__PLATFORM_SYSTEM}" in
     linux)
-      if ! echo "${1}" | grep -e "linux"; then
+      if ! echo "${1}" | grep -i -e "linux"; then
         debug "Asset '${1}' failed system filter" && return 1
       fi
       ;;
     darwin)
-      if ! echo "${1}" | grep -q -e "mac" -e "macos" -e "darwin"; then
+      if ! echo "${1}" | grep -q -i -e "mac" -e "macos" -e "darwin"; then
         debug "Asset '${1}' failed system filter" && return 1
       fi
       ;;
@@ -726,13 +726,13 @@ function _install_gh_pkg_default_system_filter_fn() {
 function _install_gh_pkg_default_arch_filter_fn() {
   case "${__PLATFORM_ARCH}" in
     x86_64|amd64)
-      if ! echo "${1}" | grep -q -e "x86_64" -e "x86" -e "amd64" -e "x64"; then
-        debug "Asset '${1}' failed system filter" && return 1
+      if ! echo "${1}" | grep -q -i -e "x86_64" -e "x86" -e "amd64" -e "x64"; then
+        debug "Asset '${1}' failed arch filter" && return 1
       fi
       ;;
     aarch64|arm64)
-      if ! echo "${1}" | grep -q -e "aarch64" -e "arm64"; then
-        debug "Asset '${1}' failed system filter" && return 1
+      if ! echo "${1}" | grep -q -i -e "aarch64" -e "arm64"; then
+        debug "Asset '${1}' failed arch filter" && return 1
       fi
       ;;
     *)

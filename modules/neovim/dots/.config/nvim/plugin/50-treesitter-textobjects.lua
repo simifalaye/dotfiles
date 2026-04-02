@@ -1,9 +1,6 @@
-local deps = require("mini.deps")
-
-deps.later(function()
-  deps.add({
-    source = "nvim-treesitter/nvim-treesitter-textobjects",
-    checkout = "main",
+vim.schedule(function()
+  vim.pack.add({
+    { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects" },
   })
 
   --

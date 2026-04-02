@@ -1,8 +1,6 @@
-local deps = require("mini.deps")
-
-deps.later(function()
-  deps.add({
-    source = "windwp/nvim-ts-autotag",
+vim.schedule(function()
+  vim.pack.add({
+    { src = "https://github.com/windwp/nvim-ts-autotag" },
   })
 
   require("nvim-ts-autotag").setup()

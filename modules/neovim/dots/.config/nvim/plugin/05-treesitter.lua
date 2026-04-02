@@ -1,6 +1,4 @@
-local deps = require("mini.deps")
-
-deps.now_if_args(function()
+_G.now_if_args(function()
   local ensure_installed = {
     "bash",
     "c",
@@ -29,23 +27,17 @@ deps.now_if_args(function()
     "yaml",
     "zig",
   }
+  local ts_update = function()
+    vim.cmd("TSUpdate")
+  end
+  _G.on_packchanged("nvim-treesitter", { "update" }, ts_update, ":TSUpdate")
 
-  deps.add({
-    source = "nvim-treesitter/nvim-treesitter",
-    checkout = "main",
-    hooks = {
-      post_checkout = function()
-        vim.cmd("TSUpdate")
-      end,
+  vim.pack.add({
+    {
+      src = "https://github.com/nvim-treesitter/nvim-treesitter",
     },
   })
 
-  local treesitter = require("nvim-treesitter")
-  treesitter.setup({
-    install_dir = vim.fn.stdpath("data") .. "/site",
-  })
-
-  -- Install required parsers
   local isnt_installed = function(lang)
     return #vim.api.nvim_get_runtime_file("parser/" .. lang .. ".*", false) == 0
   end
@@ -60,10 +52,20 @@ deps.now_if_args(function()
     :map(vim.treesitter.language.get_filetypes)
     :flatten()
     :totable()
+  vim.list_extend(filetypes, { "markdown", "quarto" })
   local ts_start = function(ev)
     vim.treesitter.start(ev.buf)
   end
-  vim.api.nvim_create_autocmd("FileType", { pattern = filetypes, callback = ts_start })
+  vim.api.nvim_create_autocmd(
+    "FileType",
+    { pattern = filetypes, callback = ts_start, desc = "Ensure enabled tree-sitter" }
+  )
+
+  -- Miscellaneous adjustments
+  vim.treesitter.language.register("markdown", "quarto")
+  vim.filetype.add({
+    extension = { qmd = "quarto", Qmd = "quarto" },
+  })
 
   -- Enable folds and indent
   vim.wo.foldmethod = "expr"

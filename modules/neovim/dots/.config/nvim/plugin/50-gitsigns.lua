@@ -1,8 +1,8 @@
-local deps = require("mini.deps")
-
-deps.later(function()
-  deps.add({
-    source = "lewis6991/gitsigns.nvim",
+vim.schedule(function()
+  vim.pack.add({
+    {
+      src = "https://github.com/lewis6991/gitsigns.nvim",
+    },
   })
 
   -- Load plugin

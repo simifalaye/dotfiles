@@ -30,6 +30,38 @@ _G.dd = function(...)
   return ...
 end
 
+--- Run function now if neovim is started with arguments
+---@param f function
+_G.now_if_args = function(f)
+  if vim.fn.argc(-1) > 0 then
+    f()
+  else
+    vim.schedule(f)
+  end
+end
+
+--- Custom `vim.pack.add()` hook helper
+---@param plugin_name string
+---@param kinds string[]
+---@param callback function
+---@param desc string
+_G.on_packchanged = function(plugin_name, kinds, callback, desc)
+  if vim.fn.has("nvim-0.12") == 0 then
+    return
+  end
+  local f = function(ev)
+    local name, kind = ev.data.spec.name, ev.data.kind
+    if not (name == plugin_name and vim.tbl_contains(kinds, kind)) then
+      return
+    end
+    if not ev.data.active then
+      vim.cmd.packadd(plugin_name)
+    end
+    callback()
+  end
+  vim.api.nvim_create_autocmd("PackChanged", { pattern = "*", callback = f, desc = desc })
+end
+
 -- Set leader keys
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
@@ -117,15 +149,8 @@ if vim.fn.has("nvim-0.10") == 0 then
 end
 if vim.fn.has("nvim-0.12") == 1 then
   vim.opt.pummaxwidth = 100
-  -- vim.opt.completefuzzycollect = "keyword,files,whole_line"
 
-  require("vim._extui").enable({ enable = true, msg = { target = "msg" } })
-
-  vim.cmd([[autocmd CmdlineChanged [:/\?@] call wildtrigger()]])
-  vim.opt.wildmode = "noselect:lastused"
-  vim.opt.wildoptions = "pum,fuzzy"
-  vim.keymap.set("c", "<Up>", "<C-u><Up>")
-  vim.keymap.set("c", "<Down>", "<C-u><Down>")
+  require("vim._core.ui2").enable({ enable = true, msg = { target = "msg" } })
 end
 
 -- Editing
@@ -171,34 +196,3 @@ end
 vim.schedule(function()
   vim.opt.clipboard = "unnamedplus"
 end)
-
---
--- Plugin manager
---
-
--- Define for lua-ls
-_G.MiniDeps = {}
-
--- Put this at the top of 'init.lua'
-local path_package = vim.fs.joinpath(vim.fn.stdpath("data"), "site")
-local mini_path = vim.fs.joinpath(path_package, "pack", "deps", "start", "mini.nvim")
-if not vim.uv.fs_stat(mini_path) then
-  vim.cmd('echo "Installing `mini.nvim`" | redraw')
-  local clone_cmd = {
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "--branch",
-    "stable",
-    "https://github.com/nvim-mini/mini.nvim",
-    mini_path,
-  }
-  vim.fn.system(clone_cmd)
-  vim.cmd("packadd mini.nvim | helptags ALL")
-  vim.cmd('echo "Installed `mini.nvim`" | redraw')
-end
-
--- Set up 'mini.deps' (customize to your liking)
-local deps = require("mini.deps")
-deps.setup({ path = { package = path_package } })
-deps.now_if_args = vim.fn.argc(-1) > 0 and deps.now or deps.later

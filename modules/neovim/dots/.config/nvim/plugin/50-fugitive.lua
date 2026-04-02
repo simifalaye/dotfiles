@@ -1,9 +1,7 @@
-local deps = require("mini.deps")
-
-deps.later(function()
-  deps.add({
-    source = "tpope/vim-fugitive",
-    depends = { "tpope/vim-rhubarb" },
+vim.schedule(function()
+  vim.pack.add({
+    { src = "https://github.com/tpope/vim-rhubarb" },
+    { src = "https://github.com/tpope/vim-fugitive" },
   })
 
   -- Autocmds

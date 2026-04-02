@@ -27,7 +27,7 @@ export SYSTEMD_LESS="$LESS"
 mkdir -p "${XDG_STATE_HOME}/less" # Create less dir if not created
 
 # Wsl2
-if test -d /proc/version && grep -iq microsoft /proc/version; then
+if test -r /proc/version && grep -iq microsoft /proc/version; then
   # Escape path
   export PATH=${PATH// /\\ }
   export LS_COLORS="ow=01;36;40"

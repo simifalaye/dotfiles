@@ -1,10 +1,6 @@
-local deps = require("mini.deps")
-
-deps.later(function()
-  deps.add({
-    source = "Bekaboo/dropbar.nvim",
-    checkout = "v14.2.1",
-    monitor = "master",
+vim.schedule(function()
+  vim.pack.add({
+    { src = "https://github.com/Bekaboo/dropbar.nvim", version = vim.version.range("*") },
   })
 
   require("dropbar").setup({

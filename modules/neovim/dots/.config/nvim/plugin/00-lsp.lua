@@ -1,3 +1,4 @@
+-- Set default lsp config
 vim.lsp.config("*", {
   root_markers = require("utils.fs").root_patterns,
   capabilities = vim.lsp.protocol.make_client_capabilities(),
@@ -6,12 +7,14 @@ vim.lsp.config("*", {
   },
 })
 
+-- Enable all lsp with configuration files
 for _, dir in ipairs(vim.api.nvim__get_runtime({ "lsp" }, true, {})) do
   for config_file in vim.fs.dir(dir) do
     vim.lsp.enable(vim.fn.fnamemodify(config_file, ":r"))
   end
 end
 
+-- Setup lsp attach handler for keymaps and settings
 local lsp_setup_grp = vim.api.nvim_create_augroup("user_lsp_setup", {})
 vim.api.nvim_create_autocmd({ "LspAttach" }, {
   group = lsp_setup_grp,
@@ -64,18 +67,18 @@ vim.api.nvim_create_autocmd({ "LspAttach" }, {
     end
     if supports_method("codeLens") and not vim.g.user_lsp_codelens_disable then
       vim.keymap.set("n", "grl", function()
-        vim.lsp.codelens.refresh()
+        vim.lsp.codelens.enable(true)
       end, { desc = "Codelens refresh (lsp)", buffer = bufnr })
       vim.keymap.set("n", "grL", function()
         vim.lsp.codelens.run()
       end, { desc = "Codelens run (lsp)", buffer = bufnr })
-      vim.lsp.codelens.refresh({ bufnr = bufnr })
+      vim.lsp.codelens.enable(true, { bufnr = bufnr })
       vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
         group = vim.api.nvim_create_augroup("user_codelens_refresh", { clear = false }),
         buffer = bufnr,
         callback = function()
           if not vim.b.user_lsp_codelens_disable then
-            vim.lsp.codelens.refresh({ bufnr = bufnr })
+            vim.lsp.codelens.enable(true, { bufnr = bufnr })
           end
         end,
       })
@@ -108,7 +111,7 @@ vim.api.nvim_create_autocmd({ "LspAttach" }, {
         if vim.fn.has("nvim-0.12") == 1 then
           vim.lsp.semantic_tokens.enable(true, { bufnr = bufnr })
         else
-          vim.lsp.semantic_tokens["start"](bufnr, client.id)
+          vim.lsp.semantic_tokens.enable(true, { bufnr = bufnr, client_id = client.id })
         end
       end
     end
@@ -144,5 +147,21 @@ vim.api.nvim_create_autocmd({ "LspAttach" }, {
     -- if supports_method("completion") then
     --   vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
     -- end
+  end,
+})
+
+-- Display lsp progress
+vim.api.nvim_create_autocmd("LspProgress", {
+  group = lsp_setup_grp,
+  callback = function(ev)
+    local value = ev.data.params.value
+    vim.api.nvim_echo({ { value.message or "done" } }, false, {
+      id = "lsp." .. ev.data.client_id,
+      kind = "progress",
+      source = "vim.lsp",
+      title = value.title,
+      status = value.kind ~= "end" and "running" or "success",
+      percent = value.percentage,
+    })
   end,
 })

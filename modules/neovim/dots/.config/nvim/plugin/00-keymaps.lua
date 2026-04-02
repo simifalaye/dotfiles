@@ -48,7 +48,7 @@ map("n", "g!", ":! chmod +x %<CR>", { desc = "Make File Executable" })
 map(
   "n",
   "g[",
-  [[<cmd>set nomore<bar>40messages<bar>set more<CR>]],
+  [[<cmd>set nomore<bar>messages<bar>set more<CR>]],
   { desc = "Show Message History" }
 )
 map("n", "g]", [[<cmd>messages clear<CR>]], { desc = "Clear Message History" })
@@ -60,7 +60,6 @@ map("n", "gQ", function()
   -- Restore state
   vim.fn.winrestview(winview)
 end, { desc = "Format Document" })
-map("n", "gx", ":SystemOpen<CR>", { desc = "System Open" })
 
 -- ([/]) namespace
 map("n", "[f", function()

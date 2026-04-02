@@ -1,8 +1,6 @@
-local deps = require("mini.deps")
-
-deps.later(function()
-  deps.add({
-    source = "danymat/neogen",
+vim.schedule(function()
+  vim.pack.add({
+    { src = "https://github.com/danymat/neogen" },
   })
 
   require("neogen").setup({ snippet_engine = "nvim" })

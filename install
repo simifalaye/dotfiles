@@ -32,8 +32,8 @@ MODULE="${1}"
 # shellcheck disable=SC2034
 COMMON_LIB="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/common"
 
-# Update system package manager every 24 hours
-update_pkg_manager 24
+# Update system package manager
+update_pkg_manager 72
 
 # Cleanup home
 info "Cleaning up HOME of misc files"
@@ -94,6 +94,7 @@ run_module pyright
 run_module ripgrep
 run_module rsync
 run_module scroll-reverser
+run_module sesh
 run_module shellcheck
 run_module shfmt
 run_module stylua
@@ -106,12 +107,3 @@ run_module wezterm
 run_module yaml-ls
 # run_module zellij
 run_module zoxide
-
-#
-# Mac-specific
-# TODO: Maybe move into a module
-#
-
-if [ "${__OS_ID}" == "mac" ]; then
-  is_installed clang || xcode-select --install
-fi

@@ -1,8 +1,8 @@
-local deps = require("mini.deps")
-
-deps.now(function()
-  deps.add({
-    source = "folke/lazydev.nvim",
+_G.now_if_args(function()
+  vim.pack.add({
+    {
+      src = "https://github.com/folke/lazydev.nvim",
+    },
   })
 
   require("lazydev").setup({
