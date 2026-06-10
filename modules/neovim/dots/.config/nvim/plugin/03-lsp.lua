@@ -7,31 +7,34 @@ vim.lsp.config("*", {
   },
 })
 
--- Enable all lsp with configuration files
-for _, dir in ipairs(vim.api.nvim__get_runtime({ "lsp" }, true, {})) do
-  for config_file in vim.fs.dir(dir) do
-    vim.lsp.enable(vim.fn.fnamemodify(config_file, ":r"))
-  end
-end
+-- Load additionl lsp configurations
+vim.pack.add({
+  { src = "https://github.com/neovim/nvim-lspconfig" },
+})
+
+-- Enable lsp servers
+vim.lsp.enable({
+  "bashls",
+  "clangd",
+  "gopls",
+  "jsonls",
+  "lua_ls",
+  "marksman",
+  "pyright",
+  "rust_analyzer",
+  "yamlls",
+})
 
 -- Setup lsp attach handler for keymaps and settings
-local lsp_setup_grp = vim.api.nvim_create_augroup("user_lsp_setup", {})
+local lsp_grp = vim.api.nvim_create_augroup("user.lsp", {})
 vim.api.nvim_create_autocmd({ "LspAttach" }, {
-  group = lsp_setup_grp,
+  group = lsp_grp,
   desc = "Setup buffer-local lsp configuration on attach",
   callback = function(args)
     local bufnr = args.buf --[[@as number]]
     local client = vim.lsp.get_client_by_id(args.data.client_id)
     if client == nil then
       return
-    end
-
-    -- Enable lsp omnifunc and tagfunc for completion and goto def
-    if client.server_capabilities.completionProvider then
-      vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
-    end
-    if client.server_capabilities.definitionProvider then
-      vim.bo[bufnr].tagfunc = "v:lua.vim.lsp.tagfunc"
     end
 
     -- Setup main keymaps
@@ -66,15 +69,9 @@ vim.api.nvim_create_autocmd({ "LspAttach" }, {
       )
     end
     if supports_method("codeLens") and not vim.g.user_lsp_codelens_disable then
-      vim.keymap.set("n", "grl", function()
-        vim.lsp.codelens.enable(true)
-      end, { desc = "Codelens refresh (lsp)", buffer = bufnr })
-      vim.keymap.set("n", "grL", function()
-        vim.lsp.codelens.run()
-      end, { desc = "Codelens run (lsp)", buffer = bufnr })
       vim.lsp.codelens.enable(true, { bufnr = bufnr })
       vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-        group = vim.api.nvim_create_augroup("user_codelens_refresh", { clear = false }),
+        group = vim.api.nvim_create_augroup("user.lsp.codelens", { clear = false }),
         buffer = bufnr,
         callback = function()
           if not vim.b.user_lsp_codelens_disable then
@@ -82,22 +79,6 @@ vim.api.nvim_create_autocmd({ "LspAttach" }, {
           end
         end,
       })
-    end
-    if supports_method("signatureHelp") then
-      vim.keymap.set(
-        "n",
-        "grs",
-        vim.lsp.buf.signature_help,
-        { desc = "Signature (lsp)", buffer = bufnr }
-      )
-    end
-    if supports_method("typeDefinition") then
-      vim.keymap.set(
-        "n",
-        "grt",
-        vim.lsp.buf.type_definition,
-        { desc = "Goto Type (lsp)", buffer = bufnr }
-      )
     end
     if
       (
@@ -117,7 +98,7 @@ vim.api.nvim_create_autocmd({ "LspAttach" }, {
     end
     if supports_method("documentHighlight") then
       local doc_highlight_grp =
-        vim.api.nvim_create_augroup("user_doc_highlight", { clear = false })
+        vim.api.nvim_create_augroup("user.lsp.doc_highlight", { clear = false })
       vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
         group = doc_highlight_grp,
         desc = "highlight references when cursor holds",
@@ -144,15 +125,15 @@ vim.api.nvim_create_autocmd({ "LspAttach" }, {
         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
       end
     end
-    -- if supports_method("completion") then
-    --   vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-    -- end
+    if supports_method("completion") then
+      vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+    end
   end,
 })
 
 -- Display lsp progress
 vim.api.nvim_create_autocmd("LspProgress", {
-  group = lsp_setup_grp,
+  group = lsp_grp,
   callback = function(ev)
     local value = ev.data.params.value
     vim.api.nvim_echo({ { value.message or "done" } }, false, {

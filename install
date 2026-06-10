@@ -80,6 +80,7 @@ run_module eza
 run_module fd
 run_module fzf
 run_module github
+run_module golang
 run_module htop
 run_module hyperkey
 run_module jq

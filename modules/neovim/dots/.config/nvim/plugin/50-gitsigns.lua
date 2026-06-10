@@ -81,10 +81,11 @@ vim.schedule(function()
   vim.keymap.set("n", "<leader>gS", gitsigns.stage_buffer, { desc = "Stage Buffer" })
 
   -- Auto-refresh fugitive buffers on staging/unstaging hunks
+  local grp = vim.api.nvim_create_augroup("user.plugin.gitsigns", {})
   vim.api.nvim_create_autocmd("User", {
     pattern = "GitSignsChanged",
     desc = "Automatically refresh fugitive buffers on staging/unstaging hunks.",
-    group = vim.api.nvim_create_augroup("GitsignsFugitiveIntegration", {}),
+    group = grp,
     callback = function(args)
       local file = args.data.file ---@type string
       for _, buf in ipairs(vim.api.nvim_list_bufs()) do

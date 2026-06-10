@@ -46,7 +46,7 @@ end
 -- Main
 --
 
-local grp = vim.api.nvim_create_augroup("user_plugin_bigfile", {})
+local grp = vim.api.nvim_create_augroup("user.plugin.bigfile", {})
 vim.api.nvim_create_autocmd("BufReadPre", {
   desc = "Set settings for large files",
   group = grp,
@@ -61,7 +61,7 @@ vim.api.nvim_create_autocmd("BufReadPre", {
     if not ok then
       return
     end
-    local large_file_groupid = vim.api.nvim_create_augroup("user_large_file", {})
+    local large_file_groupid = vim.api.nvim_create_augroup("user.plugin.bigfile", {})
     if stat and stat.size > config.midfile.size then
       vim.b[config.midfile.buflocal_name] = true
       vim.api.nvim_create_autocmd("BufReadPost", {

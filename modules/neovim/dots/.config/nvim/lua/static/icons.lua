@@ -60,14 +60,14 @@ return {
   },
   Font = {
     Diag = {
-      -- error = "●",
-      -- hint = "●",
-      -- info = "●",
-      -- warn = "●",
+      -- Error = "●",
+      -- Hint = "●",
+      -- Info = "●",
+      -- Warn = "●",
       Error = "",
       Hint = "",
       Info = "",
-      warn = "",
+      Warn = "",
     },
     Kinds = {
       Class = "󰠱",

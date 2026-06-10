@@ -1,4 +1,4 @@
-local file_utilities_grp = vim.api.nvim_create_augroup("user_file_utilities", {})
+local file_utilities_grp = vim.api.nvim_create_augroup("user.file_utilities", {})
 vim.api.nvim_create_autocmd("BufWritePre", {
   desc = "Remove trailing whitespace on save",
   group = file_utilities_grp,
@@ -51,8 +51,15 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.cmd("setlocal formatoptions-=c formatoptions-=o")
   end,
 })
+vim.api.nvim_create_autocmd("BufEnter", {
+  desc = "Disable newline auto commentstring",
+  group = file_utilities_grp,
+  callback = function()
+    vim.opt.formatoptions = vim.opt.formatoptions - { "c", "r", "o" }
+  end,
+})
 
-local window_behaviours_grp = vim.api.nvim_create_augroup("user_window_behaviours", {})
+local window_behaviours_grp = vim.api.nvim_create_augroup("user.window_behaviours", {})
 vim.api.nvim_create_autocmd("VimResized", {
   desc = "Auto-resize splits",
   group = window_behaviours_grp,
@@ -60,7 +67,7 @@ vim.api.nvim_create_autocmd("VimResized", {
   command = "tabdo wincmd =",
 })
 
-local yank_text_grp = vim.api.nvim_create_augroup("user_yank_text", {})
+local yank_text_grp = vim.api.nvim_create_augroup("user.yank_text", {})
 vim.api.nvim_create_autocmd({ "VimEnter", "CursorMoved" }, {
   desc = "Save cursor position whenever it moves",
   group = yank_text_grp,
@@ -87,7 +94,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
-local ft_corrections_grp = vim.api.nvim_create_augroup("user_ft_corrections", {})
+local ft_corrections_grp = vim.api.nvim_create_augroup("user.ft_corrections", {})
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
   desc = "Set dockerfile",
   group = ft_corrections_grp,

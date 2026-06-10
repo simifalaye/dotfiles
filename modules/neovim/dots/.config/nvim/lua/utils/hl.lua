@@ -22,31 +22,10 @@ function M.get(ns_id, opts)
   return attr
 end
 
----Merge highlight attributes, use values from the right most hl group
----if there are conflicts
----@vararg string highlight group names
----@return vim.api.keyset.highlight: merged highlight attributes
-function M.merge(...)
-  -- Eliminate nil values in vararg
-  local hl_names = {}
-  for _, hl_name in pairs({ ... }) do
-    if hl_name then
-      table.insert(hl_names, hl_name)
-    end
-  end
-  local hl_attr = vim.tbl_map(function(hl_name)
-    return M.get(0, {
-      name = hl_name,
-      winhl_link = false,
-    })
-  end, hl_names)
-  return vim.tbl_extend("force", unpack(hl_attr))
-end
-
 ---@param attr_type 'fg'|'bg'|'ctermfg'|'ctermbg'
----@param fbg? string|integer
----@param default? integer
----@return integer|string|nil
+---@param fbg? string|number
+---@param default? string|number
+---@return number|string|nil
 function M.normalize_fg_or_bg(attr_type, fbg, default)
   if not fbg then
     return default
@@ -80,6 +59,7 @@ end
 ---   if they are set to highlight group names
 ---2. If `attr.link` used in combination with other attributes, will first
 ---   retrieve the attributes of the linked highlight group, then merge
+
 ---   with other attributes
 ---Side effect: change `attr` table
 ---@param attr vim.api.keyset.highlight highlight attributes
@@ -119,71 +99,78 @@ function M.set(ns_id, name, attr)
   return vim.api.nvim_set_hl(ns_id, name, M.normalize(attr))
 end
 
----Set default highlight attributes, normalize highlight attributes before setting
----@param ns_id integer namespace id
----@param name string
----@param attr vim.api.keyset.highlight highlight attributes
----@return nil
-function M.set_default(ns_id, name, attr)
-  attr.default = true
-  return vim.api.nvim_set_hl(ns_id, name, M.normalize(attr))
+--- decimal to hex
+---@param int number
+---@return string -- "#rrggbb"
+function M.dec2hex(int)
+  assert(type(int) == "number", "dec2hex: expected number")
+  return string.format("#%x", int)
 end
 
----Convert an integer from decimal to hexadecimal
----@param int integer
----@param n_digits integer? number of digits used for the hex code
----@return string hex
-function M.dec2hex(int, n_digits)
-  return string.format("%0" .. (n_digits or 6) .. "x", int)
-end
-
---- Convert hex to decimal number
----@param hex string "#XXXXXX"
+--- hex to decimal
+---@param hex string -- "#rrggbb" or "rrggbb"
 ---@return number
 function M.hex2dec(hex)
-  -- Check if the string starts with "#" and remove it
-  if string.sub(hex, 1, 1) == "#" then
-    hex = string.sub(hex, 2)
-  end
-  return tonumber(hex, 16)
+  assert(type(hex) == "string", "hex2dec: expected string")
+  hex = hex:gsub("^#", "")
+  local num = tonumber(hex, 16)
+  assert(num, "hex2dec: invalid hex string")
+  return num
 end
 
---- Turns #rrggbb -> { red, green, blue }
----@param hex string
----@return table{ red: string, green: string, blue: string }
+--- hex to rgb
+---@param hex string -- "#rrggbb" or "rrggbb"
+---@return {r:number, g:number, b:number}
 function M.hex2rgb(hex)
-  if hex:find("#") == 1 then
-    hex = hex:sub(2, #hex)
-  end
+  assert(type(hex) == "string", "hex2rgb: expected string")
+  hex = hex:gsub("^#", "")
+  hex = string.format("%06x", tonumber(hex, 16))
   return {
-    red = tonumber(hex:sub(1, 2), 16),
-    green = tonumber(hex:sub(3, 4), 16),
-    blue = tonumber(hex:sub(5, 6), 16),
+    r = tonumber(hex:sub(1, 2), 16),
+    g = tonumber(hex:sub(3, 4), 16),
+    b = tonumber(hex:sub(5, 6), 16),
   }
 end
 
---- Turns { red, green, blue } -> #rrggbb
----@param rgb table{ red: string, green: string, blue: string }
----@return string
+--- Ensure rgb color
+---@param color number|string|{r:number, g:number, b:number}
+---@return {r:number, g:number, b:number}
+function M.normalize_rgb(color)
+  if type(color) == "table" then
+    return color
+  elseif type(color) == "number" then
+    return M.hex2rgb(M.dec2hex(color))
+  else
+    return M.hex2rgb(color)
+  end
+end
+
+-- rgb to hex
+---@param rgb {r:number, g:number, b:number}
+---@return string -- "#rrggbb"
 function M.rgb2hex(rgb)
-  return string.format("#%02x%02x%02x", rgb.red, rgb.green, rgb.blue)
+  assert(type(rgb) == "table", "rgb2hex: expected table")
+  local r = assert(rgb.r, "rgb2hex: missing r")
+  local g = assert(rgb.g, "rgb2hex: missing g")
+  local b = assert(rgb.b, "rgb2hex: missing b")
+  return string.format("#%02x%02x%02x", r, g, b)
 end
 
 --- Returns brightness level of color in range 0 to 1 arbitrary value it's basically an weighted average
----@param rgb_color string
+---@param color number|string|{r:number, g:number, b:number}
 ---@return number
-function M.get_color_brightness(rgb_color)
-  local color = M.hex2rgb(rgb_color)
-  local brightness = (color.red * 2 + color.green * 3 + color.blue) / 6
+function M.get_color_brightness(color)
+  local c = M.normalize_rgb(color)
+  local brightness = (c.r * 2 + c.g * 3 + c.b) / 6
   return brightness / 256
 end
 
 --- Returns average of colors in range 0 to 1. Used to determine contrast level
----@param rgb_color string
+---@param color number|string|{r:number, g:number, b:number}
 ---@return number
-function M.get_color_avg(rgb_color)
-  local color = M.hex2rgb(rgb_color)
-  return (color.red + color.green + color.blue) / 3 / 256
+function M.get_color_avg(color)
+  local c = M.normalize_rgb(color)
+  return (c.r + c.g + c.b) / 3 / 256
 end
 
 --- Clamps the val between left and right
@@ -202,41 +189,54 @@ function M.clamp(val, left, right)
 end
 
 -- Changes brightness of rgb_color by percentage
-function M.brightness_modifier(rgb_color, percentage)
-  local color = M.hex2rgb(rgb_color)
-  color.red = M.clamp(color.red + (color.red * percentage / 100), 0, 255)
-  color.green = M.clamp(color.green + (color.green * percentage / 100), 0, 255)
-  color.blue = M.clamp(color.blue + (color.blue * percentage / 100), 0, 255)
-  return M.rgb2hex(color)
+---@param color number|string|{r:number, g:number, b:number}
+---@param percentage number
+---@return string
+function M.brightness_modifier(color, percentage)
+  local c = M.normalize_rgb(color)
+  c.r = M.clamp(c.r + (c.r * percentage / 100), 0, 255)
+  c.g = M.clamp(c.g + (c.g * percentage / 100), 0, 255)
+  c.b = M.clamp(c.b + (c.b * percentage / 100), 0, 255)
+  return M.rgb2hex(c)
 end
 
 --- Get color from hl group
----@param scope 'bg'|'fg'|'sp'
----@param highlights string|string[]
----@param default string
----@return string
-function M.get_hl_color(scope, highlights, default)
-  ---@type string[]
-  local highlights_tbl = type(highlights) == "table" and highlights or { highlights }
-  for _, highlight in ipairs(highlights_tbl) do
-    local val = {}
-    if vim.fn.hlexists(highlight) then
-      local color = M.get(0, { name = highlight })
-      if color.bg ~= nil then
-        val.bg = string.format("#%06x", color.bg)
-      end
-      if color.fg ~= nil then
-        val.fg = string.format("#%06x", color.fg)
-      end
-      if color.sp ~= nil then
-        val.sp = string.format("#%06x", color.sp)
-      end
-      if val[scope] then
-        return val[scope]
-      end
-    end
+---@param config (string[]|string)[] {{<name>, <scope>}}
+---@param default number|string|nil
+---@return number|string|nil
+function M.get_hl_color(config, default)
+  for _, hl in ipairs(config) do
+    local name = type(hl) == "table" and hl[1] or hl ---@cast name string
+    local scope = type(hl) == "table" and hl[2] or "fg"
+    return M.normalize_fg_or_bg(scope, name, default)
   end
   return default
+end
+
+--- Get terminal color
+---@param num number
+---@param default string?
+---@return string?
+function M.get_term_color(num, default)
+  default = default or "#000000"
+  local term_color = vim.g["terminal_color_" .. tostring(num)]
+  if term_color then
+    return term_color
+  end
+  return default
+end
+
+---Wrap a string with a hl
+---@param str? string content to wrap
+---@param hl? string name of the highlight group
+---@param restore? boolean restore highlight after the content, default true
+---@return string sign string representation of the content with highlight
+function M.make_hl_str(str, hl, restore)
+  hl = hl or ""
+  str = str or ""
+  restore = restore == nil or restore
+  return restore and table.concat({ "%#", hl, "#", str, "%*" })
+    or table.concat({ "%#", hl, "#", str })
 end
 
 return M

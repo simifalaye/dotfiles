@@ -30,7 +30,7 @@ _G.dd = function(...)
   return ...
 end
 
---- Run function now if neovim is started with arguments
+--- Run function now if neovim is started with arguments or schedule
 ---@param f function
 _G.now_if_args = function(f)
   if vim.fn.argc(-1) > 0 then
@@ -57,7 +57,7 @@ _G.on_packchanged = function(plugin_name, kinds, callback, desc)
     if not ev.data.active then
       vim.cmd.packadd(plugin_name)
     end
-    callback()
+    callback(ev)
   end
   vim.api.nvim_create_autocmd("PackChanged", { pattern = "*", callback = f, desc = desc })
 end
@@ -94,6 +94,9 @@ vim.g.loaded_vimballPlugin = true
 vim.g.loaded_tohtml = true
 vim.g.loaded_2html_plugin = true
 
+-- User config
+vim.g.user_lsp_codelens_disable = true
+
 --
 -- Options
 --
@@ -108,10 +111,13 @@ vim.opt.undofile = true
 vim.opt.shada = "'100,<50,s10,:1000,/100,@100,h"
 vim.opt.exrc = true
 vim.opt.swapfile = false -- TODO: Evaluate
+vim.opt.confirm = true
 
 -- UI
 vim.opt.breakindent = true
+vim.opt.breakindentopt = "list:-1"
 vim.opt.cursorline = true
+vim.opt.cursorlineopt = "screenline,number"
 vim.opt.linebreak = true
 vim.opt.list = true
 vim.opt.listchars = {
@@ -121,8 +127,8 @@ vim.opt.listchars = {
 }
 vim.opt.fillchars = {
   fold = "·",
-  foldopen = "",
-  foldclose = "",
+  foldopen = " ",
+  foldclose = ">",
   foldsep = " ",
   diff = "╱",
   eob = " ",
@@ -130,28 +136,20 @@ vim.opt.fillchars = {
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cmdheight = 1
-vim.opt.pumheight = 10
+vim.opt.pumheight = 16
+vim.opt.pummaxwidth = 100
 vim.opt.ruler = false
-vim.opt.shortmess = "FOSWaco"
 vim.opt.showmode = false
 vim.opt.signcolumn = "yes"
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.wrap = false
-vim.opt.cursorlineopt = "screenline,number"
-vim.opt.breakindentopt = "list:-1"
-if vim.fn.has("nvim-0.9") == 1 then
-  vim.opt.shortmess = "CFOSWaco"
-  vim.opt.splitkeep = "screen"
-end
-if vim.fn.has("nvim-0.10") == 0 then
-  vim.opt.termguicolors = true
-end
-if vim.fn.has("nvim-0.12") == 1 then
-  vim.opt.pummaxwidth = 100
-
-  require("vim._core.ui2").enable({ enable = true, msg = { target = "msg" } })
-end
+vim.opt.termguicolors = true
+vim.opt.shortmess = "CFOWaco"
+vim.opt.splitkeep = "screen"
+vim.opt.scrolloff = 2
+vim.opt.sidescrolloff = 16
+require("vim._core.ui2").enable({ enable = true, msg = { target = "msg" } })
 
 -- Editing
 vim.opt.autoindent = true
@@ -173,17 +171,22 @@ vim.opt.virtualedit = "block"
 -- punctuation (. or `)`) followed by at least one space is a start of list
 -- item'
 vim.opt.formatlistpat = [[^\s*[0-9\-\+\*]\+[\.\)]*\s\+]]
-vim.opt.completeopt = "menuone,noselect"
-if vim.fn.has("nvim-0.11") == 1 then
-  vim.opt.completeopt = "menuone,noselect,fuzzy,nosort"
-end
+vim.opt.completeopt = "menu,menuone,fuzzy,popup,noselect"
 vim.opt.complete = ".,w,b,kspell"
+vim.opt.wildmode = "noselect:lastused"
+vim.api.nvim_create_autocmd("CmdlineChanged", {
+  pattern = ":",
+  callback = function()
+    vim.fn.wildtrigger()
+  end,
+})
 
 -- Spelling
 vim.opt.spelllang = "en"
 vim.opt.spelloptions = "camel"
 
 -- Folds
+vim.opt.foldcolumn = "auto"
 vim.opt.foldmethod = "indent"
 vim.opt.foldlevel = 99
 vim.opt.foldnestmax = 10
@@ -192,7 +195,18 @@ if vim.fn.has("nvim-0.10") == 1 then
   vim.opt.foldtext = ""
 end
 
--- Use system clipboard by default
-vim.schedule(function()
-  vim.opt.clipboard = "unnamedplus"
-end)
+-- Use histogram algorithm for diffing, generates more readable diffs in
+-- situations where two lines are swapped
+vim.opt.diffopt:append({
+  "algorithm:histogram",
+  "indent-heuristic",
+  "linematch:60",
+})
+
+-- Use system clipboard
+vim.api.nvim_create_autocmd("UIEnter", {
+  once = true,
+  callback = vim.schedule_wrap(function()
+    vim.opt.clipboard:append("unnamedplus")
+  end),
+})

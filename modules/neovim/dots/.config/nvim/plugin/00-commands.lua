@@ -102,14 +102,6 @@ vim.api.nvim_create_user_command(
   }
 )
 
-vim.api.nvim_create_user_command("SystemOpen", function(args)
-  local path = args.args and args.args or ""
-  require("utils.cmd").sys_open(path)
-end, {
-  desc = "Open link/file (use empty path for whatever is under the cursor)",
-  nargs = "?", -- {path?}
-})
-
 vim.api.nvim_create_user_command("Cwd", function()
   vim.cmd(":cd %:p:h")
   vim.cmd(":pwd")

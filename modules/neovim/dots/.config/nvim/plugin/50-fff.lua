@@ -1,3 +1,7 @@
+if true then
+  return
+end
+
 -- Config
 vim.g.fff = {
   prompt = "> ",
@@ -27,12 +31,18 @@ vim.pack.add({
   },
 })
 
-vim.keymap.set("n", "ff", function()
+vim.keymap.set("n", "<leader>ff", function()
   require("fff").find_files()
-end, { desc = "FFFind files" })
+end, { desc = "Find" })
 vim.keymap.set("n", "<leader><leader>", function()
   require("fff").find_files()
-end)
+end, { desc = "Find files" })
+vim.keymap.set({ "n" }, "<leader>/", function()
+  require("fff").live_grep()
+end, { desc = "Live grep" })
+vim.keymap.set({ "n" }, "<leader>*", function()
+  require("fff").live_grep({ query = vim.fn.expand("<cword>") })
+end, { desc = "Live grep" })
 
 local mb_ok, _ = pcall(require, "minibuffer")
 if mb_ok then

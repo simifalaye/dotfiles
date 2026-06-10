@@ -53,7 +53,7 @@ end
 -- Main
 --
 
-local grp = vim.api.nvim_create_augroup("user_plugin_numbers_toggle", {})
+local grp = vim.api.nvim_create_augroup("user.plugin.numbers_toggle", {})
 vim.api.nvim_create_autocmd({ "BufEnter", "FileType", "FocusGained", "InsertLeave" }, {
   desc = "Enable relative line numbers",
   group = grp,

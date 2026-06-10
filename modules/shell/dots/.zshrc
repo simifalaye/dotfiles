@@ -40,3 +40,4 @@ unfunction ssource
 
 # UNCOMMENT to enable profiling
 # zprof
+export PATH="$HOME/.local/bin:$PATH"

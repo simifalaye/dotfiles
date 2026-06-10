@@ -16,7 +16,7 @@ vim.pack.add({
   },
 }, { load = function() end })
 
-local grp = vim.api.nvim_create_augroup("user_plugin_lint", {})
+local grp = vim.api.nvim_create_augroup("user.plugin.lint", {})
 vim.api.nvim_create_autocmd("FileType", {
   desc = "Load nvim-lint on ft",
   pattern = vim.tbl_keys(linters_by_ft),

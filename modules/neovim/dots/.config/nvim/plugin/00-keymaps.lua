@@ -30,7 +30,7 @@ map(
   "v:count == 0 ? 'gk' : 'k'",
   { desc = "Up", expr = true, silent = true }
 )
-map({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save File" })
+-- map({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save File" })
 
 --
 -- Normal mode
@@ -100,7 +100,17 @@ local function find_file()
 end
 
 -- Leader
-map("n", "<leader>,", ":b ", { desc = "Find buffer" })
+-- map("n", "<leader>,", ":b <Tab>", { desc = "Find buffer" })
+vim.keymap.set('n', '<leader>,', function()
+  vim.api.nvim_feedkeys(':b ', 'n', false)
+  vim.schedule(function()
+    vim.api.nvim_feedkeys(
+      vim.api.nvim_replace_termcodes('<Tab>', true, false, true),
+      't',
+      false
+    )
+  end)
+end)
 map("n", "<leader>.", find_file, { desc = "Find file" })
 
 -- Leader + tab (tab)
@@ -115,8 +125,15 @@ map("n", "<leader><tab>p", "<cmd>tabprevious<cr>", { desc = "Previous" })
 
 -- Leader + b (buffer)
 map("n", "<leader>bb", "<cmd>e #<CR>", { desc = "Last" })
-map("n", "<leader>bd", "<cmd>bd<CR>", { desc = "Delete" })
-map("n", "<leader>bD", "<cmd>bd!<CR>", { desc = "Delete!" })
+vim.keymap.set(
+  "n",
+  "<leader>bd",
+  ":bp | bd #<CR>",
+  { desc = "Delete buffer, keep window" }
+)
+
+map("n", "<leader>bd", "<cmd>bp | bd #<CR>", { desc = "Delete" })
+map("n", "<leader>bD", "<cmd>bp | bd! #<CR>", { desc = "Delete!" })
 map("n", "<leader>bf", ":b ", { desc = "Find" })
 map("n", "<leader>bk", ":bufdo bd!<CR>", { desc = "Killall" })
 map("n", "<leader>bl", "<cmd>buffers<CR>", { desc = "List" })
@@ -137,8 +154,8 @@ end, { desc = "Only" })
 map("n", "<leader>bp", "<cmd>bp<CR>", { desc = "Previous" })
 map("n", "<leader>bs", "<cmd>w<CR>", { desc = "Save" })
 map("n", "<leader>bS", "<cmd>wall<CR>", { desc = "Save all" })
-map("n", "<leader>bw", "<cmd>bw<CR>", { desc = "Wipeout" })
-map("n", "<leader>bW", "<cmd>bw!<CR>", { desc = "Wipeout!" })
+map("n", "<leader>bw", "<cmd>bp | bw #<CR>", { desc = "Wipeout" })
+map("n", "<leader>bW", "<cmd>bp | bw! #<CR>", { desc = "Wipeout!" })
 map("n", "<leader>by", "<cmd>%y+<CR>", { desc = "Yank" })
 
 -- Leader + f (file)
@@ -237,6 +254,13 @@ map(
   "<C-r>=fnameescape(expand('%'))<cr>",
   { desc = "Insert File Path", silent = false }
 )
+map("c", "%%", function()
+  if vim.fn.getcmdtype() == ":" then
+    return vim.fn.expand("%:h") .. "/"
+  else
+    return "%%"
+  end
+end, { expr = true, desc = "expand to current buffer's directory" })
 
 --
 -- Abbreviations

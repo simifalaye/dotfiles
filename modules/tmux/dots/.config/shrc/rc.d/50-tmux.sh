@@ -25,12 +25,13 @@ tm() {
 # - remote  enable when starting zsh over a SSH connection.
 # - always  both of the above.
 # Set to any other value to disable.
-export TMUX_AUTOSTART="${TMUX_AUTOSTART-}"
+export TMUX_AUTOSTART="${TMUX_AUTOSTART-remote}"
 
 # Define what to do when autostarting. Possible values are:
 # - background      do not prompt and run a regular shell.
 # - attach          do not prompt and attach to tmux.
 # - prompt          prompt to attach or run a regular shell.
+# - cond-prompt     prompt to attach or run a regular shell if session is already open.
 # Note that the tmux server is started in the background regardless of this option.
 # This is useful to be properly welcomed to the terminal while the tmux session is
 # being restored, e.g. with tmux-resurrect/continuum.

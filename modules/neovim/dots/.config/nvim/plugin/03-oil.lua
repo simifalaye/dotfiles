@@ -96,34 +96,6 @@ _G.now_if_args(function()
       ["gx"] = "actions.open_external",
       ["g."] = "actions.toggle_hidden",
       ["g\\"] = "actions.toggle_trash",
-      -- Custom
-      ["Q"] = "q",
-      ["q"] = "actions.close",
-      ["l"] = "actions.select",
-      ["h"] = "actions.parent",
-      ["gy"] = {
-        mode = "n",
-        buffer = true,
-        desc = "Yank the filepath of the entry under the cursor to a register",
-        callback = function()
-          local entry = oil.get_cursor_entry()
-          local dir = oil.get_current_dir()
-          if not entry or not dir then
-            return
-          end
-          dir = require("utils.fs").remove_slash(dir)
-          local entry_path = vim.fs.joinpath(dir, entry.name)
-          vim.fn.setreg('"', entry_path)
-          vim.fn.setreg(vim.v.register, entry_path)
-          vim.notify(
-            string.format(
-              "[oil] yanked '%s' to register '%s'",
-              entry_path,
-              vim.v.register
-            )
-          )
-        end,
-      },
     },
   })
 
@@ -152,7 +124,7 @@ _G.now_if_args(function()
   oil_sethl()
 
   -- Setup autocommands
-  local grp = vim.api.nvim_create_augroup("user_oil_utilities", {})
+  local grp = vim.api.nvim_create_augroup("user.plugin.oil", {})
   vim.api.nvim_create_autocmd({ "BufEnter", "TextChanged" }, {
     desc = "Set cwd to follow directory shown in oil buffers.",
     group = grp,
@@ -188,7 +160,7 @@ _G.now_if_args(function()
       end
     end,
   })
-  vim.api.nvim_create_autocmd("Colorscheme", {
+  vim.api.nvim_create_autocmd("ColorScheme", {
     desc = "Refresh hl groups for oil on colorscheme change",
     group = grp,
     callback = oil_sethl,

@@ -5,7 +5,7 @@ vim.schedule(function()
   })
 
   -- Autocmds
-  local grp = vim.api.nvim_create_augroup("user_fugitive_settings", {})
+  local grp = vim.api.nvim_create_augroup("user.plugin.fugitive", {})
   vim.api.nvim_create_autocmd("BufEnter", {
     desc = "Ensure that fugitive buffers are not listed and are wiped out after hidden.",
     group = grp,
