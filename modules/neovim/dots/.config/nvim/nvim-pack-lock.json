@@ -6,7 +6,7 @@
       "version": "1.0.0 - 2.0.0"
     },
     "blink.indent": {
-      "rev": "9c80820ca77218a8d28e70075d6f44a1609911fe",
+      "rev": "3fc92e6b0e702a630cec7408f8f7947afa951d96",
       "src": "https://github.com/saghen/blink.indent",
       "version": ">=0.0.0"
     },
@@ -23,8 +23,12 @@
       "rev": "6cd7280adead7f586db6fccbd15d2cac7e2188b9",
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
+    "fzf-lua": {
+      "rev": "774150bc05f774af1df614f55d156b3318c6decd",
+      "src": "https://github.com/ibhagwan/fzf-lua"
+    },
     "gitsigns.nvim": {
-      "rev": "25050e4ed39e628282831d4cbecb1850454ce915",
+      "rev": "2038c666bd9d8a0b7349a0b6ee00dc83104b9ecf",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "lazydev.nvim": {
@@ -36,19 +40,9 @@
       "src": "https://github.com/OXY2DEV/markview.nvim",
       "version": ">=0.0.0"
     },
-    "mini.extra": {
-      "rev": "31f82562238a4fadd30997757ead6c7f1770e7ea",
-      "src": "https://github.com/nvim-mini/mini.extra",
-      "version": "'stable'"
-    },
     "mini.icons": {
-      "rev": "ff2e4f1d29f659cc2bad0f9256f2f6195c6b2428",
+      "rev": "e56797f90192d81f1fda02e662fc3e8e3d775027",
       "src": "https://github.com/nvim-mini/mini.icons",
-      "version": "'stable'"
-    },
-    "mini.pick": {
-      "rev": "6b7974543b17cf2e294993fc3d8545a342258232",
-      "src": "https://github.com/nvim-mini/mini.pick",
       "version": "'stable'"
     },
     "neogen": {
@@ -61,11 +55,11 @@
       "version": ">=0.0.0"
     },
     "nvim-lint": {
-      "rev": "99cbc3ca8a76845fca50e496be7212bebf907dd3",
+      "rev": "a219b2c9e5b4765e5c845aba119dad55806fcaf1",
       "src": "https://github.com/mfussenegger/nvim-lint"
     },
     "nvim-lspconfig": {
-      "rev": "ed19590a3a9792901553c388d1aadafce012f80d",
+      "rev": "3371bf298c1f56efc26771ee961f461176958fb5",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-surround": {
@@ -90,13 +84,12 @@
       "src": "https://github.com/stevearc/oil.nvim"
     },
     "schemastore.nvim": {
-      "rev": "961c2a806abf56d4e100713ec9dc71d2c8d9d022",
+      "rev": "490afbd7fd3b316330550405ac74758a971104a4",
       "src": "https://github.com/b0o/schemastore.nvim"
     },
-    "tinted-nvim": {
-      "rev": "f5e029b151281d19bc59b4c1d9ed1edb5e2e3bbc",
-      "src": "https://github.com/tinted-theming/tinted-nvim",
-      "version": "1.0.0 - 2.0.0"
+    "tokyonight.nvim": {
+      "rev": "cdc07ac78467a233fd62c493de29a17e0cf2b2b6",
+      "src": "https://github.com/folke/tokyonight.nvim"
     },
     "vim-easy-align": {
       "rev": "9815a55dbcd817784458df7a18acacc6f82b1241",

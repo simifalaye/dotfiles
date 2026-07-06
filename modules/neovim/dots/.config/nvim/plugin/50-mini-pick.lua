@@ -1,3 +1,7 @@
+if true then
+  return
+end
+
 vim.schedule(function()
   vim.pack.add({
     { src = "https://github.com/nvim-mini/mini.extra", version = "stable" },
@@ -69,6 +73,11 @@ vim.schedule(function()
       end,
     },
   })
+
+  -- -- Set highlights
+  -- vim.api.nvim_set_hl(0, "MiniPickMatchCurrent", {
+  --   link = "PmenuSel",
+  -- })
 
   -- Replace UI select
   vim.ui.select = pick.ui_select

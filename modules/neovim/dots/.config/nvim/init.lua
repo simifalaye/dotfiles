@@ -62,6 +62,22 @@ _G.on_packchanged = function(plugin_name, kinds, callback, desc)
   vim.api.nvim_create_autocmd("PackChanged", { pattern = "*", callback = f, desc = desc })
 end
 
+--- Lazy require a module so it is only called on use
+_G.lazy_require = function(module_name)
+  return setmetatable({}, {
+    __index = function(_, key)
+      return function(...)
+        local module = require(module_name)
+        return module[key](...)
+      end
+    end,
+  })
+end
+
+-- Configure Neovide GUI
+if vim.g.neovide then
+end
+
 -- Set leader keys
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"

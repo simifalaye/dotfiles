@@ -11,10 +11,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Main
 #
 
-if [ "${__HAS_GUI}" != "1" ]; then
-  return
-fi
-
 function install_nerd_font() {
   local font_dir tmp_dir
   font_dir="${__USER_FONTS_DIR}/${1}"
@@ -53,4 +49,7 @@ else
   install_nerd_font VictorMono
   install_nerd_font SourceCodePro
   install_nerd_font Hack
+  if is_installed fc-cache; then
+    fc-cache -fv
+  fi
 fi

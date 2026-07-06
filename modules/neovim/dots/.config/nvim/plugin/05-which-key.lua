@@ -27,9 +27,9 @@ vim.schedule(function()
         { "<leader>b", group = "+Buffer" },
         { "<leader>f", group = "+File" },
         { "<leader>g", group = "+Git" },
+        { "<leader>h", group = "+Help" },
         { "<leader>q", group = "+Quit/Session" },
         { "<leader>u", group = "+Ui" },
-        { "<leader>w", group = "+Window" },
       },
     },
   })

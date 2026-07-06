@@ -1,3 +1,8 @@
+# TODO: Disable for now, re-evalute whether to keep/remove
+if true; then
+  return 0
+fi
+
 # Tinty isn't able to apply environment variables to your shell due to
 # the way shell sub-processes work. This is a work around by running
 # Tinty through a function and then executing the shell scripts.
