@@ -120,30 +120,6 @@ vim.schedule(function()
     "cmd>Pick history scope='/'<CR>",
     { desc = "Find search history" }
   )
-  vim.keymap.set(
-    "n",
-    "<leader>d",
-    "<cmd>Pick diagnostic scope='current'<CR>",
-    { desc = "Find Diagnostic" }
-  )
-  vim.keymap.set(
-    "n",
-    "<leader>D",
-    "<cmd>Pick diagnostic<CR>",
-    { desc = "Find Diagnostic (workspace)" }
-  )
-  vim.keymap.set(
-    "n",
-    "<leader>s",
-    "<cmd>Pick lsp scope='document_symbol'<CR>",
-    { desc = "Find Symbol" }
-  )
-  vim.keymap.set(
-    "n",
-    "<leader>S",
-    "<cmd>Pick lsp scope='workspace_symbol'<CR>",
-    { desc = "Find Symbol (workspace)" }
-  )
 
   -- Keymaps: Leader + b (buffer)
   vim.keymap.set("n", "<leader>bf", pick_buffers, { desc = "Find" })

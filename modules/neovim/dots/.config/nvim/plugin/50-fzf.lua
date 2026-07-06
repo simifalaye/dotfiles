@@ -51,22 +51,23 @@ vim.schedule(function()
   vim.keymap.set("n", "<leader>.", fzf.files, { desc = "Find files" })
   vim.keymap.set("n", "<leader>/", fzf.live_grep, { desc = "Grep" })
   vim.keymap.set("n", "<leader>?", fzf.help_tags, { desc = "Find help tags" })
-  -- vim.keymap.set("n", "<leader>hd", fzf.diagnostics_document, { desc = "Diagnostics" })
-  -- vim.keymap.set(
-  --   "n",
-  --   "<leader>fD",
-  --   fzf.diagnostics_workspace,
-  --   { desc = "Diagnostics (workspace)" }
-  -- )
-  -- vim.keymap.set("n", "<leader>fs", fzf.lsp_document_symbols, { desc = "Symbols" })
-  -- vim.keymap.set(
-  --   "n",
-  --   "<leader>fS",
-  --   fzf.lsp_workspace_symbols,
-  --   { desc = "Symbols (workspace)" }
-  -- )
   -- <leader> + b
   vim.keymap.set("n", "<leader>bf", fzf.buffers, { desc = "Find" })
+  -- <leader> + c
+  vim.keymap.set("n", "<leader>cd", fzf.diagnostics_document, { desc = "Diagnostics" })
+  vim.keymap.set(
+    "n",
+    "<leader>cD",
+    fzf.diagnostics_workspace,
+    { desc = "Diagnostics (workspace)" }
+  )
+  vim.keymap.set("n", "<leader>cs", fzf.lsp_document_symbols, { desc = "Symbols" })
+  vim.keymap.set(
+    "n",
+    "<leader>cS",
+    fzf.lsp_workspace_symbols,
+    { desc = "Symbols (workspace)" }
+  )
   -- <leader> + f
   vim.keymap.set("n", "<leader>fc", function()
     fzf.files({ cwd = "~/.dotfiles" })

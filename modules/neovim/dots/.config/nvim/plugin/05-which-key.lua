@@ -25,6 +25,7 @@ vim.schedule(function()
         { "<leader>", group = "+Global" },
         { "<leader><tab>", group = "+Tab" },
         { "<leader>b", group = "+Buffer" },
+        { "<leader>c", group = "+Code" },
         { "<leader>f", group = "+File" },
         { "<leader>g", group = "+Git" },
         { "<leader>h", group = "+Help" },
