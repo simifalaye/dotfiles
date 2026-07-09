@@ -251,7 +251,7 @@ do
         self.icon, self.icon_color =
           devicons.get_icon_color(filename, extension, { default = true })
       else
-        self.icon = require("static.icons").Font.Kinds.File,
+        self.icon = require("static.icons").Font.Kinds.File
         self.icon_color = "green"
       end
     end,
