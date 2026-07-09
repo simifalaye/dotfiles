@@ -1,6 +1,3 @@
-# Path to configuration file.
-export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME}/ripgrep/config"
-
 # Check dependencies for interactive searches
 if ! command -v fzf >/dev/null; then
   return 0

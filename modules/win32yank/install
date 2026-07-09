@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+if [ "${__SOURCED_COMMON_LIB}" != "1" ]; then
+  # shellcheck source=/dev/null
+  source "${COMMON_LIB:-${HOME}/.dotfiles/lib/common}" || return 1
+fi
+# shellcheck disable=SC2034
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#
+# Main
+#
+
+if [ "${__IS_WSL}" -ne 1 ]; then
+  return
+fi
+
+if [ "${UNINSTALL}" = "1" ]; then
+  if is_installed eza; then
+    remove_system_bins "win32yank"
+  fi
+else
+  # shellcheck disable=SC2317
+  function __win32yank_install_fn() {
+    chmod +x ./win32yank.exe
+    install_system_bins '.' './win32yank.exe'
+    # install_system_bash_completions '.' './target/completions*/eza'
+    # install_system_zsh_completions '.' './target/completions*/_eza'
+    # install_system_fish_completions '.' './target/completions*/eza.fish'
+    # install_system_manpages man1 '.' './target/man*/*.1'
+    # install_system_manpages man5 '.' './target/man*/*.5'
+  }
+  # shellcheck disable=SC2317
+  function __win32yank_filter_fn() {
+    if ! echo "${1}" | grep '\.zip$'; then
+      debug "Asset '${1}' failed filter" && return 1
+    fi
+  }
+  # shellcheck disable=SC2317
+  function __win32yank_system_filter_fn() {
+    return 0
+  }
+  # shellcheck disable=SC2317
+  function __win32yank_arch_filter_fn() {
+    echo "${1}" | grep -q "x64"
+  }
+  if ! is_installed; then
+    install_gh_pkg 'equalsraf/win32yank' 'latest' 'echo ""' '__win32yank_install_fn' \
+      -f '__win32yank_filter_fn' \
+      -s '__win32yank_system_filter_fn' \
+      -a '__win32yank_arch_filter_fn'
+  fi
+  unset -f __win32yank_install_fn __win32yank_filter_fn __win32yank_system_filter_fn __win32yank_arch_filter_fn
+fi

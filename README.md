@@ -17,7 +17,7 @@
 **Wsl2**:
 - Enable systemd support:
   ```sh
-  echo -e "[boot]\nsystemd=true" | sudo tee -a /etc/wsl.conf && wsl.exe -t <DistroName>
+  echo -e "[boot]\nsystemd=true\n\n[interop]\nappendWindowsPath=false" | sudo tee -a /etc/wsl.conf && wsl.exe -t <DistroName>
   ```
 # Install
 

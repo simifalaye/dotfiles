@@ -1,0 +1,11 @@
+-- vim.schedule(function()
+--   vim.pack.add({
+--     { src = "https://github.com/nvim-lua/plenary.nvim" },
+--     { src = "https://github.com/pwntester/octo.nvim" },
+--   })
+--
+--   require("octo").setup({
+--     -- picker = "fzf-lua",
+--     use_local_fs = true,
+--   })
+-- end)

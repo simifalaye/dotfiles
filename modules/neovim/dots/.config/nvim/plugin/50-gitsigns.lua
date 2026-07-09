@@ -62,6 +62,7 @@ vim.schedule(function()
     ":<C-u>Gitsigns select_hunk<CR>",
     { silent = true, desc = "git hunk" }
   )
+  vim.keymap.set("n", "<leader>gb", gitsigns.toggle_current_line_blame, { desc = "Toggle Blame" })
   vim.keymap.set("n", "<leader>gp", gitsigns.preview_hunk, { desc = "Preview Hunk" })
   vim.keymap.set(
     "n",

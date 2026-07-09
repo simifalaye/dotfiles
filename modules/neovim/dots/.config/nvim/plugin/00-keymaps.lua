@@ -42,6 +42,7 @@ map("n", "n", "nzzzv")
 map("n", "N", "Nzzzv")
 map("n", "p", "p`[v`]=", { desc = "Paste & Format" })
 map("n", "Q", "@q", { desc = "Run q Macro" })
+map("n", "<C-x>", "<cmd>LuaExecLine<CR>", { desc = "Execute current Lua line" })
 
 -- (g) namespace
 map("n", "g!", ":! chmod +x %<CR>", { desc = "Make File Executable" })
@@ -100,17 +101,16 @@ local function find_file()
 end
 
 -- Leader
--- map("n", "<leader>,", ":b <Tab>", { desc = "Find buffer" })
-vim.keymap.set('n', '<leader>,', function()
-  vim.api.nvim_feedkeys(':b ', 'n', false)
+map("n", "<leader>,", function()
+  vim.api.nvim_feedkeys(":b ", "n", false)
   vim.schedule(function()
     vim.api.nvim_feedkeys(
-      vim.api.nvim_replace_termcodes('<Tab>', true, false, true),
-      't',
+      vim.api.nvim_replace_termcodes("<Tab>", true, false, true),
+      "t",
       false
     )
   end)
-end)
+end, { desc = "Find Buffer" })
 map("n", "<leader>.", find_file, { desc = "Find file" })
 
 -- Leader + tab (tab)
@@ -148,6 +148,7 @@ map("n", "<leader>bo", function()
       and vim.fn.buflisted(buf) == 1
     then
       vim.api.nvim_buf_delete(buf, { force = true })
+      vim.notify("Deleted other buffers")
     end
   end
 end, { desc = "Only" })
@@ -214,6 +215,7 @@ map(
   ":<C-u>call ExecuteMacroOverVisualRange()<CR>",
   { desc = "Q macro over range", silent = false }
 )
+map("x", "<C-x>", ":LuaExecSelection<CR>", { desc = "Execute selected Lua code" })
 
 -- Text Objects
 map("x", "ie", [[gg0oG$]], { desc = "entire buffer" })

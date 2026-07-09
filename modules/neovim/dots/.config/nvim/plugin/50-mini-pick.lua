@@ -1,6 +1,6 @@
-if true then
-  return
-end
+-- if true then
+--   return
+-- end
 
 vim.schedule(function()
   vim.pack.add({
@@ -62,27 +62,24 @@ vim.schedule(function()
     options = { use_cache = true },
     mappings = {
       choose_marked = "<C-y>",
-
       refine_marked = "<C-\\>",
     },
     window = {
-      config = function()
-        return {
-          width = vim.o.columns,
-        }
-      end,
+      config = {
+        -- TODO: Revisit
+        -- relative = "msgarea",
+        -- border = { " ", " ", " ", " ", " ", " ", " ", " " },
+        -- height = 15,
+        width = vim.o.columns,
+      },
     },
   })
-
-  -- -- Set highlights
-  -- vim.api.nvim_set_hl(0, "MiniPickMatchCurrent", {
-  --   link = "PmenuSel",
-  -- })
 
   -- Replace UI select
   vim.ui.select = pick.ui_select
 
   -- Keymaps: Leader
+  vim.keymap.set("n", "<leader><CR>", "<cmd>Pick resume<CR>", { desc = "Resume Picker" })
   vim.keymap.set(
     "n",
     "<leader>*",
@@ -110,7 +107,6 @@ vim.schedule(function()
   vim.keymap.set("n", "<leader>:", "<cmd>Pick commands<CR>", { desc = "Find command" })
   vim.keymap.set("n", "<leader>'", "<cmd>Pick marks<CR>", { desc = "Find mark" })
   vim.keymap.set("n", '<leader>"', "<cmd>Pick registers<CR>", { desc = "Find register" })
-  vim.keymap.set("n", "<leader><CR>", "<cmd>Pick resume<CR>", { desc = "Resume Picker" })
   vim.keymap.set("n", "<leader>,", pick_buffers, { desc = "Find buffer" })
   vim.keymap.set("n", "<leader>.", "<cmd>Pick files<CR>", { desc = "Find file" })
   vim.keymap.set("n", "<leader>/", "<cmd>Pick grep_live<CR>", { desc = "Find text" })
@@ -123,6 +119,45 @@ vim.schedule(function()
 
   -- Keymaps: Leader + b (buffer)
   vim.keymap.set("n", "<leader>bf", pick_buffers, { desc = "Find" })
+
+  -- <leader> + c
+  vim.keymap.set(
+    "n",
+    "<leader>cd",
+    "<cmd>Pick diagnostic scope='current'<CR>",
+    { desc = "Diagnostic" }
+  )
+  vim.keymap.set(
+    "n",
+    "<leader>cD",
+    "<cmd>Pick diagnostic<CR>",
+
+    { desc = "Diagnostic (workspace)" }
+  )
+  vim.keymap.set(
+    "n",
+    "<leader>cl",
+    "<cmd>Pick list scope='location'<CR>",
+    { desc = "Loclist" }
+  )
+  vim.keymap.set(
+    "n",
+    "<leader>cq",
+    "<cmd>Pick list scope='quickfix'<CR>",
+    { desc = "Quickfix" }
+  )
+  vim.keymap.set(
+    "n",
+    "<leader>cs",
+    "<cmd>Pick lsp scope='document_symbol'<CR>",
+    { desc = "Symbol" }
+  )
+  vim.keymap.set(
+    "n",
+    "<leader>cS",
+    "<cmd>Pick lsp scope='workspace_symbol'<CR>",
+    { desc = "Symbol (workspace)" }
+  )
 
   -- Keymaps: Leader + f (file)
   vim.keymap.set(
@@ -148,68 +183,14 @@ vim.schedule(function()
   -- Keymaps: Leader + g (git)
   vim.keymap.set("n", "<leader>gf", "<cmd>Pick git_files<CR>", { desc = "Find file" })
 
-  -- Keymaps: Leader + s (search)
+  -- Keymaps: Leader + h (help)
+  vim.keymap.set("n", "<leader>hh", "<cmd>Pick help<CR>", { desc = "Help tag" })
   vim.keymap.set(
     "n",
-    "<leader>sc",
-    "<cmd>Pick list scope='change'<CR>",
-    { desc = "Change" }
-  )
-  vim.keymap.set(
-    "n",
-    "<leader>sd",
-    "<cmd>Pick diagnostic scope='current'<CR>",
-    { desc = "Diagnostic" }
-  )
-  vim.keymap.set(
-    "n",
-    "<leader>sD",
-    "<cmd>Pick diagnostic<CR>",
-
-    { desc = "Diagnostic (workspace)" }
-  )
-  vim.keymap.set("n", "<leader>sg", "<cmd>Pick grep<CR>", { desc = "Grep" })
-  vim.keymap.set("n", "<leader>sh", "<cmd>Pick help<CR>", { desc = "Help tag" })
-  vim.keymap.set(
-    "n",
-    "<leader>sH",
+    "<leader>hH",
     "<cmd>Pick hl_groups<CR>",
     { desc = "Highlight group" }
   )
-  vim.keymap.set("n", "<leader>sj", "<cmd>Pick list scope='jump'<CR>", { desc = "Jump" })
-  vim.keymap.set("n", "<leader>sk", "<cmd>Pick keymaps<CR>", { desc = "Keymap" })
-  vim.keymap.set(
-    "n",
-    "<leader>sl",
-    "<cmd>Pick list scope='location'<CR>",
-    { desc = "Loclist" }
-  )
-  vim.keymap.set("n", "<leader>so", "<cmd>Pick options<CR>", { desc = "Option" })
-  vim.keymap.set(
-    "n",
-    "<leader>sq",
-    "<cmd>Pick list scope='quickfix'<CR>",
-    { desc = "Quickfix" }
-  )
-  vim.keymap.set(
-    "n",
-    "<leader>ss",
-    "<cmd>Pick lsp scope='document_symbol'<CR>",
-    { desc = "Symbol" }
-  )
-  vim.keymap.set(
-    "n",
-    "<leader>sS",
-    "<cmd>Pick lsp scope='workspace_symbol'<CR>",
-    { desc = "Symbol (workspace)" }
-  )
-  vim.keymap.set("n", "<leader>sz", "<cmd>Pick spellsuggest<CR>", { desc = "Spelling" })
-
-  local mb_ok, _ = pcall(require, "minibuffer")
-  if mb_ok then
-    local pick_mb = require("minibuffer.integrations.mini-pick")
-    pick.is_picker_active = pick_mb.is_picker_active
-    pick.set_picker_items = pick_mb.set_picker_items
-    pick.start = pick_mb.start
-  end
+  vim.keymap.set("n", "<leader>hk", "<cmd>Pick keymaps<CR>", { desc = "Keymap" })
+  vim.keymap.set("n", "<leader>ho", "<cmd>Pick options<CR>", { desc = "Option" })
 end)

@@ -2,7 +2,6 @@
 
 return setmetatable({
   fs = nil, ---@module 'utils.fs'
-  git = nil, ---@module 'utils.git'
   hl = nil, ---@module 'utils.hl'
   json = nil, ---@module 'utils.json'
   ui = nil, ---@module 'utils.ui'

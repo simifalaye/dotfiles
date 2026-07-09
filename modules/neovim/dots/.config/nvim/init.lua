@@ -74,10 +74,6 @@ _G.lazy_require = function(module_name)
   })
 end
 
--- Configure Neovide GUI
-if vim.g.neovide then
-end
-
 -- Set leader keys
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
@@ -202,7 +198,6 @@ vim.opt.spelllang = "en"
 vim.opt.spelloptions = "camel"
 
 -- Folds
-vim.opt.foldcolumn = "auto"
 vim.opt.foldmethod = "indent"
 vim.opt.foldlevel = 99
 vim.opt.foldnestmax = 10
@@ -219,10 +214,229 @@ vim.opt.diffopt:append({
   "linematch:60",
 })
 
--- Use system clipboard
-vim.api.nvim_create_autocmd("UIEnter", {
-  once = true,
-  callback = vim.schedule_wrap(function()
-    vim.opt.clipboard:append("unnamedplus")
-  end),
+-- Add filetypes
+vim.filetype.add({
+  pattern = {
+    ["Dockerfile.*"] = "dockerfile",
+  },
 })
+
+-- Configure Neovide GUI
+if vim.g.neovide then
+  vim.g.neovide_scroll_animation_length = 0.1
+  vim.g.neovide_cursor_animation_length = 0.3
+  vim.g.neovide_cursor_smooth_blink = true
+  vim.g.neovide_hide_mouse_when_typing = true
+  vim.g.neovide_fullscreen = false
+  vim.g.neovide_theme = "auto"
+  vim.api.nvim_create_autocmd("UIEnter", {
+    once = true,
+    desc = "Lazy load clipboard",
+    callback = vim.schedule_wrap(function()
+      vim.opt.clipboard = "unnamedplus"
+    end)
+  })
+  vim.opt.guifont = "JetBrainsMono Nerd Font:h14"
+
+  local font_size_factor = 1.1
+  local change_font_size = function(factor)
+    vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * factor
+  end
+  vim.keymap.set('n', '<C-=>', function()
+    change_font_size(font_size_factor)
+  end)
+  vim.keymap.set('n', '<C-->', function()
+    change_font_size(1 / font_size_factor)
+  end)
+else
+  -- Explicitly set clipboard
+  vim.api.nvim_create_autocmd("UIEnter", {
+    once = true,
+    desc = "Lazy load clipboard",
+    callback = vim.schedule_wrap(function()
+      if vim.fn.has("win32") == 1 or vim.fn.has("wsl") == 1 then
+        vim.g.clipboard = {
+          copy = {
+            ["+"] = "win32yank.exe -i --crlf",
+            ["*"] = "win32yank.exe -i --crlf",
+          },
+          paste = {
+            ["+"] = "win32yank.exe -o --lf",
+            ["*"] = "win32yank.exe -o --lf",
+          },
+        }
+      elseif vim.fn.has("unix") == 1 then
+        if vim.fn.executable("xclip") == 1 then
+          vim.g.clipboard = {
+            copy = {
+              ["+"] = "xclip -selection clipboard",
+              ["*"] = "xclip -selection clipboard",
+            },
+            paste = {
+              ["+"] = "xclip -selection clipboard -o",
+              ["*"] = "xclip -selection clipboard -o",
+            },
+          }
+        elseif vim.fn.executable("xsel") == 1 then
+          vim.g.clipboard = {
+            copy = {
+              ["+"] = "xsel --clipboard --input",
+              ["*"] = "xsel --clipboard --input",
+            },
+            paste = {
+              ["+"] = "xsel --clipboard --output",
+              ["*"] = "xsel --clipboard --output",
+            },
+          }
+        end
+      end
+      vim.opt.clipboard = "unnamedplus"
+    end),
+  })
+end
+
+---
+
+-- vim.pack.add({
+--   {
+--     src = "https://github.com/simifalaye/msgarea.nvim.git",
+--   },
+-- })
+--
+-- vim.pack.add({ "https://github.com/edisj/msgarea.nvim" })
+-- vim.g.msgarea_max_height = 15
+-- -- vim.g.msgarea_max_height = 0.4    OR fractional heights 0-1 are percentage of editor height
+-- vim.g.msgarea_min_height = 3
+-- -- vim.g.msgarea_min_height = 0.1    same as above
+--
+-- -- if you use blink.cmp and want to have cmdline completions render in msgarea
+-- -- require("msgarea.blink_integration").enable()
+-- -- require("msgarea.blink_integration").disable()  -- can be disabled at any time
+--
+-- -- set a keymap to collapse the msgarea
+-- vim.keymap.set("n", "<M-n>", function()
+--   require("msgarea").close_all()
+-- end)
+-- -- two other api functions are available:
+-- -- require("msgarea").hide()   hide (but do not close) all windows and collapse cmdheight
+-- -- require("msgarea").show()   reveal all windows and expand cmdheight
+--
+-- -- -- assuming you already called require("vim._core.ui2").enable({ ... }) in your config
+-- -- local targets = require("vim._core.ui2").cfg.msg.targets
+-- -- for _, target in ipairs({
+-- --   "wmsg",
+-- --   "emsg",
+-- --   "typed_cmd",
+-- --   "list_cmd",
+-- --   "lua_error",
+-- --   "lua_print",
+-- --   "echoerr",
+-- -- }) do
+-- --   ---@diagnostic disable-next-line: assign-type-mismatch
+-- --   targets[target] = "msgarea"
+-- -- end
+--
+-- -- TODO: Revisit
+-- local function set_cmdheight(height)
+--   if height ~= 0 then
+--     vim.api.nvim_set_option_value("cmdheight", height, { scope = "global" })
+--   else
+--     vim.api.nvim_set_option_value("cmdheight", 0, { scope = "global" })
+--   end
+-- end
+--
+-- local function redirect_pum_to_msgarea()
+--   local original_cmdheight = vim.o.cmdheight
+--   local ns = vim.api.nvim_create_namespace("my_fancy_pum")
+--   local keepheight = 1
+--   local target_buf = nil
+--   local target_win = nil
+--   local target_mark
+--   vim.ui_attach(ns, { ext_popupmenu = true }, function(event, ...)
+--     if event == "popupmenu_show" then
+--       local is_cmdline = vim.fn.getcmdtype() ~= ""
+--       local items, _, _, _, _ = ...
+--       local lines = {}
+--       for i, item in ipairs(items) do
+--         lines[i] = item[1]
+--       end
+--       if target_buf == nil or not vim.api.nvim_buf_is_valid(target_buf) then
+--         target_buf = vim.api.nvim_create_buf(false, true)
+--       end
+--       vim.api.nvim_buf_set_lines(target_buf, 0, -1, false, lines)
+--
+--       local win_opts = {}
+--       if is_cmdline then
+--         local h = math.min(#lines, 10)
+--         h = math.max(keepheight, h)
+--         keepheight = h
+--         set_cmdheight(h + 1)
+--         win_opts = {
+--           relative = "editor",
+--           width = vim.o.columns,
+--           hide = false,
+--           height = keepheight,
+--           row = vim.o.lines - 1,
+--           col = 0,
+--           style = "minimal",
+--           zindex = 999,
+--         }
+--       else
+--         win_opts = {
+--           "cursor",
+--           row = 1,
+--           col = 0,
+--           width = 30,
+--           height = math.min(#items, 10),
+--           style = "minimal",
+--           border = "single",
+--         }
+--       end
+--       if target_win and vim.api.nvim_win_is_valid(target_win) then
+--         vim.api.nvim_win_set_config(target_win, win_opts)
+--       else
+--         target_win = vim.api.nvim_open_win(target_buf, false, win_opts)
+--       end
+--       vim.api.nvim_win_call(target_win, function()
+--         vim.api.nvim_set_option_value("filetype", "", { scope = "local" })
+--         vim.api.nvim_set_option_value("eventignorewin", "all", { scope = "local" })
+--         vim.api.nvim_set_option_value("wrap", false, { scope = "local" })
+--         vim.api.nvim_set_option_value("linebreak", false, { scope = "local" })
+--         vim.api.nvim_set_option_value("swapfile", false, { scope = "local" })
+--         vim.api.nvim_set_option_value("modifiable", true, { scope = "local" })
+--         vim.api.nvim_set_option_value("bufhidden", "hide", { scope = "local" })
+--         vim.api.nvim_set_option_value("buftype", "nofile", { scope = "local" })
+--         vim.api.nvim_set_option_value(
+--           "winhighlight",
+--           "Normal:Normal",
+--           { scope = "local" }
+--         )
+--       end)
+--     elseif event == "popupmenu_select" then
+--       local selected = ...
+--       if selected >= 0 and target_buf then
+--         if target_mark then
+--           vim.api.nvim_buf_del_extmark(target_buf, ns, target_mark)
+--         end
+--         target_mark = vim.api.nvim_buf_set_extmark(target_buf, ns, selected, 0, {
+--           line_hl_group = "Visual", -- or PmenuSel, CursorLine, etc.
+--         })
+--       end
+--     elseif event == "popupmenu_hide" then
+--       local is_cmdline = vim.fn.getcmdtype() ~= ""
+--       if target_win and vim.api.nvim_win_is_valid(target_win) then
+--         vim.api.nvim_win_close(target_win, true)
+--         target_win = nil
+--       end
+--       if target_buf and target_mark then
+--         vim.api.nvim_buf_del_extmark(target_buf, ns, target_mark)
+--       end
+--       if is_cmdline then
+--         set_cmdheight(original_cmdheight)
+--       end
+--       keepheight = 1
+--     end
+--   end)
+-- end
+--
+-- redirect_pum_to_msgarea()

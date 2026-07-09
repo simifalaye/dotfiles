@@ -1,6 +1,8 @@
 local uv = vim.uv or vim.loop -- compatibility alias
 local M = {}
 
+M.is_wsl = vim.fn.has("unix") == 1 and vim.env.WSL_DISTRO_NAME ~= nil
+
 M.path_sep = vim.loop.os_uname().version:match("Windows") and "\\" or "/"
 
 M.root_patterns = {

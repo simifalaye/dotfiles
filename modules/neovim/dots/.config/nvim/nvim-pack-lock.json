@@ -19,17 +19,22 @@
       "src": "https://github.com/Bekaboo/dropbar.nvim",
       "version": ">=0.0.0"
     },
+    "flatten.nvim": {
+      "rev": "d92ca41e9c330f45c1b854a80c89c8488a9d730c",
+      "src": "https://github.com/willothy/flatten.nvim.git"
+    },
     "friendly-snippets": {
       "rev": "6cd7280adead7f586db6fccbd15d2cac7e2188b9",
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
-    "fzf-lua": {
-      "rev": "774150bc05f774af1df614f55d156b3318c6decd",
-      "src": "https://github.com/ibhagwan/fzf-lua"
-    },
     "gitsigns.nvim": {
       "rev": "eb60cc7b94c46005237fd34170d76f3a089a90aa",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
+    },
+    "heirline.nvim": {
+      "rev": "fae936abb5e0345b85c3a03ecf38525b0828b992",
+      "src": "https://github.com/rebelot/heirline.nvim",
+      "version": ">=0.0.0"
     },
     "lazydev.nvim": {
       "rev": "ff2cbcba459b637ec3fd165a2be59b7bbaeedf0d",
@@ -40,10 +45,36 @@
       "src": "https://github.com/OXY2DEV/markview.nvim",
       "version": ">=0.0.0"
     },
+    "mason-lspconfig.nvim": {
+      "rev": "47059d71b42d74b0a1e9f61c1d99d301039c3b5b",
+      "src": "https://github.com/mason-org/mason-lspconfig.nvim"
+    },
+    "mason-tool-installer.nvim": {
+      "rev": "443f1ef8b5e6bf47045cb2217b6f748a223cf7dc",
+      "src": "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim"
+    },
+    "mason.nvim": {
+      "rev": "2a6940af80375532e5e9e7c1f2fc6319a1b7a69d",
+      "src": "https://github.com/mason-org/mason.nvim"
+    },
+    "mini.extra": {
+      "rev": "e5ecf197f8954d002cb9e85b3715851e2c8d3cd5",
+      "src": "https://github.com/nvim-mini/mini.extra",
+      "version": "'stable'"
+    },
     "mini.icons": {
       "rev": "e56797f90192d81f1fda02e662fc3e8e3d775027",
       "src": "https://github.com/nvim-mini/mini.icons",
       "version": "'stable'"
+    },
+    "mini.pick": {
+      "rev": "8c1f75f8ddd8c9f75d07ed2ab5718d2c3cb65a66",
+      "src": "https://github.com/nvim-mini/mini.pick",
+      "version": "'stable'"
+    },
+    "msgarea.nvim": {
+      "rev": "8b6e178f39c7fe3cd13ddf818139db810ed6644a",
+      "src": "https://github.com/simifalaye/msgarea.nvim.git"
     },
     "neogen": {
       "rev": "23e7e9f883d01289ebd90e98025acc860ea26366",
@@ -88,16 +119,16 @@
       "src": "https://github.com/stevearc/resession.nvim"
     },
     "schemastore.nvim": {
-      "rev": "4504f8f389c44561e10027e68000cbe000129727",
+      "rev": "e954496f8ef22904e8a84f5078f4a110fdc7a0d3",
       "src": "https://github.com/b0o/schemastore.nvim"
-    },
-    "snacks.nvim": {
-      "rev": "882c996cf28183f4d63640de0b4c02ec886d01f2",
-      "src": "https://github.com/folke/snacks.nvim.git"
     },
     "tokyonight.nvim": {
       "rev": "cdc07ac78467a233fd62c493de29a17e0cf2b2b6",
       "src": "https://github.com/folke/tokyonight.nvim"
+    },
+    "vim-dispatch": {
+      "rev": "a2ff28abdb2d89725192db5b8562977d392a4d3f",
+      "src": "https://github.com/tpope/vim-dispatch.git"
     },
     "vim-easy-align": {
       "rev": "9815a55dbcd817784458df7a18acacc6f82b1241",

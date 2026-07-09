@@ -12,19 +12,6 @@ vim.pack.add({
   { src = "https://github.com/neovim/nvim-lspconfig" },
 })
 
--- Enable lsp servers
-vim.lsp.enable({
-  "bashls",
-  "clangd",
-  "gopls",
-  "jsonls",
-  "lua_ls",
-  "marksman",
-  "pyright",
-  "rust_analyzer",
-  "yamlls",
-})
-
 -- Setup lsp attach handler for keymaps and settings
 local lsp_grp = vim.api.nvim_create_augroup("user.lsp", {})
 vim.api.nvim_create_autocmd({ "LspAttach" }, {
@@ -60,6 +47,19 @@ vim.api.nvim_create_autocmd({ "LspAttach" }, {
     end
 
     -- Additional configuration based on supported methods
+    if supports_method("formatting") then
+      vim.keymap.set("n", "grf", function()
+        vim.lsp.buf.format({ bufnr = args.buf })
+      end, { desc = "vim.lsp.buf.format()", buffer = bufnr })
+    end
+    if supports_method("rangesFormatting") then
+      vim.keymap.set("x", "grf", function()
+        vim.lsp.buf.format({ bufnr = args.buf })
+      end, {
+        desc = "vim.lsp.buf.format()",
+        buffer = bufnr,
+      })
+    end
     if supports_method("declaration") then
       vim.keymap.set(
         "n",
@@ -125,9 +125,9 @@ vim.api.nvim_create_autocmd({ "LspAttach" }, {
         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
       end
     end
-    if supports_method("completion") then
-      vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-    end
+    -- if supports_method("completion") then
+    --   vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+    -- end
   end,
 })
 

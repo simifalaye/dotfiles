@@ -76,32 +76,6 @@ vim.api.nvim_create_user_command(
   }
 )
 
-vim.api.nvim_create_user_command(
-  "MoveWrite",
-  -- source: https://superuser.com/a/540519
-  [[<line1>,<line2>write<bang> <args> | <line1>,<line2>delete _]],
-  {
-    desc = "Move visual selection to a file (overwrite)",
-    bang = true,
-    range = true,
-    complete = "file",
-    nargs = 1, -- Selection
-  }
-)
-
-vim.api.nvim_create_user_command(
-  "MoveAppend",
-  -- source: https://superuser.com/a/540519
-  [[<line1>,<line2>write<bang> >> <args> | <line1>,<line2>delete _]],
-  {
-    desc = "Move visual selection to a file (append)",
-    bang = true,
-    range = true,
-    complete = "file",
-    nargs = 1, -- Selection
-  }
-)
-
 vim.api.nvim_create_user_command("Cwd", function()
   vim.cmd(":cd %:p:h")
   vim.cmd(":pwd")
@@ -201,3 +175,59 @@ vim.api.nvim_create_user_command("PackClean", function()
   end
   vim.pack.del(remove_list)
 end, { desc = "Clean inactive plugins", nargs = 0 })
+
+vim.api.nvim_create_user_command("LuaExecLine", function()
+  if vim.bo.filetype ~= "lua" then
+    vim.notify("Current buffer is not a Lua file", vim.log.levels.WARN)
+    return
+  end
+
+  local line = vim.api.nvim_get_current_line()
+  local chunk, err = load(line)
+
+  if not chunk then
+    vim.notify(err or "Failed to execute line", vim.log.levels.ERROR)
+    return
+  end
+
+  local ok, runtime_err = pcall(chunk)
+  if not ok then
+    vim.notify(runtime_err, vim.log.levels.ERROR)
+    return
+  end
+
+  vim.notify("Executed line", vim.log.levels.INFO, { title = "LuaExec" })
+end, {
+  desc = "Execute the current line as Lua",
+})
+
+vim.api.nvim_create_user_command("LuaExecSelection", function(opts)
+  if vim.bo.filetype ~= "lua" then
+    vim.notify("Current buffer is not a Lua file", vim.log.levels.WARN)
+    return
+  end
+
+  local lines = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, false)
+
+  local chunk, err = load(table.concat(lines, "\n"))
+
+  if not chunk then
+    vim.notify(err or "Failed to execute selection", vim.log.levels.ERROR)
+    return
+  end
+
+  local ok, runtime_err = pcall(chunk)
+  if not ok then
+    vim.notify(runtime_err, vim.log.levels.ERROR)
+    return
+  end
+
+  vim.notify(
+    ("Executed %d line%s"):format(#lines, #lines == 1 and "" or "s"),
+    vim.log.levels.INFO,
+    { title = "LuaExec" }
+  )
+end, {
+  desc = "Execute the selected lines as Lua",
+  range = true,
+})

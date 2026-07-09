@@ -1,3 +1,7 @@
+if true then
+  return
+end
+
 vim.schedule(function()
   vim.pack.add({
     { src = "https://github.com/ibhagwan/fzf-lua" },
@@ -7,24 +11,22 @@ vim.schedule(function()
   local fzf = require("fzf-lua")
   fzf.setup({
     "ivy",
-    {
-      grep = {
-        rg_glob = true,
-        rg_opts = table.concat({
-          "--no-messages",
-          "--hidden",
-          "--follow",
-          "--smart-case",
-          "--column",
-          "--line-number",
-          "--no-heading",
-          "--color=always",
-          "-g=!.git/",
-          "-e",
-        }, " "),
-        fzf_opts = {
-          ["--info"] = "inline-right",
-        },
+    grep = {
+      rg_glob = true,
+      rg_opts = table.concat({
+        "--no-messages",
+        "--hidden",
+        "--follow",
+        "--smart-case",
+        "--column",
+        "--line-number",
+        "--no-heading",
+        "--color=always",
+        "-g=!.git/",
+        "-e",
+      }, " "),
+      fzf_opts = {
+        ["--info"] = "inline-right",
       },
     },
   })

@@ -635,10 +635,12 @@ function install_gh_pkg() {
   local current_version desired_version release_data
 
   # Get current version
+  debug "Version cmd: $version_cmd"
   current_version="$(parse_version "$($version_cmd 2>/dev/null)" "${version_regex}")"
 
   # Compare desired version and current version
   desired_version="$(parse_version "${tag}" "${version_regex}")"
+  debug "Desired version: $desired_version, current_version: $current_version"
   if [ -n "$current_version" ] && [ "$current_version" = "$desired_version" ]; then
     debug "Already installed: $version_cmd reports version $desired_version" && return 0
   fi

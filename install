@@ -65,14 +65,9 @@ run_module python
 # Run modules that have no order requirements
 run_module alacritty
 run_module atool
-run_module bash-ls
 run_module bat
-run_module black
 run_module calc
-run_module cheat
-run_module clangd-ls
 run_module coreutils
-run_module cpplint
 run_module delta
 run_module direnv
 run_module elinks
@@ -84,27 +79,16 @@ run_module golang
 run_module htop
 run_module hyperkey
 run_module jq
-run_module json-ls
 run_module nerd-fonts
-run_module lua-ls
-run_module marksman-ls
 run_module neovim
 run_module os-theme-watcher
-run_module prettierd
-run_module pyright
 run_module ripgrep
 run_module rsync
 run_module scroll-reverser
-run_module sesh
-run_module shellcheck
-run_module shfmt
-run_module stylua
 run_module tig
-run_module tinty
 run_module tmux
 run_module trash
 run_module unison
 run_module wezterm
-run_module yaml-ls
-# run_module zellij
+run_module win32yank
 run_module zoxide

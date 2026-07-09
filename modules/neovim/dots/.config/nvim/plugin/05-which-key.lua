@@ -7,7 +7,7 @@ vim.schedule(function()
   })
 
   require("which-key").setup({
-    preset = "helix",
+    delay = 500,
     icons = {
       rules = false,
     },
@@ -29,18 +29,40 @@ vim.schedule(function()
         { "<leader>f", group = "+File" },
         { "<leader>g", group = "+Git" },
         { "<leader>h", group = "+Help" },
+        { "<leader>p", group = "+Project" },
         { "<leader>q", group = "+Quit/Session" },
         { "<leader>u", group = "+Ui" },
       },
     },
   })
 
-  local mb_ok, _ = pcall(require, "minibuffer")
-  if mb_ok then
-    -- NOTE: after loading plugin
-    local wk_mb = require("minibuffer.integrations.which-key")
-    local wk_view = require("which-key.view")
-    wk_view.show = wk_mb.show
-    wk_view.hide = wk_mb.hide
-  end
+  -- TODO: Revisit
+  -- ---@class wk.Win.opts
+  -- local override = {
+  --   relative = "msgarea",
+  --   style = "minimal",
+  --   focusable = false,
+  --   noautocmd = true,
+  --   wo = {
+  --     scrolloff = 0,
+  --     foldenable = false,
+  --     winhighlight = "Normal:WhichKeyNormal,FloatBorder:WhichKeyBorder,FloatTitle:WhichKeyTitle",
+  --     winbar = "",
+  --     statusline = "",
+  --     wrap = false,
+  --   },
+  --   bo = {
+  --     buftype = "nofile",
+  --     bufhidden = "wipe",
+  --     filetype = "wk",
+  --   },
+  -- }
+  --
+  -- ---@type wk.Win.opts
+  -- local defaults = { col = 0, row = math.huge, zindex = 1000 }
+  --
+  -- -- local wk_win_defaults = require("which-key.win").defaults
+  -- require("which-key.win").defaults = function(opts)
+  --   return vim.tbl_deep_extend("force", {}, defaults, opts or {}, override)
+  -- end
 end)
