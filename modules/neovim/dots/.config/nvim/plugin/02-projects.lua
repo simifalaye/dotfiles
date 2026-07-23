@@ -22,8 +22,8 @@ vim.g.projects = vim.g.projects
 ---@return ProjectsOpts
 local function get_config()
   local opts = type(vim.g.projects) == "function" and vim.g.projects()
-    or vim.g.projects
-    or {}
+      or vim.g.projects
+      or {}
   local config = vim.tbl_deep_extend("force", default_config, opts)
   return config
 end
@@ -81,9 +81,9 @@ local function clear_project()
   vim.cmd("only")
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     if
-      buf ~= vim.api.nvim_get_current_buf()
-      and vim.api.nvim_buf_is_valid(buf)
-      and vim.bo[buf].buftype ~= "terminal"
+        buf ~= vim.api.nvim_get_current_buf()
+        and vim.api.nvim_buf_is_valid(buf)
+        and vim.bo[buf].buftype ~= "terminal"
     then
       pcall(vim.api.nvim_buf_delete, buf, { force = true })
     end
@@ -274,14 +274,12 @@ function M.delete(path)
     return false
   end
 
-  if path == M.current() then
-    vim.notify("Cannot delete the current project", vim.log.levels.ERROR)
-    return false
-  end
-
   local choice = vim.fn.confirm(('Delete project "%s"?'):format(path), "&Yes\n&No")
 
   if choice == 1 then
+    if path == M.current() then
+      require("resession").detach()
+    end
     local ok, err = pcall(
       require("resession").delete,
       path_to_session_name(path),
@@ -300,20 +298,9 @@ end
 --- Delete a project interactively
 function M.delete_interactive()
   local projects = M.list()
-  local current = M.current()
 
   if #projects == 0 then
     vim.notify("No projects available", vim.log.levels.INFO)
-    return
-  end
-  projects = vim.tbl_filter(function(ws)
-    return ws ~= current
-  end, projects)
-  if #projects == 0 then
-    vim.notify(
-      "No other projects available and can't delete current. Current: " .. current,
-      vim.log.levels.INFO
-    )
     return
   end
 
@@ -326,8 +313,46 @@ function M.delete_interactive()
   end)
 end
 
---- Setup user commands
-function M.setup_commands()
+--
+-- Main
+--
+
+exec_now(function()
+  -- Autocommands
+  local group = vim.api.nvim_create_augroup("user.plugin.project", { clear = true })
+  vim.api.nvim_create_autocmd("StdinReadPre", {
+    group = group,
+    callback = function()
+      vim.g.using_stdin = true
+    end,
+  })
+  vim.api.nvim_create_autocmd("VimLeavePre", {
+    group = group,
+    callback = function()
+      local current = M.current()
+      if current ~= nil then
+        local ok, err = pcall(require("resession").save, current, {
+          dir = get_config().dir,
+          notify = false,
+        })
+        if not ok then
+          vim.notify("Failed to save project: " .. err, vim.log.levels.ERROR)
+        end
+      end
+    end,
+  })
+  vim.api.nvim_create_autocmd("VimEnter", {
+    group = group,
+    callback = function()
+      if vim.fn.argc(-1) == 0 and not vim.g.using_stdin and M.current() == nil then
+        if M.exists(vim.fn.getcwd()) then
+          M.switch(vim.fn.getcwd())
+        end
+      end
+    end,
+  })
+
+  -- Commands
   vim.api.nvim_create_user_command("ProjectSwitch", function(opts)
     if opts.args == "" then
       M.switch_interactive()
@@ -341,7 +366,6 @@ function M.setup_commands()
     end,
     desc = "Switch to a project (directory)",
   })
-
   vim.api.nvim_create_user_command("ProjectAdd", function(opts)
     if opts.args == "" then
       M.add_interactive()
@@ -367,14 +391,12 @@ function M.setup_commands()
     end,
     desc = "Delete a project",
   })
-
   vim.api.nvim_create_user_command("ProjectShowCurrent", function()
     local current = M.current()
     vim.notify(current or "No project loaded", vim.log.levels.INFO)
   end, {
     desc = "Show the current project",
   })
-
   vim.api.nvim_create_user_command("ProjectList", function()
     local projects = M.list()
     if #projects == 0 then
@@ -385,71 +407,26 @@ function M.setup_commands()
   end, {
     desc = "List projects",
   })
-
   vim.api.nvim_create_user_command("ProjectLast", function()
     local projects = M.list()
     if #projects <= 1 then
       vim.notify("No other projects", vim.log.levels.ERROR)
       return
     end
-    M.switch(projects[1])
+    local last = projects[1]
+    if #projects > 1 and last == M.current() then
+      last = projects[2]
+    end
+    M.switch(last)
   end, {
     desc = "Switch to last project",
   })
-end
 
---- Setup autocommands
-function M.setup_autocommands()
-  local group = vim.api.nvim_create_augroup("Project", { clear = true })
-
-  -- Track stdin usage
-  vim.api.nvim_create_autocmd("StdinReadPre", {
-    group = group,
-    callback = function()
-      vim.g.using_stdin = true
-    end,
-  })
-
-  vim.api.nvim_create_autocmd("VimLeavePre", {
-    group = group,
-    callback = function()
-      local current = M.current()
-      if current ~= nil then
-        local ok, err = pcall(require("resession").save, current, {
-          dir = get_config().dir,
-          notify = false,
-        })
-        if not ok then
-          vim.notify("Failed to save project: " .. err, vim.log.levels.ERROR)
-        end
-      end
-    end,
-  })
-
-  -- Auto-load project on startup if in a project directory
-  vim.api.nvim_create_autocmd("VimEnter", {
-    group = group,
-    callback = function()
-      if vim.fn.argc(-1) == 0 and not vim.g.using_stdin and M.current() == nil then
-        if M.exists(vim.fn.getcwd()) then
-          M.switch(vim.fn.getcwd())
-        end
-      end
-    end,
-  })
-end
-
---
--- Main
---
-
-M.setup_commands()
-M.setup_autocommands()
-
--- Keymaps
-vim.keymap.set("n", "<leader>pa", "<cmd>ProjectAdd<CR>", { desc = "Add" })
-vim.keymap.set("n", "<leader>pc", "<cmd>ProjectShowCurrent<CR>", { desc = "Show" })
-vim.keymap.set("n", "<leader>pd", "<cmd>ProjectDelete<CR>", { desc = "Delete" })
-vim.keymap.set("n", "<leader>pl", "<cmd>ProjectList<CR>", { desc = "List" })
-vim.keymap.set("n", "<leader>pp", "<cmd>ProjectLast<CR>", { desc = "Last" })
-vim.keymap.set("n", "<leader>ps", "<cmd>ProjectSwitch<CR>", { desc = "Switch" })
+  -- Keymaps
+  vim.keymap.set("n", "<leader>pa", "<cmd>ProjectAdd<CR>", { desc = "Add" })
+  vim.keymap.set("n", "<leader>pc", "<cmd>ProjectShowCurrent<CR>", { desc = "Show" })
+  vim.keymap.set("n", "<leader>pd", "<cmd>ProjectDelete<CR>", { desc = "Delete" })
+  vim.keymap.set("n", "<leader>pl", "<cmd>ProjectList<CR>", { desc = "List" })
+  vim.keymap.set("n", "<leader>pp", "<cmd>ProjectLast<CR>", { desc = "Last" })
+  vim.keymap.set("n", "<leader>ps", "<cmd>ProjectSwitch<CR>", { desc = "Switch" })
+end)

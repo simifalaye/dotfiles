@@ -1,7 +1,6 @@
-local file_utilities_grp = vim.api.nvim_create_augroup("user.file_utilities", {})
 vim.api.nvim_create_autocmd("BufWritePre", {
   desc = "Remove trailing whitespace on save",
-  group = file_utilities_grp,
+  group = custom_config_augroup,
   pattern = "*",
   callback = function()
     local ft = vim.bo.filetype
@@ -14,9 +13,10 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     vim.cmd([[ %s/\s\+$//e ]])
   end,
 })
+
 vim.api.nvim_create_autocmd("BufReadPost", {
   desc = "Jump to last known position and center buffer around cursor",
-  group = file_utilities_grp,
+  group = custom_config_augroup,
   pattern = "*",
   callback = function(event)
     local exclude = { "gitcommit", "popup" }
@@ -32,18 +32,20 @@ vim.api.nvim_create_autocmd("BufReadPost", {
     end
   end,
 })
+
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
   desc = "Check if we need to reload the file when it changed",
-  group = file_utilities_grp,
+  group = custom_config_augroup,
   callback = function()
     if vim.o.buftype ~= "nofile" then
       vim.cmd("silent! checktime")
     end
   end,
 })
+
 vim.api.nvim_create_autocmd("FileType", {
   desc = "Ensure proper 'formatoptions'",
-  group = file_utilities_grp,
+  group = custom_config_augroup,
   callback = function()
     -- Don't auto-wrap comments and don't insert comment leader after hitting 'o'
     -- If don't do this on `FileType`, this keeps reappearing due to being set in
@@ -51,41 +53,42 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.cmd("setlocal formatoptions-=c formatoptions-=o")
   end,
 })
+
 vim.api.nvim_create_autocmd("BufEnter", {
   desc = "Disable newline auto commentstring",
-  group = file_utilities_grp,
+  group = custom_config_augroup,
   callback = function()
     vim.opt.formatoptions = vim.opt.formatoptions - { "c", "r", "o" }
   end,
 })
 
-local window_behaviours_grp = vim.api.nvim_create_augroup("user.window_behaviours", {})
 vim.api.nvim_create_autocmd("VimResized", {
   desc = "Auto-resize splits",
-  group = window_behaviours_grp,
+  group = custom_config_augroup,
   pattern = { "*" },
   command = "tabdo wincmd =",
 })
 
-local yank_text_grp = vim.api.nvim_create_augroup("user.yank_text", {})
 vim.api.nvim_create_autocmd({ "VimEnter", "CursorMoved" }, {
   desc = "Save cursor position whenever it moves",
-  group = yank_text_grp,
+  group = custom_config_augroup,
   pattern = "*",
   callback = function()
     vim.g.user_cursor_pos = vim.fn.getpos(".")
   end,
 })
+
 vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Highlight yanked text",
-  group = yank_text_grp,
+  group = custom_config_augroup,
   callback = function()
     vim.highlight.on_yank({ timeout = 200, higroup = "IncSearch" })
   end,
 })
+
 vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Restore cursor position after yank",
-  group = yank_text_grp,
+  group = custom_config_augroup,
   pattern = "*",
   callback = function()
     if vim.v.event.operator == "y" then
@@ -93,3 +96,51 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     end
   end,
 })
+
+if not vim.g.neovide then
+  -- Explicitly set clipboard
+  vim.api.nvim_create_autocmd("UIEnter", {
+    desc = "Lazy load clipboard",
+    group = custom_config_augroup,
+    once = true,
+    callback = vim.schedule_wrap(function()
+      if vim.fn.has("win32") == 1 or vim.fn.has("wsl") == 1 then
+        vim.g.clipboard = {
+          copy = {
+            ["+"] = "win32yank.exe -i --crlf",
+            ["*"] = "win32yank.exe -i --crlf",
+          },
+          paste = {
+            ["+"] = "win32yank.exe -o --lf",
+            ["*"] = "win32yank.exe -o --lf",
+          },
+        }
+      elseif vim.fn.has("unix") == 1 then
+        if vim.fn.executable("xclip") == 1 then
+          vim.g.clipboard = {
+            copy = {
+              ["+"] = "xclip -selection clipboard",
+              ["*"] = "xclip -selection clipboard",
+            },
+            paste = {
+              ["+"] = "xclip -selection clipboard -o",
+              ["*"] = "xclip -selection clipboard -o",
+            },
+          }
+        elseif vim.fn.executable("xsel") == 1 then
+          vim.g.clipboard = {
+            copy = {
+              ["+"] = "xsel --clipboard --input",
+              ["*"] = "xsel --clipboard --input",
+            },
+            paste = {
+              ["+"] = "xsel --clipboard --output",
+              ["*"] = "xsel --clipboard --output",
+            },
+          }
+        end
+      end
+      vim.opt.clipboard = "unnamedplus"
+    end),
+  })
+end

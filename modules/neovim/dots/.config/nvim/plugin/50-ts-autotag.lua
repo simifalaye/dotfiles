@@ -1,4 +1,4 @@
-vim.schedule(function()
+exec_now_if_args(function()
   vim.pack.add({
     { src = "https://github.com/windwp/nvim-ts-autotag" },
   })

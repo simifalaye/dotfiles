@@ -1,4 +1,4 @@
-_G.now_if_args(function()
+exec_now_if_args(function()
   local ensure_installed = {
     "bash",
     "c",
@@ -48,10 +48,10 @@ _G.now_if_args(function()
 
   -- Ensure enabled
   local filetypes = vim
-    .iter(ensure_installed)
-    :map(vim.treesitter.language.get_filetypes)
-    :flatten()
-    :totable()
+      .iter(ensure_installed)
+      :map(vim.treesitter.language.get_filetypes)
+      :flatten()
+      :totable()
   vim.list_extend(filetypes, { "markdown", "quarto" })
   local ts_start = function(ev)
     vim.treesitter.start(ev.buf)

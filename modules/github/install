@@ -7,6 +7,13 @@ fi
 # shellcheck disable=SC2034
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+install_gh_extenstion() {
+  repo="${1}"
+  if ! gh extension list | grep -q "${repo}"; then
+    gh extenstion install "${repo}"
+  fi
+}
+
 #
 # Main
 #
@@ -18,5 +25,6 @@ if [ "${UNINSTALL}" = "1" ]; then
 else
   if ! is_installed gh; then
     install_pkg gh
+    install_gh_extenstion "yusukebe/gh-markdown-preview"
   fi
 fi

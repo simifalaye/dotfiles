@@ -22,8 +22,8 @@ vim.g.numbers_toggle = vim.g.numbers_toggle
 ---@return NumbersToggleOpts
 local function get_config()
   local opts = type(vim.g.numbers_toggle) == "function" and vim.g.numbers_toggle()
-    or vim.g.numbers_toggle
-    or {}
+      or vim.g.numbers_toggle
+      or {}
   local config = vim.tbl_deep_extend("force", default_config, opts)
   return config
 end
@@ -53,27 +53,29 @@ end
 -- Main
 --
 
-local grp = vim.api.nvim_create_augroup("user.plugin.numbers_toggle", {})
-vim.api.nvim_create_autocmd({ "BufEnter", "FileType", "FocusGained", "InsertLeave" }, {
-  desc = "Enable relative line numbers",
-  group = grp,
-  callback = function()
-    local config = get_config()
-    if config.disable then
-      return
-    end
-    local enabled = not numbers_is_blocked()
-    vim.wo.number, vim.wo.relativenumber = enabled, enabled
-  end,
-})
-vim.api.nvim_create_autocmd({ "FocusLost", "BufLeave", "InsertEnter", "TermOpen" }, {
-  desc = "Disable relative line numbers",
-  group = grp,
-  callback = function()
-    local config = get_config()
-    if config.disable then
-      return
-    end
-    vim.wo.number, vim.wo.relativenumber = not numbers_is_blocked(), false
-  end,
-})
+exec_now(function()
+  local grp = vim.api.nvim_create_augroup("user.plugin.numbers_toggle", {})
+  vim.api.nvim_create_autocmd({ "BufEnter", "FileType", "FocusGained", "InsertLeave" }, {
+    desc = "Enable relative line numbers",
+    group = grp,
+    callback = function()
+      local config = get_config()
+      if config.disable then
+        return
+      end
+      local enabled = not numbers_is_blocked()
+      vim.wo.number, vim.wo.relativenumber = enabled, enabled
+    end,
+  })
+  vim.api.nvim_create_autocmd({ "FocusLost", "BufLeave", "InsertEnter", "TermOpen" }, {
+    desc = "Disable relative line numbers",
+    group = grp,
+    callback = function()
+      local config = get_config()
+      if config.disable then
+        return
+      end
+      vim.wo.number, vim.wo.relativenumber = not numbers_is_blocked(), false
+    end,
+  })
+end)

@@ -1,4 +1,4 @@
-vim.schedule(function()
+exec_later(function()
   vim.pack.add({
     {
       src = "https://github.com/folke/which-key.nvim",
@@ -29,40 +29,11 @@ vim.schedule(function()
         { "<leader>f", group = "+File" },
         { "<leader>g", group = "+Git" },
         { "<leader>h", group = "+Help" },
+        { "<leader>n", group = "+Notes" },
         { "<leader>p", group = "+Project" },
         { "<leader>q", group = "+Quit/Session" },
         { "<leader>u", group = "+Ui" },
       },
     },
   })
-
-  -- TODO: Revisit
-  -- ---@class wk.Win.opts
-  -- local override = {
-  --   relative = "msgarea",
-  --   style = "minimal",
-  --   focusable = false,
-  --   noautocmd = true,
-  --   wo = {
-  --     scrolloff = 0,
-  --     foldenable = false,
-  --     winhighlight = "Normal:WhichKeyNormal,FloatBorder:WhichKeyBorder,FloatTitle:WhichKeyTitle",
-  --     winbar = "",
-  --     statusline = "",
-  --     wrap = false,
-  --   },
-  --   bo = {
-  --     buftype = "nofile",
-  --     bufhidden = "wipe",
-  --     filetype = "wk",
-  --   },
-  -- }
-  --
-  -- ---@type wk.Win.opts
-  -- local defaults = { col = 0, row = math.huge, zindex = 1000 }
-  --
-  -- -- local wk_win_defaults = require("which-key.win").defaults
-  -- require("which-key.win").defaults = function(opts)
-  --   return vim.tbl_deep_extend("force", {}, defaults, opts or {}, override)
-  -- end
 end)

@@ -1,4 +1,4 @@
-vim.schedule(function()
+exec_later(function()
   vim.pack.add({
     { src = "https://github.com/tpope/vim-rhubarb" },
     { src = "https://github.com/tpope/vim-fugitive" },

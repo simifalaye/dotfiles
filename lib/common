@@ -238,21 +238,32 @@ is_mac_app_installed() {
 # Update package manager every N hours
 # Usage: update_pkg_manager [hours|0 = force]
 update_pkg_manager() {
-  local hours="${1-0}"
-  if ! [ "${hours}" -eq "${hours}" ] 2>/dev/null; then
-    error "Hours param must be a number" && return 1
-  fi
+    hours=${1:-0}
 
-  local stamp now interval
-  stamp="/tmp/last_pkg_manager_update"
-  now=$(date +%s)
-  interval=$(( hours * 3600 ))
+    case $hours in
+        ''|*[!0-9]*)
+            error "Hours must be a non-negative integer"
+            return 1
+            ;;
+    esac
+    stamp="${TMPDIR:-/tmp}/last_pkg_manager_update"
+    interval=$((hours * 3600))
+    last=0
+    if [ -r "$stamp" ]; then
+        IFS= read -r last <"$stamp"
+        case $last in
+            ''|*[!0-9]*) last=0 ;;
+        esac
+    fi
 
-  if [ ${interval} -eq 0 ] || [ ! -f "${stamp}" ] || [ $((now - $(cat "${stamp}" 2>/dev/null || echo 0))) -ge ${interval} ]; then
-    info "Updating package manager"
-    # shellcheck disable=SC2086
-    _run ${__PM_UPDATE_CMD} && echo "$now" > "$stamp"
-  fi
+    now=$(date +%s)
+    if [ "$interval" -eq 0 ] || [ $((now - last)) -ge "$interval" ]; then
+        info "Updating package manager"
+        # shellcheck disable=SC2086
+        if _run ${__PM_UPDATE_CMD}; then
+            printf '%s\n' "$now" >"$stamp"
+        fi
+    fi
 }
 
 # Install bins to the system bins location using a base directory to search and a glob path
@@ -454,86 +465,224 @@ uninstall_pipx_pkg() {
 
 # Remove dead symlinks in a directory recursively up to a max depth (0 for infinite)
 # Usage: remove_dead_links <depth> <dir>
-function remove_dead_links() {
-  local depth="${1}"
-  local dir="${2}"
-  local depth_str=""
-  [ ! -d "${dir}" ] && return
-  [ "${depth}" -gt "0" ] && depth_str="-maxdepth ${depth}"
+remove_dead_links() {
+  depth=$1
+  dir=$2
 
-  # shellcheck disable=SC2086
-  find "${dir}" ${depth_str} -type l ! -exec test -e {} \; -print0 | while IFS= read -r -d '' link; do
-    _run rm -f "${link}"
-    debug "Removed dead symlink: ${link}"
-  done
+  [ -d "$dir" ] || return
+
+  if [ "$depth" -gt 0 ]; then
+    find "$dir" -maxdepth "$depth" -type l -print |
+    while IFS= read -r link; do
+      [ -e "$link" ] && continue
+      _run rm -f -- "$link"
+      debug "Removed dead symlink: $link"
+    done
+  else
+    find "$dir" -type l -print |
+    while IFS= read -r link; do
+      [ -e "$link" ] && continue
+      _run rm -f -- "$link"
+      debug "Removed dead symlink: $link"
+    done
+  fi
 }
 
-# stow_dots: Recursively symlink files from src_dir to base_dir, backing up existing files and removing dead links.
-# Usage: stow_dots <src_dir> [base_dir|${HOME}]
-# Returns 0 on success, 1 on error.
-function stow_dots() {
-  local src_dir=$1
-  local base_dir=${2:-${HOME}}
-  [ ! -d "$src_dir" ] && error "$src_dir is not a directory." && return 1
-  [ ! -d "$base_dir" ] && error "$base_dir is not a directory." && return 1
+# Get global manifest location
+_stow_manifest() {
+  local state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/stow"
+  mkdir -p "$state_dir" || return 1
+  printf '%s/manifest\n' "$state_dir"
+}
 
-  info "Stowing dotfiles from '$src_dir' to '$base_dir'"
+# Get the name of a package
+_stow_package_name() {
+  path=$1
 
-  # Prepare all target directories in a single bulk (preserve directory structure)
-  find "$src_dir" -type d | while read -r src_subdir; do
-    rel_dir=${src_subdir#"$src_dir"/}
-    if [ "$src_subdir" = "$src_dir" ]; then
-      dest_subdir="$base_dir"
-    else
-      dest_subdir="$base_dir/$rel_dir"
-    fi
-    _run mkdir -p "$dest_subdir" || { error "Failed to create dir: $dest_subdir" && return 1; }
-  done
+  # Remove trailing slash
+  path=${path%/}
+  name=${path##*/}
+  if [ "$name" = "dots" ]; then
+    parent=${path%/*}
+    name=${parent##*/}
+  fi
+  printf '%s\n' "$name"
+}
 
-  # Process files
-  find "$src_dir" -type f | while read -r src_file; do
-    rel_path=${src_file#"$src_dir"/}
-    dest_file="$base_dir/$rel_path"
-    # Backup if dest exists or is not the correct link
-    if [ -e "$dest_file" ] || [ -L "$dest_file" ]; then
-      # Only skip if already the right symlink
-      if [ -L "$dest_file" ]; then
-        real_src=$(_resolve_symlink "$src_file")
-        real_dest=$(_resolve_symlink "$dest_file")
-        [ "$real_src" = "$real_dest" ] && debug "Link already exists for $real_src" && continue
+# Remove dead symlinks from the manifest.
+#
+# A link is dead if its source no longer exists.
+_cleanup_stow_manifest() {
+  local manifest="$1"
+  local tmp
+
+  [ -f "$manifest" ] || return 0
+
+  tmp="${manifest}.tmp.$$"
+  while IFS="$(printf '\t')" read -r pkg src dest; do
+    [ -z "$pkg" ] && continue
+    if [ ! -e "$src" ]; then
+      if [ -L "$dest" ]; then
+        _run rm -f -- "$dest"
+        info "Removed dead symlink: $dest"
       fi
-      backup_file="${dest_file}.backup"
-      _run mv "$dest_file" "$backup_file"
-      info "Backed up $dest_file to $backup_file"
+      continue
     fi
-    # Link file
-    _run ln -s "$src_file" "$dest_file"
-    info "Linked ${src_file} to ${dest_file}"
+    printf '%s\t%s\t%s\n' \
+        "$pkg" "$src" "$dest"
+  done < "$manifest" > "$tmp"
+
+  mv "$tmp" "$manifest"
+}
+
+# Remove previous manifest entries for a package.
+_remove_stow_package() {
+    package=$1
+    manifest=$2
+
+    [ -f "$manifest" ] || return 0
+    tmp="${manifest}.tmp.$$"
+    while IFS="$(printf '\t')" read -r pkg src dest; do
+        [ -z "$pkg" ] && continue
+        if [ "$pkg" = "$package" ]; then
+            continue
+        fi
+        printf '%s\t%s\t%s\n' "$pkg" "$src" "$dest"
+    done < "$manifest" > "$tmp"
+
+    mv "$tmp" "$manifest"
+}
+
+
+# stow_dots: Recursively symlink files from src_dir to base_dir,
+# backing up existing files and removing dead links.
+#
+# Usage: stow_dots <src_dir> [base_dir|${HOME}]
+#
+# Returns 0 on success, 1 on error.
+_STOW_CLEANED=0
+stow_dots() {
+  local src_dir="$1"
+  local base_dir="${2:-$HOME}"
+  local manifest package
+
+  [ -d "$src_dir" ] || {
+    error "$src_dir is not a directory."
+    return 1
+  }
+
+  [ -d "$base_dir" ] || {
+    error "$base_dir is not a directory."
+    return 1
+  }
+
+  manifest=$(_stow_manifest) || return 1
+  package=$(_stow_package_name "${src_dir}")
+
+  # Only cleanup once per shell execution.
+  if [ "$_STOW_CLEANED" -eq 0 ]; then
+      if [ -f "$manifest" ]; then
+        info "Cleaning up manifest"
+        _cleanup_stow_manifest "$manifest"
+      else
+        # First install on this system or manifest deleted.
+        # Use existing fast/recursive dead link cleanup.
+        info "Cleaning dead symlinks from '${base_dir}"
+        remove_dead_links 0 "${base_dir}"
+      fi
+      _STOW_CLEANED=1
+  fi
+
+  # Remove old ownership for this package.
+  _remove_stow_package "$package" "$manifest"
+
+  # Ensure manifest exists.
+  touch "$manifest" || {
+      error "Cannot create manifest: $manifest"
+      return 1
+  }
+
+  info "Stowing $src_dir"
+  find "$src_dir" -type d |
+  while IFS= read -r src_subdir; do
+      local rel dest_dir
+
+      rel=${src_subdir#"$src_dir"}
+      if [ -z "$rel" ]; then
+          dest_dir="$base_dir"
+      else
+          dest_dir="$base_dir$rel"
+      fi
+      _run mkdir -p "$dest_dir" || return 1
+  done
+
+  find "$src_dir" -type f |
+  while IFS= read -r src_file; do
+      local rel dest backup
+
+      rel=${src_file#"$src_dir"}
+      dest="$base_dir$rel"
+      if [ -L "$dest" ]; then
+          local real_src real_dest
+
+          real_src=$(_resolve_symlink "$src_file")
+          real_dest=$(_resolve_symlink "$dest")
+          if [ "$real_src" = "$real_dest" ]; then
+              printf '%s\t%s\t%s\n' \
+                  "$package" "$src_file" "$dest" >> "$manifest"
+              continue
+          fi
+          _run rm -f "$dest"
+      elif [ -e "$dest" ]; then
+          backup="${dest}.backup"
+          _run mv "$dest" "$backup" || return 1
+          info "Backed up $dest -> $backup"
+      fi
+
+      _run ln -s "$src_file" "$dest" || return 1
+      printf '%s\t%s\t%s\n' \
+          "$package" "$src_file" "$dest" >> "$manifest"
+
+      info "Linked $src_file -> $dest"
   done
 }
+
 
 # unstow_dots: Recursively remove symlinks in base_dir matching files in src_dir.
+#
 # Usage: unstow_dots <src_dir> [base_dir]
+#
 # Returns 0 on success, 1 on error.
-function unstow_dots() {
-  local src_dir=$1
-  local base_dir=${2:-${HOME}}
-  [ ! -d "$src_dir" ] && error "Error: $src_dir is not a directory." && return 1
-  [ ! -d "$base_dir" ] && error "Error: $base_dir is not a directory." && return 1
+unstow_dots() {
+    local src_dir="$1"
+    local base_dir="${2:-$HOME}"
+    local manifest package tmp
 
-  info "Unstowing dotfiles from '$src_dir' to '$base_dir'"
-  find "$src_dir" -type f | while read -r src_file; do
-    rel_path=${src_file#"$src_dir"/}
-    dest_file="$base_dir/$rel_path"
-    if [ -L "$dest_file" ]; then
-      real_src=$(_resolve_symlink "$src_file")
-      real_dest=$(_resolve_symlink "$dest_file")
-      if [ "$real_src" = "$real_dest" ]; then
-        _run rm "$dest_file"
-        info "Removed symlink $dest_file"
-      fi
-    fi
-  done
+    [ -d "$src_dir" ] || {
+        error "$src_dir is not a directory."
+        return 1
+    }
+
+    manifest=$(_stow_manifest) || return 1
+    package=$(_stow_package_name "${src_dir}")
+
+    [ -f "$manifest" ] || return 0
+
+    tmp="${manifest}.tmp.$$"
+    while IFS="$(printf '\t')" read -r pkg src dest; do
+        [ -z "$pkg" ] && continue
+        if [ "$pkg" = "$package" ]; then
+            if [ -L "$dest" ]; then
+                _run rm -f -- "$dest"
+                info "Removed symlink: $dest"
+            fi
+            continue
+        fi
+        printf '%s\t%s\t%s\n' \
+            "$pkg" "$src" "$dest"
+    done < "$manifest" > "$tmp"
+
+    mv "$tmp" "$manifest"
 }
 
 # Parse a version from a string

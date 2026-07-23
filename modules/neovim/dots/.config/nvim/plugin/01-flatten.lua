@@ -1,7 +1,4 @@
-vim.pack.add({
-  {
-    src = "https://github.com/willothy/flatten.nvim.git",
-  },
-})
-
-require("flatten").setup({})
+exec_now(function()
+  vim.pack.add({ "https://github.com/willothy/flatten.nvim" })
+  require("flatten").setup()
+end)

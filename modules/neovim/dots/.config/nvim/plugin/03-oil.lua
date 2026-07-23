@@ -1,4 +1,4 @@
-_G.now_if_args(function()
+exec_now_if_args(function()
   vim.pack.add({
     { src = "https://github.com/stevearc/oil.nvim" },
   })

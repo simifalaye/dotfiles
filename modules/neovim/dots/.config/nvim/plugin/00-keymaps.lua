@@ -30,7 +30,13 @@ map(
   "v:count == 0 ? 'gk' : 'k'",
   { desc = "Up", expr = true, silent = true }
 )
--- map({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save File" })
+map("n", "<C-s>", "<Cmd>silent! update | redraw<CR>", { desc = "Save" })
+map(
+  { "i", "x" },
+  "<C-s>",
+  "<Esc><Cmd>silent! update | redraw<CR>",
+  { desc = "Save and go to Normal mode" }
+)
 
 --
 -- Normal mode
@@ -43,6 +49,12 @@ map("n", "N", "Nzzzv")
 map("n", "p", "p`[v`]=", { desc = "Paste & Format" })
 map("n", "Q", "@q", { desc = "Run q Macro" })
 map("n", "<C-x>", "<cmd>LuaExecLine<CR>", { desc = "Execute current Lua line" })
+
+-- Window navigation
+map("n", "<C-h>", "<C-w>h", { desc = "Focus on left window" })
+map("n", "<C-j>", "<C-w>j", { desc = "Focus on below window" })
+map("n", "<C-k>", "<C-w>k", { desc = "Focus on above window" })
+map("n", "<C-l>", "<C-w>l", { desc = "Focus on right window" })
 
 -- (g) namespace
 map("n", "g!", ":! chmod +x %<CR>", { desc = "Make File Executable" })
@@ -90,16 +102,6 @@ map("n", "]f", function()
   end
 end, { desc = "Next file" })
 
-local function find_file()
-  local buf_path = vim.api.nvim_buf_get_name(0)
-  local dir = vim.fn.fnamemodify(buf_path, ":p:h")
-  if dir == "" then
-    dir = "."
-  end
-  local cmd = ":e " .. vim.fn.fnameescape(dir) .. "/"
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(cmd, true, false, true), "n", true)
-end
-
 -- Leader
 map("n", "<leader>,", function()
   vim.api.nvim_feedkeys(":b ", "n", false)
@@ -111,7 +113,15 @@ map("n", "<leader>,", function()
     )
   end)
 end, { desc = "Find Buffer" })
-map("n", "<leader>.", find_file, { desc = "Find file" })
+map("n", "<leader>.", function()
+  local buf_path = vim.api.nvim_buf_get_name(0)
+  local dir = vim.fn.fnamemodify(buf_path, ":p:h")
+  if dir == "" then
+    dir = "."
+  end
+  local cmd = ":e " .. vim.fn.fnameescape(dir) .. "/"
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(cmd, true, false, true), "n", true)
+end, { desc = "Find file" })
 
 -- Leader + tab (tab)
 map("n", "<leader><tab><tab>", "<cmd>tablast<cr>", { desc = "Last" })
@@ -148,9 +158,9 @@ map("n", "<leader>bo", function()
       and vim.fn.buflisted(buf) == 1
     then
       vim.api.nvim_buf_delete(buf, { force = true })
-      vim.notify("Deleted other buffers")
     end
   end
+  vim.notify("Deleted other buffers")
 end, { desc = "Only" })
 map("n", "<leader>bp", "<cmd>bp<CR>", { desc = "Previous" })
 map("n", "<leader>bs", "<cmd>w<CR>", { desc = "Save" })
@@ -160,11 +170,20 @@ map("n", "<leader>bW", "<cmd>bp | bw! #<CR>", { desc = "Wipeout!" })
 map("n", "<leader>by", "<cmd>%y+<CR>", { desc = "Yank" })
 
 -- Leader + f (file)
-map("n", "<leader>ff", find_file, { desc = "Find" })
 map("n", "<leader>fd", "<cmd>DeleteFile<CR>", { desc = "Delete" })
 map("n", "<leader>fD", "<cmd>DeleteFile!<CR>", { desc = "Delete!" })
 map("n", "<leader>fr", "<cmd>RenameFile<CR>", { desc = "Rename" })
 map("n", "<leader>fy", "<cmd>YankFilePath<CR>", { desc = "Yank path" })
+
+-- Leader + h (help)
+map("n", "<leader>h?", "<cmd>checkhealth<CR>", { desc = "Health" })
+map("n", "<leader>hh", ":h ", { desc = "Help" })
+map(
+  "n",
+  "<leader>hp",
+  ":e " .. vim.fs.joinpath(vim.fn.stdpath("data"), "site", "pack", "core", "opt", "/"),
+  { desc = "Plugin" }
+)
 
 -- Leader + u (ui)
 map("n", "<leader>ui", ui.set_indent, { desc = "Set indent" })
@@ -216,6 +235,9 @@ map(
   { desc = "Q macro over range", silent = false }
 )
 map("x", "<C-x>", ":LuaExecSelection<CR>", { desc = "Execute selected Lua code" })
+
+-- (g) namespace
+map("x", "g/", "<esc>/\\%V", { silent = false, desc = "Search inside visual selection" })
 
 -- Text Objects
 map("x", "ie", [[gg0oG$]], { desc = "entire buffer" })

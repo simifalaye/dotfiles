@@ -1,8 +1,0 @@
-vim.schedule(function()
-  vim.pack.add({
-    {
-      src = "https://github.com/OXY2DEV/markview.nvim",
-      version = vim.version.range("*"),
-    },
-  })
-end)

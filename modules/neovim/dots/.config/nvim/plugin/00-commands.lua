@@ -68,14 +68,6 @@ vim.api.nvim_create_user_command("YankFilePath", function()
   vim.notify("Yanked file path to clipboard:\n" .. path)
 end, { desc = "Yank full file path to system clipboard" })
 
-vim.api.nvim_create_user_command(
-  "Todo",
-  [[noautocmd silent! grep! 'TODO\|FIXME\|BUG\|HACK' | copen]],
-  {
-    desc = "List todos in project",
-  }
-)
-
 vim.api.nvim_create_user_command("Cwd", function()
   vim.cmd(":cd %:p:h")
   vim.cmd(":pwd")
@@ -176,9 +168,47 @@ vim.api.nvim_create_user_command("PackClean", function()
   vim.pack.del(remove_list)
 end, { desc = "Clean inactive plugins", nargs = 0 })
 
+
+local function is_lua_active()
+  -- 1. Check filetype first as a fast escape hatch
+  if vim.bo.filetype == 'lua' then
+    return true
+  end
+
+  -- 2. Safely get the native parser for the current buffer
+  local buf = vim.api.nvim_get_current_buf()
+  local success, parser = pcall(vim.treesitter.get_parser, buf)
+  if not success or not parser then
+    return false
+  end
+
+  -- 3. Determine coordinate based on active mode
+  local row, col
+
+  -- Check if we are currently in Visual or Visual-Line mode
+  if vim.api.nvim_get_mode().mode:match('^[vV]') then
+    local _, start_row, start_col, _ = unpack(vim.fn.getpos('v'))
+    row = start_row - 1
+    col = start_col - 1
+  else
+    -- Unpack the table into separate row and col variables
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    row = cursor[1] - 1
+    col = cursor[2]
+  end
+
+  -- 4. Query native Treesitter for the language tree at that specific point
+  local lang_tree = parser:language_for_range({ row, col, row, col })
+  if lang_tree then
+    return lang_tree:lang() == 'lua'
+  end
+
+  return false
+end
+
 vim.api.nvim_create_user_command("LuaExecLine", function()
-  if vim.bo.filetype ~= "lua" then
-    vim.notify("Current buffer is not a Lua file", vim.log.levels.WARN)
+  if not is_lua_active() then
+    vim.notify("Can't execute non-lua code", vim.log.levels.WARN)
     return
   end
 
@@ -202,8 +232,8 @@ end, {
 })
 
 vim.api.nvim_create_user_command("LuaExecSelection", function(opts)
-  if vim.bo.filetype ~= "lua" then
-    vim.notify("Current buffer is not a Lua file", vim.log.levels.WARN)
+  if not is_lua_active() then
+    vim.notify("Can't execute non-lua code", vim.log.levels.WARN)
     return
   end
 
@@ -231,3 +261,17 @@ end, {
   desc = "Execute the selected lines as Lua",
   range = true,
 })
+
+vim.api.nvim_create_user_command("LuaReload", function(opts)
+  local module = opts.args
+  package.loaded[module] = nil
+  local success, err = pcall(require, module)
+  if success then
+    vim.notify("Successfully reloaded: " .. module, vim.log.levels.INFO)
+  else
+    vim.notify(
+      "Error reloading " .. module .. ": " .. tostring(err),
+      vim.log.levels.ERROR
+    )
+  end
+end, { nargs = 1 })
