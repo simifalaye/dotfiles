@@ -50,9 +50,6 @@ exec_now(function()
     return notify.default_sort(vim.tbl_filter(predicate, notif_arr))
   end
 
-  -- Disable default progress messages in cmdline and only use notification
-  vim.lsp.handlers["$/progress"] = function() end
-
   notify.setup({
     content = { sort = custom_sort },
     window = {
