@@ -170,19 +170,19 @@ end, { desc = "Clean inactive plugins", nargs = 0 })
 
 
 local function is_lua_active()
-  -- 1. Check filetype first as a fast escape hatch
+  -- Check filetype first as a fast escape hatch
   if vim.bo.filetype == 'lua' then
     return true
   end
 
-  -- 2. Safely get the native parser for the current buffer
+  -- Safely get the native parser for the current buffer
   local buf = vim.api.nvim_get_current_buf()
   local success, parser = pcall(vim.treesitter.get_parser, buf)
   if not success or not parser then
     return false
   end
 
-  -- 3. Determine coordinate based on active mode
+  -- Determine coordinate based on active mode
   local row, col
 
   -- Check if we are currently in Visual or Visual-Line mode
@@ -197,7 +197,7 @@ local function is_lua_active()
     col = cursor[2]
   end
 
-  -- 4. Query native Treesitter for the language tree at that specific point
+  -- Query native Treesitter for the language tree at that specific point
   local lang_tree = parser:language_for_range({ row, col, row, col })
   if lang_tree then
     return lang_tree:lang() == 'lua'

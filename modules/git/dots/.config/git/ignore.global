@@ -97,3 +97,4 @@ htmlcov/
 .clangd/
 .ccls*/
 .devcontainer*/
+**/.claude/settings.local.json

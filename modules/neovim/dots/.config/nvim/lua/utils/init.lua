@@ -4,7 +4,6 @@ return setmetatable({
   fs = nil, ---@module 'utils.fs'
   hl = nil, ---@module 'utils.hl'
   json = nil, ---@module 'utils.json'
-  term = nil, ---@module 'utils.term'
   ui = nil, ---@module 'utils.ui'
 }, {
   __index = function(_, key)

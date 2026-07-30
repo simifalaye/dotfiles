@@ -162,6 +162,23 @@ vim.g.loaded_2html_plugin = true
 -- User config
 vim.g.user_lsp_codelens_disable = true
 
+-- Enable clipboard
+vim.schedule(function()
+  if not vim.g.neovide and (vim.fn.has("win32") == 1 or vim.fn.has("wsl") == 1) then
+    vim.g.clipboard = {
+      copy = {
+        ["+"] = "win32yank.exe -i --crlf",
+        ["*"] = "win32yank.exe -i --crlf",
+      },
+      paste = {
+        ["+"] = "win32yank.exe -o --lf",
+        ["*"] = "win32yank.exe -o --lf",
+      },
+    }
+  end
+  vim.opt.clipboard = "unnamedplus"
+end)
+
 -- Configure Neovide GUI
 if vim.g.neovide then
   vim.g.neovide_scroll_animation_length = 0.1
@@ -170,13 +187,6 @@ if vim.g.neovide then
   vim.g.neovide_hide_mouse_when_typing = true
   vim.g.neovide_fullscreen = false
   vim.g.neovide_theme = "auto"
-  vim.api.nvim_create_autocmd("UIEnter", {
-    once = true,
-    desc = "Lazy load clipboard",
-    callback = vim.schedule_wrap(function()
-      vim.opt.clipboard = "unnamedplus"
-    end),
-  })
   vim.opt.guifont = "JetBrainsMono Nerd Font:h14"
 
   local font_size_factor = 1.1

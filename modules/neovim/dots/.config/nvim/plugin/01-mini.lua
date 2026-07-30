@@ -126,6 +126,17 @@ exec_now_if_args(function()
   })
   -- vim.lsp.on_type_formatting.enable()
   -- vim.o.autocomplete = true
+  vim.api.nvim_create_autocmd("BufEnter", {
+    callback = function(args)
+      if
+        args.buf
+        and vim.api.nvim_buf_is_valid(args.buf)
+        and vim.bo[args.buf].buftype == "prompt"
+      then
+        vim.b.minicompletion_disable = true
+      end
+    end,
+  })
 end)
 
 --
@@ -169,14 +180,12 @@ end)
 
 exec_later(function()
   local hipatterns = require("mini.hipatterns")
-  local hi_words = require("mini.extra").gen_highlighter.words
   hipatterns.setup({
     highlighters = {
-      fixme = hi_words({ "FIXME", "Fixme", "fixme" }, "MiniHipatternsFixme"),
-      hack = hi_words({ "HACK", "Hack", "hack" }, "MiniHipatternsHack"),
-      todo = hi_words({ "TODO", "Todo", "todo" }, "MiniHipatternsTodo"),
-      note = hi_words({ "NOTE" }, "MiniHipatternsNote"),
-      hex_color = hipatterns.gen_highlighter.hex_color(),
+      fixme = { pattern = "FIXME", group = "MiniHipatternsFixme" },
+      hack = { pattern = "HACK", group = "MiniHipatternsHack" },
+      todo = { pattern = "TODO", group = "MiniHipatternsTodo" },
+      note = { pattern = "NOTE", group = "MiniHipatternsNote" },
     },
   })
 end)

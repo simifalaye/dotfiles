@@ -16,9 +16,12 @@ if not _G.Session then
 end
 
 ---@class ProjectOpts
+---@field force { add: boolean }
 
 ---@type ProjectOpts
-local default_config = {}
+local default_config = {
+  force = { add = false },
+}
 
 ---@type ProjectOpts | fun():ProjectOpts
 vim.g.project = vim.g.project
@@ -107,63 +110,155 @@ local function get_projects(exclude_current)
   return projects
 end
 
+--- Rename a project
+---@param old string?
+---@param new string?
+local function rename_project(old, new)
+  if not old or old == "" then
+    local projects = get_projects()
+    if #projects == 0 then
+      vim.notify("No projects available", vim.log.levels.ERROR)
+      return
+    end
+    vim.ui.select(projects, {
+      prompt = "Old project",
+      format_item = function(item)
+        return item.name
+      end,
+    }, function(value)
+      if value and value ~= "" then
+        rename_project(value.name, new)
+      end
+    end)
+    return
+  end
+
+  if not new or new == "" then
+    vim.ui.input({
+      prompt = "New name: ",
+    }, function(value)
+      if value and value ~= "" then
+        rename_project(old, value)
+      end
+    end)
+    return
+  end
+
+  local ok, err = pcall(Session.rename, to_session(old), to_session(new))
+  if not ok then
+    vim.notify(err, vim.log.levels.ERROR)
+    return
+  end
+  vim.notify(string.format("Renamed project from '%s' to '%s'", old, new))
+end
+
 --- Switch to a project (creates it if it doesn't exist)
 ---@param name string?
----@return boolean Success or failure
 local function switch_project(name)
-  if not name or not project_exists(name) then
+  if not name or name == "" then
+    local projects = get_projects(true)
+    if #projects == 0 then
+      vim.notify("No other projects available", vim.log.levels.ERROR)
+      return
+    end
+    vim.ui.select(projects, {
+      prompt = "Select project",
+      format_item = function(item)
+        return item.name
+      end,
+    }, function(value)
+      if value and value ~= "" then
+        switch_project(value.name)
+      end
+    end)
+    return
+  end
+
+  if not project_exists(name) then
     vim.notify("No project exists named: " .. name, vim.log.levels.ERROR)
-    return false
+    return
   end
   local current = get_current_project()
 
   -- Don't switch to current project
-  if name and name == current then
-    return true
+  if name == current then
+    return
   end
 
   -- Switch
-  Session.read(to_session(name))
-  vim.notify("Project: " .. name)
-
-  return true
-end
-
---- Switch to project interactively
-local function switch_project_interactive()
-  local projects = get_projects(true)
-  if #projects == 0 then
-    vim.notify("No other projects available", vim.log.levels.INFO)
+  local ok, err = pcall(Session.read, to_session(name))
+  if not ok then
+    vim.notify(err, vim.log.levels.ERROR)
     return
   end
-  vim.ui.select(projects, {
-    prompt = "Select project: ",
-    format_item = function(item)
-      return ("%s"):format(item.name)
-    end,
-  }, function(choice)
-    if choice then
-      switch_project(choice.name)
-    end
-  end)
+  vim.notify("Project: " .. name)
 end
 
 --- Add a directory as a project
----@param path string
----@param name string
----@return boolean Success or failure
-local function add_project(path, name)
+---@param path string?
+---@param name string?
+---@param skip_unsaved boolean?
+local function add_project(path, name, skip_unsaved)
+  -- Possibly check for unsaved listed buffers and do nothing if present
+  local config = get_config()
+  if not skip_unsaved and not config.force.add then
+    local unsaved_listed_buffers = vim.tbl_filter(function(buf_id)
+      return vim.bo[buf_id].modified and vim.bo[buf_id].buflisted
+    end, vim.api.nvim_list_bufs())
+    if #unsaved_listed_buffers > 0 then
+      local buf_list = table.concat(unsaved_listed_buffers, ", ")
+      vim.notify(
+        ("There are unsaved listed buffers: %s."):format(buf_list),
+        vim.log.levels.WARN
+      )
+      return
+    end
+  end
+
+  if not path or path == "" then
+    vim.ui.input({
+      prompt = "Path: ",
+      default = vim.fn.getcwd(),
+      completion = "dir",
+    }, function(value)
+      if value and value ~= "" then
+        add_project(value, name, true)
+      end
+    end)
+    return
+  end
+  path = vim.fs.normalize(path)
+
+  if not name or name == "" then
+    vim.ui.input({
+      prompt = "Name (optional): ",
+      default = vim.fs.basename(path),
+    }, function(value)
+      if value and value ~= "" then
+        add_project(path, value, true)
+      end
+    end)
+    return
+  end
+
   if not vim.fn.isdirectory(path) then
     vim.notify("Directory does not exist: " .. path, vim.log.levels.ERROR)
-    return false
+    return
   end
-  if name == "" then
-    vim.notify("Name cannot be empty", vim.log.levels.ERROR)
-    return false
-  end
+
   if project_exists(name) then
     vim.notify("Project already exists: " .. path, vim.log.levels.WARN)
-    return false
+    return
+  end
+
+  -- Save previous project
+  local current_project = get_current_project()
+  if current_project then
+    local ok, err = pcall(Session.write, to_session(current_project))
+    if not ok then
+      vim.notify(err, vim.log.levels.ERROR)
+      return
+    end
   end
 
   -- Create new project from clean state
@@ -172,46 +267,36 @@ local function add_project(path, name)
   vim.cmd.edit(path)
 
   -- Save project
-  Session.write(to_session(name))
-
-  return true
-end
-
---- Add a project interactively
-local function add_project_interactive()
-  vim.ui.input({
-    prompt = "Path: ",
-    default = vim.fn.getcwd(),
-    completion = "dir",
-  }, function(path)
-    if not path or path == "" then
-      vim.notify("Path cannot be empty", vim.log.levels.ERROR)
-      return
-    end
-
-    path = vim.fs.normalize(path)
-    if not vim.fn.isdirectory(path) then
-      vim.notify("Directory does not exist: " .. path, vim.log.levels.ERROR)
-      return
-    end
-
-    vim.ui.input({
-      prompt = "Name (optional): ",
-      default = vim.fs.basename(path),
-    }, function(name)
-      if not name or name == "" then
-        vim.notify("Name cannot be empty", vim.log.levels.ERROR)
-        return
-      end
-      add_project(path, name)
-    end)
-  end)
+  local ok, err = pcall(Session.write, to_session(name))
+  if not ok then
+    vim.notify(err, vim.log.levels.ERROR)
+    return
+  end
+  vim.notify("Project: " .. name)
 end
 
 --- Delete a project
----@param name string Project name
----@return boolean Success or failure
+---@param name string? Project name
 local function delete_project(name)
+  if not name or name == "" then
+    local projects = get_projects()
+    if #projects == 0 then
+      vim.notify("No projects available", vim.log.levels.INFO)
+      return
+    end
+    vim.ui.select(projects, {
+      prompt = "Delete project: ",
+      format_item = function(item)
+        return item.name
+      end,
+    }, function(value)
+      if value and value ~= "" then
+        delete_project(value.name)
+      end
+    end)
+    return
+  end
+
   if not project_exists(name) then
     vim.notify("Project does not exist: " .. name, vim.log.levels.ERROR)
     return false
@@ -219,30 +304,13 @@ local function delete_project(name)
 
   local choice = vim.fn.confirm(('Delete project "%s"?'):format(name), "&Yes\n&No")
   if choice == 1 then
-    Session.delete(to_session(name))
-  end
-
-  return true
-end
-
---- Delete a project interactively
-local function delete_project_interactive()
-  local projects = get_projects()
-  if #projects == 0 then
-    vim.notify("No projects available", vim.log.levels.INFO)
-    return
-  end
-
-  vim.ui.select(projects, {
-    prompt = "Delete project: ",
-    format_item = function(item)
-      return ("%s"):format(item.name)
-    end,
-  }, function(choice)
-    if choice then
-      delete_project(choice.name)
+    local ok, err = pcall(Session.delete, to_session(name))
+    if not ok then
+      vim.notify(err, vim.log.levels.ERROR)
+      return
     end
-  end)
+    vim.notify("Deleted project: " .. name)
+  end
 end
 
 --
@@ -259,12 +327,20 @@ exec_now(function()
   -- })
 
   -- Commands
+  vim.api.nvim_create_user_command("ProjectRename", function(opts)
+    local args = opts.fargs
+    rename_project(args[1], args[2])
+  end, {
+    nargs = "*",
+    complete = function()
+      return vim.tbl_map(function(item)
+        return item.name
+      end, get_projects(true))
+    end,
+    desc = "Switch to a project (directory)",
+  })
   vim.api.nvim_create_user_command("ProjectSwitch", function(opts)
-    if opts.args == "" then
-      switch_project_interactive()
-    else
-      switch_project(opts.args)
-    end
+    switch_project(opts.args)
   end, {
     nargs = "?",
     complete = function()
@@ -276,23 +352,7 @@ exec_now(function()
   })
   vim.api.nvim_create_user_command("ProjectAdd", function(opts)
     local args = opts.fargs
-
-    if #args > 2 then
-      vim.notify("Expect at most 2 args: path, name")
-      return
-    end
-
-    if #args == 0 then
-      add_project_interactive()
-      return
-    end
-
-    local path = args[1]
-    if not vim.fn.isdirectory(path) then
-      vim.notify("Directory does not exist: " .. path, vim.log.levels.ERROR)
-      return
-    end
-    add_project(args[1], args[2] or vim.fs.basename(args[1]))
+    add_project(args[1], args[2])
   end, {
     nargs = "*",
     complete = "dir",
@@ -300,11 +360,7 @@ exec_now(function()
   })
 
   vim.api.nvim_create_user_command("ProjectDelete", function(opts)
-    if opts.args == "" then
-      delete_project_interactive()
-    else
-      delete_project(opts.args)
-    end
+    delete_project(opts.args)
   end, {
     nargs = "?",
     complete = function()
@@ -344,5 +400,6 @@ exec_now(function()
   vim.keymap.set("n", "<leader>pc", "<cmd>ProjectCurrent<CR>", { desc = "Current" })
   vim.keymap.set("n", "<leader>pd", "<cmd>ProjectDelete<CR>", { desc = "Delete" })
   vim.keymap.set("n", "<leader>pp", "<cmd>ProjectLast<CR>", { desc = "Last" })
+  vim.keymap.set("n", "<leader>pr", "<cmd>ProjectRename<CR>", { desc = "Rename" })
   vim.keymap.set("n", "<leader>ps", "<cmd>ProjectSwitch<CR>", { desc = "Switch" })
 end)

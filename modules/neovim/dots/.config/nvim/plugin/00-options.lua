@@ -9,6 +9,8 @@ vim.opt.shada = "'100,<50,s10,:1000,/100,@100,h"
 vim.opt.exrc = true
 vim.opt.swapfile = false -- TODO: Evaluate
 vim.opt.confirm = true
+vim.opt.sessionoptions =
+  "blank,buffers,curdir,folds,help,tabpages,winsize,terminal,localoptions"
 
 -- UI
 vim.opt.breakindent = true
