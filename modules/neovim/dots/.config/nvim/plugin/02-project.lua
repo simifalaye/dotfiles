@@ -121,7 +121,7 @@ local function rename_project(old, new)
       return
     end
     vim.ui.select(projects, {
-      prompt = "Old project",
+      prompt = "Rename project: ",
       format_item = function(item)
         return item.name
       end,
@@ -162,7 +162,7 @@ local function switch_project(name)
       return
     end
     vim.ui.select(projects, {
-      prompt = "Select project",
+      prompt = "Select project: ",
       format_item = function(item)
         return item.name
       end,

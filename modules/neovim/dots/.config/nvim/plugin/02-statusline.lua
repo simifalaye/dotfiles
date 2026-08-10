@@ -547,6 +547,11 @@ exec_now(function()
           return false
         end
       end
+      -- If the minibuffer is active, treat this as the active window
+      local mb_ok, mb = pcall(require, "minibuffer")
+      if mb_ok and mb.get_active_window() == winid then
+        return false
+      end
       return true
     end,
     Space,

@@ -183,7 +183,6 @@ function M.capture()
   })
 
   vim.api.nvim_create_autocmd({
-    "BufLeave",
     "BufDelete",
     "BufWipeout",
     "VimLeavePre",

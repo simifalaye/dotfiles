@@ -425,7 +425,7 @@ vim.api.nvim_create_user_command("SessionRename", function(opts)
       return
     end
     vim.ui.select(sessions, {
-      prompt = "Read session",
+      prompt = "Rename session: ",
       format_item = function(item)
         return item.name
       end,
@@ -488,7 +488,7 @@ vim.api.nvim_create_user_command("SessionRead", function(opts)
       return
     end
     vim.ui.select(sessions, {
-      prompt = "Read session",
+      prompt = "Read session: ",
       format_item = function(item)
         return item.name
       end,
@@ -517,7 +517,7 @@ vim.api.nvim_create_user_command("SessionDelete", function(opts)
     end
 
     vim.ui.select(sessions, {
-      prompt = "Delete session",
+      prompt = "Delete session: ",
       format_item = function(item)
         return item.name
       end,
