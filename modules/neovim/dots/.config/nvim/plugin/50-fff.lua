@@ -28,6 +28,14 @@ exec_later(function()
   if fffmb_ok then
     vim.keymap.set("n", "<leader><leader>", function()
       fffmb.file_search({})
+    end, { desc = "Find config" })
+    vim.keymap.set("n", "<leader>fc", function()
+      fffmb.file_search({
+        cwd = vim.fs.joinpath(vim.env.HOME, ".dotfiles"),
+      })
+    end, { desc = "Find file" })
+    vim.keymap.set("n", "<leader>ff", function()
+      fffmb.file_search({})
     end, { desc = "FFFind" })
     vim.keymap.set("n", "<leader>/", function()
       fffmb.content_search({})

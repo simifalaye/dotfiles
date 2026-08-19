@@ -63,6 +63,8 @@ vim.opt.formatlistpat = [[^\s*[0-9\-\+\*]\+[\.\)]*\s\+]]
 -- Completion
 vim.opt.complete = ".,w,b,kspell"
 vim.opt.completeopt = "menuone,noselect,fuzzy,nosort"
+vim.opt.wildmode = "noselect,full"
+vim.opt.wildoptions = "fuzzy,pum"
 
 -- Spelling
 vim.opt.spelllang = "en,uk"
