@@ -14,6 +14,7 @@ exec_now(function()
         enabled = function()
           return vim.fn.reg_recording() == "" and vim.fn.reg_executing() == ""
         end,
+        cmdline = { enabled = false },
         keymap = {
           preset = "default",
           ["<C-u>"] = { "scroll_documentation_up", "fallback" },
@@ -81,6 +82,9 @@ exec_now(function()
               -- - https://github.com/Saghen/blink.cmp/issues/2042
               -- - https://cmp.saghen.dev/configuration/sources.html#show-buffer-completions-with-lsp
               timeout_ms = 500,
+            },
+            cmdline = {
+              enabled = false,
             },
           },
         },

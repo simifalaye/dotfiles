@@ -1,6 +1,8 @@
 vim.g.minibuffer = {
+  dynamic_window_resize = true,
   cmd = {
     enabled = true,
+    autotrigger = true,
     dynamic_height = false,
     max_height = 15,
   },
@@ -34,60 +36,60 @@ exec_now(function()
   vim.keymap.set(
     "n",
     "<leader>,",
-    require("minibuffer.examples.buffers"),
+    require("minibuffer.builtin.buffers"),
     { desc = "Find buffers" }
   )
   vim.keymap.set("n", "<leader>;", function()
-    require("minibuffer.examples.history")({ type = "cmd" })
+    require("minibuffer.builtin.history")({ type = "cmd" })
   end, { desc = "Find command history" })
   vim.keymap.set("n", "<leader>?", function()
-    require("minibuffer.examples.history")({ type = "search" })
+    require("minibuffer.builtin.history")({ type = "search" })
   end, { desc = "Find command history" })
   vim.keymap.set("n", "<leader>'", function()
-    require("minibuffer.examples.marks")()
+    require("minibuffer.builtin.marks")()
   end, { desc = "Find mark" })
 
   -- Keymaps: Leader + b (buffer)
   vim.keymap.set(
     "n",
     "<leader>bf",
-    require("minibuffer.examples.buffers"),
+    require("minibuffer.builtin.buffers"),
     { desc = "Find" }
   )
 
   -- <leader> + c
   vim.keymap.set("n", "<leader>cd", function()
-    require("minibuffer.examples.diagnostics")({ scope = "buffer" })
+    require("minibuffer.builtin.diagnostics")({ scope = "buffer" })
   end, { desc = "Diagnostics" })
   vim.keymap.set("n", "<leader>cD", function()
-    require("minibuffer.examples.diagnostics")({ scope = "workspace" })
+    require("minibuffer.builtin.diagnostics")({ scope = "workspace" })
   end, { desc = "Diagnostics (workspace)" })
   vim.keymap.set("n", "<leader>cl", function()
-    require("minibuffer.examples.list")({ type = "loclist" })
+    require("minibuffer.builtin.list")({ type = "loclist" })
   end, { desc = "Loclist" })
   vim.keymap.set("n", "<leader>cq", function()
-    require("minibuffer.examples.list")({ type = "quickfix" })
+    require("minibuffer.builtin.list")({ type = "quickfix" })
   end, { desc = "Quickfix" })
 
   -- <leader> + f
   vim.keymap.set("n", "<leader>fc", function()
-    require("minibuffer.examples.files")({
+    require("minibuffer.builtin.files")({
       cwd = vim.fs.joinpath(vim.env.HOME, ".dotfiles"),
     })
   end, { desc = "Find config" })
   vim.keymap.set(
     "n",
     "<leader>ff",
-    require("minibuffer.examples.files"),
+    require("minibuffer.builtin.files"),
     { desc = "Find file" }
   )
   vim.keymap.set("n", "<leader>fo", function()
-    require("minibuffer.examples.oldfiles")({ cwd = vim.fn.getcwd() })
+    require("minibuffer.builtin.oldfiles")({ cwd = vim.fn.getcwd() })
   end, { desc = "Oldfiles (cwd)" })
   vim.keymap.set(
     "n",
     "<leader>fO",
-    require("minibuffer.examples.oldfiles"),
+    require("minibuffer.builtin.oldfiles"),
     { desc = "Oldfiles" }
   )
 
@@ -95,7 +97,7 @@ exec_now(function()
   vim.keymap.set(
     "n",
     "<leader>gf",
-    require("minibuffer.examples.git-files"),
+    require("minibuffer.builtin.git-files"),
     { desc = "Find file" }
   )
 
@@ -103,7 +105,7 @@ exec_now(function()
   vim.keymap.set(
     "n",
     "<leader>hm",
-    require("minibuffer.examples.manpages"),
+    require("minibuffer.builtin.manpages"),
     { desc = "Manpages" }
   )
 end)

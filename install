@@ -78,6 +78,7 @@ run_module neovim
 run_module os-theme-watcher
 run_module ripgrep
 run_module rsync
+run_module rust
 run_module scroll-reverser
 run_module tig
 run_module tmux

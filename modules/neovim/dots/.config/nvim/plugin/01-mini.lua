@@ -22,7 +22,6 @@ exec_now(function()
   local win_config = function()
     local ret = {
       border = { " ", " ", " ", " ", " ", " ", " ", " " },
-      height = 15,
       width = vim.o.columns,
       relative = "minibuffer",
       use_minibuffer = true,
