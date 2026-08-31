@@ -26,6 +26,7 @@ exec_now_if_args(function()
       "clang-format",
       "gofumpt",
       "golines",
+      "mdformat",
       "prettierd",
       "shfmt",
       "stylua",
@@ -36,6 +37,7 @@ exec_now_if_args(function()
       "eslint_d",
       "flake8",
       "golangci-lint",
+      "luacheck",
       "shellcheck",
     },
 

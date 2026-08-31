@@ -6,20 +6,7 @@ exec_later(function()
     },
   })
 
-  local win
-  -- local msgarea_ok, _ = pcall(require, "msgarea")
-  -- if msgarea_ok then
-  --   win = {
-  --     relative = "msgarea",
-  --     force_msgarea = true,
-  --   }
-  -- end
-  local minibuffer_ok, _ = pcall(require, "minibuffer")
-  if minibuffer_ok then
-    win = { use_minibuffer = true }
-  end
-
-  require("which-key").setup({
+  local opts = {
     delay = 500,
     icons = {
       rules = false,
@@ -48,8 +35,12 @@ exec_later(function()
         { "<leader>u", group = "+Ui" },
       },
     },
-    win = win,
-  })
+  }
 
-  pcall(vim.api.nvim_set_hl, 0, "WhichKeyNormal", { link = "Normal" })
+  local ok, mb_wk = pcall(require, "minibuffer.integrations.which-key")
+  if ok then
+    mb_wk(opts)
+  else
+    require("which-key").setup(opts)
+  end
 end)
