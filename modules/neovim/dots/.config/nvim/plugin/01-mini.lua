@@ -1,8 +1,10 @@
+local lazy = require("utils.lazy")
+
 --
 -- Now
 --
 
-exec_now(function()
+lazy.now(function()
   vim.pack.add({
     {
       src = "https://github.com/nvim-mini/mini.icons",
@@ -28,76 +30,15 @@ exec_now(function()
       dotenv = { glyph = "", hl = "MiniIconsYellow" },
     },
   })
-  exec_later(icons.mock_nvim_web_devicons)
-  exec_later(icons.tweak_lsp_kind)
-end)
-
-exec_now(function()
-  vim.pack.add({
-    {
-      src = "https://github.com/nvim-mini/mini.notify",
-      version = "stable",
-    },
-  })
-
-  local notify = require("mini.notify")
-  local predicate = function(notif)
-    if
-      not (notif.data.source == "lsp_progress" and notif.data.client_name == "lua_ls")
-    then
-      return true
-    end
-    -- Filter out some LSP progress notifications from 'lua_ls'
-    return notif.msg:find("Diagnosing") == nil
-      and notif.msg:find("semantic tokens") == nil
-  end
-  local custom_sort = function(notif_arr)
-    return notify.default_sort(vim.tbl_filter(predicate, notif_arr))
-  end
-
-  notify.setup({
-    content = { sort = custom_sort },
-    window = {
-      config = {
-        border = { " ", " ", " ", " ", " ", " ", " ", " " },
-      },
-    },
-  })
-
-  -- Override vim.notify with log level aware function
-  local default_vim_notify = notify.make_notify()
-  ---@diagnostic disable-next-line: duplicate-set-field
-  vim.notify = function(msg, level, opts)
-    level = level or vim.log.levels.INFO
-    if level < vim.g.user_log_level then
-      return
-    end
-    return default_vim_notify(msg, level, opts)
-  end
-
-  -- Setup keymaps
-  vim.keymap.set("n", "g{", function()
-    require("mini.notify").show_history()
-  end, { desc = "Show notification history" })
-  vim.keymap.set("n", "g}", function()
-    require("mini.notify").clear()
-  end, { desc = "Clear notifications" })
-  vim.keymap.set("n", "<leader>un", function()
-    if vim.g.mininotify_disable then
-      vim.g.mininotify_disable = false
-    else
-      vim.g.mininotify_disable = true
-    end
-    local state = vim.g.mininotify_disable
-    vim.notify(string.format("notifications %s", require("utils.ui").bool2str(not state)))
-  end, { desc = "Toggle notifications" })
+  lazy.later(icons.mock_nvim_web_devicons)
+  lazy.later(icons.tweak_lsp_kind)
 end)
 
 --
 -- Later
 --
 
-exec_later(function()
+lazy.later(function()
   vim.pack.add({
     {
       src = "https://github.com/nvim-mini/mini.bufremove",
@@ -118,7 +59,67 @@ exec_later(function()
   end, { desc = "Wipeout!" })
 end)
 
-exec_later(function()
+-- lazy.now_if_args(function()
+--   vim.pack.add({
+--     {
+--       src = "https://github.com/nvim-mini/mini.completion",
+--       version = "stable",
+--     },
+--   })
+--
+--   local completion = require("mini.completion")
+--   -- Don't show 'Text' suggestions
+--   local process_items_opts = { kind_priority = { Text = -1, Snippet = 99 } }
+--   local process_items = function(items, base)
+--     return completion.default_process_items(items, base, process_items_opts)
+--   end
+--   completion.setup({
+--     window = {
+--       info = {
+--         border = { " ", " ", " ", " ", " ", " ", " ", " " },
+--       },
+--       signature = {
+--         border = { " ", " ", " ", " ", " ", " ", " ", " " },
+--       },
+--     },
+--     lsp_completion = {
+--       source_func = "omnifunc",
+--       auto_setup = false,
+--       process_items = process_items,
+--     },
+--     mappings = {
+--       scroll_down = "<C-Down>",
+--       scroll_up = "<C-Up>",
+--     },
+--   })
+--
+--   -- Set up LSP part of completion
+--   local augroup =
+--     vim.api.nvim_create_augroup("user.plugin.mini-completion", { clear = false })
+--   vim.api.nvim_create_autocmd("LspAttach", {
+--     desc = "Setup mini completion omnifunc",
+--     group = augroup,
+--     pattern = "*",
+--     callback = function(args)
+--       vim.bo[args.buf].omnifunc = "v:lua.MiniCompletion.completefunc_lsp"
+--     end,
+--   })
+--   -- vim.lsp.on_type_formatting.enable()
+--   -- vim.o.autocomplete = true
+--   vim.api.nvim_create_autocmd("BufEnter", {
+--     callback = function(args)
+--       if
+--         args.buf
+--         and vim.api.nvim_buf_is_valid(args.buf)
+--         and vim.bo[args.buf].buftype == "prompt"
+--       then
+--         vim.b.minicompletion_disable = true
+--       end
+--     end,
+--   })
+-- end)
+
+lazy.later(function()
   vim.pack.add({
     {
       src = "https://github.com/nvim-mini/mini.hipatterns",
@@ -137,7 +138,7 @@ exec_later(function()
   })
 end)
 
-exec_later(function()
+lazy.later(function()
   vim.pack.add({
     {
       src = "https://github.com/nvim-mini/mini.pairs",

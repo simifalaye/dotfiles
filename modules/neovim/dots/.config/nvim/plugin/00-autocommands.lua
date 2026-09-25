@@ -1,6 +1,8 @@
+local augroup = vim.api.nvim_create_augroup("user.config", {})
+
 vim.api.nvim_create_autocmd("BufWritePre", {
   desc = "Remove trailing whitespace on save",
-  group = custom_config_augroup,
+  group = augroup,
   pattern = "*",
   callback = function()
     local ft = vim.bo.filetype
@@ -16,7 +18,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 
 vim.api.nvim_create_autocmd("BufReadPost", {
   desc = "Jump to last known position and center buffer around cursor",
-  group = custom_config_augroup,
+  group = augroup,
   pattern = "*",
   callback = function(event)
     local exclude = { "gitcommit", "popup" }
@@ -35,7 +37,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
   desc = "Check if we need to reload the file when it changed",
-  group = custom_config_augroup,
+  group = augroup,
   callback = function()
     if vim.o.buftype ~= "nofile" then
       vim.cmd("silent! checktime")
@@ -45,7 +47,7 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 
 vim.api.nvim_create_autocmd("FileType", {
   desc = "Ensure proper 'formatoptions'",
-  group = custom_config_augroup,
+  group = augroup,
   callback = function()
     -- Don't auto-wrap comments and don't insert comment leader after hitting 'o'
     -- If don't do this on `FileType`, this keeps reappearing due to being set in
@@ -56,7 +58,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 vim.api.nvim_create_autocmd("BufEnter", {
   desc = "Disable newline auto commentstring",
-  group = custom_config_augroup,
+  group = augroup,
   callback = function()
     vim.opt.formatoptions = vim.opt.formatoptions - { "c", "r", "o" }
   end,
@@ -64,14 +66,14 @@ vim.api.nvim_create_autocmd("BufEnter", {
 
 vim.api.nvim_create_autocmd("VimResized", {
   desc = "Auto-resize splits",
-  group = custom_config_augroup,
+  group = augroup,
   pattern = { "*" },
   command = "tabdo wincmd =",
 })
 
 vim.api.nvim_create_autocmd({ "VimEnter", "CursorMoved" }, {
   desc = "Save cursor position whenever it moves",
-  group = custom_config_augroup,
+  group = augroup,
   pattern = "*",
   callback = function()
     vim.g.user_cursor_pos = vim.fn.getpos(".")
@@ -80,7 +82,7 @@ vim.api.nvim_create_autocmd({ "VimEnter", "CursorMoved" }, {
 
 vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Highlight yanked text",
-  group = custom_config_augroup,
+  group = augroup,
   callback = function()
     vim.highlight.on_yank({ timeout = 200, higroup = "IncSearch" })
   end,
@@ -88,7 +90,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Restore cursor position after yank",
-  group = custom_config_augroup,
+  group = augroup,
   pattern = "*",
   callback = function()
     if vim.v.event.operator == "y" then

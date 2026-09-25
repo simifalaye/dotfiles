@@ -1,3 +1,5 @@
+local lazy = require("utils.lazy")
+
 --
 -- Neovim global plugin for handling large files
 --
@@ -46,7 +48,7 @@ end
 -- Main
 --
 
-exec_now_if_args(function()
+lazy.now_if_args(function()
   local grp = vim.api.nvim_create_augroup("user.plugin.bigfile", {})
   vim.api.nvim_create_autocmd("BufReadPre", {
     desc = "Set settings for large files",

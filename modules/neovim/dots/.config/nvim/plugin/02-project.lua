@@ -110,10 +110,22 @@ local function get_projects(exclude_current)
   return projects
 end
 
+--
+-- API
+--
+
+local M = {}
+
+--- Get current project
+---@return string?
+function M.current_project()
+  return get_current_project()
+end
+
 --- Rename a project
 ---@param old string?
 ---@param new string?
-local function rename_project(old, new)
+function M.rename_project(old, new)
   if not old or old == "" then
     local projects = get_projects()
     if #projects == 0 then
@@ -127,7 +139,7 @@ local function rename_project(old, new)
       end,
     }, function(value)
       if value and value ~= "" then
-        rename_project(value.name, new)
+        M.rename_project(value.name, new)
       end
     end)
     return
@@ -138,7 +150,7 @@ local function rename_project(old, new)
       prompt = "New name: ",
     }, function(value)
       if value and value ~= "" then
-        rename_project(old, value)
+        M.rename_project(old, value)
       end
     end)
     return
@@ -154,7 +166,7 @@ end
 
 --- Switch to a project (creates it if it doesn't exist)
 ---@param name string?
-local function switch_project(name)
+function M.switch_project(name)
   if not name or name == "" then
     local projects = get_projects(true)
     if #projects == 0 then
@@ -168,7 +180,7 @@ local function switch_project(name)
       end,
     }, function(value)
       if value and value ~= "" then
-        switch_project(value.name)
+        M.switch_project(value.name)
       end
     end)
     return
@@ -198,7 +210,7 @@ end
 ---@param path string?
 ---@param name string?
 ---@param skip_unsaved boolean?
-local function add_project(path, name, skip_unsaved)
+function M.add_project(path, name, skip_unsaved)
   -- Possibly check for unsaved listed buffers and do nothing if present
   local config = get_config()
   if not skip_unsaved and not config.force.add then
@@ -222,7 +234,7 @@ local function add_project(path, name, skip_unsaved)
       completion = "dir",
     }, function(value)
       if value and value ~= "" then
-        add_project(value, name, true)
+        M.add_project(value, name, true)
       end
     end)
     return
@@ -235,7 +247,7 @@ local function add_project(path, name, skip_unsaved)
       default = vim.fs.basename(path),
     }, function(value)
       if value and value ~= "" then
-        add_project(path, value, true)
+        M.add_project(path, value, true)
       end
     end)
     return
@@ -277,7 +289,7 @@ end
 
 --- Delete a project
 ---@param name string? Project name
-local function delete_project(name)
+function M.delete_project(name)
   if not name or name == "" then
     local projects = get_projects()
     if #projects == 0 then
@@ -291,7 +303,7 @@ local function delete_project(name)
       end,
     }, function(value)
       if value and value ~= "" then
-        delete_project(value.name)
+        M.delete_project(value.name)
       end
     end)
     return
@@ -313,11 +325,14 @@ local function delete_project(name)
   end
 end
 
+_G.Project = M
+
 --
 -- Main
 --
 
-exec_now(function()
+local lazy = require("utils.lazy")
+lazy.now(function()
   -- Autocommands
   -- local group = vim.api.nvim_create_augroup("user.plugin.project", { clear = true })
   -- vim.api.nvim_create_autocmd("VimEnter", {
@@ -329,7 +344,7 @@ exec_now(function()
   -- Commands
   vim.api.nvim_create_user_command("ProjectRename", function(opts)
     local args = opts.fargs
-    rename_project(args[1], args[2])
+    M.rename_project(args[1], args[2])
   end, {
     nargs = "*",
     complete = function()
@@ -340,7 +355,7 @@ exec_now(function()
     desc = "Switch to a project (directory)",
   })
   vim.api.nvim_create_user_command("ProjectSwitch", function(opts)
-    switch_project(opts.args)
+    M.switch_project(opts.args)
   end, {
     nargs = "?",
     complete = function()
@@ -352,7 +367,7 @@ exec_now(function()
   })
   vim.api.nvim_create_user_command("ProjectAdd", function(opts)
     local args = opts.fargs
-    add_project(args[1], args[2])
+    M.add_project(args[1], args[2])
   end, {
     nargs = "*",
     complete = "dir",
@@ -360,7 +375,7 @@ exec_now(function()
   })
 
   vim.api.nvim_create_user_command("ProjectDelete", function(opts)
-    delete_project(opts.args)
+    M.delete_project(opts.args)
   end, {
     nargs = "?",
     complete = function()
@@ -389,7 +404,7 @@ exec_now(function()
       end
     end
     if latest_name then
-      switch_project(latest_name)
+      M.switch_project(latest_name)
     end
   end, {
     desc = "Switch to last project",

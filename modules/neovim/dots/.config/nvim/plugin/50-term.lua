@@ -1,4 +1,6 @@
-exec_now_if_args(function()
+local lazy = require("utils.lazy")
+
+lazy.now_if_args(function()
   -- Commands
   vim.api.nvim_create_user_command("TermRename", function(opts)
     if vim.bo.buftype ~= "terminal" then

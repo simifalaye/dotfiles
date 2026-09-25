@@ -1,4 +1,6 @@
-exec_later(function()
+local lazy = require("utils.lazy")
+
+lazy.later(function()
   vim.pack.add({
     { src = "https://github.com/tpope/vim-rhubarb" },
     { src = "https://github.com/tpope/vim-fugitive" },

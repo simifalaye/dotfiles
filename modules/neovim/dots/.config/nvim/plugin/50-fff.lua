@@ -1,10 +1,12 @@
+local lazy = require("utils.lazy")
+
 vim.g.fff = {
   lazy_sync = false,
   debug = { enabled = true, show_scores = true },
 }
 
-exec_later(function()
-  on_packchanged("fff.nvim", { "install", "update" }, function(ev)
+lazy.later(function()
+  lazy.on_packchanged("fff.nvim", { "install", "update" }, function(ev)
     if not ev.data.active then
       vim.cmd.packadd("fff.nvim")
     end

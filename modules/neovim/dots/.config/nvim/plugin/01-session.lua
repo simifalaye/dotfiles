@@ -345,198 +345,206 @@ _G.Session = M
 -- Main
 --
 
-local config = get_config()
+local lazy = require("utils.lazy")
+lazy.now(function()
+  local config = get_config()
 
-vim.fn.mkdir(config.dir, "p")
+  vim.fn.mkdir(config.dir, "p")
 
-local function with_error_notify(fn, success_fn)
-  return function(...)
-    local ok, result = pcall(fn, ...)
-    if not ok then
-      vim.notify(result, vim.log.levels.ERROR)
-      return nil
-    end
-    if success_fn then
-      success_fn(...)
-    end
-    return result
-  end
-end
-
-local complete_sessions = function()
-  return vim.tbl_map(function(item)
-    return item.name
-  end, M.list())
-end
-
--- Autocommands
-local augroup = vim.api.nvim_create_augroup("user.plugin.session", { clear = false })
-vim.api.nvim_create_autocmd("VimLeavePre", {
-  desc = "Autowrite current session",
-  group = augroup,
-  callback = function(_)
-    if config.autowrite and current_session then
-      M.write(current_session)
-    end
-  end,
-})
-vim.api.nvim_create_autocmd("BufWipeout", {
-  desc = "Clean session terminals cache",
-  group = augroup,
-  callback = function(args)
-    local name = vim.api.nvim_buf_get_name(args.buf)
-    if existing_terminals[name] == args.buf then
-      existing_terminals[name] = nil
-    end
-  end,
-})
-
--- Commands
-vim.api.nvim_create_user_command("SessionCurrent", function(_)
-  local current = M.current()
-  if not current then
-    vim.notify("Not currently in an active session")
-    return
-  end
-  print(current)
-end, {
-  desc = "Show current session",
-})
-vim.api.nvim_create_user_command("SessionRename", function(opts)
-  local args = opts.fargs
-  local call = with_error_notify(M.rename, function(old, new)
-    vim.notify(string.format("Renamed session from '%s' to '%s'", old, new))
-  end)
-
-  local function prompt_new(old)
-    vim.ui.input({
-      prompt = "New name: ",
-    }, function(value)
-      if value and value ~= "" then
-        call(old, value)
+  local function with_error_notify(fn, success_fn)
+    return function(...)
+      local ok, result = pcall(fn, ...)
+      if not ok then
+        vim.notify(result, vim.log.levels.ERROR)
+        return nil
       end
-    end)
+      if success_fn then
+        success_fn(...)
+      end
+      return result
+    end
   end
 
-  if #args == 0 then
-    local sessions = list_sessions()
-    if vim.tbl_isempty(sessions) then
-      vim.notify("No saved sessions", vim.log.levels.ERROR)
+  local complete_sessions = function()
+    return vim.tbl_map(function(item)
+      return item.name
+    end, M.list())
+  end
+
+  -- Autocommands
+  local augroup = vim.api.nvim_create_augroup("user.plugin.session", { clear = false })
+  vim.api.nvim_create_autocmd("VimLeavePre", {
+    desc = "Autowrite current session",
+    group = augroup,
+    callback = function(_)
+      if config.autowrite and current_session then
+        M.write(current_session)
+      end
+    end,
+  })
+  vim.api.nvim_create_autocmd("BufWipeout", {
+    desc = "Clean session terminals cache",
+    group = augroup,
+    callback = function(args)
+      local name = vim.api.nvim_buf_get_name(args.buf)
+      if existing_terminals[name] == args.buf then
+        existing_terminals[name] = nil
+      end
+    end,
+  })
+
+  -- Commands
+  vim.api.nvim_create_user_command("SessionCurrent", function(_)
+    local current = M.current()
+    if not current then
+      vim.notify("Not currently in an active session")
       return
     end
-    vim.ui.select(sessions, {
-      prompt = "Rename session: ",
-      format_item = function(item)
-        return item.name
-      end,
-    }, function(value)
-      if value then
-        if value == "" then
-          local current = M.current()
-          if current == nil then
-            vim.notify(
-              "Old name cannot be empty if not in a session",
-              vim.log.levels.ERROR
-            )
-            return
-          end
-          value = current
+    print(current)
+  end, {
+    desc = "Show current session",
+  })
+  vim.api.nvim_create_user_command("SessionRename", function(opts)
+    local args = opts.fargs
+    local call = with_error_notify(M.rename, function(old, new)
+      vim.notify(string.format("Renamed session from '%s' to '%s'", old, new))
+    end)
+
+    local function prompt_new(old)
+      vim.ui.input({
+        prompt = "New name: ",
+      }, function(value)
+        if value and value ~= "" then
+          call(old, value)
         end
-        prompt_new(value)
-      end
-    end)
-  elseif #args == 1 then
-    prompt_new(args[1])
-  elseif #args == 2 then
-    call(args[1], args[2])
-  else
-    vim.notify("Expect at most 2 args: old, new", vim.log.levels.ERROR)
-  end
-end, {
-  nargs = "*",
-  complete = complete_sessions,
-  desc = "Write a session",
-})
-vim.api.nvim_create_user_command("SessionWrite", function(opts)
-  local call = with_error_notify(M.write, function(name)
-    vim.notify(string.format("Wrote session: %s", name))
-  end)
-  if opts.args == "" and current_session == nil then
-    vim.ui.input({
-      prompt = "Session name: ",
-    }, function(value)
-      if value or value ~= "" then
-        call(value)
-      end
-    end)
-  else
-    call(opts.args)
-  end
-end, {
-  nargs = "?",
-  complete = complete_sessions,
-  desc = "Write a session",
-})
-vim.api.nvim_create_user_command("SessionRead", function(opts)
-  local call = with_error_notify(M.read, function(name)
-    vim.notify(string.format("Read session: %s", name))
-  end)
-  if opts.args == "" then
-    local sessions = list_sessions(true)
-    if vim.tbl_isempty(sessions) then
-      vim.notify("No other saved sessions", vim.log.levels.ERROR)
-      return
-    end
-    vim.ui.select(sessions, {
-      prompt = "Read session: ",
-      format_item = function(item)
-        return item.name
-      end,
-    }, function(value)
-      if value and value ~= "" then
-        call(value.name)
-      end
-    end)
-  else
-    call(opts.args)
-  end
-end, {
-  nargs = "?",
-  complete = complete_sessions,
-  desc = "Read a session",
-})
-vim.api.nvim_create_user_command("SessionDelete", function(opts)
-  local call = with_error_notify(M.delete, function(name)
-    vim.notify(string.format("Deleted session: %s", name))
-  end)
-  if opts.args == "" then
-    local sessions = list_sessions(false)
-    if vim.tbl_isempty(sessions) then
-      vim.notify("No saved sessions", vim.log.levels.ERROR)
-      return
+      end)
     end
 
-    vim.ui.select(sessions, {
-      prompt = "Delete session: ",
-      format_item = function(item)
-        return item.name
-      end,
-    }, function(value)
-      if value and value ~= "" then
-        call(value.name)
+    if #args == 0 then
+      local sessions = list_sessions()
+      if vim.tbl_isempty(sessions) then
+        vim.notify("No saved sessions", vim.log.levels.ERROR)
+        return
       end
+      vim.ui.select(sessions, {
+        prompt = "Rename session: ",
+        format_item = function(item)
+          return item.name
+        end,
+      }, function(value)
+        if value then
+          if value == "" then
+            local current = M.current()
+            if current == nil then
+              vim.notify(
+                "Old name cannot be empty if not in a session",
+                vim.log.levels.ERROR
+              )
+              return
+            end
+            value = current
+          end
+          prompt_new(value)
+        end
+      end)
+    elseif #args == 1 then
+      prompt_new(args[1])
+    elseif #args == 2 then
+      call(args[1], args[2])
+    else
+      vim.notify("Expect at most 2 args: old, new", vim.log.levels.ERROR)
+    end
+  end, {
+    nargs = "*",
+    complete = complete_sessions,
+    desc = "Write a session",
+  })
+  vim.api.nvim_create_user_command("SessionWrite", function(opts)
+    local call = with_error_notify(M.write, function(name)
+      vim.notify(string.format("Wrote session: %s", name))
     end)
-  else
-    call(opts.args)
-  end
-end, {
-  nargs = "?",
-  complete = complete_sessions,
-  desc = "Delete a session",
-})
+    if opts.args == "" and current_session == nil then
+      vim.ui.input({
+        prompt = "Session name: ",
+      }, function(value)
+        if value or value ~= "" then
+          call(value)
+        end
+      end)
+    else
+      call(opts.args)
+    end
+  end, {
+    nargs = "?",
+    complete = complete_sessions,
+    desc = "Write a session",
+  })
+  vim.api.nvim_create_user_command("SessionRead", function(opts)
+    local call = with_error_notify(M.read, function(name)
+      vim.notify(string.format("Read session: %s", name))
+    end)
+    if opts.args == "" then
+      local sessions = list_sessions(true)
+      if vim.tbl_isempty(sessions) then
+        vim.notify("No other saved sessions", vim.log.levels.ERROR)
+        return
+      end
+      vim.ui.select(sessions, {
+        prompt = "Read session: ",
+        format_item = function(item)
+          return item.name
+        end,
+      }, function(value)
+        if value and value ~= "" then
+          call(value.name)
+        end
+      end)
+    else
+      call(opts.args)
+    end
+  end, {
+    nargs = "?",
+    complete = complete_sessions,
+    desc = "Read a session",
+  })
+  vim.api.nvim_create_user_command("SessionDelete", function(opts)
+    local call = with_error_notify(M.delete, function(name)
+      vim.notify(string.format("Deleted session: %s", name))
+    end)
+    if opts.args == "" then
+      local sessions = list_sessions(false)
+      if vim.tbl_isempty(sessions) then
+        vim.notify("No saved sessions", vim.log.levels.ERROR)
+        return
+      end
 
--- Keymaps
-vim.keymap.set("n", "<leader>qc", "<cmd>SessionCurrent<CR>", { desc = "Current Session" })
-vim.keymap.set("n", "<leader>qd", "<cmd>SessionDelete<CR>", { desc = "Delete Session" })
-vim.keymap.set("n", "<leader>qr", "<cmd>SessionRead<CR>", { desc = "Read Session" })
-vim.keymap.set("n", "<leader>qw", "<cmd>SessionWrite<CR>", { desc = "Write Session" })
+      vim.ui.select(sessions, {
+        prompt = "Delete session: ",
+        format_item = function(item)
+          return item.name
+        end,
+      }, function(value)
+        if value and value ~= "" then
+          call(value.name)
+        end
+      end)
+    else
+      call(opts.args)
+    end
+  end, {
+    nargs = "?",
+    complete = complete_sessions,
+    desc = "Delete a session",
+  })
+
+  -- Keymaps
+  vim.keymap.set(
+    "n",
+    "<leader>qc",
+    "<cmd>SessionCurrent<CR>",
+    { desc = "Current Session" }
+  )
+  vim.keymap.set("n", "<leader>qd", "<cmd>SessionDelete<CR>", { desc = "Delete Session" })
+  vim.keymap.set("n", "<leader>qr", "<cmd>SessionRead<CR>", { desc = "Read Session" })
+  vim.keymap.set("n", "<leader>qw", "<cmd>SessionWrite<CR>", { desc = "Write Session" })
+end)

@@ -30,13 +30,6 @@ map(
   "v:count == 0 ? 'gk' : 'k'",
   { desc = "Up", expr = true, silent = true }
 )
-map("n", "<C-s>", "<Cmd>silent! update | redraw<CR>", { desc = "Save" })
-map(
-  { "i", "x" },
-  "<C-s>",
-  "<Esc><Cmd>silent! update | redraw<CR>",
-  { desc = "Save and go to Normal mode" }
-)
 
 --
 -- Normal mode

@@ -1,3 +1,5 @@
+local lazy = require("utils.lazy")
+
 --
 -- Neovim global plugin toggling the number display
 --
@@ -53,7 +55,7 @@ end
 -- Main
 --
 
-exec_now(function()
+lazy.now(function()
   local grp = vim.api.nvim_create_augroup("user.plugin.numbers_toggle", {})
   vim.api.nvim_create_autocmd({ "BufEnter", "FileType", "FocusGained", "InsertLeave" }, {
     desc = "Enable relative line numbers",

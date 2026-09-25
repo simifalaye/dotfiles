@@ -1,4 +1,6 @@
-exec_now(function()
+local lazy = require("utils.lazy")
+
+lazy.now(function()
   vim.pack.add({
     "https://github.com/folke/tokyonight.nvim",
   })

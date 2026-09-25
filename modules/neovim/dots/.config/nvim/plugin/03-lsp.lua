@@ -1,3 +1,5 @@
+local lazy = require("utils.lazy")
+
 -- Set default lsp config
 vim.lsp.config("*", {
   root_markers = require("utils.fs").root_patterns,
@@ -7,7 +9,7 @@ vim.lsp.config("*", {
   },
 })
 
-exec_now_if_args(function()
+lazy.now_if_args(function()
   -- Load additionl lsp configurations
   vim.pack.add({
     { src = "https://github.com/neovim/nvim-lspconfig" },
@@ -126,25 +128,25 @@ exec_now_if_args(function()
           vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
         end
       end
-      if supports_method("completion") then
-        vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-      end
+      -- if supports_method("completion") then
+      --   vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+      -- end
     end,
   })
 
-  -- -- Display lsp progress
-  -- vim.api.nvim_create_autocmd("LspProgress", {
-  --   group = lsp_grp,
-  --   callback = function(ev)
-  --     local value = ev.data.params.value
-  --     vim.api.nvim_echo({ { value.message or "done" } }, false, {
-  --       id = "lsp." .. ev.data.client_id,
-  --       kind = "progress",
-  --       source = "vim.lsp",
-  --       title = value.title,
-  --       status = value.kind ~= "end" and "running" or "success",
-  --       percent = value.percentage,
-  --     })
-  --   end,
-  -- })
+  -- Display lsp progress
+  vim.api.nvim_create_autocmd("LspProgress", {
+    group = lsp_grp,
+    callback = function(ev)
+      local value = ev.data.params.value
+      vim.api.nvim_echo({ { value.message or "done" } }, false, {
+        id = "lsp." .. ev.data.client_id,
+        kind = "progress",
+        source = "vim.lsp",
+        title = value.title,
+        status = value.kind ~= "end" and "running" or "success",
+        percent = value.percentage,
+      })
+    end,
+  })
 end)

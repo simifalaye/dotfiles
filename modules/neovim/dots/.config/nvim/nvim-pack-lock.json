@@ -6,7 +6,7 @@
       "version": "1.0.0 - 2.0.0"
     },
     "blink.indent": {
-      "rev": "3fc92e6b0e702a630cec7408f8f7947afa951d96",
+      "rev": "2e9c9768affeaf3a48b2dc329eb59763012f79f6",
       "src": "https://github.com/saghen/blink.indent",
       "version": ">=0.0.0"
     },
@@ -20,7 +20,7 @@
       "version": ">=0.0.0"
     },
     "fff.nvim": {
-      "rev": "f4def12a1c1e1fe529edb72c018702298944b630",
+      "rev": "f3647b79de052c9e3fb0f4edc19911e6e25024c3",
       "src": "https://github.com/dmtrKovalenko/fff.nvim",
       "version": ">=0.0.0"
     },
@@ -29,11 +29,11 @@
       "src": "https://github.com/willothy/flatten.nvim"
     },
     "friendly-snippets": {
-      "rev": "6cd7280adead7f586db6fccbd15d2cac7e2188b9",
+      "rev": "b4d01b0fdf3c9a549961c2f9ffe8dc09be166219",
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "5be654f2232c10ddcad19c1607a67b6b4b78fc29",
+      "rev": "5eb287fdbd523c3a1b3d01f304f43570e73e259b",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "guess-indent.nvim": {
@@ -50,11 +50,11 @@
       "src": "https://github.com/folke/lazydev.nvim"
     },
     "live-preview.nvim": {
-      "rev": "a30e54e51e7480d7060c8c8185f2a963ad3518b4",
+      "rev": "a6307fa340ed7c0d96f5c567afc8c991aad94ce0",
       "src": "https://github.com/brianhuster/live-preview.nvim"
     },
     "mason-lspconfig.nvim": {
-      "rev": "9d28935aa95fa6c1dc7c4d6747f101a72a8a4bec",
+      "rev": "77e06f7d2fc127e6ef0a720b59acbc50757cff19",
       "src": "https://github.com/mason-org/mason-lspconfig.nvim"
     },
     "mason-tool-installer.nvim": {
@@ -70,9 +70,9 @@
       "src": "https://github.com/nvim-mini/mini.bufremove",
       "version": "'stable'"
     },
-    "mini.extra": {
-      "rev": "e5ecf197f8954d002cb9e85b3715851e2c8d3cd5",
-      "src": "https://github.com/nvim-mini/mini.extra",
+    "mini.completion": {
+      "rev": "0aeee1231b90d70563e24facc238ab4359b8d5fc",
+      "src": "https://github.com/nvim-mini/mini.completion",
       "version": "'stable'"
     },
     "mini.hipatterns": {
@@ -85,31 +85,17 @@
       "src": "https://github.com/nvim-mini/mini.icons",
       "version": "'stable'"
     },
-    "mini.notify": {
-      "rev": "821db7d464f7a9bb8666b4ba3be7d2ed637cfcfc",
-      "src": "https://github.com/nvim-mini/mini.notify",
-      "version": "'stable'"
-    },
     "mini.pairs": {
       "rev": "4a014143fcb4e9df26198ccb3ecff3b9e77a048c",
       "src": "https://github.com/nvim-mini/mini.pairs",
-      "version": "'stable'"
-    },
-    "mini.pick": {
-      "rev": "8c1f75f8ddd8c9f75d07ed2ab5718d2c3cb65a66",
-      "src": "https://github.com/nvim-mini/mini.pick",
       "version": "'stable'"
     },
     "neogen": {
       "rev": "23e7e9f883d01289ebd90e98025acc860ea26366",
       "src": "https://github.com/danymat/neogen"
     },
-    "nvim-lint": {
-      "rev": "5b5b794458b5ff0b17d26c9d7400faaebd00b32d",
-      "src": "https://github.com/mfussenegger/nvim-lint"
-    },
     "nvim-lspconfig": {
-      "rev": "bff1bd61cb1455040533201ca1edf1e84efa578f",
+      "rev": "ac9d2f7c4757db6320cab6697fe73e5e8adb2457",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-surround": {
@@ -118,11 +104,11 @@
       "version": ">=0.0.0"
     },
     "nvim-treesitter": {
-      "rev": "074aa4422bf029908338e855d0c0f71470a971bb",
+      "rev": "9a168f6357ed21c3a636e1727bc7d382abc451b8",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-treesitter-textobjects": {
-      "rev": "898ee307df58f854d11cd7edd06472574d48014e",
+      "rev": "5c7b0263797dfd1bd6202f2b219f3b53a80b2187",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter-textobjects"
     },
     "nvim-ts-autotag": {
@@ -134,7 +120,7 @@
       "src": "https://github.com/stevearc/oil.nvim"
     },
     "schemastore.nvim": {
-      "rev": "cef8d093b63c9be7e8b49f7dc341e8447fc4c300",
+      "rev": "495680182003292e686b84903bc005fc1099291c",
       "src": "https://github.com/b0o/schemastore.nvim"
     },
     "tokyonight.nvim": {

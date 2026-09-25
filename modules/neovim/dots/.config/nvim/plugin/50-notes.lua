@@ -1,3 +1,5 @@
+local lazy = require("utils.lazy")
+
 --
 -- Neovim global plugin for handling notes
 --
@@ -379,7 +381,7 @@ end
 -- Main
 --
 
-exec_later(function()
+lazy.later(function()
   -- Commands
   vim.api.nvim_create_user_command("NotesToday", M.today, { desc = "Today" })
   vim.api.nvim_create_user_command("NotesYesterday", M.yesterday, { desc = "Yesterday" })

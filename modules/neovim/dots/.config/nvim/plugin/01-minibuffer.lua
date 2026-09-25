@@ -1,3 +1,5 @@
+local lazy = require("utils.lazy")
+
 vim.g.minibuffer = {
   dynamic_window_resize = true,
   cmd = {
@@ -8,7 +10,7 @@ vim.g.minibuffer = {
   },
 }
 
-exec_now(function()
+lazy.now(function()
   local local_path = vim.fs.joinpath(vim.env.HOME, "dev", "oss", "minibuffer.nvim")
   if require("utils.fs").dir_exists(local_path) then
     vim.opt.runtimepath:prepend(

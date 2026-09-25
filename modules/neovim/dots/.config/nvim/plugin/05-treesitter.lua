@@ -1,4 +1,6 @@
-exec_now_if_args(function()
+local lazy = require("utils.lazy")
+
+lazy.now_if_args(function()
   local ensure_installed = {
     "bash",
     "c",
@@ -30,7 +32,7 @@ exec_now_if_args(function()
   local ts_update = function()
     vim.cmd("TSUpdate")
   end
-  _G.on_packchanged("nvim-treesitter", { "update" }, ts_update, ":TSUpdate")
+  lazy.on_packchanged("nvim-treesitter", { "update" }, ts_update, ":TSUpdate")
 
   vim.pack.add({
     {

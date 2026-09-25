@@ -1,4 +1,6 @@
-exec_now(function()
+local lazy = require("utils.lazy")
+
+lazy.now(function()
   vim.pack.add({
     {
       src = "https://github.com/rebelot/heirline.nvim",
@@ -250,7 +252,7 @@ exec_now(function()
         local has_devicons, devicons = pcall(require, "nvim-web-devicons")
         if has_devicons then
           self.icon, self.icon_color =
-              devicons.get_icon_color(filename, extension, { default = true })
+            devicons.get_icon_color(filename, extension, { default = true })
         else
           self.icon = require("static.icons").Font.Kinds.File
           self.icon_color = "green"
@@ -383,10 +385,21 @@ exec_now(function()
     hl = { fg = "fore", bg = "back1" },
   }
 
+  local Project = {
+    condition = function()
+      return _G.Project ~= nil
+        and type(_G.Project) == "table"
+        and _G.Project.current_project() ~= nil
+    end,
+    provider = function(_)
+      return string.format(" %s ", _G.Project.current_project())
+    end,
+  }
+
   local FileProperties = {
     provider = function(self)
       local encoding = (vim.bo.fileencoding ~= "" and vim.bo.fileencoding)
-          or vim.o.encoding
+        or vim.o.encoding
       local fileformat = vim.bo.fileformat
 
       self.encoding = string.upper(encoding)
@@ -457,8 +470,8 @@ exec_now(function()
     local GitBranch = {
       condition = function()
         return vim.b.gitsigns_head
-            or vim.b.gitsigns_status_dict
-            or vim.fn.exists("*FugitiveHead") == 1
+          or vim.b.gitsigns_status_dict
+          or vim.fn.exists("*FugitiveHead") == 1
       end,
       init = function(self)
         self.head = ""
@@ -494,12 +507,12 @@ exec_now(function()
           if #names == 1 then
             names = names[1]
           else
-            names = table.concat(names, ", ")
+            names = table.concat(names, ",")
           end
           return names
         end,
       },
-      Space(2),
+      Space,
       hl = { fg = "blue", bold = true },
     }
 
@@ -507,14 +520,20 @@ exec_now(function()
       condition = conditions.lsp_attached,
       init = function(self)
         local names = {}
+        local ignored = { "null-ls", "none-ls", "efm", "mini.snippets" }
+        local conform_ok, conform = pcall(require, "conform")
+        if conform_ok then
+          ignored = vim.tbl_extend(
+            "force",
+            ignored,
+            vim.tbl_map(function(v)
+              return v.name
+            end, conform.list_all_formatters())
+          )
+        end
         for _, client in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
-          if
-              client.name ~= "null-ls"
-              and client.name ~= "none-ls"
-              and client.name ~= "efm"
-              and client.name ~= "mini.snippets"
-          then
-            table.insert(names, client.name)
+          if not vim.tbl_contains(ignored, client.name) then
+            table.insert(names, string.upper(client.name))
           end
         end
         self.lsp_names = names
@@ -633,8 +652,8 @@ exec_now(function()
       ScrollPercentage,
       Align,
       Diagnostics,
-      FileProperties,
-      FileType,
+      { fallthrough = false, Project, FileProperties },
+      Lsp,
       Space,
       Git,
     },

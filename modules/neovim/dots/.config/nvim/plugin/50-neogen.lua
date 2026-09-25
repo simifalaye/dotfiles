@@ -1,4 +1,6 @@
-exec_later(function()
+local lazy = require("utils.lazy")
+
+lazy.later(function()
   vim.pack.add({
     { src = "https://github.com/danymat/neogen" },
   })
